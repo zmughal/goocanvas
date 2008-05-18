@@ -1,5 +1,9 @@
 2008-05-18  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasatk.c (goo_canvas_widget_accessible_new): made static.
+
+2008-05-18  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (goo_canvas_expose_event): when clipping, clip to
 	the intersection of the canvas bounds and the expose bounds, to avoid
 	problems with cairo's coordinate limits. (This was apparent in the

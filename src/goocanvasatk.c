@@ -570,7 +570,7 @@ goo_canvas_widget_accessible_init (GooCanvasWidgetAccessible *accessible)
 }
 
 
-AtkObject*
+static AtkObject*
 goo_canvas_widget_accessible_new (GObject *object)
 {
   AtkObject *accessible;
