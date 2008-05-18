@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<refentry id="goocanvas-coordinates">
+  <refmeta>
+    <refentrytitle>Coordinate Spaces</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>GOOCANVAS Library</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Coordinate Spaces</refname>
+    <refpurpose>how coordinates are used.</refpurpose>
+  </refnamediv>
+
+  <refsect1 id="coordinates">
+    <title>Coordinate Spaces</title>
+    <para>
+      Items in the canvas typically have a number of properties specifying
+      their location and size. For example the #GooCanvasRect item has
+      #GooCanvasRect:x, #GooCanvasRect:y, #GooCanvasRect:width and
+      #GooCanvasRect:height properties.
+    </para>
+    <para>
+      However, items can also have a transformation matrix (e.g. the
+      #GooCanvasItem:transform property).
+      Transformation matrices modify the item's coordinate space in some
+      way. Modifications include translation (moving the origin), rotation,
+      scaling, and skewing, or combinations of these. Thus the final
+      position of the item on the canvas can be altered dramatically.
+    </para>
+    <para>
+      The simple animation features in #GooCanvas are accomplished by
+      modifying the item's transformation matrix over time.
+      (See goo_canvas_item_animate().)
+    </para>
+    <para>
+      Since items are in a hierarchy it is possible to move or rotate an
+      entire group of items by simply changing the transformation matrix
+      of the group containing them.
+    </para>
+    <para>
+      The coordinate space used within the item itself (e.g. where the
+      #GooCanvasRect:x and #GooCanvasRect:y properties of a #GooCanvasRect
+      are specified)
+      is referred to as "Item Space". The coordinate space used by
+      the entire canvas is referred to as "Device Space". "Item Space"
+      and "Device Space" may or may not be the same, depending on whether
+      the item or any of its ancestors have a transformation matrix set.
+      (Note that the entire canvas may also be scrolled and/or zoomed,
+      which means that there may be additional transformations above
+      "Device Space".)
+    </para>
+    <para>
+      Functions are provided to convert between coordinate spaces,
+      e.g. goo_canvas_convert_to_item_space() and
+      goo_canvas_convert_from_item_space() convert device space coordinates
+      to item space and vice versa.
+    </para>
+  </refsect1>
+</refentry>
