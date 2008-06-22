@@ -370,16 +370,16 @@ on_item_created (GooCanvas          *canvas,
   if (!goo_canvas_item_model_get_parent (model))
     {
       g_signal_connect (item, "button_press_event",
-			(GtkSignalFunc) on_background_button_press, NULL);
+			G_CALLBACK (on_background_button_press), NULL);
     }
   else if (!g_object_get_data (G_OBJECT (model), "skip-signal-connection"))
     {
       g_signal_connect (item, "motion_notify_event",
-			(GtkSignalFunc) on_motion_notify, NULL);
+			G_CALLBACK (on_motion_notify), NULL);
       g_signal_connect (item, "button_press_event",
-			(GtkSignalFunc) on_button_press, NULL);
+			G_CALLBACK (on_button_press), NULL);
       g_signal_connect (item, "button_release_event",
-			(GtkSignalFunc) on_button_release, NULL);
+			G_CALLBACK (on_button_release), NULL);
     }
 }
 
@@ -418,7 +418,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 604, 454);
 
 	g_signal_connect (canvas, "item_created",
-			  (GtkSignalFunc) on_item_created, NULL);
+			  G_CALLBACK (on_item_created), NULL);
 
 	/* Zoom */
 
@@ -429,7 +429,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.50));
 	w = gtk_spin_button_new (adj, 0.0, 2);
 	g_signal_connect (adj, "value_changed",
-			  (GtkSignalFunc) zoom_changed,
+			  G_CALLBACK (zoom_changed),
 			  canvas);
 	gtk_widget_set_size_request (w, 50, -1);
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
@@ -441,7 +441,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	/*gtk_widget_show (w);*/
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) center_toggled,
+			  G_CALLBACK (center_toggled),
 			  canvas);
 
 	/* Move Ellipse */
@@ -450,7 +450,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) move_ellipse_clicked,
+			  G_CALLBACK  (move_ellipse_clicked),
 			  canvas);
 
 	/* Animate Ellipse */
@@ -459,7 +459,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) animate_ellipse_clicked,
+			  G_CALLBACK (animate_ellipse_clicked),
 			  canvas);
 	
 	/* Stop Animation */
@@ -468,7 +468,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) stop_animation_clicked,
+			  G_CALLBACK (stop_animation_clicked),
 			  canvas);
 	
 
@@ -479,7 +479,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) write_pdf_clicked,
+			  G_CALLBACK (write_pdf_clicked),
 			  canvas);
 #endif
 
@@ -487,7 +487,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) change_bounds_clicked,
+			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
 	hbox = gtk_hbox_new (FALSE, 4);
@@ -504,21 +504,21 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) scroll_to_50_50_clicked,
+			  G_CALLBACK (scroll_to_50_50_clicked),
 			  canvas);
 
 	w = gtk_button_new_with_label("250,250");
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) scroll_to_250_250_clicked,
+			  G_CALLBACK (scroll_to_250_250_clicked),
 			  canvas);
 
 	w = gtk_button_new_with_label("500,500");
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
-			  (GtkSignalFunc) scroll_to_500_500_clicked,
+			  G_CALLBACK (scroll_to_500_500_clicked),
 			  canvas);
 
 	/* Scroll anchor */
@@ -532,7 +532,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_NW));
@@ -542,7 +542,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_N));
@@ -552,7 +552,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_NE));
@@ -562,7 +562,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_W));
@@ -572,7 +572,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_CENTER));
@@ -582,7 +582,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_E));
@@ -592,7 +592,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_SW));
@@ -602,7 +602,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_S));
@@ -612,7 +612,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
-			  (GtkSignalFunc) anchor_toggled,
+			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
 			   GINT_TO_POINTER (GTK_ANCHOR_SE));
@@ -633,7 +633,7 @@ create_canvas_primitives (GooCanvasItemModel *model)
 
 #if 0
 	g_signal_connect_after (canvas, "key_press_event",
-				(GtkSignalFunc) key_press,
+				G_CALLBACK (key_press),
 				NULL);
 
 	GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
@@ -1302,7 +1302,7 @@ create_window (GooCanvasItemModel *model)
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
   gtk_widget_show (window);
-  g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+  g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
   notebook = gtk_notebook_new ();

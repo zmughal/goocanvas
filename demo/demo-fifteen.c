@@ -166,13 +166,13 @@ static void
 setup_item_signals (GooCanvasItem     *item)
 {
   g_signal_connect (item, "enter_notify_event",
-		    (GtkSignalFunc) piece_enter_notify,
+		    G_CALLBACK (piece_enter_notify),
 		    NULL);
   g_signal_connect (item, "leave_notify_event",
-		    (GtkSignalFunc) piece_leave_notify,
+		    G_CALLBACK (piece_leave_notify),
 		    NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) piece_button_press,
+		    G_CALLBACK (piece_button_press),
 		    NULL);
 }
 
@@ -277,7 +277,7 @@ create_canvas_fifteen (void)
 	board = g_new (GooCanvasItem *, 16);
 	g_object_set_data (G_OBJECT (canvas), "board", board);
 	g_signal_connect (canvas, "destroy",
-			  (GtkSignalFunc) free_stuff,
+			  G_CALLBACK (free_stuff),
 			  board);
 
 	for (i = 0; i < 15; i++) {
@@ -320,7 +320,7 @@ create_canvas_fifteen (void)
 	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 	g_object_set_data (G_OBJECT (button), "board", board);
 	g_signal_connect (button, "clicked",
-			  (GtkSignalFunc) scramble,
+			  G_CALLBACK (scramble),
 			  canvas);
 	gtk_widget_show (button);
 

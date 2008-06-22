@@ -1,3 +1,48 @@
+2008-06-22  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* demo/demo-animation.c: (create_animation_page):
+	* demo/demo-arrowhead.c: (create_drag_box):
+	* demo/demo-clipping.c: (setup_canvas):
+	* demo/demo-events.c: (setup_item_signals):
+	* demo/demo-features.c: (create_canvas_features):
+	* demo/demo-fifteen.c: (setup_item_signals),
+	(create_canvas_fifteen):
+	* demo/demo-focus.c: (create_focus_box):
+	* demo/demo-grabs.c: (create_fixed), (setup_item_signals):
+	* demo/demo-large-items.c: (create_large_items_page):
+	* demo/demo-paths.c: (create_paths_page):
+	* demo/demo-table.c: (create_demo_item), (create_demo_table),
+	(create_width_for_height_table):
+	* demo/demo.c: (setup_item_signals), (create_canvas_primitives),
+	(setup_canvas), (create_window):
+	* demo/mv-demo-animation.c: (create_animation_page):
+	* demo/mv-demo-arrowhead.c: (on_item_created),
+	(create_canvas_arrowhead):
+	* demo/mv-demo-clipping.c: (setup_canvas):
+	* demo/mv-demo-events.c: (on_item_created), (create_events_page):
+	* demo/mv-demo-features.c: (on_item_created),
+	(create_canvas_features):
+	* demo/mv-demo-fifteen.c: (on_item_created),
+	(create_canvas_fifteen):
+	* demo/mv-demo-focus.c: (on_item_created), (create_focus_page):
+	* demo/mv-demo-grabs.c: (create_fixed), (on_item_created),
+	(create_canvas):
+	* demo/mv-demo-paths.c: (create_paths_page):
+	* demo/mv-demo-table.c: (create_demo_item), (create_demo_table),
+	(create_width_for_height_table):
+	* demo/mv-demo.c: (on_item_created), (create_canvas_primitives),
+	(create_window):
+	* demo/mv-scalability-demo.c: (setup_canvas), (create_canvas),
+	(main):
+	* demo/mv-simple-demo.c: (main):
+	* demo/mv-table-demo.c: (main):
+	* demo/scalability-demo.c: (setup_canvas), (create_canvas), (main):
+	* demo/simple-demo.c: (main):
+	* demo/table-demo.c: (main):
+	* demo/units-demo.c: (setup_canvas), (create_canvas), (main):
+	* demo/widgets-demo.c: (create_focus_box), (main):
+	Use G_CALLBACK instead of the deprecated GtkSignal stuff.
+
 2008-05-18  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasatk.c (goo_canvas_widget_accessible_new): made static.

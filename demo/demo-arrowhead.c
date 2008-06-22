@@ -385,19 +385,19 @@ create_drag_box (GtkWidget *canvas,
   g_object_set_data (G_OBJECT (canvas), box_name, item);
 
   g_signal_connect (item, "enter_notify_event",
-		    (GtkSignalFunc) on_enter_notify,
+		    G_CALLBACK (on_enter_notify),
 		    NULL);
   g_signal_connect (item, "leave_notify_event",
-		    (GtkSignalFunc) on_leave_notify,
+		    G_CALLBACK (on_leave_notify),
 		    NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press,
+		    G_CALLBACK (on_button_press),
 		    NULL);
   g_signal_connect (item, "button_release_event",
-		    (GtkSignalFunc) on_button_release,
+		    G_CALLBACK (on_button_release),
 		    NULL);
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion,
+		    G_CALLBACK (on_motion),
 		    NULL);
 }
 

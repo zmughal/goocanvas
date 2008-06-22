@@ -94,7 +94,7 @@ setup_canvas (GtkWidget *canvas)
 
   item = goo_canvas_get_item (GOO_CANVAS (canvas), root);
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
 
 #ifdef USE_PIXMAP
   pixbuf = gdk_pixbuf_new_from_file("toroid.png", NULL);
@@ -191,7 +191,7 @@ setup_canvas (GtkWidget *canvas)
 
 #if 0
 		  g_signal_connect (item, "motion_notify_event",
-				    (GtkSignalFunc) on_motion_notify, NULL);
+				    G_CALLBACK (on_motion_notify), NULL);
 #endif
 
 #ifdef USE_TEXT
@@ -279,7 +279,7 @@ create_canvas (void)
   gtk_widget_show (canvas);
 
   g_signal_connect (canvas, "expose_event",
-		    (GtkSignalFunc) on_expose_event, NULL);
+		    G_CALLBACK (on_expose_event), NULL);
 
   return canvas;
 }
@@ -306,7 +306,7 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
   gtk_widget_show (window);
-  g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+  g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
   scrolled_win = gtk_scrolled_window_new (NULL, NULL);

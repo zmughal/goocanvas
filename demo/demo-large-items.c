@@ -96,7 +96,7 @@ create_large_items_page (void)
   root = goo_canvas_get_root_item (GOO_CANVAS (canvas));
 
   g_signal_connect (root, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
 
 #if 1
   item = goo_demo_large_rect_new (root, CANVAS_LEFT + 10, CANVAS_TOP + 10,
@@ -146,7 +146,7 @@ create_large_items_page (void)
   adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 10.00, 0.05, 0.50, 0.50));
   w = gtk_spin_button_new (adj, 0.0, 2);
   g_signal_connect (adj, "value_changed",
-		    (GtkSignalFunc) zoom_changed,
+		    G_CALLBACK (zoom_changed),
 		    canvas);
   gtk_widget_set_size_request (w, 50, -1);
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);

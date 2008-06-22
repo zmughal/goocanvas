@@ -41,7 +41,7 @@ on_item_created (GooCanvas          *canvas,
   if (g_object_get_data (G_OBJECT (model), "parent1"))
     {
       g_signal_connect (item, "button_press_event",
-			(GtkSignalFunc) on_button_press, NULL);
+			G_CALLBACK (on_button_press), NULL);
     }
 }
 
@@ -83,7 +83,7 @@ create_canvas_features (void)
 	canvas = goo_canvas_new ();
 
 	g_signal_connect (canvas, "item_created",
-			  (GtkSignalFunc) on_item_created, NULL);
+			  G_CALLBACK (on_item_created), NULL);
 
 	root = goo_canvas_group_model_new (NULL, NULL);
 
@@ -120,7 +120,7 @@ create_canvas_features (void)
 	g_object_set_data (G_OBJECT (item), "parent2", parent2);
 #if 0
 	g_signal_connect (G_OBJECT (item), "event",
-			  (GtkSignalFunc) item_event,
+			  G_CALLBACK (item_event),
 			  NULL);
 #endif
 
@@ -142,7 +142,7 @@ create_canvas_features (void)
 	g_object_set_data (G_OBJECT (group), "parent2", parent2);
 #if 0
 	g_signal_connect (G_OBJECT (group), "event",
-			    (GtkSignalFunc) item_event,
+			  G_CALLBACK (item_event),
 			    NULL);
 #endif
 

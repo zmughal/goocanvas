@@ -79,7 +79,7 @@ create_demo_item (GooCanvasItemModel *table,
   item = goo_canvas_get_item (canvas, model);
   g_object_set_data (G_OBJECT (item), "id", text);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 }
 
 
@@ -182,7 +182,7 @@ create_demo_table (GooCanvasItemModel *root,
   item = goo_canvas_get_item (canvas, square);
   g_object_set_data (G_OBJECT (item), "id", "Red square");
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   circle = goo_canvas_ellipse_model_new (table, 0.0, 0.0, 25.0, 25.0,
 					 "fill-color", "blue",
@@ -195,7 +195,7 @@ create_demo_table (GooCanvasItemModel *root,
   item = goo_canvas_get_item (canvas, circle);
   g_object_set_data (G_OBJECT (item), "id", "Blue circle");
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   triangle = goo_canvas_polyline_model_new (table, TRUE, 3,
 					    25.0, 0.0, 0.0, 50.0, 50.0, 50.0,
@@ -209,7 +209,7 @@ create_demo_table (GooCanvasItemModel *root,
   item = goo_canvas_get_item (canvas, triangle);
   g_object_set_data (G_OBJECT (item), "id", "Yellow triangle");
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 }
 
 
@@ -257,7 +257,7 @@ create_width_for_height_table (GooCanvasItemModel *root,
   item = goo_canvas_get_item (canvas, model);
   g_object_set_data (G_OBJECT (item), "id", "Text Item");
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 #endif
 
   model = goo_canvas_rect_model_new (table, 0.0, 0.0, width - 2, 10.0,

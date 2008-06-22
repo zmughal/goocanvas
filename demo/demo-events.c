@@ -26,7 +26,7 @@ static void
 setup_item_signals (GooCanvasItem *item)
 {
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
 }
 
 

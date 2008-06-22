@@ -231,18 +231,18 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
 
   view_id = g_strdup_printf ("%s-background", id);
   g_signal_connect (fixed, "expose_event",
-		    (GtkSignalFunc) on_widget_expose, view_id);
+		    G_CALLBACK (on_widget_expose), view_id);
 
   g_signal_connect (fixed, "enter_notify_event",
-		    (GtkSignalFunc) on_widget_enter_notify, view_id);
+		    G_CALLBACK (on_widget_enter_notify), view_id);
   g_signal_connect (fixed, "leave_notify_event",
-		    (GtkSignalFunc) on_widget_leave_notify, view_id);
+		    G_CALLBACK (on_widget_leave_notify), view_id);
   g_signal_connect (fixed, "motion_notify_event",
-		    (GtkSignalFunc) on_widget_motion_notify, view_id);
+		    G_CALLBACK (on_widget_motion_notify), view_id);
   g_signal_connect (fixed, "button_press_event",
-		    (GtkSignalFunc) on_widget_button_press, view_id);
+		    G_CALLBACK (on_widget_button_press), view_id);
   g_signal_connect (fixed, "button_release_event",
-		    (GtkSignalFunc) on_widget_button_release, view_id);
+		    G_CALLBACK (on_widget_button_release), view_id);
 
 
   drawing_area = gtk_drawing_area_new ();
@@ -264,18 +264,18 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
 
   view_id = g_strdup_printf ("%s-left", id);
   g_signal_connect (drawing_area, "expose_event",
-		    (GtkSignalFunc) on_widget_expose, view_id);
+		    G_CALLBACK (on_widget_expose), view_id);
 
   g_signal_connect (drawing_area, "enter_notify_event",
-		    (GtkSignalFunc) on_widget_enter_notify, view_id);
+		    G_CALLBACK (on_widget_enter_notify), view_id);
   g_signal_connect (drawing_area, "leave_notify_event",
-		    (GtkSignalFunc) on_widget_leave_notify, view_id);
+		    G_CALLBACK (on_widget_leave_notify), view_id);
   g_signal_connect (drawing_area, "motion_notify_event",
-		    (GtkSignalFunc) on_widget_motion_notify, view_id);
+		    G_CALLBACK (on_widget_motion_notify), view_id);
   g_signal_connect (drawing_area, "button_press_event",
-		    (GtkSignalFunc) on_widget_button_press, view_id);
+		    G_CALLBACK (on_widget_button_press), view_id);
   g_signal_connect (drawing_area, "button_release_event",
-		    (GtkSignalFunc) on_widget_button_release, view_id);
+		    G_CALLBACK (on_widget_button_release), view_id);
 
 
   drawing_area = gtk_drawing_area_new ();
@@ -297,18 +297,18 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
 
   view_id = g_strdup_printf ("%s-right", id);
   g_signal_connect (drawing_area, "expose_event",
-		    (GtkSignalFunc) on_widget_expose, view_id);
+		    G_CALLBACK (on_widget_expose), view_id);
 
   g_signal_connect (drawing_area, "enter_notify_event",
-		    (GtkSignalFunc) on_widget_enter_notify, view_id);
+		    G_CALLBACK (on_widget_enter_notify), view_id);
   g_signal_connect (drawing_area, "leave_notify_event",
-		    (GtkSignalFunc) on_widget_leave_notify, view_id);
+		    G_CALLBACK (on_widget_leave_notify), view_id);
   g_signal_connect (drawing_area, "motion_notify_event",
-		    (GtkSignalFunc) on_widget_motion_notify, view_id);
+		    G_CALLBACK (on_widget_motion_notify), view_id);
   g_signal_connect (drawing_area, "button_press_event",
-		    (GtkSignalFunc) on_widget_button_press, view_id);
+		    G_CALLBACK (on_widget_button_press), view_id);
   g_signal_connect (drawing_area, "button_release_event",
-		    (GtkSignalFunc) on_widget_button_release, view_id);
+		    G_CALLBACK (on_widget_button_release), view_id);
 }
 
 
@@ -316,15 +316,15 @@ static void
 setup_item_signals (GooCanvasItem *item)
 {
   g_signal_connect (item, "enter_notify_event",
-		    (GtkSignalFunc) on_enter_notify, NULL);
+		    G_CALLBACK (on_enter_notify), NULL);
   g_signal_connect (item, "leave_notify_event",
-		    (GtkSignalFunc) on_leave_notify, NULL);
+		    G_CALLBACK (on_leave_notify), NULL);
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
   g_signal_connect (item, "button_release_event",
-		    (GtkSignalFunc) on_button_release, NULL);
+		    G_CALLBACK (on_button_release), NULL);
 }
 
 

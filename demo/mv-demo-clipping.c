@@ -35,7 +35,7 @@ setup_canvas (GooCanvas *canvas)
   goo_canvas_item_model_rotate (model, 30, 0, 0);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse (unclipped)");
+		    G_CALLBACK (on_button_press), "Blue ellipse (unclipped)");
 
   model = goo_canvas_rect_model_new (root, 200, 50, 100, 100,
 				     "fill-color", "red",
@@ -43,20 +43,20 @@ setup_canvas (GooCanvas *canvas)
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle (unclipped)");
+		    G_CALLBACK (on_button_press), "Red rectangle (unclipped)");
 
   model = goo_canvas_rect_model_new (root, 380, 50, 100, 100,
 				     "fill-color", "yellow",
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle (unclipped)");
+		    G_CALLBACK (on_button_press), "Yellow rectangle (unclipped)");
 
   model = goo_canvas_text_model_new (root, "Sample Text", 520, 100, -1, GTK_ANCHOR_NW,
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text (unclipped)");
+		    G_CALLBACK (on_button_press), "Text (unclipped)");
 
 
   /* Clipped items. */
@@ -68,7 +68,7 @@ setup_canvas (GooCanvas *canvas)
   goo_canvas_item_model_rotate (model, 30, 0, 0);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse");
+		    G_CALLBACK (on_button_press), "Blue ellipse");
 
   model = goo_canvas_rect_model_new (root, 200, 250, 100, 100,
 				     "fill-color", "red",
@@ -77,7 +77,7 @@ setup_canvas (GooCanvas *canvas)
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle");
+		    G_CALLBACK (on_button_press), "Red rectangle");
 
   model = goo_canvas_rect_model_new (root, 380, 250, 100, 100,
 				     "fill-color", "yellow",
@@ -85,14 +85,14 @@ setup_canvas (GooCanvas *canvas)
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle");
+		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
   model = goo_canvas_text_model_new (root, "Sample Text", 520, 300, -1, GTK_ANCHOR_NW,
 				     "clip-path", "M535,300 h75 v40 h-75 z",
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text (unclipped)");
+		    G_CALLBACK (on_button_press), "Text (unclipped)");
 
 
   /* Table with clipped items. */
@@ -109,7 +109,7 @@ setup_canvas (GooCanvas *canvas)
   goo_canvas_item_model_rotate (model, 30, 0, 0);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse");
+		    G_CALLBACK (on_button_press), "Blue ellipse");
 
   model = goo_canvas_rect_model_new (table, 200, 250, 100, 100,
 				     "fill-color", "red",
@@ -121,7 +121,7 @@ setup_canvas (GooCanvas *canvas)
 					      NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle");
+		    G_CALLBACK (on_button_press), "Red rectangle");
 
   model = goo_canvas_rect_model_new (table, 380, 250, 100, 100,
 				     "fill-color", "yellow",
@@ -132,7 +132,7 @@ setup_canvas (GooCanvas *canvas)
 					      NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle");
+		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
   model = goo_canvas_text_model_new (table, "Sample Text", 520, 300, -1, GTK_ANCHOR_NW,
 				     "clip-path", "M535,300 h75 v40 h-75 z",
@@ -142,7 +142,7 @@ setup_canvas (GooCanvas *canvas)
 					      NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text (unclipped)");
+		    G_CALLBACK (on_button_press), "Text (unclipped)");
 }
 
 

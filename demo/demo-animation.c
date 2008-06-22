@@ -107,13 +107,13 @@ create_animation_page (void)
   w = gtk_button_new_with_label("Start Animation");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) start_animation_clicked,
+  g_signal_connect (w, "clicked", G_CALLBACK (start_animation_clicked),
 		    NULL);
 
   w = gtk_button_new_with_label("Stop Animation");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) stop_animation_clicked,
+  g_signal_connect (w, "clicked", G_CALLBACK (stop_animation_clicked),
 		    NULL);
 
 

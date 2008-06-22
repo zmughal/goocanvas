@@ -31,25 +31,25 @@ setup_canvas (GtkWidget *canvas)
   goo_canvas_item_translate (item, 100, 100);
   goo_canvas_item_rotate (item, 30, 0, 0);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse (unclipped)");
+		    G_CALLBACK (on_button_press), "Blue ellipse (unclipped)");
 
   item = goo_canvas_rect_new (root, 200, 50, 100, 100,
 			      "fill-color", "red",
 			      "clip-fill-rule", CAIRO_FILL_RULE_EVEN_ODD,
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle (unclipped)");
+		    G_CALLBACK (on_button_press), "Red rectangle (unclipped)");
 
   item = goo_canvas_rect_new (root, 380, 50, 100, 100,
 			      "fill-color", "yellow",
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle (unclipped)");
+		    G_CALLBACK (on_button_press), "Yellow rectangle (unclipped)");
 
   item = goo_canvas_text_new (root, "Sample Text", 520, 100, -1, GTK_ANCHOR_NW,
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text (unclipped)");
+		    G_CALLBACK (on_button_press), "Text (unclipped)");
 
 
 
@@ -61,7 +61,7 @@ setup_canvas (GtkWidget *canvas)
   goo_canvas_item_translate (item, 100, 300);
   goo_canvas_item_rotate (item, 30, 0, 0);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse");
+		    G_CALLBACK (on_button_press), "Blue ellipse");
 
   item = goo_canvas_rect_new (root, 200, 250, 100, 100,
 			      "fill-color", "red",
@@ -69,20 +69,20 @@ setup_canvas (GtkWidget *canvas)
 			      "clip-fill-rule", CAIRO_FILL_RULE_EVEN_ODD,
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle");
+		    G_CALLBACK (on_button_press), "Red rectangle");
 
   item = goo_canvas_rect_new (root, 380, 250, 100, 100,
 			      "fill-color", "yellow",
 			      "clip-path", "M480,230 l40,100 l-80 0 z",
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle");
+		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
   item = goo_canvas_text_new (root, "Sample Text", 520, 300, -1, GTK_ANCHOR_NW,
 			      "clip-path", "M535,300 h75 v40 h-75 z",
 			      NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text");
+		    G_CALLBACK (on_button_press), "Text");
 
 
   /* Table with clipped items. */
@@ -97,7 +97,7 @@ setup_canvas (GtkWidget *canvas)
   goo_canvas_item_translate (item, 100, 300);
   goo_canvas_item_rotate (item, 30, 0, 0);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Blue ellipse");
+		    G_CALLBACK (on_button_press), "Blue ellipse");
 
   item = goo_canvas_rect_new (table, 200, 250, 100, 100,
 			      "fill-color", "red",
@@ -108,7 +108,7 @@ setup_canvas (GtkWidget *canvas)
 					"column", 1,
 					NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Red rectangle");
+		    G_CALLBACK (on_button_press), "Red rectangle");
 
   item = goo_canvas_rect_new (table, 380, 250, 100, 100,
 			      "fill-color", "yellow",
@@ -118,7 +118,7 @@ setup_canvas (GtkWidget *canvas)
 					"column", 2,
 					NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Yellow rectangle");
+		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
   item = goo_canvas_text_new (table, "Sample Text", 520, 300, -1,
 			      GTK_ANCHOR_NW,
@@ -128,7 +128,7 @@ setup_canvas (GtkWidget *canvas)
 					"column", 3,
 					NULL);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, "Text");
+		    G_CALLBACK (on_button_press), "Text");
 }
 
 

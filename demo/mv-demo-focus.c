@@ -87,15 +87,15 @@ on_item_created (GooCanvas          *view,
       g_object_set (model, "can-focus", TRUE, NULL);
 
       g_signal_connect (item, "focus_in_event",
-			(GtkSignalFunc) on_focus_in, NULL);
+			G_CALLBACK (on_focus_in), NULL);
       g_signal_connect (item, "focus_out_event",
-			(GtkSignalFunc) on_focus_out, NULL);
+			G_CALLBACK (on_focus_out), NULL);
 
       g_signal_connect (item, "button_press_event",
-			(GtkSignalFunc) on_button_press, NULL);
+			G_CALLBACK (on_button_press), NULL);
 
       g_signal_connect (item, "key_press_event",
-			(GtkSignalFunc) on_key_press, NULL);
+			G_CALLBACK (on_key_press), NULL);
     }
 }
 
@@ -175,7 +175,7 @@ create_focus_page (void)
   gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);
 
   g_signal_connect (canvas, "item_created",
-		    (GtkSignalFunc) on_item_created, NULL);
+		    G_CALLBACK (on_item_created), NULL);
 
   setup_canvas (canvas);
 

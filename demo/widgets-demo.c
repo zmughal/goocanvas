@@ -251,15 +251,15 @@ create_focus_box (GtkWidget     *canvas,
   g_object_set_data (G_OBJECT (item), "id", color);
 
   g_signal_connect (item, "focus_in_event",
-		    (GtkSignalFunc) on_focus_in, NULL);
+		    G_CALLBACK (on_focus_in), NULL);
   g_signal_connect (item, "focus_out_event",
-		    (GtkSignalFunc) on_focus_out, NULL);
+		    G_CALLBACK (on_focus_out), NULL);
 
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   g_signal_connect (item, "key_press_event",
-		    (GtkSignalFunc) on_key_press, NULL);
+		    G_CALLBACK (on_key_press), NULL);
 }
 
 
@@ -279,7 +279,7 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
   gtk_widget_show (window);
-  g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+  g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
   vbox = gtk_vbox_new (FALSE, 4);
@@ -294,27 +294,27 @@ main (int argc, char *argv[])
   w = gtk_button_new_with_label ("Add Widget");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) add_widget_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (add_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Remove Widget");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) remove_widget_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (remove_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Move Widget");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) move_widget_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (move_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Anchor");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) change_anchor_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (change_anchor_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Widget");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) change_widget_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (change_widget_clicked), NULL);
 
   hbox = gtk_hbox_new (FALSE, 4);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -323,27 +323,27 @@ main (int argc, char *argv[])
   w = gtk_button_new_with_label ("Hide Canvas");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) hide_canvas_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (hide_canvas_clicked), NULL);
 
   w = gtk_button_new_with_label ("Show Canvas");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) show_canvas_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (show_canvas_clicked), NULL);
 
   w = gtk_button_new_with_label ("Hide Item");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) hide_item_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (hide_item_clicked), NULL);
 
   w = gtk_button_new_with_label ("Show Item");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) show_item_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (show_item_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Transform");
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
-  g_signal_connect (w, "clicked", (GtkSignalFunc) change_transform_clicked, NULL);
+  g_signal_connect (w, "clicked", G_CALLBACK (change_transform_clicked), NULL);
 
   scrolled_win = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),

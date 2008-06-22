@@ -81,7 +81,7 @@ create_demo_item (GooCanvasItem *table,
 
   g_object_set_data (G_OBJECT (item), "id", text);
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 }
 
 
@@ -182,7 +182,7 @@ create_demo_table (GooCanvasItem *root,
 					NULL);
   g_object_set_data (G_OBJECT (square), "id", "Red square");
   g_signal_connect (square, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   circle = goo_canvas_ellipse_new (table, 0.0, 0.0, 25.0, 25.0,
 				   "fill-color", "blue",
@@ -194,7 +194,7 @@ create_demo_table (GooCanvasItem *root,
 					NULL);
   g_object_set_data (G_OBJECT (circle), "id", "Blue circle");
   g_signal_connect (circle, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   triangle = goo_canvas_polyline_new (table, TRUE, 3,
 				      25.0, 0.0, 0.0, 50.0, 50.0, 50.0,
@@ -207,7 +207,7 @@ create_demo_table (GooCanvasItem *root,
 					NULL);
   g_object_set_data (G_OBJECT (triangle), "id", "Yellow triangle");
   g_signal_connect (triangle, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 }
 
 
@@ -253,7 +253,7 @@ create_width_for_height_table (GooCanvasItem *root,
 					NULL);
   g_object_set_data (G_OBJECT (item), "id", "Text Item");
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 #endif
 
   item = goo_canvas_rect_new (table, 0.0, 0.0, width - 2, 10.0,

@@ -100,15 +100,15 @@ create_focus_box (GtkWidget     *canvas,
   g_object_set_data (G_OBJECT (item), "id", color);
 
   g_signal_connect (item, "focus_in_event",
-		    (GtkSignalFunc) on_focus_in, NULL);
+		    G_CALLBACK (on_focus_in), NULL);
   g_signal_connect (item, "focus_out_event",
-		    (GtkSignalFunc) on_focus_out, NULL);
+		    G_CALLBACK (on_focus_out), NULL);
 
   g_signal_connect (item, "button_press_event",
-		    (GtkSignalFunc) on_button_press, NULL);
+		    G_CALLBACK (on_button_press), NULL);
 
   g_signal_connect (item, "key_press_event",
-		    (GtkSignalFunc) on_key_press, NULL);
+		    G_CALLBACK (on_key_press), NULL);
 }
 
 

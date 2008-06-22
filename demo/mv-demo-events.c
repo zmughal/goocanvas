@@ -33,7 +33,7 @@ on_item_created (GooCanvas          *view,
 		 gpointer            data)
 {
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
 }
 
 
@@ -155,7 +155,7 @@ create_events_page (void)
   canvas = goo_canvas_new ();
 
   g_signal_connect (canvas, "item_created",
-		    (GtkSignalFunc) on_item_created, NULL);
+		    G_CALLBACK (on_item_created), NULL);
 
   root = goo_canvas_group_model_new (NULL, NULL);
 

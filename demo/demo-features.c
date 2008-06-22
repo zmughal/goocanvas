@@ -108,7 +108,7 @@ create_canvas_features (void)
 	g_object_set_data (G_OBJECT (item), "parent1", parent1);
 	g_object_set_data (G_OBJECT (item), "parent2", parent2);
 	g_signal_connect (item, "button_press_event",
-			  (GtkSignalFunc) on_button_press, NULL);
+			  G_CALLBACK (on_button_press), NULL);
 
 	/* A group to be reparented */
 
@@ -127,7 +127,7 @@ create_canvas_features (void)
 	g_object_set_data (G_OBJECT (group), "parent1", parent1);
 	g_object_set_data (G_OBJECT (group), "parent2", parent2);
 	g_signal_connect (group, "button_press_event",
-			  (GtkSignalFunc) on_button_press, NULL);
+			  G_CALLBACK (on_button_press), NULL);
 
 	return vbox;
 }

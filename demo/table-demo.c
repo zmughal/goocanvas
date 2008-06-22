@@ -219,7 +219,7 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
   gtk_widget_show (window);
-  g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+  g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
   vbox = gtk_vbox_new (FALSE, 4);

@@ -49,7 +49,7 @@ setup_canvas (GtkWidget *canvas,
   item = goo_canvas_rect_new (root, d[0], d[1], d[2], d[3],
 			      NULL);
   g_signal_connect (item, "motion_notify_event",
-		    (GtkSignalFunc) on_motion_notify, NULL);
+		    G_CALLBACK (on_motion_notify), NULL);
 
   sprintf (buffer, "This box is %gx%g %s", d[2], d[3], units_name);
   sprintf (font_desc, "Sans %gpx", d[4]);
@@ -99,7 +99,7 @@ create_canvas (GtkUnit         units,
   adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 100.00, 0.05, 0.50, 0.50));
   w = gtk_spin_button_new (adj, 0.0, 2);
   g_signal_connect (adj, "value_changed",
-		    (GtkSignalFunc) zoom_changed,
+		    G_CALLBACK (zoom_changed),
 		    canvas);
   gtk_widget_set_size_request (w, 50, -1);
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
@@ -147,7 +147,7 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
   gtk_widget_show (window);
-  g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+  g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
   notebook = gtk_notebook_new ();

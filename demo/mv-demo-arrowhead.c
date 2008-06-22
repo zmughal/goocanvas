@@ -399,19 +399,19 @@ on_item_created (GooCanvas          *canvas,
   if (GOO_IS_CANVAS_RECT_MODEL (model))
     {
       g_signal_connect (item, "enter_notify_event",
-			(GtkSignalFunc) on_enter_notify,
+			G_CALLBACK (on_enter_notify),
 			NULL);
       g_signal_connect (item, "leave_notify_event",
-			(GtkSignalFunc) on_leave_notify,
+			G_CALLBACK (on_leave_notify),
 			NULL);
       g_signal_connect (item, "button_press_event",
-			(GtkSignalFunc) on_button_press,
+			G_CALLBACK (on_button_press),
 			NULL);
       g_signal_connect (item, "button_release_event",
-			(GtkSignalFunc) on_button_release,
+			G_CALLBACK (on_button_release),
 			NULL);
       g_signal_connect (item, "motion_notify_event",
-			(GtkSignalFunc) on_motion,
+			G_CALLBACK (on_motion),
 			NULL);
     }
 }
@@ -448,7 +448,7 @@ create_canvas_arrowhead (void)
 	canvas = goo_canvas_new ();
 
 	g_signal_connect (canvas, "item_created",
-			  (GtkSignalFunc) on_item_created, NULL);
+			  G_CALLBACK (on_item_created), NULL);
 
 	root = goo_canvas_group_model_new (NULL, NULL);
 	goo_canvas_set_root_item_model (GOO_CANVAS (canvas), root);

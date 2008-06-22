@@ -156,7 +156,7 @@ create_paths_page (void)
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked",
-		    (GtkSignalFunc) move_path_clicked, canvas);
+		    G_CALLBACK (move_path_clicked), canvas);
 
   return vbox;
 }
