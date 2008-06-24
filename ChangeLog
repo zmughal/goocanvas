@@ -1,3 +1,8 @@
+2008-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasutils.h: removed comma at end of GooCanvasItemVisibility
+	enum. Patch from Hubert Figuiere. #539844
+
 2008-06-22  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* demo/demo-animation.c: (create_animation_page):
