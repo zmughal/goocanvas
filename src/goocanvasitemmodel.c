@@ -395,7 +395,8 @@ goo_canvas_item_model_get_n_children (GooCanvasItemModel       *model)
  * 
  * Gets the child at the given stack position.
  * 
- * Returns: the child at the given stack position.
+ * Returns: the child at the given stack position, or %NULL if @child_num
+ * is out of range.
  **/
 GooCanvasItemModel*
 goo_canvas_item_model_get_child (GooCanvasItemModel  *model,

@@ -1,5 +1,14 @@
 2008-06-24  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasgroup.c (goo_canvas_group_get_child)
+	(goo_canvas_group_model_get_child): return NULL if child_num is out
+	of range. #535150
+
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_child): 
+	* src/goocanvasitem.c (goo_canvas_item_get_child): updated docs.
+
+2008-06-24  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasutils.h: removed comma at end of GooCanvasItemVisibility
 	enum. Patch from Hubert Figuiere. #539844
 

@@ -238,7 +238,9 @@ goo_canvas_group_get_child   (GooCanvasItem       *item,
 {
   GooCanvasGroup *group = (GooCanvasGroup*) item;
 
-  return group->items->pdata[child_num];
+  if (child_num < group->items->len)
+    return group->items->pdata[child_num];
+  return NULL;
 }
 
 
@@ -742,7 +744,9 @@ goo_canvas_group_model_get_child   (GooCanvasItemModel  *model,
 {
   GooCanvasGroupModel *gmodel = (GooCanvasGroupModel*) model;
 
-  return gmodel->children->pdata[child_num];
+  if (child_num < gmodel->children->len)
+    return gmodel->children->pdata[child_num];
+  return NULL;
 }
 
 
