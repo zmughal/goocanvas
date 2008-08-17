@@ -152,6 +152,7 @@ goo_canvas_group_add_child     (GooCanvasItem  *item,
 				gint            position)
 {
   GooCanvasGroup *group = (GooCanvasGroup*) item;
+  AtkObject *atk_obj, *child_atk_obj;
 
   g_object_ref (child);
 
@@ -166,6 +167,15 @@ goo_canvas_group_add_child     (GooCanvasItem  *item,
     }
 
   goo_canvas_item_set_parent (child, item);
+
+  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
+  atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
+  if (!ATK_IS_NO_OP_OBJECT (atk_obj))
+    {
+      child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
+      g_signal_emit_by_name (atk_obj, "children_changed::add",
+			     position, child_atk_obj);
+    }
 
   goo_canvas_item_request_update (item);
 }
@@ -203,6 +213,7 @@ goo_canvas_group_remove_child  (GooCanvasItem  *item,
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasItem *child;
   GooCanvasBounds bounds;
+  AtkObject *atk_obj, *child_atk_obj;
 
   g_return_if_fail (child_num < group->items->len);
 
@@ -212,6 +223,15 @@ goo_canvas_group_remove_child  (GooCanvasItem  *item,
     {
       goo_canvas_item_get_bounds (child, &bounds);
       goo_canvas_request_redraw (simple->canvas, &bounds);
+    }
+
+  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
+  atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
+  if (!ATK_IS_NO_OP_OBJECT (atk_obj))
+    {
+      child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
+      g_signal_emit_by_name (atk_obj, "children_changed::remove",
+			     child_num, child_atk_obj);
     }
 
   goo_canvas_item_set_parent (child, NULL);
