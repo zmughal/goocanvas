@@ -1,3 +1,9 @@
+2008-08-17  Damon Chaplin  <damon@gnome.org>
+
+	* src/Makefile.am (INCLUDES): 
+	* demo/Makefile.am (INCLUDES): get rid of the XXX_DISABLE_DEPRECATED
+	flags so we don't break compilation when GTK+ deprecates stuff. #548086
+
 2008-06-24  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasgroup.c (goo_canvas_group_get_child)

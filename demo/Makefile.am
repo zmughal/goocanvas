@@ -1,11 +1,12 @@
 ## Process this file with automake to produce Makefile.in
 
 INCLUDES = \
-	-DG_DISABLE_DEPRECATED -DPANGO_DISABLE_DEPRECATED \
-	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
-	-DGTK_DISABLE_DEPRECATED \
 	-I$(top_srcdir)/src \
 	@PACKAGE_CFLAGS@
+
+#	-DG_DISABLE_DEPRECATED -DPANGO_DISABLE_DEPRECATED \
+#	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
+#	-DGTK_DISABLE_DEPRECATED
 
 noinst_PROGRAMS = demo table-demo simple-demo scalability-demo units-demo widgets-demo mv-demo mv-table-demo mv-simple-demo mv-scalability-demo
 
