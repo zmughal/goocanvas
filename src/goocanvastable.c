@@ -2193,6 +2193,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasItemSimpleData *simple_data = simple->simple_data;
+  GooCanvasStyle *style = simple_data->style;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableData *table_data = table->table_data;
@@ -2264,7 +2265,22 @@ goo_canvas_table_paint (GooCanvasItem         *item,
       cairo_clip (cr);
     }
 
-  cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+  /* Fill the table, if desired. */
+  if (goo_canvas_style_set_fill_options (style, cr))
+    {
+      cairo_rectangle (cr,
+                       layout_data->border_width + vert_grid_line_width,
+                       layout_data->border_width + horz_grid_line_width,
+                       layout_data->allocated_size[HORZ] - 2 * (layout_data->border_width + vert_grid_line_width),
+                       layout_data->allocated_size[VERT] - 2 * (layout_data->border_width + horz_grid_line_width));
+      cairo_fill (cr);
+    }
+
+  /* We use the style for the stroke color, but the line cap style and line
+     width are overridden here. */
+  goo_canvas_style_set_stroke_options (style, cr);
+
+  cairo_set_line_cap (cr, CAIRO_LINE_CAP_BUTT);
 
   /* Horizontal grid lines */
   if (horz_grid_line_width > 0.0)

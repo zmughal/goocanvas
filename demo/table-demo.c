@@ -29,6 +29,7 @@ create_item (GooCanvasItem *table,
   GooCanvasItem *item;
 
   item = goo_canvas_rect_new (table, 0, 0, width, height,
+			      "stroke-color", "black",
 			      "fill-color", "red",
 			      NULL);
 
@@ -76,6 +77,8 @@ create_table1 (GooCanvasItem *parent,
 		    "y-border-spacing", 1.0,
 		    "horz-grid-line-width", 1.0,
 		    "vert-grid-line-width", 2.0,
+		    "stroke-color", "blue",
+		    "fill-color", "lightblue",
 		    NULL);
     }
 
