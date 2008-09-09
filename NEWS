@@ -1,4 +1,12 @@
 
+GooCanvas 0.11	(Sep 9 2008)
+==============
+
+ o Use the tables' fill and stroke colors to paint its grid and background.
+ o Emit "children_changed" ATK signal when child items added/removed.
+ o Fixed bug when clipping the entire canvas.
+ o Got rid of the XXX_DISABLE_DEPRECATED compilation flags.
+
 
 GooCanvas 0.10	(Apr 27 2008)
 ==============
