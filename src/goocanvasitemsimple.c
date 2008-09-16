@@ -1302,6 +1302,9 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
   cairo_matrix_t matrix;
   double x_offset, y_offset;
 
+  /* Request a redraw of the existing bounds. */
+  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+
   cairo_save (cr);
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
@@ -1377,6 +1380,9 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
   simple->bounds.y1 += y_offset;
   simple->bounds.x2 += x_offset;
   simple->bounds.y2 += y_offset;
+
+  /* Request a redraw of the new bounds. */
+  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
 }
 
 

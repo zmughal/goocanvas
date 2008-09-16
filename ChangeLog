@@ -1,3 +1,13 @@
+2008-09-14  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_requested_area)
+	(goo_canvas_item_simple_allocate_area): request redraws of the old and
+	new item bounds.
+
+2008-09-09  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 0.11
+
 2008-09-02  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastable.c (goo_canvas_table_paint): use the item's
