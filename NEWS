@@ -1,4 +1,11 @@
 
+GooCanvas 0.12	(Sep 21 2008)
+==============
+
+ o Fixed redraws of tables after updates.
+ o Fixed problems compiling with libtool 2.2.
+
+
 GooCanvas 0.11	(Sep 9 2008)
 ==============
 

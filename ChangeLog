@@ -1,5 +1,9 @@
 2008-09-21  Damon Chaplin  <damon@gnome.org>
 
+	* Released GooCanvas 0.12
+
+2008-09-21  Damon Chaplin  <damon@gnome.org>
+
 	* configure.in: renamed LT_CURRENT, LT_AGE & LT_REVISION to CURRENT,
 	AGE & REVISION to avoid problems with libtool 2.2. #552725.
 
