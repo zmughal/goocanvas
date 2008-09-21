@@ -10,13 +10,13 @@ AM_INIT_AUTOMAKE
 # If the code has changed at all: REVISION++.
 # If any interfaces have changed at all: CURRENT++, REVISION=0.
 # If interfaces changed but it is backwards compatible: AGE++, else AGE=0.
-#  i.e. the library supports interfaces LT_CURRENT - LT_AGE up to LT_CURRENT.
+#  i.e. the library supports interfaces CURRENT - AGE up to CURRENT.
 #  if two libraries have identical CURRENT and AGE, then newest REVISION used.
-LT_CURRENT=4
-LT_AGE=1
-LT_REVISION=1
+CURRENT=4
+AGE=1
+REVISION=1
 
-LT_VERSION_INFO="$LT_CURRENT:$LT_REVISION:$LT_AGE"
+LT_VERSION_INFO="$CURRENT:$REVISION:$AGE"
 AC_SUBST(LT_VERSION_INFO)
 
 AM_MAINTAINER_MODE

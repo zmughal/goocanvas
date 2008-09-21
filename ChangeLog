@@ -1,3 +1,8 @@
+2008-09-21  Damon Chaplin  <damon@gnome.org>
+
+	* configure.in: renamed LT_CURRENT, LT_AGE & LT_REVISION to CURRENT,
+	AGE & REVISION to avoid problems with libtool 2.2. #552725.
+
 2008-09-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_requested_area)
