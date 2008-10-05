@@ -409,7 +409,6 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
 
   font_options = cairo_font_options_create ();
   cairo_font_options_set_hint_metrics (font_options, hint_metrics);
-  cairo_font_options_set_hint_style (font_options, CAIRO_HINT_STYLE_NONE);
   pango_cairo_context_set_font_options (context, font_options);
   cairo_font_options_destroy (font_options);
 

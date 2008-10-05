@@ -1,3 +1,11 @@
+2008-10-05  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvastext.c (goo_canvas_text_create_layout): don't turn off
+	font hinting. I don't think it has any effect on text layout so we can
+	safely leave it on. Small text should be easier to read, as well as
+	non-antialiased text. Though it does seem to sometimes produce slightly
+	odd results for rotated text (see the 8-bit text in the demo).
+
 2008-09-21  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 0.12
