@@ -3,13 +3,13 @@
                "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <refentry id="goocanvas-coordinates">
   <refmeta>
-    <refentrytitle>Coordinate Spaces</refentrytitle>
+    <refentrytitle>Coordinate Spaces and Limits</refentrytitle>
     <manvolnum>3</manvolnum>
     <refmiscinfo>GOOCANVAS Library</refmiscinfo>
   </refmeta>
 
   <refnamediv>
-    <refname>Coordinate Spaces</refname>
+    <refname>Coordinate Spaces and Limits</refname>
     <refpurpose>how coordinates are used.</refpurpose>
   </refnamediv>
 
@@ -57,5 +57,30 @@
       goo_canvas_convert_from_item_space() convert device space coordinates
       to item space and vice versa.
     </para>
+
+    <refsect2 id="coordinate-limits">
+      <title>Coordinate Limits</title>
+      <para>
+	GooCanvas uses the Cairo graphics library to render canvas items.
+	For performance reasons Cairo uses 32-bit fixed point integers
+	internally when rendering graphics, with 24 bits used for the integer
+	part of values and 8 bits used for the fractional part.
+	This means that values are limited to roughly +/- 8,388,608.
+	(Prior to Cairo 1.6 16 bits were used for the integer part and 16 bits
+	for the	fractional part, meaning values were limited to +/- 32,768.)
+      </para>
+      <para>
+	GooCanvas includes code to work around the Cairo limits to some extent.
+	Subclasses of GooCanvasItemSimple (including all builtin items) can
+	use any desired translation using a transformation matrix.
+	But item space coordinates (modified by any scale, rotation or skew)
+	must be within the Cairo limits.
+      </para>
+      <para>
+	It is possible to create new canvas items that avoid the Cairo
+	limits completely. For an example of this see the "Large Items" page
+	in the GooCanvas demo application, and the corresponding code.
+      </para>
+    </refsect2>
   </refsect1>
 </refentry>
