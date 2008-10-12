@@ -1933,6 +1933,9 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   GooCanvasTableDimensionLayoutData *rows, *columns;
   gdouble width = 0.0, height = 0.0;
   gint row, column, end;
+
+  /* Request a redraw of the existing bounds */
+  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
   
   /* We reset the bounds to 0, just in case we are hidden or aren't allocated
      any area. */
@@ -2154,6 +2157,8 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
   layout_data->children = NULL;
 
   cairo_restore (cr);
+
+  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
 }
 
 
@@ -2250,10 +2255,6 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   frame_width = MAX (layout_data->allocated_size[HORZ], layout_data->natural_size[HORZ]);
   frame_height = MAX (layout_data->allocated_size[VERT], layout_data->natural_size[VERT]);
 
-  /* Save current line width, line cap etc. for drawing items after having
-     drawn grid lines */
-  cairo_save (cr);
-
   /* Draw border and grid lines */
   if (check_clip)
     {
@@ -2264,6 +2265,10 @@ goo_canvas_table_paint (GooCanvasItem         *item,
                        layout_data->allocated_size[VERT] - 2*layout_data->border_width);
       cairo_clip (cr);
     }
+
+  /* Save current line width, line cap etc. for drawing items after having
+     drawn grid lines */
+  cairo_save (cr);
 
   /* Fill the table, if desired. */
   if (goo_canvas_style_set_fill_options (style, cr))
