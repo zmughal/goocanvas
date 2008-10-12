@@ -500,8 +500,8 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
 	    }
 	}
 
-      bounds->x2 = origin_x + logical_width;
-      bounds->y2 = origin_y + logical_height;
+      bounds->x2 = bounds->x1 + logical_width;
+      bounds->y2 = bounds->y1 + logical_height;
 
       /* Now adjust it to take into account the ink bounds. Calculate how far
 	 the ink rect extends outside each edge of the logical rect and adjust

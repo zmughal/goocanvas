@@ -1,3 +1,8 @@
+2008-10-12  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvastext.c (goo_canvas_text_create_layout): fixed calculation
+	of text bounds.
+
 2008-10-12  Armin Burgmeier  <armin@openismus.com>
 
 	* src/goocanvastable.c (goo_canvas_table_get_requested_area)
