@@ -6,12 +6,36 @@
 
 static GooCanvasItem *path1;
 
+static gboolean
+on_background_button_press (GooCanvasItem *item,
+			    GooCanvasItem *target,
+			    GdkEventButton *event,
+			    gpointer data)
+{
+  GooCanvas *canvas;
+  GList *items, *elem;
+
+  g_print ("Button Press Item: %p\n", target);
+
+  canvas = goo_canvas_item_get_canvas (item);
+  items = goo_canvas_get_items_at (canvas, event->x_root, event->y_root,
+				   FALSE);
+  for (elem = items; elem; elem = elem->next)
+    g_print ("  clicked items: %p\n", elem->data);
+  g_list_free (items);
+
+  return TRUE;
+}
+
+
 static void
 setup_canvas (GtkWidget *canvas)
 {
   GooCanvasItem *root, *path;
 
   root = goo_canvas_get_root_item (GOO_CANVAS (canvas));
+  g_signal_connect (root, "button_press_event",
+		    G_CALLBACK (on_background_button_press), NULL);
 
   /* Test the simple commands like moveto and lineto: MmZzLlHhVv. */
   path1 = goo_canvas_path_new (root, "M 20 20 L 40 40", NULL);

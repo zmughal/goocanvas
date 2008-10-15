@@ -42,17 +42,6 @@ enum {
 };
 
 static void canvas_item_interface_init   (GooCanvasItemIface  *iface);
-static void goo_canvas_path_finalize     (GObject             *object);
-static void goo_canvas_path_get_property (GObject             *object,
-					  guint                param_id,
-					  GValue              *value,
-					  GParamSpec          *pspec);
-static void goo_canvas_path_set_property (GObject             *object,
-					  guint                param_id,
-					  const GValue        *value,
-					  GParamSpec          *pspec);
-static void goo_canvas_path_create_path  (GooCanvasItemSimple *simple,
-					  cairo_t             *cr);
 
 G_DEFINE_TYPE_WITH_CODE (GooCanvasPath, goo_canvas_path,
 			 GOO_TYPE_CANVAS_ITEM_SIMPLE,
@@ -76,23 +65,6 @@ goo_canvas_path_install_common_properties (GObjectClass *gobject_class)
 							_("The sequence of path commands"),
 							NULL,
 							G_PARAM_WRITABLE));
-}
-
-
-static void
-goo_canvas_path_class_init (GooCanvasPathClass *klass)
-{
-  GObjectClass *gobject_class = (GObjectClass*) klass;
-  GooCanvasItemSimpleClass *simple_class = (GooCanvasItemSimpleClass*) klass;
-
-  gobject_class->finalize     = goo_canvas_path_finalize;
-
-  gobject_class->get_property = goo_canvas_path_get_property;
-  gobject_class->set_property = goo_canvas_path_set_property;
-
-  simple_class->simple_create_path = goo_canvas_path_create_path;
-
-  goo_canvas_path_install_common_properties (gobject_class);
 }
 
 
@@ -282,6 +254,34 @@ goo_canvas_path_create_path (GooCanvasItemSimple *simple,
 }
 
 
+static gboolean
+goo_canvas_path_is_item_at (GooCanvasItemSimple *simple,
+			    gdouble              x,
+			    gdouble              y,
+			    cairo_t             *cr,
+			    gboolean             is_pointer_event)
+{
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+  GooCanvasPointerEvents pointer_events = GOO_CANVAS_EVENTS_ALL;
+  gboolean do_fill;
+
+  /* By default only check the fill if a fill color/pattern is specified. */
+  do_fill = goo_canvas_style_set_fill_options (simple_data->style, cr);
+  if (!do_fill)
+    pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
+
+  /* If is_pointer_event is set use the pointer_events property instead. */
+  if (is_pointer_event)
+    pointer_events = simple_data->pointer_events;
+
+  goo_canvas_path_create_path (simple, cr);
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events))
+    return TRUE;
+
+  return FALSE;
+}
+
+
 static void
 goo_canvas_path_set_model    (GooCanvasItem      *item,
 			      GooCanvasItemModel *model)
@@ -310,6 +310,24 @@ static void
 canvas_item_interface_init (GooCanvasItemIface *iface)
 {
   iface->set_model      = goo_canvas_path_set_model;
+}
+
+
+static void
+goo_canvas_path_class_init (GooCanvasPathClass *klass)
+{
+  GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemSimpleClass *simple_class = (GooCanvasItemSimpleClass*) klass;
+
+  gobject_class->finalize     = goo_canvas_path_finalize;
+
+  gobject_class->get_property = goo_canvas_path_get_property;
+  gobject_class->set_property = goo_canvas_path_set_property;
+
+  simple_class->simple_create_path = goo_canvas_path_create_path;
+  simple_class->simple_is_item_at  = goo_canvas_path_is_item_at;
+
+  goo_canvas_path_install_common_properties (gobject_class);
 }
 
 

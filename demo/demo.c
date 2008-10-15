@@ -412,6 +412,7 @@ on_background_button_press (GooCanvasItem *item,
 			    gpointer data)
 {
   GooCanvas *canvas;
+  GList *items, *elem;
 
 #if 1
   g_print ("background received 'button-press' signal\n");
@@ -419,6 +420,12 @@ on_background_button_press (GooCanvasItem *item,
 
   canvas = goo_canvas_item_get_canvas (item);
   output_items_in_area (canvas, event->x_root, event->y_root);
+
+  items = goo_canvas_get_items_at (canvas, event->x_root, event->y_root,
+				   FALSE);
+  for (elem = items; elem; elem = elem->next)
+    g_print ("  clicked items: %p\n", elem->data);
+  g_list_free (items);
 
   return TRUE;
 }

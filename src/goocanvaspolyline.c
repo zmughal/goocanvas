@@ -121,16 +121,7 @@ enum {
 };
 
 
-static void goo_canvas_polyline_finalize     (GObject            *object);
 static void canvas_item_interface_init       (GooCanvasItemIface *iface);
-static void goo_canvas_polyline_get_property (GObject            *object,
-					      guint               param_id,
-					      GValue             *value,
-					      GParamSpec         *pspec);
-static void goo_canvas_polyline_set_property (GObject            *object,
-					      guint               param_id,
-					      const GValue       *value,
-					      GParamSpec         *pspec);
 
 G_DEFINE_TYPE_WITH_CODE (GooCanvasPolyline, goo_canvas_polyline,
 			 GOO_TYPE_CANVAS_ITEM_SIMPLE,
@@ -768,6 +759,10 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
   /* Check if the item should receive events. */
   if (is_pointer_event)
     pointer_events = simple_data->pointer_events;
+
+  /* If the path isn't closed, we never check the fill. */
+  if (!(polyline_data->close_path && polyline_data->num_points > 2))
+    pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
 
   goo_canvas_polyline_create_path (polyline, cr);
   if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events))

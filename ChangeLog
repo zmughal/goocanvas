@@ -1,3 +1,13 @@
+2008-10-15  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvaspolyline.c (goo_canvas_polyline_is_item_at): only check
+	the fill if the polyline path is closed. Otherwise if we call
+	cairo_in_fill() it will automatically close the path which is not what
+	we want.
+
+	* src/goocanvaspath.c (goo_canvas_path_is_item_at): only check the fill
+	if a fill color/pattern has been set, for similar reasons.
+
 2008-10-12  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastext.c (goo_canvas_text_create_layout): fixed calculation
