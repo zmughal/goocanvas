@@ -127,6 +127,7 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @key_release_event: signal emitted when a key is released.
  * @grab_broken_event: signal emitted when a grab that the item has is lost.
  * @child_notify: signal emitted when a child property is changed.
+ * @animation_finished: signal emitted when the item's animation has finished.
  *
  * #GooCanvasItemIFace holds the virtual methods that make up the
  * #GooCanvasItem interface.
@@ -288,6 +289,9 @@ struct _GooCanvasItemIface
   void			(* set_is_static)		(GooCanvasItem		*item,
 							 gboolean		 is_static);
 
+  void			(* animation_finished)		(GooCanvasItem           *item,
+							 gboolean                 stopped);
+
   /*< private >*/
 
   /* Padding for future expansion */
@@ -296,7 +300,6 @@ struct _GooCanvasItemIface
   void (*_goo_canvas_reserved3) (void);
   void (*_goo_canvas_reserved4) (void);
   void (*_goo_canvas_reserved5) (void);
-  void (*_goo_canvas_reserved6) (void);
 };
 
 

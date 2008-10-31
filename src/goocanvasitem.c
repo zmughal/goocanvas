@@ -47,6 +47,7 @@ enum {
   /* Miscellaneous signals. */
   GRAB_BROKEN_EVENT,
   CHILD_NOTIFY,
+  ANIMATION_FINISHED,
 
   LAST_SIGNAL
 };
@@ -372,6 +373,23 @@ goo_canvas_item_base_init (gpointer g_iface)
 		      g_cclosure_marshal_VOID__PARAM,
 		      G_TYPE_NONE, 1,
 		      G_TYPE_PARAM);
+
+      /**
+       * GooCanvasItem::animation-finished
+       * @item: the item that received the signal.
+       * @stopped: if the animation was explicitly stopped.
+       *
+       * Emitted when the item animation has finished.
+       */
+      canvas_item_signals[ANIMATION_FINISHED] =
+	g_signal_new ("animation-finished",
+		      iface_type,
+		      G_SIGNAL_RUN_LAST,
+		      G_STRUCT_OFFSET (GooCanvasItemIface, animation_finished),
+		      NULL, NULL,
+		      g_cclosure_marshal_VOID__BOOLEAN,
+		      G_TYPE_NONE, 1,
+		      G_TYPE_BOOLEAN);
 
 
       g_object_interface_install_property (g_iface,
@@ -1211,9 +1229,15 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	  /* This will result in a call to goo_canvas_item_free_animation()
 	     above. We've set the timeout_id to 0 so it isn't removed twice. */
 	  if (model)
-	    g_object_set_data (G_OBJECT (model), animation_key, NULL);
+	    {
+	      g_signal_emit_by_name (model, "animation-finished", FALSE);
+	      g_object_set_data (G_OBJECT (model), animation_key, NULL);
+	    }
 	  else
-	    g_object_set_data (G_OBJECT (item), animation_key, NULL);
+	    {
+	      g_signal_emit_by_name (item, "animation-finished", FALSE);
+	      g_object_set_data (G_OBJECT (item), animation_key, NULL);
+	    }
 	  break;
 
 	case GOO_CANVAS_ANIMATE_RESTART:
@@ -1392,6 +1416,8 @@ goo_canvas_item_animate        (GooCanvasItem *item,
 void
 goo_canvas_item_stop_animation (GooCanvasItem *item)
 {
+  g_signal_emit_by_name (item, "animation-finished", TRUE);
+
   /* This will result in a call to goo_canvas_item_free_animation() above. */
   g_object_set_data (G_OBJECT (item), animation_key, NULL);
 }

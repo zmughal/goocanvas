@@ -37,6 +37,7 @@ enum {
   CHANGED,
 
   CHILD_NOTIFY,
+  ANIMATION_FINISHED,
 
   LAST_SIGNAL
 };
@@ -194,6 +195,23 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      g_cclosure_marshal_VOID__PARAM,
 		      G_TYPE_NONE, 1,
 		      G_TYPE_PARAM);
+
+      /**
+       * GooCanvasItemModel::animation-finished
+       * @item: the item model that received the signal.
+       * @stopped: if the animation was explicitly stopped.
+       *
+       * Emitted when the item model animation has finished.
+       */
+      item_model_signals[ANIMATION_FINISHED] =
+	g_signal_new ("animation-finished",
+		      iface_type,
+		      G_SIGNAL_RUN_LAST,
+		      G_STRUCT_OFFSET (GooCanvasItemModelIface, animation_finished),
+		      NULL, NULL,
+		      g_cclosure_marshal_VOID__BOOLEAN,
+		      G_TYPE_NONE, 1,
+		      G_TYPE_BOOLEAN);
 
 
       g_object_interface_install_property (g_iface,
@@ -899,6 +917,8 @@ goo_canvas_item_model_animate        (GooCanvasItemModel  *model,
 void
 goo_canvas_item_model_stop_animation (GooCanvasItemModel *model)
 {
+  g_signal_emit_by_name (model, "animation-finished", TRUE);
+
   /* This will result in a call to goo_canvas_item_free_animation() above. */
   g_object_set_data (G_OBJECT (model), animation_key, NULL);
 }

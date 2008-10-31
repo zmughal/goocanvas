@@ -1,5 +1,17 @@
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemmodel.h (struct _GooCanvasItemModelIface): 
+	* src/goocanvasitem.h (struct _GooCanvasItemIface): added
+	animation_finished() signals.
+
+	* src/goocanvasitemmodel.c: 
+	* src/goocanvasitem.c: implemented "animation-finished" signals.
+
+	* demo/mv-demo-animation.c: 
+	* demo/demo-animation.c: added test for above.
+
+2008-10-31  Damon Chaplin  <damon@gnome.org>
+
 	* demo/mv-demo-arrowhead.c (on_button_press): 
 	* demo/demo-arrowhead.c (on_button_press): 
 	* demo/mv-demo.c (on_button_press): 

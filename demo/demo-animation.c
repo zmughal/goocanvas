@@ -51,6 +51,15 @@ stop_animation_clicked (GtkWidget *button, gpointer data)
 
 
 static void
+on_animation_finished (GooCanvasItem *item,
+		       gboolean       stopped,
+		       gpointer       data)
+{
+  g_print ("Animation finished stopped: %i\n", stopped);
+}
+
+
+static void
 setup_canvas (GtkWidget *canvas)
 {
   GooCanvasItem *root;
@@ -62,6 +71,8 @@ setup_canvas (GtkWidget *canvas)
 				     "fill-color", "blue",
 				     NULL);
   goo_canvas_item_translate (ellipse1, 100, 100);
+  g_signal_connect (ellipse1, "animation_finished",
+		    G_CALLBACK (on_animation_finished), NULL);
 
   rect1 = goo_canvas_rect_new (root, -10, -10, 20, 20,
 			       "fill-color", "blue",
