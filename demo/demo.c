@@ -361,7 +361,7 @@ on_button_press (GooCanvasItem *item,
 
 	  fleur = gdk_cursor_new (GDK_FLEUR);
 	  goo_canvas_pointer_grab (canvas, item,
-				   GDK_POINTER_MOTION_MASK | GDK_BUTTON_RELEASE_MASK,
+				   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 				   fleur,
 				   event->time);
 	  gdk_cursor_unref (fleur);

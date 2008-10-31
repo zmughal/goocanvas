@@ -1,5 +1,13 @@
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
+	* demo/mv-demo-arrowhead.c (on_button_press): 
+	* demo/demo-arrowhead.c (on_button_press): 
+	* demo/mv-demo.c (on_button_press): 
+	* demo/demo.c (on_button_press): use GDK_POINTER_MOTION_HINT_MASK for
+	the pointer grab, so we don't get too many events.
+
+2008-10-31  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.h: 
 	(goo_canvas_get_static_root_item): new function to get static root item.
 	(goo_canvas_set_static_root_item): new function to set static root item.
