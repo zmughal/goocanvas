@@ -105,6 +105,17 @@
 #include "goocanvasmarshal.h"
 
 
+#define GOO_CANVAS_GET_PRIVATE(canvas)  \
+   (G_TYPE_INSTANCE_GET_PRIVATE ((canvas), GOO_TYPE_CANVAS, GooCanvasPrivate))
+
+typedef struct _GooCanvasPrivate GooCanvasPrivate;
+struct _GooCanvasPrivate {
+  GooCanvasItem *static_root_item;
+  GooCanvasItemModel *static_root_item_model;
+  gint window_x, window_y;
+};
+
+
 enum {
   PROP_0,
 
@@ -133,6 +144,7 @@ enum {
 
   LAST_SIGNAL
 };
+
 
 static guint canvas_signals[LAST_SIGNAL] = { 0 };
 
@@ -201,6 +213,9 @@ static void     reconfigure_canvas	   (GooCanvas        *canvas,
 					    gboolean          redraw_if_needed);
 static void	goo_canvas_update_automatic_bounds (GooCanvas       *canvas);
 
+static void     goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
+							 gdouble       *x,
+							 gdouble       *y);
 
 G_DEFINE_TYPE (GooCanvas, goo_canvas, GTK_TYPE_CONTAINER)
 
@@ -216,6 +231,8 @@ goo_canvas_class_init (GooCanvasClass *klass)
   GObjectClass *gobject_class = (GObjectClass*) klass;
   GtkWidgetClass *widget_class = (GtkWidgetClass*) klass;
   GtkContainerClass *container_class = (GtkContainerClass*) klass;
+
+  g_type_class_add_private (gobject_class, sizeof (GooCanvasPrivate));
 
   gobject_class->dispose	     = goo_canvas_dispose;
   gobject_class->finalize	     = goo_canvas_finalize;
@@ -443,6 +460,8 @@ goo_canvas_class_init (GooCanvasClass *klass)
 static void
 goo_canvas_init (GooCanvas *canvas)
 {
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+
   /* We set GTK_CAN_FOCUS by default, so it works as people expect.
      Though developers can turn this off if not needed for efficiency. */
   GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
@@ -485,6 +504,14 @@ goo_canvas_init (GooCanvas *canvas)
      time. Apps can set their own root item if required. */
   canvas->root_item = goo_canvas_group_new (NULL, NULL);
   goo_canvas_item_set_canvas (canvas->root_item, canvas);
+
+  priv->static_root_item = goo_canvas_group_new (NULL, NULL);
+  goo_canvas_item_set_canvas (priv->static_root_item, canvas);
+  goo_canvas_item_set_is_static (priv->static_root_item, TRUE);
+  priv->static_root_item_model = NULL;
+
+  priv->window_x = 0;
+  priv->window_y = 0;
 }
 
 
@@ -509,6 +536,7 @@ static void
 goo_canvas_dispose (GObject *object)
 {
   GooCanvas *canvas = (GooCanvas*) object;
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
 
   if (canvas->model_to_item)
     {
@@ -526,6 +554,18 @@ goo_canvas_dispose (GObject *object)
     {
       g_object_unref (canvas->root_item_model);
       canvas->root_item_model = NULL;
+    }
+
+  if (priv->static_root_item)
+    {
+      g_object_unref (priv->static_root_item);
+      priv->static_root_item = NULL;
+    }
+
+  if (priv->static_root_item_model)
+    {
+      g_object_unref (priv->static_root_item_model);
+      priv->static_root_item_model = NULL;
     }
 
   if (canvas->idle_id)
@@ -954,6 +994,142 @@ goo_canvas_set_root_item    (GooCanvas		*canvas,
 
 
 /**
+ * goo_canvas_get_static_root_item:
+ * @canvas: a #GooCanvas.
+ *
+ * Gets the static root item of the canvas.
+ *
+ * Returns: the static root item, or %NULL.
+ **/
+GooCanvasItem*
+goo_canvas_get_static_root_item    (GooCanvas		*canvas)
+{
+  g_return_val_if_fail (GOO_IS_CANVAS (canvas), NULL);
+
+  return GOO_CANVAS_GET_PRIVATE (canvas)->static_root_item;
+}
+
+
+/**
+ * goo_canvas_set_static_root_item:
+ * @canvas: a #GooCanvas.
+ * @item: the static root item.
+ *
+ * Sets the static root item. Any existing static items are removed.
+ **/
+void
+goo_canvas_set_static_root_item    (GooCanvas		*canvas,
+				    GooCanvasItem       *item)
+{
+  GooCanvasPrivate *priv;
+
+  g_return_if_fail (GOO_IS_CANVAS (canvas));
+  g_return_if_fail (GOO_IS_CANVAS_ITEM (item));
+
+  priv = GOO_CANVAS_GET_PRIVATE (canvas);
+
+  if (priv->static_root_item == item)
+    return;
+
+  /* Remove any current model. */
+  if (priv->static_root_item_model)
+    {
+      g_object_unref (priv->static_root_item_model);
+      priv->static_root_item_model = NULL;
+    }
+
+  if (priv->static_root_item)
+    g_object_unref (priv->static_root_item);
+
+  priv->static_root_item = g_object_ref (item);
+  goo_canvas_item_set_canvas (priv->static_root_item, canvas);
+  goo_canvas_item_set_is_static (priv->static_root_item, TRUE);
+
+  canvas->need_update = TRUE;
+
+  if (GTK_WIDGET_REALIZED (canvas))
+    goo_canvas_update (canvas);
+
+  gtk_widget_queue_draw (GTK_WIDGET (canvas));
+}
+
+
+/**
+ * goo_canvas_get_static_root_item_model:
+ * @canvas: a #GooCanvas.
+ *
+ * Gets the static root item model of the canvas.
+ *
+ * Returns: the static root item model, or %NULL.
+ **/
+GooCanvasItemModel*
+goo_canvas_get_static_root_item_model (GooCanvas	  *canvas)
+{
+  g_return_val_if_fail (GOO_IS_CANVAS (canvas), NULL);
+
+  return GOO_CANVAS_GET_PRIVATE (canvas)->static_root_item_model;
+}
+
+
+/**
+ * goo_canvas_set_static_root_item_model:
+ * @canvas: a #GooCanvas.
+ * @model: the static root item model.
+ *
+ * Sets the static root item model. Any existing static item models are
+ * removed.
+ **/
+void
+goo_canvas_set_static_root_item_model (GooCanvas	  *canvas,
+				       GooCanvasItemModel *model)
+{
+  GooCanvasPrivate *priv;
+
+  g_return_if_fail (GOO_IS_CANVAS (canvas));
+  g_return_if_fail (GOO_IS_CANVAS_ITEM_MODEL (model));
+
+  priv = GOO_CANVAS_GET_PRIVATE (canvas);
+
+  if (priv->static_root_item_model == model)
+    return;
+
+  if (priv->static_root_item_model)
+    {
+      g_object_unref (priv->static_root_item_model);
+      priv->static_root_item_model = NULL;
+    }
+
+  if (priv->static_root_item)
+    {
+      g_object_unref (priv->static_root_item);
+      priv->static_root_item = NULL;
+    }
+
+  if (model)
+    {
+      priv->static_root_item_model = g_object_ref (model);
+
+      /* Create a hierarchy of canvas items for all the items in the model. */
+      priv->static_root_item = goo_canvas_create_item (canvas, model);
+    }
+  else
+    {
+      /* The model has been reset so we go back to a default root group. */
+      priv->static_root_item = goo_canvas_group_new (NULL, NULL);
+    }
+
+  goo_canvas_item_set_canvas (priv->static_root_item, canvas);
+  goo_canvas_item_set_is_static (priv->static_root_item, TRUE);
+  canvas->need_update = TRUE;
+
+  if (GTK_WIDGET_REALIZED (canvas))
+    goo_canvas_update (canvas);
+
+  gtk_widget_queue_draw (GTK_WIDGET (canvas));
+}
+
+
+/**
  * goo_canvas_get_item:
  * @canvas: a #GooCanvas.
  * @model: a #GooCanvasItemModel.
@@ -1014,19 +1190,30 @@ goo_canvas_get_item_at (GooCanvas     *canvas,
 			gdouble        y,
 			gboolean       is_pointer_event)
 {
+  GooCanvasPrivate *priv;
   cairo_t *cr;
   GooCanvasItem *result = NULL;
-  GList *list;
+  GList *list = NULL;
 
   g_return_val_if_fail (GOO_IS_CANVAS (canvas), NULL);
 
-  /* If no root item is set, just return NULL. */
-  if (!canvas->root_item)
-    return NULL;
-
+  priv = GOO_CANVAS_GET_PRIVATE (canvas);
   cr = goo_canvas_create_cairo_context (canvas);
-  list = goo_canvas_item_get_items_at (canvas->root_item, x, y, cr,
-				       is_pointer_event, TRUE, NULL);
+
+  if (canvas->root_item)
+    list = goo_canvas_item_get_items_at (canvas->root_item, x, y, cr,
+					 is_pointer_event, TRUE, NULL);
+
+  if (!list && priv->static_root_item)
+    {
+      gdouble static_x = x, static_y = y;
+
+      goo_canvas_convert_to_static_item_space (canvas, &static_x, &static_y);
+      list = goo_canvas_item_get_items_at (priv->static_root_item,
+					   static_x, static_y, cr,
+					   is_pointer_event, TRUE, NULL);
+    }
+
   cairo_destroy (cr);
 
   /* We just return the top item in the list. */
@@ -1059,18 +1246,29 @@ goo_canvas_get_items_at (GooCanvas     *canvas,
 			 gdouble        y,
 			 gboolean       is_pointer_event)
 {
+  GooCanvasPrivate *priv;
   cairo_t *cr;
-  GList *result;
+  GList *result = NULL;
 
   g_return_val_if_fail (GOO_IS_CANVAS (canvas), NULL);
 
-  /* If no root item is set, just return NULL. */
-  if (!canvas->root_item)
-    return NULL;
-
+  priv = GOO_CANVAS_GET_PRIVATE (canvas);
   cr = goo_canvas_create_cairo_context (canvas);
-  result = goo_canvas_item_get_items_at (canvas->root_item, x, y, cr,
-					 is_pointer_event, TRUE, NULL);
+
+  if (canvas->root_item)
+    result = goo_canvas_item_get_items_at (canvas->root_item, x, y, cr,
+					   is_pointer_event, TRUE, NULL);
+
+  if (priv->static_root_item)
+    {
+      gdouble static_x = x, static_y = y;
+
+      goo_canvas_convert_to_static_item_space (canvas, &static_x, &static_y);
+      result = goo_canvas_item_get_items_at (priv->static_root_item,
+					     static_x, static_y, cr,
+					     is_pointer_event, TRUE, result);
+    }
+
   cairo_destroy (cr);
 
   return result;
@@ -1181,6 +1379,7 @@ static void
 goo_canvas_realize (GtkWidget *widget)
 {
   GooCanvas *canvas;
+  GooCanvasPrivate *priv;
   GdkWindowAttr attributes;
   gint attributes_mask;
   gint width_pixels, height_pixels;
@@ -1189,6 +1388,7 @@ goo_canvas_realize (GtkWidget *widget)
   g_return_if_fail (GOO_IS_CANVAS (widget));
 
   canvas = GOO_CANVAS (widget);
+  priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GTK_WIDGET_SET_FLAGS (canvas, GTK_REALIZED);
 
   attributes.window_type = GDK_WINDOW_CHILD;
@@ -1227,6 +1427,9 @@ goo_canvas_realize (GtkWidget *widget)
 			 | GDK_LEAVE_NOTIFY_MASK
 			 | GDK_FOCUS_CHANGE_MASK
                          | gtk_widget_get_events (widget);
+
+  priv->window_x = attributes.x;
+  priv->window_y = attributes.y;
 
   canvas->canvas_window = gdk_window_new (widget->window,
 					  &attributes, attributes_mask);
@@ -1440,6 +1643,47 @@ recalculate_scales (GooCanvas *canvas)
 }
 
 
+static void
+request_static_redraw (GooCanvas             *canvas,
+		       const GooCanvasBounds *bounds)
+{
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+  GdkRectangle rect;
+
+  if (!GTK_WIDGET_DRAWABLE (canvas) || (bounds->x1 == bounds->x2))
+    return;
+
+  /* We subtract one from the left & top edges, in case anti-aliasing makes
+     the drawing use an extra pixel. */
+  rect.x = (double) bounds->x1 - priv->window_x - 1;
+  rect.y = (double) bounds->y1 - priv->window_y - 1;
+
+  /* We add an extra one here for the same reason. (The other extra one is to
+     round up to the next pixel.) And one for luck! */
+  rect.width = (double) bounds->x2 - priv->window_x - rect.x + 2 + 1;
+  rect.height = (double) bounds->y2 - priv->window_y - rect.y + 2 + 1;
+
+  gdk_window_invalidate_rect (canvas->canvas_window, &rect, FALSE);
+}
+
+
+static void
+request_all_static_redraws (GooCanvas *canvas)
+{
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+  GooCanvasBounds bounds;
+
+  if (!priv->static_root_item)
+    return;
+
+  /* Get the bounds of all the static items, relative to the window. */
+  goo_canvas_item_get_bounds (priv->static_root_item, &bounds);
+
+  /* Request a redraw of the old position. */
+  request_static_redraw (canvas, &bounds);
+}
+
+
 /* This makes sure the canvas is all set up correctly, i.e. the scrollbar
    adjustments are set, the canvas x & y offsets are calculated, and the
    canvas window is sized. */
@@ -1648,18 +1892,51 @@ static void
 goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 				     GooCanvas     *canvas)
 {
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   AtkObject *accessible;
 
   if (!canvas->freeze_count && GTK_WIDGET_REALIZED (canvas))
     {
+      /* Request a redraw of the bounds of the static items. */
+      request_all_static_redraws (canvas);
+
+      /* Move the static items to the new position. */
+      priv->window_x = -canvas->hadjustment->value;
+      priv->window_y = -canvas->vadjustment->value;
+
+      /* Now do the redraw. This makes sure the static items don't get dragged when the rest
+	 of the window is scrolled. */
+      if (adjustment)
+	gdk_window_process_updates (canvas->canvas_window, TRUE);
+
+      /* To avoid flicker of static items completely we could redraw the entire canvas whenever
+	 it is scrolled, by mapping the temporary window as we do when zooming. Though of course
+	 it is a lot slower. We could make this an option. (If this code is used we don't need
+	 to redraw the static items and process updates afterwards.) */
+#if 0
+      if (GTK_WIDGET_MAPPED (canvas))
+	gdk_window_show (canvas->tmp_window);
+#endif
+
       gdk_window_move (canvas->canvas_window,
 		       - canvas->hadjustment->value,
 		       - canvas->vadjustment->value);
-      
+
       /* If this is callback from a signal for one of the scrollbars, process
 	 updates here for smoother scrolling. */
       if (adjustment)
 	gdk_window_process_updates (canvas->canvas_window, TRUE);
+
+      /* Now make sure the static items are redrawn in their new position. */
+      request_all_static_redraws (canvas);
+
+      if (adjustment)
+	gdk_window_process_updates (canvas->canvas_window, TRUE);
+
+#if 0
+      if (GTK_WIDGET_MAPPED (canvas))
+	gdk_window_hide (canvas->tmp_window);
+#endif
 
       /* Notify any accessibility modules that the view has changed. */
       accessible = gtk_widget_get_accessible (GTK_WIDGET (canvas));
@@ -2095,7 +2372,8 @@ static void
 goo_canvas_update_internal (GooCanvas *canvas,
 			    cairo_t   *cr)
 {
-  GooCanvasBounds bounds;
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+  GooCanvasBounds bounds, static_bounds;
 
   /* It is possible that processing the first set of updates causes other
      updates to be scheduled, so we loop round until all are done. Items
@@ -2108,6 +2386,10 @@ goo_canvas_update_internal (GooCanvas *canvas,
       canvas->need_entire_subtree_update = FALSE;
       if (canvas->root_item)
 	goo_canvas_item_update (canvas->root_item, entire_tree, cr, &bounds);
+
+      if (priv->static_root_item)
+	goo_canvas_item_update (priv->static_root_item, entire_tree, cr,
+				&static_bounds);
     }
 
   /* If the bounds are automatically-calculated, update them now. */
@@ -2189,7 +2471,7 @@ goo_canvas_request_update (GooCanvas   *canvas)
 /**
  * goo_canvas_request_redraw:
  * @canvas: a #GooCanvas.
- * @bounds: the bounds to redraw.
+ * @bounds: the bounds to redraw, in device space.
  * 
  * This function is only intended to be used by subclasses of #GooCanvas or
  * #GooCanvasItem implementations.
@@ -2221,6 +2503,54 @@ goo_canvas_request_redraw (GooCanvas             *canvas,
   rect.y += canvas->canvas_y_offset;
 
   gdk_window_invalidate_rect (canvas->canvas_window, &rect, FALSE);
+}
+
+
+/**
+ * goo_canvas_request_item_redraw:
+ * @canvas: a #GooCanvas.
+ * @bounds: the bounds of the item to redraw.
+ * @is_static: if the item is static.
+ * 
+ * This function is only intended to be used by subclasses of #GooCanvas or
+ * #GooCanvasItem implementations.
+ *
+ * Requests that the given bounds be redrawn. If the item is static the bounds are assumed to
+ * be in the static item coordinate space, otherwise they are assumed to be in device space.
+ **/
+void
+goo_canvas_request_item_redraw (GooCanvas             *canvas,
+				const GooCanvasBounds *bounds,
+				gboolean               is_static)
+{
+  if (is_static)
+    request_static_redraw (canvas, bounds);
+  else
+    goo_canvas_request_redraw (canvas, bounds);
+}
+
+
+static void
+paint_static_items (GooCanvas      *canvas,
+		    GdkEventExpose *event,
+		    cairo_t        *cr)
+{
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+  GooCanvasBounds static_bounds;
+  double static_x_offset, static_y_offset;
+
+  cairo_save (cr);
+  cairo_identity_matrix (cr);
+  static_x_offset = floor (canvas->hadjustment->value);
+  static_y_offset = floor (canvas->vadjustment->value);
+  cairo_translate (cr, static_x_offset, static_y_offset);
+  /* FIXME: Uses pixels at present - use canvas units instead? */
+  static_bounds.x1 = event->area.x - static_x_offset;
+  static_bounds.y1 = event->area.y - static_y_offset;
+  static_bounds.x2 = event->area.width + static_bounds.x1;
+  static_bounds.y2 = event->area.height + static_bounds.y1;
+  goo_canvas_item_paint (priv->static_root_item, cr, &static_bounds, 1.0);
+  cairo_restore (cr);
 }
 
 
@@ -2300,6 +2630,8 @@ goo_canvas_expose_event (GtkWidget      *widget,
     }
 
   goo_canvas_item_paint (canvas->root_item, cr, &bounds, canvas->scale);
+
+  paint_static_items (canvas, event, cr);
 
   cairo_destroy (cr);
 
@@ -3137,6 +3469,20 @@ goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
   *x += canvas->hadjustment->value;
   *y += canvas->vadjustment->value;
   goo_canvas_convert_from_pixels (canvas, x, y);
+}
+
+
+/* Converts from device space to the coordinate space the static items are in, i.e. in pixels
+   from the top-left of the viewport window. */
+static void
+goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
+					 gdouble       *x,
+					 gdouble       *y)
+{
+  *x = ((*x - canvas->bounds.x1) * canvas->device_to_pixels_x)
+    + canvas->canvas_x_offset - canvas->hadjustment->value;
+  *y = ((*y - canvas->bounds.y1) * canvas->device_to_pixels_y)
+    + canvas->canvas_y_offset - canvas->vadjustment->value;
 }
 
 

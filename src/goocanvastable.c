@@ -1935,7 +1935,7 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   gint row, column, end;
 
   /* Request a redraw of the existing bounds */
-  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
   
   /* We reset the bounds to 0, just in case we are hidden or aren't allocated
      any area. */
@@ -2158,7 +2158,7 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
 
   cairo_restore (cr);
 
-  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
 }
 
 

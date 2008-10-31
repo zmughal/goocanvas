@@ -95,6 +95,8 @@ goo_canvas_item_get_simple_transform
 goo_canvas_item_set_simple_transform
 goo_canvas_item_get_bounds
 goo_canvas_item_is_visible
+goo_canvas_item_get_is_static
+goo_canvas_item_set_is_static
 
 <SUBSECTION>
 goo_canvas_item_animate
@@ -351,10 +353,20 @@ GooCanvasClass
 
 <SUBSECTION>
 goo_canvas_new
+
+<SUBSECTION>
 goo_canvas_get_root_item
 goo_canvas_set_root_item
 goo_canvas_get_root_item_model
 goo_canvas_set_root_item_model
+
+<SUBSECTION>
+goo_canvas_get_static_root_item
+goo_canvas_set_static_root_item
+goo_canvas_get_static_root_item_model
+goo_canvas_set_static_root_item_model
+
+<SUBSECTION>
 goo_canvas_get_bounds
 goo_canvas_set_bounds
 goo_canvas_get_scale
@@ -394,6 +406,7 @@ goo_canvas_unregister_widget_item
 goo_canvas_update
 goo_canvas_request_update
 goo_canvas_request_redraw
+goo_canvas_request_item_redraw
 goo_canvas_get_default_line_width
 
 <SUBSECTION Standard>

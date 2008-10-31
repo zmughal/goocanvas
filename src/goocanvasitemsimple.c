@@ -930,6 +930,9 @@ void
 goo_canvas_item_simple_changed    (GooCanvasItemSimple *item,
 				   gboolean             recompute_bounds)
 {
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+
   if (recompute_bounds)
     {
       item->need_entire_subtree_update = TRUE;
@@ -945,7 +948,7 @@ goo_canvas_item_simple_changed    (GooCanvasItemSimple *item,
   else
     {
       if (item->canvas)
-	goo_canvas_request_redraw (item->canvas, &item->bounds);
+	goo_canvas_request_item_redraw (item->canvas, &item->bounds, simple_data->is_static);
     }
 }
 
@@ -1151,6 +1154,27 @@ goo_canvas_item_simple_is_visible  (GooCanvasItem   *item)
 }
 
 
+static gboolean
+goo_canvas_item_simple_get_is_static  (GooCanvasItem   *item)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+
+  return simple_data->is_static;
+}
+
+
+static void
+goo_canvas_item_simple_set_is_static  (GooCanvasItem   *item,
+				       gboolean         is_static)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+
+  simple_data->is_static = is_static;
+}
+
+
 /**
  * goo_canvas_item_simple_check_style:
  * @item: a #GooCanvasItemSimple.
@@ -1258,7 +1282,7 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
   if (entire_tree || simple->need_update)
     {
       /* Request a redraw of the existing bounds. */
-      goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
 
       cairo_save (cr);
       if (simple_data->transform)
@@ -1285,7 +1309,7 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
       cairo_restore (cr);
 
       /* Request a redraw of the new bounds. */
-      goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
     }
 
   *bounds = simple->bounds;
@@ -1303,7 +1327,7 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
   double x_offset, y_offset;
 
   /* Request a redraw of the existing bounds. */
-  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
 
   cairo_save (cr);
   if (simple_data->transform)
@@ -1373,6 +1397,7 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
 					   gdouble                y_offset)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
   /* Simple items can't resize at all, so we just adjust the bounds x & y
      positions here, and let the item be clipped if necessary. */
@@ -1382,7 +1407,7 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
   simple->bounds.y2 += y_offset;
 
   /* Request a redraw of the new bounds. */
-  goo_canvas_request_redraw (simple->canvas, &simple->bounds);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
 }
 
 
@@ -1568,6 +1593,8 @@ canvas_item_interface_init (GooCanvasItemIface *iface)
   iface->get_style          = goo_canvas_item_simple_get_style;
   iface->set_style          = goo_canvas_item_simple_set_style;
   iface->is_visible         = goo_canvas_item_simple_is_visible;
+  iface->get_is_static	    = goo_canvas_item_simple_get_is_static;
+  iface->set_is_static	    = goo_canvas_item_simple_set_is_static;
 
   iface->get_model          = goo_canvas_item_simple_get_model;
   iface->set_model          = goo_canvas_item_simple_set_model_internal;

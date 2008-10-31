@@ -203,6 +203,14 @@ GooCanvasItemModel* goo_canvas_get_root_item_model (GooCanvas	       *canvas);
 void                goo_canvas_set_root_item_model (GooCanvas	       *canvas,
 						    GooCanvasItemModel *model);
 
+GooCanvasItem*  goo_canvas_get_static_root_item    (GooCanvas		*canvas);
+void            goo_canvas_set_static_root_item    (GooCanvas		*canvas,
+						    GooCanvasItem      *item);
+
+GooCanvasItemModel* goo_canvas_get_static_root_item_model (GooCanvas	       *canvas);
+void                goo_canvas_set_static_root_item_model (GooCanvas	       *canvas,
+							   GooCanvasItemModel *model);
+
 GooCanvasItem*  goo_canvas_get_item	    (GooCanvas		*canvas,
 					     GooCanvasItemModel *model);
 GooCanvasItem*  goo_canvas_get_item_at	    (GooCanvas		*canvas,
@@ -298,6 +306,9 @@ void		goo_canvas_update	    (GooCanvas		*canvas);
 void		goo_canvas_request_update   (GooCanvas		*canvas);
 void		goo_canvas_request_redraw   (GooCanvas		*canvas,
 					     const GooCanvasBounds *bounds);
+void		goo_canvas_request_item_redraw   (GooCanvas		*canvas,
+						  const GooCanvasBounds *bounds,
+						  gboolean               is_static);
 gdouble         goo_canvas_get_default_line_width (GooCanvas    *canvas);
 
 

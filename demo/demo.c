@@ -1326,6 +1326,40 @@ setup_images (GooCanvasItem *root)
 }
 
 
+static void
+setup_static_items (GooCanvas *canvas)
+{
+  GooCanvasItem *static_root, *item;
+
+  static_root = goo_canvas_get_static_root_item (canvas);
+
+  item = goo_canvas_polyline_new_line (static_root,
+				       40.0, 410.0,
+				       40.0, 330.0,
+				       "stroke-color", "midnightblue",
+				       "line-width", 3.0,
+				       "end-arrow", TRUE,
+				       "arrow-tip-length", 3.0,
+				       "arrow-length", 4.0,
+				       "arrow-width", 3.5,
+				       NULL);
+  setup_item_signals (item);
+
+  item = goo_canvas_polyline_new_line (static_root,
+				       32.0, 370.0,
+				       48.0, 370.0,
+				       "stroke-color", "midnightblue",
+				       "line-width", 3.0,
+				       NULL);
+  setup_item_signals (item);
+
+  item = goo_canvas_text_new (static_root, "N", 40, 320, -1, GTK_ANCHOR_S,
+			      "font", "Sans 12",
+			      NULL);
+  setup_item_signals (item);
+}
+
+
 /* This checks that the rgba color properties work properly, i.e. the value
    written to them is the same when read back out. */
 static void
@@ -1423,6 +1457,7 @@ setup_canvas (GooCanvas *canvas)
   setup_texts (root); 
   setup_images (root);
   setup_invisible_texts (root);
+  setup_static_items (canvas);
 #endif
 
   test_color_properties (root);

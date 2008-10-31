@@ -109,6 +109,8 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @get_style: gets the item's style.
  * @set_style: sets the item's style.
  * @is_visible: returns %TRUE if the item is currently visible.
+ * @get_is_static: returns %TRUE if the item is static.
+ * @set_is_static: notifies the item whether it is static or not.
  * @get_requested_height: returns the requested height of the item,
  *  given a particular allocated width, using the parent's coordinate space.
  * @get_model: gets the model that the canvas item is viewing.
@@ -280,6 +282,14 @@ struct _GooCanvasItemIface
 							 gpointer /*GtkTooltip*/		*tooltip);
 
 
+  /*< public >*/
+
+  gboolean		(* get_is_static)		(GooCanvasItem		*item);
+  void			(* set_is_static)		(GooCanvasItem		*item,
+							 gboolean		 is_static);
+
+  /*< private >*/
+
   /* Padding for future expansion */
   void (*_goo_canvas_reserved1) (void);
   void (*_goo_canvas_reserved2) (void);
@@ -287,8 +297,6 @@ struct _GooCanvasItemIface
   void (*_goo_canvas_reserved4) (void);
   void (*_goo_canvas_reserved5) (void);
   void (*_goo_canvas_reserved6) (void);
-  void (*_goo_canvas_reserved7) (void);
-  void (*_goo_canvas_reserved8) (void);
 };
 
 
@@ -445,6 +453,9 @@ void		   goo_canvas_item_allocate_area      (GooCanvasItem	     *item,
 						       gdouble                x_offset,
 						       gdouble                y_offset);
 
+gboolean	   goo_canvas_item_get_is_static	(GooCanvasItem		*item);
+void		   goo_canvas_item_set_is_static	(GooCanvasItem		*item,
+							 gboolean		 is_static);
 
 
 /*

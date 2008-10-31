@@ -676,6 +676,49 @@ goo_canvas_item_set_parent (GooCanvasItem *item,
 
 
 /**
+ * goo_canvas_item_get_is_static:
+ * @item: an item.
+ * 
+ * Returns %TRUE if the item is static. Static items do not move or change
+ * size when the canvas is scrolled or the scale changes.
+ *
+ * Returns: %TRUE if the item is static.
+ **/
+gboolean
+goo_canvas_item_get_is_static	(GooCanvasItem		*item)
+{
+  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+
+  if (iface->get_is_static)
+    return iface->get_is_static (item);
+  return FALSE;
+}
+
+
+/**
+ * goo_canvas_item_set_is_static:
+ * @item: an item.
+ * @is_static: if the item is static.
+ * 
+ * Notifies the item that it is static. Static items do not move or change
+ * size when the canvas is scrolled or the scale changes.
+ *
+ * Container items such as #GooCanvasGroup should call this function when
+ * children are added, to notify children whether they are static or not.
+ * Containers should also pass on any changes in their own status to children.
+ **/
+void
+goo_canvas_item_set_is_static	(GooCanvasItem		*item,
+				 gboolean		 is_static)
+{
+  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+
+  if (iface->set_is_static)
+    iface->set_is_static (item, is_static);
+}
+
+
+/**
  * goo_canvas_item_remove:
  * @item: an item.
  * 
@@ -1554,7 +1597,7 @@ goo_canvas_item_update      (GooCanvasItem   *item,
  * goo_canvas_item_paint:
  * @item: a #GooCanvasItem.
  * @cr: a cairo context.
- * @bounds: the bounds that need to be repainted.
+ * @bounds: the bounds that need to be repainted, in device space.
  * @scale: the scale to use to determine whether an item should be painted.
  *  See #GooCanvasItem:visibility-threshold.
  * 

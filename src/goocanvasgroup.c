@@ -151,6 +151,7 @@ goo_canvas_group_add_child     (GooCanvasItem  *item,
 				GooCanvasItem  *child,
 				gint            position)
 {
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   AtkObject *atk_obj, *child_atk_obj;
 
@@ -167,6 +168,7 @@ goo_canvas_group_add_child     (GooCanvasItem  *item,
     }
 
   goo_canvas_item_set_parent (child, item);
+  goo_canvas_item_set_is_static (child, simple->simple_data->is_static);
 
   /* Emit the "children_changed" ATK signal, if ATK is enabled. */
   atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
@@ -196,7 +198,8 @@ goo_canvas_group_move_child    (GooCanvasItem  *item,
   if (simple->canvas)
     {
       goo_canvas_item_get_bounds (child, &bounds);
-      goo_canvas_request_redraw (simple->canvas, &bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &bounds,
+				      simple->simple_data->is_static);
     }
 
   goo_canvas_util_ptr_array_move (group->items, old_position, new_position);
@@ -222,7 +225,8 @@ goo_canvas_group_remove_child  (GooCanvasItem  *item,
   if (simple->canvas)
     {
       goo_canvas_item_get_bounds (child, &bounds);
-      goo_canvas_request_redraw (simple->canvas, &bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &bounds,
+				      simple->simple_data->is_static);
     }
 
   /* Emit the "children_changed" ATK signal, if ATK is enabled. */
@@ -274,6 +278,9 @@ goo_canvas_group_set_canvas  (GooCanvasItem *item,
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   gint i;
 
+  if (simple->canvas == canvas)
+    return;
+
   simple->canvas = canvas;
 
   /* Recursively set the canvas of all child items. */
@@ -281,6 +288,29 @@ goo_canvas_group_set_canvas  (GooCanvasItem *item,
     {
       GooCanvasItem *item = group->items->pdata[i];
       goo_canvas_item_set_canvas (item, canvas);
+    }
+}
+
+
+static void
+goo_canvas_group_set_is_static  (GooCanvasItem *item,
+				 gboolean       is_static)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+  GooCanvasGroup *group = (GooCanvasGroup*) item;
+  gint i;
+
+  if (simple_data->is_static == is_static)
+    return;
+
+  simple_data->is_static = is_static;
+
+  /* Recursively set the canvas of all child items. */
+  for (i = 0; i < group->items->len; i++)
+    {
+      GooCanvasItem *item = group->items->pdata[i];
+      goo_canvas_item_set_is_static (item, is_static);
     }
 }
 
@@ -561,6 +591,7 @@ canvas_item_interface_init (GooCanvasItemIface *iface)
   iface->paint          = goo_canvas_group_paint;
 
   iface->set_model      = goo_canvas_group_set_model;
+  iface->set_is_static  = goo_canvas_group_set_is_static;
 }
 
 

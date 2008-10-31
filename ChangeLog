@@ -1,3 +1,69 @@
+2008-10-31  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.h: 
+	(goo_canvas_get_static_root_item): new function to get static root item.
+	(goo_canvas_set_static_root_item): new function to set static root item.
+	(goo_canvas_get_static_root_item_model): new function to get static
+	root item model.
+	(goo_canvas_set_static_root_item_model): new function to set static
+	root item model.
+	(goo_canvas_request_item_redraw): new function to request a redraw of
+	an item either in device space or in the static item space.
+
+	* src/goocanvasitem.h (struct _GooCanvasItemIface): added
+	get_is_static() and set_is_static() interface methods.
+
+	* src/goocanvasitemsimple.h (struct _GooCanvasItemSimpleData): removed
+	one bit from cache_setting and used it for is_static. Hopefully that
+	won't break binary compatibility.
+
+	* src/goocanvas.c (struct _GooCanvasPrivate): added new private struct
+	with static root item & model and current window position.
+	(goo_canvas_init): init private struct and create static root item.
+	(goo_canvas_dispose): free static root item & model.
+	(goo_canvas_update_internal): update static items.
+	(goo_canvas_get_item_at): check static items as well.
+	(goo_canvas_get_items_at): check static items as well.
+	(goo_canvas_realize): store original window position in private struct.
+	(request_static_redraw): new function to request a redraw in static
+	coordinate space.
+	(request_all_static_redraws): new function to request a redraw of all
+	static items.
+	(paint_static_items): new function to paint the static items.
+	(goo_canvas_expose_event): call paint_static_items().
+	(goo_canvas_convert_to_static_item_space): new function to convert
+	coords to static space.
+	(goo_canvas_adjustment_value_changed): redraw the static items before
+	the window is scrolled, but in their new position. We do this so we
+	don't see them being dragged along when scrolling.
+	Redraw them again after the window has been moved. Hopefully we can
+	optimize this a bit in future to avoid the flickering.
+
+	* src/goocanvasitem.c (goo_canvas_item_get_is_static)
+	(goo_canvas_item_set_is_static): new functions to call the interface
+	methods if they	are implemented. The default behavior allows old code
+	to work without crashing (but old items can't be static).
+
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_is_static)
+	(goo_canvas_item_simple_set_is_static): implemented new interface
+	functions - just get/set the bit-flag.
+
+	* src/goocanvasgroup.c (goo_canvas_group_add_child): call
+	set_is_static() on new child.
+
+	* src/goocanvasgroup.c (goo_canvas_group_set_is_static): implement new
+	interface method, calling set_is_static() for all children if changed.
+
+	* src/goocanvasitemsimple.c:
+	* src/goocanvasgroup.c:
+	* src/goocanvastable.c: use new goo_canvas_request_item_redraw()
+	function so static items are redrawn correctly.
+
+	* demo/mv-demo.c (create_static_model): 
+	* demo/demo.c (setup_static_items): added some static items to test.
+	Note that dragging around when scale != 1.0 is weird as the coord
+	spaces are different, but is expected.
+
 2008-10-15  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvaspolyline.c (goo_canvas_polyline_is_item_at): only check

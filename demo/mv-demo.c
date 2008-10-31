@@ -385,7 +385,8 @@ on_item_created (GooCanvas          *canvas,
 
 
 GtkWidget *
-create_canvas_primitives (GooCanvasItemModel *model)
+create_canvas_primitives (GooCanvasItemModel *model,
+			  GooCanvasItemModel *static_model)
 {
 	GtkWidget *vbox;
 	GtkWidget *hbox;
@@ -630,6 +631,8 @@ create_canvas_primitives (GooCanvasItemModel *model)
 	/* Set the model on the canvas view. The canvas view will then create
 	   item views to render each of the items. */
 	goo_canvas_set_root_item_model (GOO_CANVAS (canvas), model);
+
+	goo_canvas_set_static_root_item_model (GOO_CANVAS (canvas), static_model);
 
 #if 0
 	g_signal_connect_after (canvas, "key_press_event",
@@ -1211,6 +1214,39 @@ setup_images (GooCanvasItemModel *root)
 }
 
 
+static GooCanvasItemModel*
+create_static_model ()
+{
+  GooCanvasItemModel *static_root, *item;
+
+  static_root = goo_canvas_group_model_new (NULL, NULL);
+
+  item = goo_canvas_polyline_model_new_line (static_root,
+					     40.0, 410.0,
+					     40.0, 330.0,
+					     "stroke-color", "midnightblue",
+					     "line-width", 3.0,
+					     "end-arrow", TRUE,
+					     "arrow-tip-length", 3.0,
+					     "arrow-length", 4.0,
+					     "arrow-width", 3.5,
+					     NULL);
+
+  item = goo_canvas_polyline_model_new_line (static_root,
+					     32.0, 370.0,
+					     48.0, 370.0,
+					     "stroke-color", "midnightblue",
+					     "line-width", 3.0,
+					     NULL);
+
+  item = goo_canvas_text_model_new (static_root, "N", 40, 320, -1, GTK_ANCHOR_S,
+				    "font", "Sans 12",
+				    NULL);
+
+  return static_root;
+}
+
+
 static void
 test_simple_transforms (GooCanvasItemModel *root)
 {
@@ -1295,7 +1331,8 @@ on_delete_event (GtkWidget *window,
 
 
 static GtkWidget*
-create_window (GooCanvasItemModel *model)
+create_window (GooCanvasItemModel *model,
+	       GooCanvasItemModel *static_model)
 {
   GtkWidget *window, *notebook;
 
@@ -1310,7 +1347,7 @@ create_window (GooCanvasItemModel *model)
   gtk_container_add (GTK_CONTAINER (window), notebook);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    create_canvas_primitives (model),
+			    create_canvas_primitives (model, static_model),
 			    gtk_label_new ("Primitives"));
 #if 1
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
@@ -1375,21 +1412,23 @@ create_window (GooCanvasItemModel *model)
 int
 main (int argc, char *argv[])
 {
-  GooCanvasItemModel *model;
+  GooCanvasItemModel *model, *static_model;
   GtkWidget *window;
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   model = create_model ();
+  static_model = create_static_model ();
 
   /* Create 2 windows to show off multiple views. */
-  window = create_window (model);
+  window = create_window (model, static_model);
 #if 1
-  window = create_window (model);
+  window = create_window (model, static_model);
 #endif
 
   g_object_unref (model);
+  g_object_unref (static_model);
 
   gtk_main ();
   return 0;
