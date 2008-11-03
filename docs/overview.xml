@@ -21,7 +21,7 @@
     </para></listitem><listitem><para>
       Uses interfaces for items and views.
     </para></listitem><listitem><para>
-      Basic items - rect/ellipse/polyline/text/image/group.
+      Basic items - rect/ellipse/polyline/text/image/grid/group.
     </para></listitem><listitem><para>
       Path item, using SVG path specification strings.
     </para></listitem><listitem><para>
@@ -50,6 +50,8 @@
       Scrolling.
     </para></listitem><listitem><para>
       Zooming.
+    </para></listitem><listitem><para>
+      Static items that don't move as the canvas is scrolled or zoomed.
     </para></listitem><listitem><para>
       Item visibility setting - on/off/above zoom threshold.
     </para></listitem><listitem><para>

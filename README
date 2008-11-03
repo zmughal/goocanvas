@@ -25,7 +25,7 @@ Features:
 
  o Optional model/view split.
  o Uses interfaces for items & views.
- o Basic items - rect/ellipse/polyline/text/image/group.
+ o Basic items - rect/ellipse/polyline/text/image/grid/group.
  o Path item, using SVG path specification strings.
  o Table item for layout of other items (similar to the GtkTable widget).
    (This also supports items whose requested height changes according to
@@ -42,6 +42,7 @@ Features:
  o Printing (output to a given cairo_t).
  o Scrolling.
  o Zooming.
+ o Static items that don't move as the canvas is scrolled or zoomed.
  o Item visibility setting - on/off/above zoom threshold.
  o Simple animation.
  o Scalable - support for thousands of items over a large canvas area.

@@ -1,5 +1,14 @@
 2008-11-03  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (emit_pointer_event): handle NULL target_item.
+
+	* src/goocanvaswidget.c: note that widgets can't be static.
+
+	* README: 
+	* docs/overview.xml: mention static items and the grid item.
+
+2008-11-03  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (goo_canvas_scroll_to_item): just return if the
 	item is static, as we can't scroll to a static item.
 	(emit_pointer_event): convert the pointer position to static item space

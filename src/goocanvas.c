@@ -2862,7 +2862,7 @@ emit_pointer_event (GooCanvas *canvas,
   goo_canvas_convert_from_pixels (canvas, x, y);
 
   /* Convert to static item space, if necessary. */
-  if (goo_canvas_item_get_is_static (target_item))
+  if (target_item && goo_canvas_item_get_is_static (target_item))
     goo_canvas_convert_to_static_item_space (canvas, x, y);
 
   /* Copy to the x_root & y_root fields. */

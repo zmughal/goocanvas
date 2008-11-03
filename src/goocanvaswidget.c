@@ -26,6 +26,8 @@
  * </para></listitem><listitem><para>
  * It doesn't have a model/view variant like the other standard items,
  * so it can only be used in a simple canvas without a model.
+ * </para></listitem><listitem><para>
+ * It can't be made a static item.
  * </para></listitem></itemizedlist>
  */
 #include <config.h>
