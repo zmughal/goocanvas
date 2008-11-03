@@ -2142,6 +2142,10 @@ goo_canvas_scroll_to_item (GooCanvas     *canvas,
   GooCanvasBounds bounds;
   gdouble hvalue, vvalue;
 
+  /* We can't scroll to static items. */
+  if (goo_canvas_item_get_is_static (item))
+    return;
+
   goo_canvas_item_get_bounds (item, &bounds);
 
   goo_canvas_convert_to_pixels (canvas, &bounds.x1, &bounds.y1);
@@ -2857,6 +2861,10 @@ emit_pointer_event (GooCanvas *canvas,
   /* Convert to the canvas coordinate space. */
   goo_canvas_convert_from_pixels (canvas, x, y);
 
+  /* Convert to static item space, if necessary. */
+  if (goo_canvas_item_get_is_static (target_item))
+    goo_canvas_convert_to_static_item_space (canvas, x, y);
+
   /* Copy to the x_root & y_root fields. */
   *x_root = *x;
   *y_root = *y;
@@ -3472,8 +3480,8 @@ goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
 }
 
 
-/* Converts from device space to the coordinate space the static items are in, i.e. in pixels
-   from the top-left of the viewport window. */
+/* Converts from the canvas coordinate space to the static item coordinate
+   space, i.e. in pixels from the top-left of the viewport window. */
 static void
 goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 					 gdouble       *x,

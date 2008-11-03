@@ -1,5 +1,16 @@
 2008-11-03  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (goo_canvas_scroll_to_item): just return if the
+	item is static, as we can't scroll to a static item.
+	(emit_pointer_event): convert the pointer position to static item space
+	for static items.
+
+	* src/goocanvasatk.c (goo_canvas_item_accessible_get_item_extents): 
+	handle static items - don't need to convert to pixels within the
+	window as they are already like that.
+
+2008-11-03  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasgrid.[hc]: new grid item.
 
 	* demo/mv-demo.c (setup_grids): 

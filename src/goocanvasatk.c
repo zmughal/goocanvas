@@ -50,15 +50,19 @@ goo_canvas_item_accessible_get_item_extents (GooCanvasItem *item,
   /* Get the bounds in device units. */
   goo_canvas_item_get_bounds (item, &bounds);
 
-  /* Convert to pixels within the entire canvas. */
-  goo_canvas_convert_to_pixels (canvas, &bounds.x1, &bounds.y1);
-  goo_canvas_convert_to_pixels (canvas, &bounds.x2, &bounds.y2);
+  /* Static items are in pixels so don't need converting. */
+  if (!goo_canvas_item_get_is_static (item))
+    {
+      /* Convert to pixels within the entire canvas. */
+      goo_canvas_convert_to_pixels (canvas, &bounds.x1, &bounds.y1);
+      goo_canvas_convert_to_pixels (canvas, &bounds.x2, &bounds.y2);
 
-  /* Convert to pixels within the visible window. */
-  bounds.x1 -= canvas->hadjustment->value;
-  bounds.y1 -= canvas->vadjustment->value;
-  bounds.x2 -= canvas->hadjustment->value;
-  bounds.y2 -= canvas->vadjustment->value;
+      /* Convert to pixels within the visible window. */
+      bounds.x1 -= canvas->hadjustment->value;
+      bounds.y1 -= canvas->vadjustment->value;
+      bounds.x2 -= canvas->hadjustment->value;
+      bounds.y2 -= canvas->vadjustment->value;
+    }
 
   /* Round up or down to integers. */
   rect->x = floor (bounds.x1);
