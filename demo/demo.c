@@ -1438,6 +1438,25 @@ test_simple_transforms (GooCanvasItem *root)
 #endif
 }
 
+
+static void
+setup_grids (GooCanvasItem *root)
+{
+  GooCanvasItem *item;
+
+  item = goo_canvas_grid_new (root, 80, 310, 90, 90, 10, 10, 5, 5,
+			      "stroke-color", "yellow",
+			      "fill-color", "pink",
+			      "border-width", 2.0,
+			      "border-color", "red",
+			      "vert-grid-line-color", "lightblue",
+			      "horz-grid-line-width", 1.0,
+			      "vert-grid-line-width", 1.0,
+			      "vert-grid-lines-on-top", TRUE,
+			      NULL);
+}
+
+
 static void
 setup_canvas (GooCanvas *canvas)
 {
@@ -1458,6 +1477,7 @@ setup_canvas (GooCanvas *canvas)
   setup_images (root);
   setup_invisible_texts (root);
   setup_static_items (canvas);
+  setup_grids (root);
 #endif
 
   test_color_properties (root);

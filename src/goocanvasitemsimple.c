@@ -432,27 +432,6 @@ goo_canvas_item_simple_finalize (GObject *object)
 }
 
 
-static guint
-convert_color (double red, double green, double blue, double alpha)
-{
-  guint red_byte, green_byte, blue_byte, alpha_byte;
-
-  red_byte = red * 256;
-  red_byte -= red_byte >> 8;
-
-  green_byte = green * 256;
-  green_byte -= green_byte >> 8;
-
-  blue_byte = blue * 256;
-  blue_byte -= blue_byte >> 8;
-
-  alpha_byte = alpha * 256;
-  alpha_byte -= alpha_byte >> 8;
-
-  return (red_byte << 24) + (green_byte << 16) + (blue_byte << 8) + alpha_byte;
-}
-
-
 static void
 goo_canvas_item_simple_get_common_property (GObject                 *object,
 					    GooCanvasItemSimpleData *simple_data,
@@ -465,9 +444,6 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
   GValue *svalue;
   gdouble line_width = 2.0;
   gchar *font = NULL;
-  cairo_pattern_t *pattern;
-  double red, green, blue, alpha;
-  guint rgba = 0;
 
   switch (prop_id)
     {
@@ -539,29 +515,15 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
       /* Convenience properties. */
     case PROP_STROKE_COLOR_RGBA:
       svalue = goo_canvas_style_get_property (style, goo_canvas_style_stroke_pattern_id);
-      if (svalue && svalue->data[0].v_pointer)
-	{
-	  pattern = svalue->data[0].v_pointer;
-	  if (cairo_pattern_get_type (pattern) == CAIRO_PATTERN_TYPE_SOLID)
-	    {
-	      cairo_pattern_get_rgba (pattern, &red, &green, &blue, &alpha);
-	      rgba = convert_color (red, green, blue, alpha);
-	    }
-	}
-      g_value_set_uint (value, rgba);
+      if (svalue)
+	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
+						value);
       break;
     case PROP_FILL_COLOR_RGBA:
       svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_pattern_id);
-      if (svalue && svalue->data[0].v_pointer)
-	{
-	  pattern = svalue->data[0].v_pointer;
-	  if (cairo_pattern_get_type (pattern) == CAIRO_PATTERN_TYPE_SOLID)
-	    {
-	      cairo_pattern_get_rgba (pattern, &red, &green, &blue, &alpha);
-	      rgba = convert_color (red, green, blue, alpha);
-	    }
-	}
-      g_value_set_uint (value, rgba);
+      if (svalue)
+	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
+						value);
       break;
 
       /* Other properties. */
@@ -630,10 +592,6 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
 					    GParamSpec              *pspec)
 {
   GooCanvasStyle *style;
-  GdkColor color = { 0, 0, 0, 0, };
-  guint rgba, red, green, blue, alpha;
-  GdkPixbuf *pixbuf;
-  cairo_surface_t *surface;
   cairo_pattern_t *pattern;
   gboolean recompute_bounds = FALSE;
   cairo_matrix_t *transform;
@@ -722,74 +680,29 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
 
       /* Convenience properties. */
     case PROP_STROKE_COLOR:
-      if (g_value_get_string (value))
-	gdk_color_parse (g_value_get_string (value), &color);
-      pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-					  color.green / 65535.0,
-					  color.blue / 65535.0);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_stroke_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_color_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
       break;
     case PROP_STROKE_COLOR_RGBA:
-      rgba = g_value_get_uint (value);
-      red   = (rgba >> 24) & 0xFF;
-      green = (rgba >> 16) & 0xFF;
-      blue  = (rgba >> 8)  & 0xFF;
-      alpha = (rgba)       & 0xFF;
-      pattern = cairo_pattern_create_rgba (red / 255.0, green / 255.0,
-					   blue / 255.0, alpha / 255.0);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_stroke_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_rgba_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
       break;
     case PROP_STROKE_PIXBUF:
-      pixbuf = g_value_get_object (value);
-      surface = goo_canvas_cairo_surface_from_pixbuf (pixbuf);
-      pattern = cairo_pattern_create_for_surface (surface);
-      cairo_surface_destroy (surface);
-      cairo_pattern_set_extend (pattern, CAIRO_EXTEND_REPEAT);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_stroke_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
       break;
+
     case PROP_FILL_COLOR:
-      if (g_value_get_string (value))
-	gdk_color_parse (g_value_get_string (value), &color);
-      pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-					  color.green / 65535.0,
-					  color.blue / 65535.0);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_color_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
       break;
     case PROP_FILL_COLOR_RGBA:
-      rgba = g_value_get_uint (value);
-      red   = (rgba >> 24) & 0xFF;
-      green = (rgba >> 16) & 0xFF;
-      blue  = (rgba >> 8)  & 0xFF;
-      alpha = (rgba)       & 0xFF;
-      pattern = cairo_pattern_create_rgba (red / 255.0, green / 255.0,
-					   blue / 255.0, alpha / 255.0);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_rgba_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
       break;
     case PROP_FILL_PIXBUF:
-      pixbuf = g_value_get_object (value);
-      surface = goo_canvas_cairo_surface_from_pixbuf (pixbuf);
-      pattern = cairo_pattern_create_for_surface (surface);
-      cairo_surface_destroy (surface);
-      cairo_pattern_set_extend (pattern, CAIRO_EXTEND_REPEAT);
-      g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-      g_value_take_boxed (&tmpval, pattern);
-      goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, &tmpval);
-      g_value_unset (&tmpval);
+      pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
       break;
 
       /* Other properties. */

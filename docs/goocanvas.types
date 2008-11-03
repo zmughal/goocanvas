@@ -37,3 +37,5 @@ goo_canvas_image_get_type
 goo_canvas_image_model_get_type
 goo_canvas_table_get_type
 goo_canvas_table_model_get_type
+goo_canvas_grid_get_type
+goo_canvas_grid_model_get_type

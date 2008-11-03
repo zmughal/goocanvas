@@ -1,3 +1,26 @@
+2008-11-03  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasgrid.[hc]: new grid item.
+
+	* demo/mv-demo.c (setup_grids): 
+	* demo/demo.c (setup_grids): added a grid.
+
+	* src/Makefile.am: added grid.
+
+	* src/goocanvas.[hc] (goo_canvas_convert_bounds_to_item_space): new
+	function to convert a bounding box in device space to a bounding box
+	in item space. Useful in paint() methods to optimize painting.
+
+	* src/goocanvasutils.c (goo_canvas_convert_colors_to_rgba)
+	(goo_canvas_get_rgba_value_from_pattern)
+	(goo_canvas_set_style_property_from_pattern)
+	(goo_canvas_create_pattern_from_color_value)
+	(goo_canvas_create_pattern_from_rgba_value)
+	(goo_canvas_create_pattern_from_pixbuf_value): new private utility
+	functions taken out of goocanvasitemsimple.c code.
+
+	* src/goocanvasitemsimple.c: use above utility functions.
+
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemmodel.h (struct _GooCanvasItemModelIface): 

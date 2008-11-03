@@ -10,6 +10,7 @@
 #include <gtk/gtk.h>
 #include <goocanvasenumtypes.h>
 #include <goocanvasellipse.h>
+#include <goocanvasgrid.h>
 #include <goocanvasgroup.h>
 #include <goocanvasimage.h>
 #include <goocanvaspath.h>
@@ -272,6 +273,9 @@ void		goo_canvas_convert_from_item_space (GooCanvas       *canvas,
 						    GooCanvasItem   *item,
 						    gdouble         *x,
 						    gdouble         *y);
+void		goo_canvas_convert_bounds_to_item_space (GooCanvas           *canvas,
+							 GooCanvasItem       *item,
+							 GooCanvasBounds     *bounds);
 
 
 /*

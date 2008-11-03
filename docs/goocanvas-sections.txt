@@ -387,6 +387,7 @@ goo_canvas_convert_to_pixels
 goo_canvas_convert_from_pixels
 goo_canvas_convert_to_item_space
 goo_canvas_convert_from_item_space
+goo_canvas_convert_bounds_to_item_space
 
 <SUBSECTION>
 goo_canvas_pointer_grab
@@ -589,6 +590,45 @@ GOO_CANVAS_IMAGE_MODEL_GET_CLASS
 
 <SUBSECTION Private>
 GooCanvasImageModelClass
+</SECTION>
+
+<SECTION>
+<FILE>goocanvasgrid</FILE>
+<TITLE>GooCanvasGrid</TITLE>
+GooCanvasGrid
+goo_canvas_grid_new
+
+<SUBSECTION Standard>
+GOO_CANVAS_GRID
+GOO_IS_CANVAS_GRID
+GOO_TYPE_CANVAS_GRID
+goo_canvas_grid_get_type
+GOO_CANVAS_GRID_CLASS
+GOO_IS_CANVAS_GRID_CLASS
+GOO_CANVAS_GRID_GET_CLASS
+
+<SUBSECTION Private>
+GooCanvasGridData
+GooCanvasGridClass
+</SECTION>
+
+<SECTION>
+<FILE>goocanvasgridmodel</FILE>
+<TITLE>GooCanvasGridModel</TITLE>
+GooCanvasGridModel
+goo_canvas_grid_model_new
+
+<SUBSECTION Standard>
+GOO_CANVAS_GRID_MODEL
+GOO_IS_CANVAS_GRID_MODEL
+GOO_TYPE_CANVAS_GRID_MODEL
+goo_canvas_grid_model_get_type
+GOO_CANVAS_GRID_MODEL_CLASS
+GOO_IS_CANVAS_GRID_MODEL_CLASS
+GOO_CANVAS_GRID_MODEL_GET_CLASS
+
+<SUBSECTION Private>
+GooCanvasGridModelClass
 </SECTION>
 
 <SECTION>

@@ -3486,22 +3486,9 @@ goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 }
 
 
-/**
- * goo_canvas_convert_to_item_space:
- * @canvas: a #GooCanvas.
- * @item: a #GooCanvasItem.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
- * 
- * Converts a coordinate from the canvas coordinate space to the given
- * item's coordinate space, applying all transformation matrices including the
- * item's own transformation matrix, if it has one.
- **/
-void
-goo_canvas_convert_to_item_space (GooCanvas     *canvas,
-				  GooCanvasItem *item,
-				  gdouble       *x,
-				  gdouble       *y)
+static void
+get_transform_to_item_space (GooCanvasItem  *item,
+			     cairo_matrix_t *transform)
 {
   GooCanvasItem *tmp = item, *parent, *child;
   GList *list = NULL, *l;
@@ -3530,8 +3517,31 @@ goo_canvas_convert_to_item_space (GooCanvas     *canvas,
     }
   g_list_free (list);
 
-  /* Now convert the coordinates. */
-  cairo_matrix_transform_point (&inverse, x, y);
+  *transform = inverse;
+}
+
+
+/**
+ * goo_canvas_convert_to_item_space:
+ * @canvas: a #GooCanvas.
+ * @item: a #GooCanvasItem.
+ * @x: a pointer to the x coordinate to convert.
+ * @y: a pointer to the y coordinate to convert.
+ * 
+ * Converts a coordinate from the canvas coordinate space to the given
+ * item's coordinate space, applying all transformation matrices including the
+ * item's own transformation matrix, if it has one.
+ **/
+void
+goo_canvas_convert_to_item_space (GooCanvas     *canvas,
+				  GooCanvasItem *item,
+				  gdouble       *x,
+				  gdouble       *y)
+{
+  cairo_matrix_t transform;
+
+  get_transform_to_item_space (item, &transform);
+  cairo_matrix_transform_point (&transform, x, y);
 }
 
 
@@ -3580,6 +3590,56 @@ goo_canvas_convert_from_item_space (GooCanvas     *canvas,
 
   /* Now convert the coordinates. */
   cairo_matrix_transform_point (&transform, x, y);
+}
+
+
+/**
+ * goo_canvas_convert_bounds_to_item_space:
+ * @canvas: a #GooCanvas.
+ * @item: a #GooCanvasItem.
+ * @bounds: the bounds in device space.
+ * 
+ * Converts the bound in device space to a bounding box in item space.
+ * This is useful in the item paint() methods to convert the bounds to be
+ * painted to the item's coordinate space.
+ **/
+void
+goo_canvas_convert_bounds_to_item_space (GooCanvas           *canvas,
+					 GooCanvasItem       *item,
+					 GooCanvasBounds     *bounds)
+{
+  GooCanvasBounds tmp_bounds = *bounds, tmp_bounds2 = *bounds;
+  cairo_matrix_t transform;
+
+  get_transform_to_item_space (item, &transform);
+
+  /* Convert the top-left and bottom-right corners to device coords. */
+  cairo_matrix_transform_point (&transform, &tmp_bounds.x1, &tmp_bounds.y1);
+  cairo_matrix_transform_point (&transform, &tmp_bounds.x2, &tmp_bounds.y2);
+
+  /* Now convert the top-right and bottom-left corners. */
+  cairo_matrix_transform_point (&transform, &tmp_bounds2.x1, &tmp_bounds2.y2);
+  cairo_matrix_transform_point (&transform, &tmp_bounds2.x2, &tmp_bounds2.y1);
+
+  /* Calculate the minimum x coordinate seen and put in x1. */
+  bounds->x1 = MIN (tmp_bounds.x1, tmp_bounds.x2);
+  bounds->x1 = MIN (bounds->x1, tmp_bounds2.x1);
+  bounds->x1 = MIN (bounds->x1, tmp_bounds2.x2);
+
+  /* Calculate the maximum x coordinate seen and put in x2. */
+  bounds->x2 = MAX (tmp_bounds.x1, tmp_bounds.x2);
+  bounds->x2 = MAX (bounds->x2, tmp_bounds2.x1);
+  bounds->x2 = MAX (bounds->x2, tmp_bounds2.x2);
+
+  /* Calculate the minimum y coordinate seen and put in y1. */
+  bounds->y1 = MIN (tmp_bounds.y1, tmp_bounds.y2);
+  bounds->y1 = MIN (bounds->y1, tmp_bounds2.y1);
+  bounds->y1 = MIN (bounds->y1, tmp_bounds2.y2);
+
+  /* Calculate the maximum y coordinate seen and put in y2. */
+  bounds->y2 = MAX (tmp_bounds.y1, tmp_bounds.y2);
+  bounds->y2 = MAX (bounds->y2, tmp_bounds2.y1);
+  bounds->y2 = MAX (bounds->y2, tmp_bounds2.y2);
 }
 
 
