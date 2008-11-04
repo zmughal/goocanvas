@@ -366,7 +366,7 @@ goo_canvas_line_dash_get_type (void)
   
   if (cairo_line_dash_type == 0)
     cairo_line_dash_type = g_boxed_type_register_static
-      ("GooCairoLineDash",
+      ("GooCanvasLineDash",
        (GBoxedCopyFunc) goo_canvas_line_dash_ref,
        (GBoxedFreeFunc) goo_canvas_line_dash_unref);
 

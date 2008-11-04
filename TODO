@@ -14,11 +14,6 @@ Bugs:
    errors. Maybe we should extend any bounds returned from cairo slightly to
    cover the maximum possible errors.
 
- o button press events are generating leave-notify and enter-notify signals.
-   Seems to be a GTK+/X problem.
-
- o The GooCairo* types are used for some properties but aren't documented.
-   Maybe we could point to the cairo docs.
 
 Features definitely needed:
 
@@ -49,7 +44,6 @@ Possible additional features:
 
  o Caching of rendered items to improve performance. Items would have a cache
    option with choices like Never, Always and WhenVisible.
- o Sticky items that don't move at all as the canvas is scrolled & zoomed.
  o Filters like in SVG, to add graphical effects.
  o Support using the same item in different places, like SVG 'use'.
  o Support using system color names, like SVG, e.g. "ActiveBorder".

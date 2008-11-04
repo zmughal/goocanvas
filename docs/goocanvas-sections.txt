@@ -732,6 +732,15 @@ GooCanvasPathCommand
 goo_canvas_parse_path_data
 goo_canvas_create_path
 
+<SUBSECTION>
+GooCairoAntialias
+GooCairoFillRule
+GooCairoHintMetrics
+GooCairoLineCap
+GooCairoLineJoin
+GooCairoOperator
+GooCairoMatrix
+GooCairoPattern
 
 <SUBSECTION Private>
 GOO_TYPE_CANVAS_POINTS

@@ -1,3 +1,13 @@
+2008-11-04  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasutils.h: added typedefs for wrappers of cairo types
+	(but ifdef'd out so not usable), so we can add docs for them.
+	And added the docs, pointing to the cairo docs.
+
+	* src/goocanvasutils.c (goo_canvas_line_dash_get_type): changed the
+	registered type	name from GooCairoLineDash to GooCanvasLineDash so the
+	docs work. The struct was already called GooCanvasLineDash.
+
 2008-11-03  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (emit_pointer_event): handle NULL target_item.
