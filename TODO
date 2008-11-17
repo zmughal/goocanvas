@@ -44,6 +44,7 @@ Possible additional features:
 
  o Caching of rendered items to improve performance. Items would have a cache
    option with choices like Never, Always and WhenVisible.
+   But don't use caches when printing.
  o Filters like in SVG, to add graphical effects.
  o Support using the same item in different places, like SVG 'use'.
  o Support using system color names, like SVG, e.g. "ActiveBorder".
