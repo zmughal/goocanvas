@@ -1,3 +1,11 @@
+2008-11-17  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c: added "redraw-when-scrolled" boolean property,
+	which makes the canvas redraw the entire window when scrolled. This
+	is useful for static items to reduce flicker, but is slower.
+	(goo_canvas_adjustment_value_changed): map/unmap the temporary window
+	to implement "redraw-when-scrolled".
+
 2008-11-04  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasutils.h: added typedefs for wrappers of cairo types

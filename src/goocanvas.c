@@ -136,7 +136,8 @@ enum {
   PROP_BACKGROUND_COLOR,
   PROP_BACKGROUND_COLOR_RGB,
   PROP_INTEGER_LAYOUT, 
-  PROP_CLEAR_BACKGROUND
+  PROP_CLEAR_BACKGROUND,
+  PROP_REDRAW_WHEN_SCROLLED
 };
 
 enum {
@@ -410,6 +411,13 @@ goo_canvas_class_init (GooCanvasClass *klass)
 							 TRUE,
 							 G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_REDRAW_WHEN_SCROLLED, 
+                                   g_param_spec_boolean ("redraw-when-scrolled",
+							 _("Redraw When Scrolled"),
+							 _("If the canvas is completely redrawn when scrolled, to reduce the flicker of static items"),
+							 FALSE,
+							 G_PARAM_READWRITE));
+
   /**
    * GooCanvas::set-scroll-adjustments
    * @canvas: the canvas.
@@ -474,6 +482,7 @@ goo_canvas_init (GooCanvas *canvas)
   canvas->crossing_event.type = GDK_LEAVE_NOTIFY;
   canvas->anchor = GTK_ANCHOR_NORTH_WEST;
   canvas->clear_background = TRUE;
+  canvas->redraw_when_scrolled = FALSE;
 
   /* Set the default bounds to a reasonable size. */
   canvas->bounds.x1 = 0.0;
@@ -743,6 +752,9 @@ goo_canvas_get_property    (GObject            *object,
     case PROP_CLEAR_BACKGROUND:
       g_value_set_boolean (value, canvas->clear_background);
       break;
+    case PROP_REDRAW_WHEN_SCROLLED:
+      g_value_set_boolean (value, canvas->redraw_when_scrolled);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -845,6 +857,9 @@ goo_canvas_set_property    (GObject            *object,
       break;
     case PROP_CLEAR_BACKGROUND:
       canvas->clear_background = g_value_get_boolean (value);
+      break;
+    case PROP_REDRAW_WHEN_SCROLLED:
+      canvas->redraw_when_scrolled = g_value_get_boolean (value);
       break;
 
     default:
@@ -1897,46 +1912,52 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 
   if (!canvas->freeze_count && GTK_WIDGET_REALIZED (canvas))
     {
-      /* Request a redraw of the bounds of the static items. */
-      request_all_static_redraws (canvas);
+      if (canvas->redraw_when_scrolled)
+	{
+	  /* Map the temporary window to stop the canvas window being scrolled.
+	     When it is unmapped the entire canvas will be redrawn. */
+	  if (GTK_WIDGET_MAPPED (canvas))
+	    gdk_window_show (canvas->tmp_window);
+	}
+      else
+	{
+	  /* Request a redraw of the bounds of the static items. */
+	  request_all_static_redraws (canvas);
 
-      /* Move the static items to the new position. */
-      priv->window_x = -canvas->hadjustment->value;
-      priv->window_y = -canvas->vadjustment->value;
+	  /* Move the static items to the new position. */
+	  priv->window_x = -canvas->hadjustment->value;
+	  priv->window_y = -canvas->vadjustment->value;
 
-      /* Now do the redraw. This makes sure the static items don't get dragged when the rest
-	 of the window is scrolled. */
-      if (adjustment)
-	gdk_window_process_updates (canvas->canvas_window, TRUE);
-
-      /* To avoid flicker of static items completely we could redraw the entire canvas whenever
-	 it is scrolled, by mapping the temporary window as we do when zooming. Though of course
-	 it is a lot slower. We could make this an option. (If this code is used we don't need
-	 to redraw the static items and process updates afterwards.) */
-#if 0
-      if (GTK_WIDGET_MAPPED (canvas))
-	gdk_window_show (canvas->tmp_window);
-#endif
+	  /* Now do the redraw. This makes sure the static items don't get
+	     dragged when the rest of the window is scrolled. */
+	  if (adjustment)
+	    gdk_window_process_updates (canvas->canvas_window, TRUE);
+	}
 
       gdk_window_move (canvas->canvas_window,
 		       - canvas->hadjustment->value,
 		       - canvas->vadjustment->value);
 
-      /* If this is callback from a signal for one of the scrollbars, process
-	 updates here for smoother scrolling. */
-      if (adjustment)
-	gdk_window_process_updates (canvas->canvas_window, TRUE);
+      if (canvas->redraw_when_scrolled)
+	{
+	  /* Unmap the temporary window, causing the entire canvas to be
+	     redrawn. */
+	  if (GTK_WIDGET_MAPPED (canvas))
+	    gdk_window_hide (canvas->tmp_window);
+	}
+      else
+	{
+	  /* If this is callback from a signal for one of the scrollbars,
+	     process updates here for smoother scrolling. */
+	  if (adjustment)
+	    gdk_window_process_updates (canvas->canvas_window, TRUE);
 
-      /* Now make sure the static items are redrawn in their new position. */
-      request_all_static_redraws (canvas);
+	  /* Now ensure the static items are redrawn in their new position. */
+	  request_all_static_redraws (canvas);
 
-      if (adjustment)
-	gdk_window_process_updates (canvas->canvas_window, TRUE);
-
-#if 0
-      if (GTK_WIDGET_MAPPED (canvas))
-	gdk_window_hide (canvas->tmp_window);
-#endif
+	  if (adjustment)
+	    gdk_window_process_updates (canvas->canvas_window, TRUE);
+	}
 
       /* Notify any accessibility modules that the view has changed. */
       accessible = gtk_widget_get_accessible (GTK_WIDGET (canvas));

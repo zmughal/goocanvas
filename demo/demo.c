@@ -473,6 +473,9 @@ create_canvas_primitives ()
 		      "bounds-from-origin", FALSE,
 		      "bounds-padding", 4.0,
 		      "background-color-rgb", 0xC3C3FF,
+#if 0
+		      "redraw-when-scrolled", TRUE,
+#endif
 		      NULL);
 	goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 604, 454);
 

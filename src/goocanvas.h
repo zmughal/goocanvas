@@ -84,6 +84,10 @@ struct _GooCanvas
   /* This is TRUE if the background is cleared before painting the canvas. */
   guint clear_background : 1;
 
+  /* This is TRUE if the canvas is completely redrawn when scrolled. It is
+     useful when there are sticky items to reduce flicker, but is slower. */
+  guint redraw_when_scrolled : 1;
+
   /* This is the padding around the automatic bounds. */
   gdouble bounds_padding;
 
