@@ -49,6 +49,8 @@ enum {
   PROP_VERT_GRID_LINE_PATTERN,
   PROP_BORDER_WIDTH,
   PROP_BORDER_PATTERN,
+  PROP_SHOW_HORZ_GRID_LINES,
+  PROP_SHOW_VERT_GRID_LINES,
   PROP_VERT_GRID_LINES_ON_TOP,
 
   /* Convenience properties. */
@@ -180,6 +182,20 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						       GOO_TYPE_CAIRO_PATTERN,
 						       G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_SHOW_HORZ_GRID_LINES,
+                                   g_param_spec_boolean ("show-horz-grid-lines",
+							 _("Show Horizontal Grid Lines"),
+							 _("If the horizontal grid lines are shown"),
+							 TRUE,
+							 G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_SHOW_VERT_GRID_LINES,
+                                   g_param_spec_boolean ("show-vert-grid-lines",
+							 _("Show Vertical Grid Lines"),
+							 _("If the vertical grid lines are shown"),
+							 TRUE,
+							 G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_VERT_GRID_LINES_ON_TOP,
                                    g_param_spec_boolean ("vert-grid-lines-on-top",
 							 _("Vertical Grid Lines On Top"),
@@ -272,6 +288,8 @@ goo_canvas_grid_init_data (GooCanvasGridData *grid_data)
   grid_data->vert_grid_line_pattern = NULL;
   grid_data->border_width = -1.0;
   grid_data->border_pattern = NULL;
+  grid_data->show_horz_grid_lines = TRUE;
+  grid_data->show_vert_grid_lines = TRUE;
   grid_data->vert_grid_lines_on_top = FALSE;
 }
 
@@ -445,6 +463,12 @@ goo_canvas_grid_get_common_property (GObject              *object,
     case PROP_BORDER_PATTERN:
       g_value_set_boxed (value, grid_data->border_pattern);
       break;
+    case PROP_SHOW_HORZ_GRID_LINES:
+      g_value_set_boolean (value, grid_data->show_horz_grid_lines);
+      break;
+    case PROP_SHOW_VERT_GRID_LINES:
+      g_value_set_boolean (value, grid_data->show_vert_grid_lines);
+      break;
     case PROP_VERT_GRID_LINES_ON_TOP:
       g_value_set_boolean (value, grid_data->vert_grid_lines_on_top);
       break;
@@ -535,6 +559,12 @@ goo_canvas_grid_set_common_property (GObject              *object,
       cairo_pattern_destroy (grid_data->border_pattern);
       grid_data->border_pattern = g_value_get_boxed (value);
       cairo_pattern_reference (grid_data->border_pattern);
+      break;
+    case PROP_SHOW_HORZ_GRID_LINES:
+      grid_data->show_horz_grid_lines = g_value_get_boolean (value);
+      break;
+    case PROP_SHOW_VERT_GRID_LINES:
+      grid_data->show_vert_grid_lines = g_value_get_boolean (value);
       break;
     case PROP_VERT_GRID_LINES_ON_TOP:
       grid_data->vert_grid_lines_on_top = g_value_get_boolean (value);
@@ -662,6 +692,9 @@ paint_vertical_lines (GooCanvasItemSimple   *simple,
   double x, max_x, max_y, max_bounds_x, line_width;
   gboolean has_stroke;
 
+  if (!grid_data->show_vert_grid_lines)
+    return;
+
   max_x = grid_data->x + grid_data->width;
   max_y = grid_data->y + grid_data->height;
 
@@ -716,6 +749,9 @@ paint_horizontal_lines (GooCanvasItemSimple   *simple,
   GooCanvasGridData *grid_data = grid->grid_data;
   double y, max_x, max_y, max_bounds_y, line_width;
   gboolean has_stroke;
+
+  if (!grid_data->show_horz_grid_lines)
+    return;
 
   max_x = grid_data->x + grid_data->width;
   max_y = grid_data->y + grid_data->height;

@@ -38,6 +38,10 @@ struct _GooCanvasGridData
   /* The color/pattern for the border, or NULL to use the stroke color. */
   cairo_pattern_t *border_pattern;
 
+  /* If the horizontal and vertical grid lines should be shown. */
+  guint show_horz_grid_lines : 1;
+  guint show_vert_grid_lines : 1;
+
   /* If vertical grid lines are drawn on top. */
   guint vert_grid_lines_on_top : 1;
 };

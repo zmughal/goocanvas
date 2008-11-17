@@ -1,5 +1,10 @@
 2008-11-17  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasgrid.c: added "show-horz-grid-lines" and
+	"show-vert-grid-lines" properties, to turn off horz/vert grid lines.
+
+2008-11-17  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (redraw_static_items_at_position): redraw each
 	group of static items separately, to stop GTK+ merging the redraw
 	rect into one massive one.
