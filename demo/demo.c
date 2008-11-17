@@ -1332,11 +1332,15 @@ setup_images (GooCanvasItem *root)
 static void
 setup_static_items (GooCanvas *canvas)
 {
-  GooCanvasItem *static_root, *item;
+  GooCanvasItem *static_root, *group, *item;
 
   static_root = goo_canvas_get_static_root_item (canvas);
 
-  item = goo_canvas_polyline_new_line (static_root,
+  /* All static items in one place in the canvas should be placed in the same
+     group. */
+  group = goo_canvas_group_new (static_root, NULL);
+
+  item = goo_canvas_polyline_new_line (group,
 				       40.0, 410.0,
 				       40.0, 330.0,
 				       "stroke-color", "midnightblue",
@@ -1348,7 +1352,7 @@ setup_static_items (GooCanvas *canvas)
 				       NULL);
   setup_item_signals (item);
 
-  item = goo_canvas_polyline_new_line (static_root,
+  item = goo_canvas_polyline_new_line (group,
 				       32.0, 370.0,
 				       48.0, 370.0,
 				       "stroke-color", "midnightblue",
@@ -1356,7 +1360,7 @@ setup_static_items (GooCanvas *canvas)
 				       NULL);
   setup_item_signals (item);
 
-  item = goo_canvas_text_new (static_root, "N", 40, 320, -1, GTK_ANCHOR_S,
+  item = goo_canvas_text_new (group, "N", 40, 320, -1, GTK_ANCHOR_S,
 			      "font", "Sans 12",
 			      NULL);
   setup_item_signals (item);

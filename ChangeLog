@@ -1,5 +1,15 @@
 2008-11-17  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (redraw_static_items_at_position): redraw each
+	group of static items separately, to stop GTK+ merging the redraw
+	rect into one massive one.
+
+	* demo/mv-demo.c (create_static_model): 
+	* demo/demo.c (setup_static_items): use a group for all the static
+	items.
+
+2008-11-17  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c: added "redraw-when-scrolled" boolean property,
 	which makes the canvas redraw the entire window when scrolled. This
 	is useful for static items to reduce flicker, but is slower.

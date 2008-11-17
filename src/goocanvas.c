@@ -1682,20 +1682,47 @@ request_static_redraw (GooCanvas             *canvas,
 }
 
 
+/* This requests a redraw of all the toplevel static items at their current
+   position, but redraws them at their given new position.
+   We redraw one item at a time to avoid GTK+ merging the rectangles into
+   one big one. */
 static void
-request_all_static_redraws (GooCanvas *canvas)
+redraw_static_items_at_position (GooCanvas *canvas,
+				 gint       x,
+				 gint       y)
 {
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GooCanvasBounds bounds;
+  GooCanvasItem *item;
+  gint n_children, i, window_x_copy, window_y_copy;
 
   if (!priv->static_root_item)
     return;
 
-  /* Get the bounds of all the static items, relative to the window. */
-  goo_canvas_item_get_bounds (priv->static_root_item, &bounds);
+  window_x_copy = priv->window_x;
+  window_y_copy = priv->window_y;
 
-  /* Request a redraw of the old position. */
-  request_static_redraw (canvas, &bounds);
+  n_children = goo_canvas_item_get_n_children (priv->static_root_item);
+  for (i = 0; i < n_children; i++)
+    {
+      item = goo_canvas_item_get_child (priv->static_root_item, i);
+
+      /* Get the bounds of all the static items, relative to the window. */
+      goo_canvas_item_get_bounds (item, &bounds);
+
+      /* Request a redraw of the old position. */
+      request_static_redraw (canvas, &bounds);
+
+      /* Redraw the item in its new position. */
+      priv->window_x = x;
+      priv->window_y = y;
+
+      gdk_window_process_updates (canvas->canvas_window, TRUE);
+
+      /* Now reset the window position. */
+      priv->window_x = window_x_copy;
+      priv->window_y = window_y_copy;
+    }
 }
 
 
@@ -1921,17 +1948,16 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	}
       else
 	{
-	  /* Request a redraw of the bounds of the static items. */
-	  request_all_static_redraws (canvas);
+	  /* Redraw the area currently occupied by the static items. But
+	     draw the static items in their new position. This stops them
+	     from being "dragged" when the window is scrolled. */
+	  redraw_static_items_at_position (canvas,
+					   -canvas->hadjustment->value,
+					   -canvas->hadjustment->value);
 
 	  /* Move the static items to the new position. */
 	  priv->window_x = -canvas->hadjustment->value;
 	  priv->window_y = -canvas->vadjustment->value;
-
-	  /* Now do the redraw. This makes sure the static items don't get
-	     dragged when the rest of the window is scrolled. */
-	  if (adjustment)
-	    gdk_window_process_updates (canvas->canvas_window, TRUE);
 	}
 
       gdk_window_move (canvas->canvas_window,
@@ -1947,16 +1973,12 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	}
       else
 	{
-	  /* If this is callback from a signal for one of the scrollbars,
-	     process updates here for smoother scrolling. */
-	  if (adjustment)
-	    gdk_window_process_updates (canvas->canvas_window, TRUE);
+	  /* Process updates here for smoother scrolling. */
+	  gdk_window_process_updates (canvas->canvas_window, TRUE);
 
 	  /* Now ensure the static items are redrawn in their new position. */
-	  request_all_static_redraws (canvas);
-
-	  if (adjustment)
-	    gdk_window_process_updates (canvas->canvas_window, TRUE);
+	  redraw_static_items_at_position (canvas, priv->window_x,
+					   priv->window_y);
 	}
 
       /* Notify any accessibility modules that the view has changed. */

@@ -415,6 +415,9 @@ create_canvas_primitives (GooCanvasItemModel *model,
 		      "bounds-from-origin", FALSE,
 		      "bounds-padding", 4.0,
 		      "background-color-rgb", 0xC3C3FF,
+#if 0
+		      "redraw-when-scrolled", TRUE,
+#endif
 		      NULL);
 	goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 604, 454);
 
@@ -1217,11 +1220,13 @@ setup_images (GooCanvasItemModel *root)
 static GooCanvasItemModel*
 create_static_model ()
 {
-  GooCanvasItemModel *static_root, *item;
+  GooCanvasItemModel *static_root, *group, *item;
 
   static_root = goo_canvas_group_model_new (NULL, NULL);
 
-  item = goo_canvas_polyline_model_new_line (static_root,
+  group = goo_canvas_group_model_new (static_root, NULL);
+
+  item = goo_canvas_polyline_model_new_line (group,
 					     40.0, 410.0,
 					     40.0, 330.0,
 					     "stroke-color", "midnightblue",
@@ -1232,14 +1237,14 @@ create_static_model ()
 					     "arrow-width", 3.5,
 					     NULL);
 
-  item = goo_canvas_polyline_model_new_line (static_root,
+  item = goo_canvas_polyline_model_new_line (group,
 					     32.0, 370.0,
 					     48.0, 370.0,
 					     "stroke-color", "midnightblue",
 					     "line-width", 3.0,
 					     NULL);
 
-  item = goo_canvas_text_model_new (static_root, "N", 40, 320, -1, GTK_ANCHOR_S,
+  item = goo_canvas_text_model_new (group, "N", 40, 320, -1, GTK_ANCHOR_S,
 				    "font", "Sans 12",
 				    NULL);
 
