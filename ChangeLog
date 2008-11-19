@@ -1,3 +1,11 @@
+2008-11-19  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_stop_animation): 
+	* src/goocanvasitem.c (goo_canvas_item_animate_cb)
+	(goo_canvas_item_stop_animation): remove the current animation data
+	before emitting "animation-finished", so signal handlers can start a
+	new animation.
+
 2008-11-17  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasgrid.c: added "show-horz-grid-lines" and

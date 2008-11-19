@@ -56,6 +56,12 @@ on_animation_finished (GooCanvasItem *item,
 		       gpointer       data)
 {
   g_print ("Animation finished stopped: %i\n", stopped);
+
+#if 0
+  /* Test starting another animation. */
+  goo_canvas_item_animate (ellipse1, 500, 200, 2, 720, TRUE, 2000, 40,
+			   GOO_CANVAS_ANIMATE_BOUNCE);
+#endif
 }
 
 
