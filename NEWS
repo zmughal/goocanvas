@@ -1,4 +1,18 @@
 
+GooCanvas 0.13	(Nov 30 2008)
+==============
+
+ o New GooCanvasGrid item for drawing grids on the canvas.
+ o Support for static items that don't move as the canvas is zoomed
+   and scrolled (this is a bit experimental).
+ o Font hinting is not turned off any more - this means smaller text should
+   be more readable. Hopefully it doesn't affect text layout.
+ o Fixed a few GooCanvasTable drawing bugs.
+ o Fixed GooCanvasText drawing, when align is set.
+ o Fixed GooCanvasPolyline is_item_at() code, so the fill isn't tested.
+ o Added "animation-finished" signals to GooCanvasItem & Model.
+
+
 GooCanvas 0.12	(Sep 21 2008)
 ==============
 

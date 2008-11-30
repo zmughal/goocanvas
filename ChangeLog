@@ -1,3 +1,7 @@
+2008-11-30  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 0.13
+
 2008-11-19  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemmodel.c (goo_canvas_item_model_stop_animation): 
