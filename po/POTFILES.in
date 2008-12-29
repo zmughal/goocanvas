@@ -3,6 +3,7 @@
 src/goocanvasatk.c
 src/goocanvas.c
 src/goocanvasellipse.c
+src/goocanvasgrid.c
 src/goocanvasgroup.c
 src/goocanvasimage.c
 src/goocanvasitem.c
