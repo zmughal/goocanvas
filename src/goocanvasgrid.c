@@ -664,15 +664,16 @@ calculate_start_position (gdouble start_pos,
 			  gdouble redraw_start_pos,
 			  gdouble line_width)
 {
-  gdouble n, result;
+  gdouble n = 0.0, result;
 
   /* We want the first position where pos + line_width/2 >= redraw_start_pos.
      i.e. start_pos + (n * step) + (line_width / 2) >= redraw_start_pos,
      or   (n * step) >= redraw_start_pos - start_pos - (line_width / 2),
      or   n >= (redraw_start_pos - start_pos - (line_width / 2) / step). */
-  n = ceil (((redraw_start_pos - start_pos - (line_width / 2.0))) / step);
+  if (step > 0.0)
+    n = ceil (((redraw_start_pos - start_pos - (line_width / 2.0))) / step);
 
-  if (n <= 0)
+  if (n <= 0.0)
     result = start_pos;
   else
     result = start_pos + (n * step);
@@ -734,6 +735,10 @@ paint_vertical_lines (GooCanvasItemSimple   *simple,
       cairo_line_to (cr, x, max_y);
       cairo_stroke (cr);
 
+      /* Avoid an infinite loop. */
+      if (grid_data->x_step <= 0.0)
+        break;
+
       x += grid_data->x_step;
     }
 }
@@ -791,6 +796,10 @@ paint_horizontal_lines (GooCanvasItemSimple   *simple,
       cairo_move_to (cr, grid_data->x, y);
       cairo_line_to (cr, max_x, y);
       cairo_stroke (cr);
+
+      /* Avoid an infinite loop. */
+      if (grid_data->y_step <= 0.0)
+        break;
 
       y += grid_data->y_step;
     }

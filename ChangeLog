@@ -1,8 +1,15 @@
+2008-12-29  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasgrid.c (calculate_start_position)
+	(paint_vertical_lines, paint_horizontal_lines): handle step <= 0.0.
+	It should now draw a single line at the start position.
+	(based on patch from Murray Cumming) #563487.
+
 2008-12-29  Jonathon Jongsma  <jonathon@quotidian.org>
 
 	* demo/Makefile.am: Fix building demos when builddir != srcdir.
 	goocanvasenumtypes.h is generated in the build dir and not the src dir
-	so we must also add the build dir to the INCLUDES.
+	so we must also add the build dir to the INCLUDES. #561401.
 
 2008-11-30  Damon Chaplin  <damon@gnome.org>
 
