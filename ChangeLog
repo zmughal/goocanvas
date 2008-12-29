@@ -1,3 +1,9 @@
+2008-12-29  Jonathon Jongsma  <jonathon@quotidian.org>
+
+	* demo/Makefile.am: Fix building demos when builddir != srcdir.
+	goocanvasenumtypes.h is generated in the build dir and not the src dir
+	so we must also add the build dir to the INCLUDES.
+
 2008-11-30  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 0.13

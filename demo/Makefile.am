@@ -2,6 +2,7 @@
 
 INCLUDES = \
 	-I$(top_srcdir)/src \
+	-I$(top_builddir)/src \
 	@PACKAGE_CFLAGS@
 
 #	-DG_DISABLE_DEPRECATED -DPANGO_DISABLE_DEPRECATED \
