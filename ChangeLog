@@ -1,3 +1,24 @@
+2009-01-12  Armin Burgmeier  <armin@openismus.com>
+
+	* src/goocanvasellipse.c:
+	* src/goocanvaspolyline.c:
+	* src/goocanvasgroup.c:
+	* src/goocanvaspath.c:
+	* src/goocanvaswidget.c:
+	* src/goocanvastext.c:
+	* src/goocanvastable.c: Added "x", "y", "width" and "height"
+	properties where they do not exist already. GooCanvasGroup clips its
+	children if they are out of the specified area, and GooCanvasText
+	clips the text. It is possible to turn off the clipping by using -1
+	for width or height, respectively, which is the default.
+
+	* demo/generic-position-demo.c:
+	* demo/mv-generic-position-demo.c:
+	* demo/Makefile.am: Added a demo showing how this can be used to
+	generically resize items using drag and drop.
+
+	(Patch from bug #555097 committed with quite a few changes by Damon)
+
 2008-12-29  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasgrid.c (calculate_start_position)

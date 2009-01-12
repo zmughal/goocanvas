@@ -9,7 +9,7 @@ INCLUDES = \
 #	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
 #	-DGTK_DISABLE_DEPRECATED
 
-noinst_PROGRAMS = demo table-demo simple-demo scalability-demo units-demo widgets-demo mv-demo mv-table-demo mv-simple-demo mv-scalability-demo
+noinst_PROGRAMS = demo table-demo generic-position-demo simple-demo scalability-demo units-demo widgets-demo mv-demo mv-table-demo mv-generic-position-demo mv-simple-demo mv-scalability-demo
 
 demo_SOURCES = \
 	demo.c demo-fifteen.c demo-scalability.c demo-grabs.c \
@@ -67,6 +67,16 @@ widgets_demo_SOURCES = \
 	widgets-demo.c
 
 widgets_demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS)
+
+generic_position_demo_SOURCES = \
+	generic-position-demo.c
+
+generic_position_demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS)
+
+mv_generic_position_demo_SOURCES = \
+	mv-generic-position-demo.c
+
+mv_generic_position_demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS)
 
 EXTRA_DIST = flower.png toroid.png
 

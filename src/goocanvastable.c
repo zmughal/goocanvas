@@ -51,6 +51,8 @@
 enum
 {
   PROP_0,
+  PROP_X,
+  PROP_Y,
   PROP_WIDTH,
   PROP_HEIGHT,
   PROP_ROW_SPACING,
@@ -164,6 +166,10 @@ struct _GooCanvasTableLayoutData
   GooCanvasTableDimensionLayoutData *dldata[2];
   GooCanvasTableChildLayoutData *children;
 
+  /* Position of the table */
+  gdouble x;
+  gdouble y;
+
   /* This is TRUE if we are rounding everything to the nearest integer. */
   gboolean integer_layout;
 
@@ -219,20 +225,11 @@ static void
 goo_canvas_table_install_common_properties (GObjectClass *gobject_class,
 					    InstallChildPropertyFunc install_child_property)
 {
-  g_object_class_install_property (gobject_class, PROP_WIDTH,
-                                   g_param_spec_double ("width",
-							_("Width"),
-							_("The requested width of the table, or -1 to use the default width"),
-							-G_MAXDOUBLE,
-							G_MAXDOUBLE, -1.0,
-							G_PARAM_READWRITE));
-  g_object_class_install_property (gobject_class, PROP_HEIGHT,
-                                   g_param_spec_double ("height",
-							_("Height"),
-							_("The requested height of the table, or -1 to use the default height"),
-							-G_MAXDOUBLE,
-							G_MAXDOUBLE, -1.0,
-							G_PARAM_READWRITE));
+  /* Override from GooCanvasGroup */
+  g_object_class_override_property (gobject_class, PROP_X, "x");
+  g_object_class_override_property (gobject_class, PROP_Y, "y");
+  g_object_class_override_property (gobject_class, PROP_WIDTH, "width");
+  g_object_class_override_property (gobject_class, PROP_HEIGHT, "height");
 
   /* FIXME: Support setting individual row/col spacing. */
   g_object_class_install_property (gobject_class, PROP_ROW_SPACING,
@@ -430,6 +427,9 @@ goo_canvas_table_init_data (GooCanvasTableData *table_data)
   table_data->children = g_array_new (0, 0, sizeof (GooCanvasTableChild));
 
   table_data->layout_data = g_slice_new (GooCanvasTableLayoutData);
+  table_data->layout_data->x = 0.0;
+  table_data->layout_data->y = 0.0;
+
   table_data->layout_data->children = NULL;
   for (d = 0; d < 2; d++)
     {
@@ -572,6 +572,12 @@ goo_canvas_table_get_common_property (GObject              *object,
 {
   switch (prop_id)
     {
+    case PROP_X:
+      g_value_set_double (value, table_data->layout_data->x);
+      break;
+    case PROP_Y:
+      g_value_set_double (value, table_data->layout_data->y);
+      break;
     case PROP_WIDTH:
       g_value_set_double (value, table_data->width);
       break;
@@ -618,7 +624,7 @@ goo_canvas_table_get_property (GObject              *object,
   GooCanvasTable *table = (GooCanvasTable*) object;
 
   goo_canvas_table_get_common_property (object, table->table_data,
-					prop_id, value, pspec);
+                                        prop_id, value, pspec);
 }
 
 
@@ -633,6 +639,12 @@ goo_canvas_table_set_common_property (GObject              *object,
 
   switch (prop_id)
     {
+    case PROP_X:
+      table_data->layout_data->x = g_value_get_double (value);
+      break;
+    case PROP_Y:
+      table_data->layout_data->y = g_value_get_double (value);
+      break;
     case PROP_WIDTH:
       table_data->width = g_value_get_double (value);
       break;
@@ -1929,7 +1941,7 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data;
+  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
   GooCanvasTableDimensionLayoutData *rows, *columns;
   gdouble width = 0.0, height = 0.0;
   gint row, column, end;
@@ -1953,6 +1965,8 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
 
+  cairo_translate (cr, layout_data->x, layout_data->y);
+
   /* Initialize the layout data, get the requested sizes of all children, and
      set the expand, shrink and empty flags. */
   goo_canvas_table_init_layout_data (table);
@@ -1964,7 +1978,6 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   goo_canvas_table_size_request_pass3 (table, HORZ);
   goo_canvas_table_size_request_pass2 (table, HORZ);
 
-  layout_data = table_data->layout_data;
   rows = layout_data->dldata[VERT];
   columns = layout_data->dldata[HORZ];
 
@@ -2049,6 +2062,8 @@ goo_canvas_table_get_requested_height (GooCanvasItem    *item,
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
 
+  cairo_translate (cr, layout_data->x, layout_data->y);
+
   /* Convert the width from the parent's coordinate space. Note that we only
      need to support a simple scale operation here. */
   if (simple_data->transform)
@@ -2132,12 +2147,14 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
 		   -(allocated_area->y1 - requested_area->y1));
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
+  cairo_translate (cr, layout_data->x, layout_data->y);
   goo_canvas_table_update_requested_heights (item, cr);
   cairo_restore (cr);
 
   cairo_save (cr);
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
+  cairo_translate (cr, layout_data->x, layout_data->y);
 
   /* Calculate the table's bounds. */
   simple->bounds.x1 = simple->bounds.y1 = 0.0;
@@ -2233,6 +2250,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   cairo_save (cr);
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
+  cairo_translate (cr, layout_data->x, layout_data->y);
 
   /* Clip with the table's clip path, if it is set. */
   if (simple_data->clip_path_commands)
@@ -2536,6 +2554,7 @@ goo_canvas_table_get_items_at (GooCanvasItem  *item,
   cairo_save (cr);
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
+  cairo_translate (cr, layout_data->x, layout_data->y);
 
   cairo_device_to_user (cr, &user_x, &user_y);
 
