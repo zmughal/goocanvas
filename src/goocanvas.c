@@ -3634,7 +3634,7 @@ goo_canvas_convert_from_item_space (GooCanvas     *canvas,
 							       &item_transform);
       if (has_transform)
 	{
-	  cairo_matrix_multiply (&transform, &transform, &item_transform);
+	  cairo_matrix_multiply (&transform, &item_transform, &transform);
 	}
     }
   g_list_free (list);

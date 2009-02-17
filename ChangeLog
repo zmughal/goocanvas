@@ -1,3 +1,9 @@
+2009-02-17  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_convert_from_item_space): changed the
+	order of the arguments to cairo_matrix_multiply(). This was broken
+	for everything except translations. #572180
+
 2009-01-12  Armin Burgmeier  <armin@openismus.com>
 
 	* src/goocanvasellipse.c:
