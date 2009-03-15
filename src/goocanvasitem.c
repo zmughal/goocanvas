@@ -119,8 +119,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::enter-notify-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse enters an item.
        *
@@ -143,8 +144,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::leave-notify-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse leaves an item.
        *
@@ -167,8 +169,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::motion-notify-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse moves within an item.
        *
@@ -191,8 +194,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::button-press-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a mouse button is pressed in an item.
        *
@@ -215,8 +219,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::button-release-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a mouse button is released in an item.
        *
@@ -396,8 +401,9 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::scroll-event
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data, with coordinates translated to canvas
-       *  coordinates.
+       * @event: the event data. The x & y fields contain the mouse position
+       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
        * usually configured to generate button press events for buttons 4 and 5

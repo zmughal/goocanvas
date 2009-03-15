@@ -1,3 +1,14 @@
+2009-03-15  Damon Chaplin  <damon@gnome.org>
+
+	* docs/coordinates.xml: 
+	* docs/architecture.xml: 
+	* docs/creating-items.xml: 
+	* src/goocanvasitemsimple.c: use the terms "canvas coordinate space" or
+	"canvas space" rather than "device space" which is a bit misleading.
+
+	* src/goocanvasitem.c: clarify the docs for the mouse position fields
+	of the event structs of the signals.
+
 2009-03-15  Gian Mario Tagliaretti  <gianmt@gnome.org>
 	(Committed by Damon with a few changes.)
 

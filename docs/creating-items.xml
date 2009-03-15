@@ -187,14 +187,14 @@
 	      set_parent() - the item's parent should be stored (though it
 	      should not add a reference to the parent).
 	  </para></listitem><listitem><para>
-	      get_bounds() - returns the bounds of the item, in device space.
+	      get_bounds() - returns the bounds of the item, in canvas space.
 	      The item should ensure that the bounds are up-to-date before
 	      returning them, calling goo_canvas_item_ensure_updated() if
 	      necessary.
 	  </para></listitem><listitem><para>
 	      update() - if the item has been changed since the last update,
 	      or if the entire_tree flag is %TRUE, the item's bounds should
-	      be recomputed (in device space). It should also request a redraw
+	      be recomputed (in canvas space). It should also request a redraw
 	      of the old bounds and the new bounds, so the display is updated
 	      appropriately. The new bounds should be returned in the bounds
 	      argument.

@@ -44,17 +44,18 @@
       #GooCanvasRect:x and #GooCanvasRect:y properties of a #GooCanvasRect
       are specified)
       is referred to as "Item Space". The coordinate space used by
-      the entire canvas is referred to as "Device Space". "Item Space"
-      and "Device Space" may or may not be the same, depending on whether
+      the entire canvas is referred to as "Canvas Space" (or "Device Space").
+      "Item Space" and "Canvas Space" may or may not be the same, depending
+      on whether
       the item or any of its ancestors have a transformation matrix set.
       (Note that the entire canvas may also be scrolled and/or zoomed,
       which means that there may be additional transformations above
-      "Device Space".)
+      "Canvas Space".)
     </para>
     <para>
       Functions are provided to convert between coordinate spaces,
       e.g. goo_canvas_convert_to_item_space() and
-      goo_canvas_convert_from_item_space() convert device space coordinates
+      goo_canvas_convert_from_item_space() convert canvas space coordinates
       to item space and vice versa.
     </para>
 

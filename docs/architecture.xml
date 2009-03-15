@@ -47,7 +47,7 @@
 	Each item in the canvas keeps a #GooCanvasBounds structure which
 	stores the bounding rectangle of the item and all of its descendants.
 	This makes it easy to find out which items in the canvas need repainting
-	or which item the mouse is over. (The bounds are stored in the device
+	or which item the mouse is over. (The bounds are stored in the canvas
 	coordinate space, which is the coordinate space of the entire canvas,
 	after any item transformation matrices have been applied.)
       </para>

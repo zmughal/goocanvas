@@ -1638,7 +1638,8 @@ goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *item,
  * This function is intended to be used by subclasses of #GooCanvasItemSimple,
  * typically in their update() or get_requested_area() methods.
  *
- * It converts the item's bounds to a bounding box in device space.
+ * It converts the item's bounds to a bounding box in the canvas (device)
+ * coordinate space.
  **/
 void
 goo_canvas_item_simple_user_bounds_to_device (GooCanvasItemSimple *item,
