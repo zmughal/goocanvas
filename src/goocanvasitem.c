@@ -48,6 +48,7 @@ enum {
   GRAB_BROKEN_EVENT,
   CHILD_NOTIFY,
   ANIMATION_FINISHED,
+  SCROLL_EVENT,
 
   LAST_SIGNAL
 };
@@ -391,6 +392,31 @@ goo_canvas_item_base_init (gpointer g_iface)
 		      G_TYPE_NONE, 1,
 		      G_TYPE_BOOLEAN);
 
+      /**
+       * GooCanvasItem::scroll-event
+       * @item: the item that received the signal.
+       * @target_item: the target of the event.
+       * @event: the event data, with coordinates translated to canvas
+       *  coordinates.
+       *
+       * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
+       * usually configured to generate button press events for buttons 4 and 5
+       * when the wheel is turned in an item.
+       *
+       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+       *  continue.
+       */
+      canvas_item_signals[SCROLL_EVENT] =
+	g_signal_new ("scroll_event",
+		      iface_type,
+		      G_SIGNAL_RUN_LAST,
+		      G_STRUCT_OFFSET (GooCanvasItemIface,
+				       scroll_event),
+		      goo_canvas_boolean_handled_accumulator, NULL,
+		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		      G_TYPE_BOOLEAN, 2,
+		      GOO_TYPE_CANVAS_ITEM,
+		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
       g_object_interface_install_property (g_iface,
 					   g_param_spec_object ("parent",

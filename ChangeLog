@@ -1,3 +1,15 @@
+2009-03-15  Gian Mario Tagliaretti  <gianmt@gnome.org>
+	(Committed by Damon with a few changes.)
+
+	* src/goocanvasitem.h (struct _GooCanvasItemIface): added
+	scroll_event() signals on items.
+
+	* src/goocanvasitem.c: implemented "scroll_event" signals on items.
+	
+	* src/goocanvas.c: implemented "scroll_event" signals on items.
+
+	* demo/demo.c: added test for above. #566110
+
 2009-02-17  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_convert_from_item_space): changed the

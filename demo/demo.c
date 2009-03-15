@@ -386,6 +386,25 @@ on_button_press (GooCanvasItem *item,
 
 
 static gboolean
+on_scroll (GooCanvasItem *item,
+	   GooCanvasItem *target,
+	   GdkEventScroll *event,
+	   gpointer data)
+{
+#if 0
+  g_print ("received 'scroll-event' signal\n");
+#endif
+
+  if (event->direction == GDK_SCROLL_UP)
+    goo_canvas_item_scale (item, 1.1, 1.1);
+  else if (event->direction == GDK_SCROLL_DOWN)
+    goo_canvas_item_scale (item, 0.909, 0.909);
+  else return FALSE;
+
+  return TRUE;
+}
+
+static gboolean
 on_button_release (GooCanvasItem *item,
 		   GooCanvasItem *target,
 		   GdkEventButton *event,
@@ -403,7 +422,6 @@ on_button_release (GooCanvasItem *item,
 
   return TRUE;
 }
-
 
 static gboolean
 on_background_button_press (GooCanvasItem *item,
@@ -1098,6 +1116,7 @@ setup_polygons (GooCanvasItem *root)
   cairo_pattern_destroy (pattern);
   goo_canvas_points_unref (points);
   setup_item_signals (polyline1);
+  
 
   points = goo_canvas_points_new (14);
   points->coords[0] = 270.0;
@@ -1157,6 +1176,9 @@ make_anchor (GooCanvasItem *root, double x, double y)
 			      "line-width", 1.0,
 			      NULL);
   setup_item_signals (item);
+
+  g_signal_connect (group, "scroll_event",
+		    G_CALLBACK (on_scroll), NULL);
 
   return group;
 }

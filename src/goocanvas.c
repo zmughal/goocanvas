@@ -2773,6 +2773,15 @@ initialize_crossing_event (GooCanvas *canvas,
       crossing_event->state  = event->crossing.state;
       break;
 
+    case GDK_SCROLL:
+      crossing_event->time   = event->scroll.time;
+      crossing_event->x      = event->scroll.x;
+      crossing_event->y      = event->scroll.y;
+      crossing_event->x_root = event->scroll.x_root;
+      crossing_event->y_root = event->scroll.y_root;
+      crossing_event->state  = event->scroll.state;
+      break;
+
     default:
       /* It must be a button press/release event. */
       crossing_event->time   = event->button.time;
@@ -2887,6 +2896,12 @@ emit_pointer_event (GooCanvas *canvas,
       y = &event.crossing.y;
       x_root = &event.crossing.x_root;
       y_root = &event.crossing.y_root;
+      break;
+    case GDK_SCROLL:
+      x = &event.scroll.x;
+      y = &event.scroll.y;
+      x_root = &event.scroll.x_root;
+      y_root = &event.scroll.y_root;
       break;
     default:
       /* It must be a button press/release event. */
@@ -3098,6 +3113,14 @@ goo_canvas_scroll	(GtkWidget      *widget,
   GooCanvas *canvas = GOO_CANVAS (widget);
   GtkAdjustment *adj;
   gdouble delta, new_value;
+
+  if (event->window == canvas->canvas_window)
+    {
+      /* See if the current item wants the scroll event. */
+      update_pointer_item (canvas, (GdkEvent*) event);
+      if (emit_pointer_event (canvas, "scroll_event", (GdkEvent*) event))
+        return TRUE;
+    }
 
   if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_DOWN)
     adj = canvas->vadjustment;

@@ -128,6 +128,8 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @grab_broken_event: signal emitted when a grab that the item has is lost.
  * @child_notify: signal emitted when a child property is changed.
  * @animation_finished: signal emitted when the item's animation has finished.
+ * @scroll_event: signal emitted when the mouse wheel is activated within
+ * the item.
  *
  * #GooCanvasItemIFace holds the virtual methods that make up the
  * #GooCanvasItem interface.
@@ -292,6 +294,10 @@ struct _GooCanvasItemIface
   void			(* animation_finished)		(GooCanvasItem           *item,
 							 gboolean                 stopped);
 
+  gboolean		(* scroll_event)		(GooCanvasItem		*item,
+							 GooCanvasItem		*target,
+							 GdkEventScroll		*event);
+
   /*< private >*/
 
   /* Padding for future expansion */
@@ -299,7 +305,6 @@ struct _GooCanvasItemIface
   void (*_goo_canvas_reserved2) (void);
   void (*_goo_canvas_reserved3) (void);
   void (*_goo_canvas_reserved4) (void);
-  void (*_goo_canvas_reserved5) (void);
 };
 
 
