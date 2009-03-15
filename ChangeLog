@@ -1,5 +1,24 @@
 2009-03-15  Damon Chaplin  <damon@gnome.org>
 
+	* Released GooCanvas 0.14
+
+2009-03-15  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_query_tooltip): new function to propagate the "query-tooltip"
+	signal up through the canvas items.
+
+	* src/goocanvasitem.[hc]: added "query-tooltip" signal and "tooltip" property.
+	* src/goocanvasitemmodel.c: added "tooltip" property.
+
+	* src/goocanvasitemsimple.c: added "tooltip" property and query_tooltip signal handler.
+
+	* configure.in: added dependancy on GTK+ 2.12 for tooltips.
+
+	* demo/mv-demo.c: 
+	* demo/demo.c: added tests for tooltips.
+
+2009-03-15  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasgrid.c: improved section docs.
 
 	* src/goocanvas.c: improved a few function docs.

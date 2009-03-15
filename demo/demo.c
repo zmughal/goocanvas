@@ -491,6 +491,7 @@ create_canvas_primitives ()
 		      "bounds-from-origin", FALSE,
 		      "bounds-padding", 4.0,
 		      "background-color-rgb", 0xC3C3FF,
+ 		      "has-tooltip", TRUE,
 #if 0
 		      "redraw-when-scrolled", TRUE,
 #endif
@@ -852,6 +853,7 @@ setup_rectangles (GooCanvasItem *root)
   item = goo_canvas_rect_new (root, 20, 30, 50, 30,
 			      "stroke-color", "red",
 			      "line-width", 8.0,
+			      "tooltip", "Red stroked rectangle",
 			      NULL);
   setup_item_signals (item);
 
@@ -860,6 +862,7 @@ setup_rectangles (GooCanvasItem *root)
 			      "fill-pattern", pattern,
 			      "stroke-color", "black",
 			      "line-width", 4.0,
+			      "tooltip", "Medium Sea Green stippled rectangle",
 			      NULL);
   cairo_pattern_destroy (pattern);
   setup_item_signals (item);
@@ -867,6 +870,7 @@ setup_rectangles (GooCanvasItem *root)
   item = goo_canvas_rect_new (root, 10, 80, 70, 60,
 			      "fill-color", "steelblue",
 			      /*"fill-pattern", NULL,*/
+			      "tooltip", "Steel Blue rectangle",
 			      NULL);
   setup_item_signals (item);
 
@@ -874,6 +878,7 @@ setup_rectangles (GooCanvasItem *root)
 			      "fill-color-rgba", 0x3cb37180,
 			      "stroke-color", "blue",
 			      "line-width", 2.0,
+			      "tooltip", "Partially transparent rectangle",
 			      NULL);
   setup_item_signals (item);
 
@@ -882,11 +887,13 @@ setup_rectangles (GooCanvasItem *root)
 			      "radius-y", 10.0,
 			      "stroke-color", "yellow",
 			      "fill-color-rgba", 0x3cb3f180,
+			      "tooltip", "Rectangle with rounded corners",
 			      NULL);
   setup_item_signals (item);
 
   item = goo_demo_item_new (root, 30, 20, 50, 30,
 			    "fill-color", "yellow",
+			    "tooltip", "Yellow demo item",
 			    NULL);
   setup_item_signals (item);
 }

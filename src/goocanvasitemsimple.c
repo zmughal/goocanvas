@@ -79,7 +79,8 @@ enum {
   PROP_DESCRIPTION,
   PROP_CAN_FOCUS,
   PROP_CLIP_PATH,
-  PROP_CLIP_FILL_RULE
+  PROP_CLIP_FILL_RULE,
+  PROP_TOOLTIP
 };
 
 static gboolean accessibility_enabled = FALSE;
@@ -286,6 +287,9 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 
   g_object_class_override_property (gobject_class, PROP_CAN_FOCUS,
 				    "can-focus");
+
+  g_object_class_override_property (gobject_class, PROP_TOOLTIP,
+				    "tooltip");
 
   /**
    * GooCanvasItemSimple:clip-path
@@ -545,6 +549,9 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
     case PROP_CLIP_FILL_RULE:
       g_value_set_enum (value, simple_data->clip_fill_rule);
       break;
+    case PROP_TOOLTIP:
+      g_value_set_string (value, simple_data->tooltip);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -733,6 +740,9 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
     case PROP_CLIP_FILL_RULE:
       simple_data->clip_fill_rule = g_value_get_enum (value);
       recompute_bounds = TRUE;
+      break;
+    case PROP_TOOLTIP:
+      simple_data->tooltip = g_value_dup_string (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1486,6 +1496,26 @@ goo_canvas_item_simple_set_model_internal    (GooCanvasItem      *item,
 }
 
 
+static gboolean
+goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
+				      gdouble         x,
+				      gdouble         y,
+				      gboolean        keyboard_tip,
+				      GtkTooltip     *tooltip)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+
+  if (simple_data->tooltip)
+    {
+      gtk_tooltip_set_markup (tooltip, simple_data->tooltip);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+
 static void
 canvas_item_interface_init (GooCanvasItemIface *iface)
 {
@@ -1511,6 +1541,8 @@ canvas_item_interface_init (GooCanvasItemIface *iface)
 
   iface->get_model          = goo_canvas_item_simple_get_model;
   iface->set_model          = goo_canvas_item_simple_set_model_internal;
+
+  iface->query_tooltip	    = goo_canvas_item_simple_query_tooltip;
 }
 
 

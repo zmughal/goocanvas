@@ -127,6 +127,7 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @key_release_event: signal emitted when a key is released.
  * @grab_broken_event: signal emitted when a grab that the item has is lost.
  * @child_notify: signal emitted when a child property is changed.
+ * @query_tooltip: signal emitted to query the tooltip of an item.
  * @animation_finished: signal emitted when the item's animation has finished.
  * @scroll_event: signal emitted when the mouse wheel is activated within
  * the item.
@@ -274,18 +275,11 @@ struct _GooCanvasItemIface
 							 GdkEventGrabBroken	*event);
   void			(* child_notify)		(GooCanvasItem		*item,
 							 GParamSpec		*pspec);
-
-  /*< private >*/
-
-  /* We might use this in future to support tooltips. */
   gboolean		(* query_tooltip)		(GooCanvasItem		*item,
 							 gdouble		 x,
 							 gdouble		 y,
 							 gboolean		 keyboard_tooltip,
-							 gpointer /*GtkTooltip*/		*tooltip);
-
-
-  /*< public >*/
+							 GtkTooltip		*tooltip);
 
   gboolean		(* get_is_static)		(GooCanvasItem		*item);
   void			(* set_is_static)		(GooCanvasItem		*item,

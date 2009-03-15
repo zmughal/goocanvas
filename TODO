@@ -19,7 +19,6 @@ Features definitely needed:
 
  o API for modifying GooCanvasPath data.
  o Editable text item - a port of GtkTextView.
- o Tooltips - I have code to support tooltips using the new API in GTK+ 2.12.
 
  o Need a function to setup a given cairo context with the defaults settings
    of a GooCanvas, e.g. default line width.

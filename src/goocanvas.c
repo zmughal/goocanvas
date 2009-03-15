@@ -201,6 +201,11 @@ static void     goo_canvas_forall          (GtkContainer     *container,
 					    gboolean          include_internals,
 					    GtkCallback       callback,
 					    gpointer          callback_data);
+static gboolean goo_canvas_query_tooltip   (GtkWidget	     *widget,
+					    gint              x,
+					    gint              y,
+					    gboolean          keyboard_tip,
+					    GtkTooltip       *tooltip);
 
 static void	goo_canvas_set_scale_internal (GooCanvas     *canvas,
 					       gdouble        scale_x,
@@ -259,6 +264,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
   widget_class->focus_in_event       = goo_canvas_focus_in;
   widget_class->focus_out_event      = goo_canvas_focus_out;
   widget_class->grab_broken_event    = goo_canvas_grab_broken;
+  widget_class->query_tooltip	     = goo_canvas_query_tooltip;
 
   container_class->remove	     = goo_canvas_remove;
   container_class->forall            = goo_canvas_forall;
@@ -4317,3 +4323,49 @@ goo_canvas_remove (GtkContainer *container,
 	}
     }
 }
+
+
+static gboolean
+goo_canvas_query_tooltip (GtkWidget  *widget,
+			  gint        x,
+			  gint        y,
+			  gboolean    keyboard_tip,
+			  GtkTooltip *tooltip)
+{
+  GooCanvas *canvas = (GooCanvas*) widget;
+  GooCanvasItem *item = canvas->pointer_item, *parent;
+  gdouble item_x = x, item_y = y;
+  gboolean tip_set = FALSE, has_transform;
+  cairo_matrix_t transform;
+
+  if (!item)
+    return FALSE;
+
+  /* Convert from pixels to the item's coordinate space. */
+  goo_canvas_convert_from_pixels (canvas, &item_x, &item_y);
+  goo_canvas_convert_to_item_space (canvas, item, &item_x, &item_y);
+
+  for (;;)
+    {
+      g_signal_emit_by_name (item, "query-tooltip", item_x, item_y,
+			     keyboard_tip, tooltip, &tip_set);
+      if (tip_set)
+	return TRUE;
+
+      parent = goo_canvas_item_get_parent (item);
+      if (!parent)
+	break;
+
+      /* Convert x & y to the parent's coordinate space. */
+      has_transform = goo_canvas_item_get_transform_for_child (parent, item,
+							       &transform);
+      if (has_transform)
+	cairo_matrix_transform_point (&transform, &item_x, &item_y);
+
+      item = parent;
+    }
+
+  /* We call the parent method in case the canvas itself has a tooltip set. */
+  return GTK_WIDGET_CLASS (goo_canvas_parent_class)->query_tooltip (widget, x, y, keyboard_tip, tooltip);
+}
+

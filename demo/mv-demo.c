@@ -415,6 +415,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 		      "bounds-from-origin", FALSE,
 		      "bounds-padding", 4.0,
 		      "background-color-rgb", 0xC3C3FF,
+ 		      "has-tooltip", TRUE,
 #if 0
 		      "redraw-when-scrolled", TRUE,
 #endif
@@ -746,6 +747,7 @@ setup_rectangles (GooCanvasItemModel *root)
   item = goo_canvas_rect_model_new (root, 20, 30, 50, 30,
 				    "stroke-color", "red",
 				    "line-width", 8.0,
+				    "tooltip", "Red stroked rectangle",
 				    NULL);
 
   pattern = create_stipple ("mediumseagreen", stipple_data);
@@ -753,17 +755,21 @@ setup_rectangles (GooCanvasItemModel *root)
 				    "fill-pattern", pattern,
 				    "stroke-color", "black",
 				    "line-width", 4.0,
+				    "tooltip", "Medium Sea Green stippled rectangle",
 				    NULL);
   cairo_pattern_destroy (pattern);
 
   item = goo_canvas_rect_model_new (root, 10, 80, 70, 60,
 				    "fill-color", "steelblue",
+				    /*"fill-pattern", NULL,*/
+				    "tooltip", "Steel Blue rectangle",
 				    NULL);
 
   item = goo_canvas_rect_model_new (root, 20, 90, 70, 60,
 				    "fill-color-rgba", 0x3cb37180,
 				    "stroke-color", "blue",
 				    "line-width", 2.0,
+				    "tooltip", "Partially transparent rectangle",
 				    NULL);
 
   item = goo_canvas_rect_model_new (root, 110, 80, 50, 30,
@@ -771,6 +777,7 @@ setup_rectangles (GooCanvasItemModel *root)
 				    "radius-y", 10.0,
 				    "stroke-color", "yellow",
 				    "fill-color-rgba", 0x3cb3f180,
+				    "tooltip", "Rectangle with rounded corners",
 				    NULL);
 }
 

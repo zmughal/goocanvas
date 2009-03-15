@@ -49,6 +49,7 @@ enum {
   CHILD_NOTIFY,
   ANIMATION_FINISHED,
   SCROLL_EVENT,
+  QUERY_TOOLTIP,
 
   LAST_SIGNAL
 };
@@ -337,6 +338,37 @@ goo_canvas_item_base_init (gpointer g_iface)
 		      GOO_TYPE_CANVAS_ITEM,
 		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
+      /**
+       * GooCanvasItem::query-tooltip:
+       * @item: the item which received the signal.
+       * @x: the x coordinate of the mouse.
+       * @y: the y coordinate of the mouse.
+       * @keyboard_mode: %TRUE if the tooltip was triggered using the keyboard.
+       * @tooltip: a #GtkTooltip.
+       *
+       * Emitted when the mouse has paused over the item for a certain amount
+       * of time, or the tooltip was requested via the keyboard.
+       *
+       * Note that if @keyboard_mode is %TRUE, the values of @x and @y are
+       * undefined and should not be used.
+       *
+       * If the item wants to display a tooltip it should update @tooltip
+       * and return %TRUE.
+       *
+       * Returns: %TRUE if the item has set a tooltip to show.
+       */
+      canvas_item_signals[QUERY_TOOLTIP] =
+	g_signal_new ("query-tooltip",
+		      iface_type,
+		      G_SIGNAL_RUN_LAST,
+		      G_STRUCT_OFFSET (GooCanvasItemIface, query_tooltip),
+		      goo_canvas_boolean_handled_accumulator, NULL,
+		      goo_canvas_marshal_BOOLEAN__DOUBLE_DOUBLE_BOOLEAN_OBJECT,
+		      G_TYPE_BOOLEAN, 4,
+		      G_TYPE_DOUBLE,
+		      G_TYPE_DOUBLE,
+		      G_TYPE_BOOLEAN,
+		      GTK_TYPE_TOOLTIP);
 
       /**
        * GooCanvasItem::grab-broken-event
@@ -483,6 +515,13 @@ goo_canvas_item_base_init (gpointer g_iface)
 								 _("If the item can take the keyboard focus"),
 								 FALSE,
 								 G_PARAM_READWRITE));
+
+      g_object_interface_install_property (g_iface,
+					   g_param_spec_string ("tooltip",
+								_("Tooltip"),
+								_("The tooltip to display for the item"),
+								NULL,
+								G_PARAM_READWRITE));
 
       _goo_canvas_style_init ();
 

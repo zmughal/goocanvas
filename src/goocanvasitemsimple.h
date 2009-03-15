@@ -22,6 +22,7 @@ G_BEGIN_DECLS
  * @transform: the transformation matrix of the item, or %NULL.
  * @clip_path_commands: an array of #GooCanvasPathCommand specifying the clip
  *  path of the item, or %NULL.
+ * @tooltip: the item's tooltip.
  * @visibility_threshold: the threshold scale setting at which to show the item
  *  (if the @visibility setting is set to %VISIBLE_ABOVE_THRESHOLD).
  * @visibility: the #GooCanvasItemVisibility setting specifying whether the
@@ -42,9 +43,6 @@ struct _GooCanvasItemSimpleData
   GooCanvasStyle *style;
   cairo_matrix_t *transform;
   GArray *clip_path_commands;
-
-  /*< private >*/
-  /* We will store tooltips here in future. */
   gchar *tooltip;
 
   /*< public >*/

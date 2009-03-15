@@ -43,6 +43,7 @@ Features:
  o Scrolling.
  o Zooming.
  o Static items that don't move as the canvas is scrolled or zoomed.
+ o Tooltips.
  o Item visibility setting - on/off/above zoom threshold.
  o Simple animation.
  o Scalable - support for thousands of items over a large canvas area.

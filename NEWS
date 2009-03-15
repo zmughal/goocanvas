@@ -1,4 +1,16 @@
 
+GooCanvas 0.14	(Mar 15 2009)
+==============
+
+ o Added support for tooltips (this means we need GTK+ 2.12).
+   (Note that there is a GTK+ bug which will cause problems with
+   tooltips on a large canvas. See bug #573294.)
+ o Added "x", "y", "width" and "height" properties to items that
+   didn't have them.
+ o Fixed bug in goo_canvas_convert_from_item_space().
+ o Added "scroll-event" signal to GooCanvasItem.
+
+
 GooCanvas 0.13	(Nov 30 2008)
 ==============
 

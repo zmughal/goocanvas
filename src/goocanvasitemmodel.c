@@ -274,6 +274,13 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 								 FALSE,
 								 G_PARAM_READWRITE));
 
+      g_object_interface_install_property (g_iface,
+					   g_param_spec_string ("tooltip",
+								_("Tooltip"),
+								_("The tooltip to display for the item"),
+								NULL,
+								G_PARAM_READWRITE));
+
       _goo_canvas_style_init ();
 
       initialized = TRUE;
