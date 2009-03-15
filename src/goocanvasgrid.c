@@ -11,6 +11,8 @@
  * @Short_Description: a grid item.
  *
  * GooCanvasGrid represents a grid item.
+ * A grid consists of a number of equally-spaced horizontal and vertical
+ * grid lines, plus an optional border.
  *
  * It is a subclass of #GooCanvasItemSimple and so inherits all of the style
  * properties such as "stroke-color", "fill-color" and "line-width".
@@ -23,6 +25,28 @@
  *
  * To get or set the properties of an existing #GooCanvasGrid, use
  * g_object_get() and g_object_set().
+ *
+ * The grid's position and size is specified with the #GooCanvasGrid:x,
+ * #GooCanvasGrid:y, #GooCanvasGrid:width and #GooCanvasGrid:height properties.
+ *
+ * The #GooCanvasGrid:x-step and #GooCanvasGrid:y-step properties specify the 
+ * distance between grid lines. The  #GooCanvasGrid:x-offset and
+ * #GooCanvasGrid:y-offset properties specify the distance before the first
+ * grid lines.
+ *
+ * The horizontal or vertical grid lines can be hidden using the
+ * #GooCanvasGrid:show-horz-grid-lines and #GooCanvasGrid:show-vert-grid-lines
+ * properties.
+ *
+ * The width of the border can be set using the #GooCanvasGrid:border-width
+ * property. The border is drawn outside the area specified with the
+ * #GooCanvasGrid:x, #GooCanvasGrid:y, #GooCanvasGrid:width and
+ * #GooCanvasGrid:height properties.
+ *
+ * Other properties allow the colors and widths of the grid lines to be set.
+ * The grid line color and width properties override the standard
+ * #GooCanvasItemSimple:stroke-color and #GooCanvasItemSimple:line-width
+ * properties, enabling different styles for horizontal and vertical grid lines.
  */
 #include <config.h>
 #include <math.h>
@@ -926,6 +950,8 @@ goo_canvas_grid_class_init (GooCanvasGridClass *klass)
  * @Short_Description: a model for grid items.
  *
  * GooCanvasGridModel represents a model for grid items.
+ * A grid consists of a number of equally-spaced horizontal and vertical
+ * grid lines, plus an optional border.
  *
  * It is a subclass of #GooCanvasItemModelSimple and so inherits all of the
  * style properties such as "stroke-color", "fill-color" and "line-width".
@@ -942,6 +968,30 @@ goo_canvas_grid_class_init (GooCanvasGridClass *klass)
  * To respond to events such as mouse clicks on the grid you must connect
  * to the signal handlers of the corresponding #GooCanvasGrid objects.
  * (See goo_canvas_get_item() and #GooCanvas::item-created.)
+ *
+ * The grid's position and size is specified with the #GooCanvasGridModel:x,
+ * #GooCanvasGridModel:y, #GooCanvasGridModel:width and
+ * #GooCanvasGridModel:height properties.
+ *
+ * The #GooCanvasGridModel:x-step and #GooCanvasGridModel:y-step properties
+ * specify the distance between grid lines. The  #GooCanvasGridModel:x-offset
+ * and #GooCanvasGridModel:y-offset properties specify the distance before the
+ * first grid lines.
+ *
+ * The horizontal or vertical grid lines can be hidden using the
+ * #GooCanvasGridModel:show-horz-grid-lines and
+ * #GooCanvasGridModel:show-vert-grid-lines properties.
+ *
+ * The width of the border can be set using the #GooCanvasGridModel:border-width
+ * property. The border is drawn outside the area specified with the
+ * #GooCanvasGridModel:x, #GooCanvasGridModel:y, #GooCanvasGridModel:width and
+ * #GooCanvasGridModel:height properties.
+ *
+ * Other properties allow the colors and widths of the grid lines to be set.
+ * The grid line color and width properties override the standard
+ * #GooCanvasItemModelSimple:stroke-color and
+ * #GooCanvasItemModelSimple:line-width properties, enabling different styles
+ * for horizontal and vertical grid lines.
  */
 
 GooCanvasItemModelIface *goo_canvas_grid_model_parent_iface;

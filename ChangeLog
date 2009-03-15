@@ -1,5 +1,11 @@
 2009-03-15  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasgrid.c: improved section docs.
+
+	* src/goocanvas.c: improved a few function docs.
+
+2009-03-15  Damon Chaplin  <damon@gnome.org>
+
 	* docs/coordinates.xml: 
 	* docs/architecture.xml: 
 	* docs/creating-items.xml: 
@@ -7,7 +13,7 @@
 	"canvas space" rather than "device space" which is a bit misleading.
 
 	* src/goocanvasitem.c: clarify the docs for the mouse position fields
-	of the event structs of the signals.
+	of the event structs of the signals. #573458
 
 2009-03-15  Gian Mario Tagliaretti  <gianmt@gnome.org>
 	(Committed by Damon with a few changes.)

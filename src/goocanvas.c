@@ -1014,6 +1014,13 @@ goo_canvas_set_root_item    (GooCanvas		*canvas,
  *
  * Gets the static root item of the canvas.
  *
+ * Static items are exactly the same as ordinary canvas items, except that
+ * they do not move or change size when the canvas is scrolled or the scale
+ * changes.
+ *
+ * Static items are added to the static root item in exactly the same way that
+ * ordinary items are added to the root item.
+ *
  * Returns: the static root item, or %NULL.
  **/
 GooCanvasItem*
@@ -1031,6 +1038,13 @@ goo_canvas_get_static_root_item    (GooCanvas		*canvas)
  * @item: the static root item.
  *
  * Sets the static root item. Any existing static items are removed.
+ *
+ * Static items are exactly the same as ordinary canvas items, except that
+ * they do not move or change size when the canvas is scrolled or the scale
+ * changes.
+ *
+ * Static items are added to the static root item in exactly the same way that
+ * ordinary items are added to the root item.
  **/
 void
 goo_canvas_set_static_root_item    (GooCanvas		*canvas,
@@ -1075,6 +1089,13 @@ goo_canvas_set_static_root_item    (GooCanvas		*canvas,
  *
  * Gets the static root item model of the canvas.
  *
+ * Static item models are exactly the same as ordinary item models, except that
+ * the corresponding items do not move or change size when the canvas is
+ * scrolled or the scale changes.
+ *
+ * Static items models are added to the static root item model in exactly the
+ * same way that ordinary item models are added to the root item model.
+ *
  * Returns: the static root item model, or %NULL.
  **/
 GooCanvasItemModel*
@@ -1093,6 +1114,13 @@ goo_canvas_get_static_root_item_model (GooCanvas	  *canvas)
  *
  * Sets the static root item model. Any existing static item models are
  * removed.
+ *
+ * Static item models are exactly the same as ordinary item models, except that
+ * the corresponding items do not move or change size when the canvas is
+ * scrolled or the scale changes.
+ *
+ * Static items models are added to the static root item model in exactly the
+ * same way that ordinary item models are added to the root item model.
  **/
 void
 goo_canvas_set_static_root_item_model (GooCanvas	  *canvas,
@@ -2523,7 +2551,8 @@ goo_canvas_request_update (GooCanvas   *canvas)
  * This function is only intended to be used by subclasses of #GooCanvas or
  * #GooCanvasItem implementations.
  *
- * Requests that the given bounds be redrawn.
+ * Requests that the given bounds be redrawn. The bounds must be in the canvas
+ * coordinate space.
  **/
 void
 goo_canvas_request_redraw (GooCanvas             *canvas,
@@ -2562,8 +2591,12 @@ goo_canvas_request_redraw (GooCanvas             *canvas,
  * This function is only intended to be used by subclasses of #GooCanvas or
  * #GooCanvasItem implementations.
  *
- * Requests that the given bounds be redrawn. If the item is static the bounds are assumed to
- * be in the static item coordinate space, otherwise they are assumed to be in device space.
+ * Requests that the given bounds be redrawn. If @is_static is %TRUE the bounds
+ * are assumed to be in the static item coordinate space, otherwise they are
+ * assumed to be in the canvas coordinate space.
+ *
+ * If @is_static is %FALSE this function behaves the same as
+ * goo_canvas_request_redraw().
  **/
 void
 goo_canvas_request_item_redraw (GooCanvas             *canvas,
@@ -3671,11 +3704,11 @@ goo_canvas_convert_from_item_space (GooCanvas     *canvas,
  * goo_canvas_convert_bounds_to_item_space:
  * @canvas: a #GooCanvas.
  * @item: a #GooCanvasItem.
- * @bounds: the bounds in device space.
+ * @bounds: the bounds in canvas coordinate space, to be converted.
  * 
- * Converts the bound in device space to a bounding box in item space.
- * This is useful in the item paint() methods to convert the bounds to be
- * painted to the item's coordinate space.
+ * Converts the given bounds in the canvas coordinate space to a bounding box
+ * in item space. This is useful in the item paint() methods to convert the
+ * bounds to be painted to the item's coordinate space.
  **/
 void
 goo_canvas_convert_bounds_to_item_space (GooCanvas           *canvas,
