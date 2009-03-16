@@ -121,7 +121,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse enters an item.
@@ -146,7 +146,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse leaves an item.
@@ -171,7 +171,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when the mouse moves within an item.
@@ -196,7 +196,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a mouse button is pressed in an item.
@@ -221,7 +221,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a mouse button is released in an item.
@@ -434,7 +434,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * @item: the item that received the signal.
        * @target_item: the target of the event.
        * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The root_x & root_y fields contain
+       *  in the item's coordinate space. The x_root & y_root fields contain
        *  the same coordinates converted to the canvas coordinate space.
        *
        * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
