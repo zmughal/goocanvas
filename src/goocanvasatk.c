@@ -20,6 +20,7 @@
 typedef AtkGObjectAccessible      GooCanvasItemAccessible;
 typedef AtkGObjectAccessibleClass GooCanvasItemAccessibleClass;
 
+#define GOO_TYPE_CANVAS_ITEM_ACCESSIBLE    (goo_canvas_item_accessible_get_type ())
 #define GOO_IS_CANVAS_ITEM_ACCESSIBLE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), goo_canvas_item_accessible_get_type ()))
 
 static void goo_canvas_item_accessible_component_interface_init (AtkComponentIface *iface);
@@ -495,7 +496,7 @@ typedef AtkGObjectAccessibleClass GooCanvasWidgetAccessibleClass;
 #define GOO_IS_CANVAS_WIDGET_ACCESSIBLE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), goo_canvas_widget_accessible_get_type ()))
 
 G_DEFINE_TYPE (GooCanvasWidgetAccessible, goo_canvas_widget_accessible,
-	       GOO_TYPE_CANVAS_ITEM)
+	       GOO_TYPE_CANVAS_ITEM_ACCESSIBLE)
 
 
 static void

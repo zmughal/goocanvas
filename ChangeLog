@@ -1,3 +1,10 @@
+2009-05-07  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasatk.c: fixed GooCanvasWidgetAccessible's G_DEFINE_TYPE
+	call, using GOO_TYPE_CANVAS_ITEM_ACCESSIBLE as parent class.
+	This avoids a hang when using GooCanvasWidget with accessibility support
+	turned on. #581596.
+
 2009-03-16  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitem.c: changed docs referring to "root_x" and "root_y" 
