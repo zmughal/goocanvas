@@ -1,4 +1,13 @@
 
+GooCanvas 0.15	(Jun 29 2009)
+==============
+
+ o Fixed a bug that caused a hang when using GooCanvasWidget with
+   accessibility support turned on.
+ o Added "scale-to-fit" property to GooCanvasImage, to scale the image
+   to the "width" and "height" settings, instead of just clipping.
+
+
 GooCanvas 0.14	(Mar 15 2009)
 ==============
 
