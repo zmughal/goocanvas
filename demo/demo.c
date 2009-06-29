@@ -1321,8 +1321,9 @@ plant_flower (GooCanvasItem *root, double x, double y, GtkAnchorType anchor)
 
   image = goo_canvas_image_new (root, NULL, x, y,
 			       "pattern", pattern,
-			       "width", w,
-			       "height", h,
+			       "width", w * 1.5,
+			       "height", h * 2,
+				"scale-to-fit", TRUE,
 			       NULL);
   cairo_pattern_destroy (pattern);
   setup_item_signals (image);

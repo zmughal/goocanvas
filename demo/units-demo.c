@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <goocanvas.h>
 
+cairo_pattern_t *flower_pattern;
+gdouble flower_width, flower_height;
+
 
 static gboolean
 on_motion_notify (GooCanvasItem *item,
@@ -24,22 +27,30 @@ setup_canvas (GtkWidget *canvas,
   GooCanvasItem *root, *item;
   gchar buffer[256], font_desc[64];
   double *d;
-  double data[4][8] = {
+  double data[4][12] = {
     /* Pixels */
     { 100, 100, 200, 20, 10,
-      200, 310, 24 },
+      200, 310, 24,
+      310, 100, 20, 20
+    },
 
     /* Points */
     { 100, 100, 200, 20, 10,
-      200, 310, 24 },
+      200, 310, 24,
+      310, 100, 20, 20
+    },
 
     /* Inches */
     { 1, 1, 3, 0.5, 0.16,
-      3, 4, 0.3 },
+      3, 4, 0.3,
+      4.2, 1, 0.5, 0.5
+    },
 
     /* MM */
     { 30, 30, 100, 10, 5,
-      80, 60, 10 }
+      80, 60, 10,
+      135, 30, 10, 10
+    }
   };
 
   d = data[units];
@@ -65,6 +76,13 @@ setup_canvas (GtkWidget *canvas,
 			      GTK_ANCHOR_CENTER,
 			      "font", font_desc,
 			      NULL);
+
+  item = goo_canvas_image_new (root, NULL, d[8], d[9],
+			       "pattern", flower_pattern,
+			       "width", d[10],
+			       "height", d[11],
+			       "scale-to-fit", TRUE,
+			       NULL);
 }
 
 
@@ -140,6 +158,7 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *window, *notebook;
+  cairo_surface_t *surface;
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
@@ -153,6 +172,12 @@ main (int argc, char *argv[])
   notebook = gtk_notebook_new ();
   gtk_widget_show (notebook);
   gtk_container_add (GTK_CONTAINER (window), notebook);
+
+  surface = cairo_image_surface_create_from_png ("flower.png");
+  flower_width = cairo_image_surface_get_width (surface);
+  flower_height = cairo_image_surface_get_height (surface);
+  flower_pattern = cairo_pattern_create_for_surface (surface);
+  cairo_surface_destroy (surface);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    create_canvas (GTK_UNIT_PIXEL, "pixels"),

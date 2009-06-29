@@ -1,3 +1,16 @@
+2009-06-29  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 0.15
+
+2009-06-29  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasimage.c: added "scale-to-fit" property, which scales
+	the image to fit the "width" and "height" settings.
+
+	* demo/units-demo.c: 
+	* demo/mv-demo.c (plant_flower): 
+	* demo/demo.c (plant_flower): test "scale-to-fit" property.
+
 2009-05-07  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasatk.c: fixed GooCanvasWidgetAccessible's G_DEFINE_TYPE

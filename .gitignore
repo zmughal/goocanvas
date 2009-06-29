@@ -48,3 +48,17 @@ Makefile.in
 /src/stamp-goocanvasenumtypes.h
 /src/stamp-goocanvasmarshal.h
 /stamp-h1
+/docs/goocanvas-decl-list.txt
+/docs/goocanvas-decl.txt
+/docs/goocanvas-undeclared.txt
+/docs/goocanvas-undocumented.txt
+/docs/goocanvas-unused.txt
+/docs/goocanvas.args
+/docs/goocanvas.hierarchy
+/docs/goocanvas.interfaces
+/docs/goocanvas.prerequisites
+/docs/goocanvas.signals
+/docs/*.stamp
+/docs/html
+/docs/xml
+/docs/tmpl/goo*.sgml

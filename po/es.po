@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 16:57+0000\n"
+"POT-Creation-Date: 2009-06-29 16:23+0100\n"
 "PO-Revision-Date: 2006-04-24 16:26+0100\n"
 "Last-Translator: Rafael Villar Burke <pachi@rvburke.com>\n"
 "Language-Team: \n"
@@ -235,7 +235,7 @@ msgid "The y coordinate of the top of the ellipse"
 msgstr "Coordenada y del centro de la elipse"
 
 #: src/goocanvasellipse.c:123 src/goocanvasgrid.c:124 src/goocanvasgroup.c:106
-#: src/goocanvasimage.c:95 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
+#: src/goocanvasimage.c:107 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
 #: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:572
 msgid "Width"
 msgstr "Ancho"
@@ -246,7 +246,7 @@ msgid "The width of the ellipse"
 msgstr "Ancho de la imagen"
 
 #: src/goocanvasellipse.c:130 src/goocanvasgrid.c:131 src/goocanvasgroup.c:114
-#: src/goocanvasimage.c:102 src/goocanvaspath.c:100
+#: src/goocanvasimage.c:114 src/goocanvaspath.c:100
 #: src/goocanvaspolyline.c:214 src/goocanvasrect.c:83 src/goocanvastext.c:149
 #: src/goocanvaswidget.c:580
 msgid "Height"
@@ -488,35 +488,44 @@ msgstr "Ancho solicitado de la tabla, o -1 para usar el ancho predeterminado"
 msgid "The height of the group, or -1 to use the default height"
 msgstr "Altura solicitada de la tabla, o -1 para usar la altura predefinida"
 
-#: src/goocanvasimage.c:72
+#: src/goocanvasimage.c:84
 msgid "Pattern"
 msgstr "Patrón"
 
-#: src/goocanvasimage.c:73
+#: src/goocanvasimage.c:85
 msgid "The cairo pattern to paint"
 msgstr "Patrón cairo para dibujar"
 
-#: src/goocanvasimage.c:80
+#: src/goocanvasimage.c:92
 msgid "The x coordinate of the image"
 msgstr "Coordenada x de la imagen"
 
-#: src/goocanvasimage.c:88
+#: src/goocanvasimage.c:100
 msgid "The y coordinate of the image"
 msgstr "Coordenada y de la imagen"
 
-#: src/goocanvasimage.c:96
+#: src/goocanvasimage.c:108
 msgid "The width of the image"
 msgstr "Ancho de la imagen"
 
-#: src/goocanvasimage.c:103
+#: src/goocanvasimage.c:115
 msgid "The height of the image"
 msgstr "Altura de la la imagen"
 
-#: src/goocanvasimage.c:109
+#: src/goocanvasimage.c:121
+#, fuzzy
+msgid "Scale To Fit"
+msgstr "Escala"
+
+#: src/goocanvasimage.c:122
+msgid "If the image is scaled to fit the width and height settings"
+msgstr ""
+
+#: src/goocanvasimage.c:128
 msgid "Pixbuf"
 msgstr "Pixbuf"
 
-#: src/goocanvasimage.c:110
+#: src/goocanvasimage.c:129
 msgid "The GdkPixbuf to display"
 msgstr "GdkPixbuf para mostrar"
 

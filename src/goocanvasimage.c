@@ -33,6 +33,17 @@
 #include "goocanvasutils.h"
 
 
+typedef struct _GooCanvasImagePrivate GooCanvasImagePrivate;
+struct _GooCanvasImagePrivate {
+  gboolean scale_to_fit;
+};
+
+#define GOO_CANVAS_IMAGE_GET_PRIVATE(image)  \
+   (G_TYPE_INSTANCE_GET_PRIVATE ((image), GOO_TYPE_CANVAS_IMAGE, GooCanvasImagePrivate))
+#define GOO_CANVAS_IMAGE_MODEL_GET_PRIVATE(image)  \
+   (G_TYPE_INSTANCE_GET_PRIVATE ((image), GOO_TYPE_CANVAS_IMAGE_MODEL, GooCanvasImagePrivate))
+
+
 enum {
   PROP_0,
 
@@ -41,6 +52,7 @@ enum {
   PROP_Y,
   PROP_WIDTH,
   PROP_HEIGHT,
+  PROP_SCALE_TO_FIT,
 
   /* Convenience properties. */
   PROP_PIXBUF
@@ -104,12 +116,40 @@ goo_canvas_image_install_common_properties (GObjectClass *gobject_class)
 							0.0, G_MAXDOUBLE, 0.0,
 							G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_SCALE_TO_FIT, 
+                                   g_param_spec_boolean ("scale-to-fit",
+							 _("Scale To Fit"),
+							 _("If the image is scaled to fit the width and height settings"),
+							 FALSE,
+							 G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_PIXBUF,
 				   g_param_spec_object ("pixbuf",
 							_("Pixbuf"),
 							_("The GdkPixbuf to display"),
 							GDK_TYPE_PIXBUF,
 							G_PARAM_WRITABLE));
+}
+
+
+/* Gets the private data to use, from the model or from the item itself. */
+static GooCanvasImagePrivate*
+goo_canvas_image_get_private (gpointer object)
+{
+  GooCanvasItemSimple *simple;
+
+  if (GOO_IS_CANVAS_IMAGE (object))
+    {
+      simple = (GooCanvasItemSimple*) object;
+      if (simple->model)
+	return GOO_CANVAS_IMAGE_MODEL_GET_PRIVATE (simple->model);
+      else
+	return GOO_CANVAS_IMAGE_GET_PRIVATE (object);
+    }
+  else
+    {
+      return GOO_CANVAS_IMAGE_MODEL_GET_PRIVATE (object);
+    }
 }
 
 
@@ -226,6 +266,8 @@ goo_canvas_image_get_common_property (GObject              *object,
 				      GValue               *value,
 				      GParamSpec           *pspec)
 {
+  GooCanvasImagePrivate *priv = goo_canvas_image_get_private (object);
+
   switch (prop_id)
     {
     case PROP_PATTERN:
@@ -242,6 +284,9 @@ goo_canvas_image_get_common_property (GObject              *object,
       break;
     case PROP_HEIGHT:
       g_value_set_double (value, image_data->height);
+      break;
+    case PROP_SCALE_TO_FIT:
+      g_value_set_boolean (value, priv->scale_to_fit);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -271,6 +316,7 @@ goo_canvas_image_set_common_property (GObject              *object,
 				      const GValue         *value,
 				      GParamSpec           *pspec)
 {
+  GooCanvasImagePrivate *priv = goo_canvas_image_get_private (object);
   GdkPixbuf *pixbuf;
 
   switch (prop_id)
@@ -291,6 +337,9 @@ goo_canvas_image_set_common_property (GObject              *object,
       break;
     case PROP_HEIGHT:
       image_data->height = g_value_get_double (value);
+      break;
+    case PROP_SCALE_TO_FIT:
+      priv->scale_to_fit = g_value_get_boolean (value);
       break;
     case PROP_PIXBUF:
       cairo_pattern_destroy (image_data->pattern);
@@ -365,15 +414,32 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
 			cairo_t               *cr,
 			const GooCanvasBounds *bounds)
 {
+  GooCanvasImagePrivate *priv = goo_canvas_image_get_private (simple);
   GooCanvasImage *image = (GooCanvasImage*) simple;
   GooCanvasImageData *image_data = image->image_data;
-  cairo_matrix_t matrix;
+  cairo_matrix_t matrix = { 1, 0, 0, 1, 0, 0 };
+  cairo_surface_t *surface;
+  gdouble width, height;
 
   if (!image_data->pattern)
     return;
 
 #if 1
-  cairo_matrix_init_translate (&matrix, -image_data->x, -image_data->y);
+  if (priv->scale_to_fit)
+    {
+      if (cairo_pattern_get_surface (image_data->pattern, &surface)
+	  == CAIRO_STATUS_SUCCESS
+	  && cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE)
+	{
+	  width = cairo_image_surface_get_width (surface);
+	  height = cairo_image_surface_get_height (surface);
+	  cairo_matrix_scale (&matrix, width / image_data->width,
+			      height / image_data->height);
+	}
+    }
+
+  cairo_matrix_translate (&matrix, -image_data->x, -image_data->y);
+
   cairo_pattern_set_matrix (image_data->pattern, &matrix);
   goo_canvas_style_set_fill_options (simple->simple_data->style, cr);
   cairo_set_source (cr, image_data->pattern);
@@ -427,6 +493,8 @@ goo_canvas_image_class_init (GooCanvasImageClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
   GooCanvasItemSimpleClass *simple_class = (GooCanvasItemSimpleClass*) klass;
+
+  g_type_class_add_private (gobject_class, sizeof (GooCanvasImagePrivate));
 
   gobject_class->dispose  = goo_canvas_image_dispose;
   gobject_class->finalize = goo_canvas_image_finalize;
@@ -488,6 +556,8 @@ static void
 goo_canvas_image_model_class_init (GooCanvasImageModelClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
+
+  g_type_class_add_private (gobject_class, sizeof (GooCanvasImagePrivate));
 
   gobject_class->dispose      = goo_canvas_image_model_dispose;
 
