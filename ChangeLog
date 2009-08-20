@@ -1,3 +1,8 @@
+2009-08-20  Murray Cumming  <murrayc@murrayc.com>
+
+	* docs/architecture.xml: Fixed documenation typo. Bug #591983. 
+	(Martin Olsson)
+
 2009-06-29  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 0.15

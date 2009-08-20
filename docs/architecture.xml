@@ -82,7 +82,7 @@
 	goo_canvas_item_request_update().
       </para>
       <para>
-	#GooCanvas handles all the update requests at once, to avoids multiple
+	#GooCanvas handles all the update requests at once, to avoid multiple
 	redraws of the same parts of the canvas. To do this it installs
 	an idle handler, goo_canvas_idle_handler(), which is called as soon
 	as the application is idle (and before any part of the canvas is
