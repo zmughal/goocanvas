@@ -951,7 +951,11 @@ goo_canvas_set_root_item_model (GooCanvas          *canvas,
   goo_canvas_item_set_canvas (canvas->root_item, canvas);
   canvas->need_update = TRUE;
 
-  if (GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION(2, 19, 6)
+   if (gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_REALIZED (canvas))
+#endif
     goo_canvas_update (canvas);
 
   gtk_widget_queue_draw (GTK_WIDGET (canvas));
@@ -1007,7 +1011,11 @@ goo_canvas_set_root_item    (GooCanvas		*canvas,
 
   canvas->need_update = TRUE;
 
-  if (GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION(2, 19, 6)
+   if (gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_REALIZED (canvas))
+#endif
     goo_canvas_update (canvas);
 
   gtk_widget_queue_draw (GTK_WIDGET (canvas));
@@ -1082,7 +1090,11 @@ goo_canvas_set_static_root_item    (GooCanvas		*canvas,
 
   canvas->need_update = TRUE;
 
-  if (GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION(2, 19, 6)
+   if (gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_REALIZED (canvas))
+#endif
     goo_canvas_update (canvas);
 
   gtk_widget_queue_draw (GTK_WIDGET (canvas));
@@ -1171,7 +1183,11 @@ goo_canvas_set_static_root_item_model (GooCanvas	  *canvas,
   goo_canvas_item_set_is_static (priv->static_root_item, TRUE);
   canvas->need_update = TRUE;
 
-  if (GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION(2, 19, 6)
+   if (gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_REALIZED (canvas))
+#endif
     goo_canvas_update (canvas);
 
   gtk_widget_queue_draw (GTK_WIDGET (canvas));
@@ -1558,9 +1574,17 @@ goo_canvas_map (GtkWidget *widget)
       GooCanvasWidget *witem = tmp_list->data;
       tmp_list = tmp_list->next;
 
-      if (witem->widget && GTK_WIDGET_VISIBLE (witem->widget))
-	{
-	  if (!GTK_WIDGET_MAPPED (witem->widget))
+#if GTK_CHECK_VERSION(2, 19, 6)
+       if (witem->widget && gtk_widget_get_visible (witem->widget))
+#else
+       if (witem->widget && GTK_WIDGET_VISIBLE (witem->widget))
+#endif
+ 	{
+#if GTK_CHECK_VERSION(2, 19, 6)
+	  if (!gtk_widget_get_mapped (witem->widget))
+#else
+          if (!GTK_WIDGET_MAPPED (witem->widget))
+#endif
 	    gtk_widget_map (witem->widget);
 	}
     }
@@ -1577,7 +1601,11 @@ goo_canvas_style_set (GtkWidget *widget,
   if (GTK_WIDGET_CLASS (goo_canvas_parent_class)->style_set)
     GTK_WIDGET_CLASS (goo_canvas_parent_class)->style_set (widget, old_style);
 
-  if (GTK_WIDGET_REALIZED (widget))
+#if GTK_CHECK_VERSION(2, 19, 6)
+   if (gtk_widget_get_realized (widget))
+#else
+   if (GTK_WIDGET_REALIZED (widget))
+#endif
     {
       /* Make sure the window backgrounds aren't set, to avoid flicker when
 	 scrolling (due to the delay between X clearing the background and
@@ -1699,7 +1727,11 @@ request_static_redraw (GooCanvas             *canvas,
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GdkRectangle rect;
 
-  if (!GTK_WIDGET_DRAWABLE (canvas) || (bounds->x1 == bounds->x2))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (!gtk_widget_is_drawable (GTK_WIDGET (canvas)) || (bounds->x1 == bounds->x2))
+#else
+   if (!GTK_WIDGET_DRAWABLE (canvas) || (bounds->x1 == bounds->x2))
+#endif
     return;
 
   /* We subtract one from the left & top edges, in case anti-aliasing makes
@@ -1854,7 +1886,11 @@ reconfigure_canvas (GooCanvas *canvas,
 
   canvas->freeze_count--;
 
-  if (GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_REALIZED (canvas))
+#endif
     {
       gdk_window_move_resize (canvas->canvas_window, window_x, window_y,
 			      window_width, window_height);
@@ -1938,8 +1974,12 @@ goo_canvas_size_allocate (GtkWidget     *widget,
 
   widget->allocation = *allocation;
 
-  if (GTK_WIDGET_REALIZED (widget))
-    {
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (gtk_widget_get_realized (widget))
+#else
+   if (GTK_WIDGET_REALIZED (widget))
+#endif
+     {
       /* We can only allocate our children when we are realized, since we
 	 need a window to create a cairo_t which we use for layout. */
       tmp_list = canvas->widget_items;
@@ -1971,13 +2011,21 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   AtkObject *accessible;
 
-  if (!canvas->freeze_count && GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (!canvas->freeze_count && gtk_widget_get_realized (GTK_WIDGET(canvas)))
+#else
+   if (!canvas->freeze_count && GTK_WIDGET_REALIZED (canvas))
+#endif
     {
       if (canvas->redraw_when_scrolled)
 	{
 	  /* Map the temporary window to stop the canvas window being scrolled.
 	     When it is unmapped the entire canvas will be redrawn. */
-	  if (GTK_WIDGET_MAPPED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+	  if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
+#else
+ 	  if (GTK_WIDGET_MAPPED (canvas))
+#endif
 	    gdk_window_show (canvas->tmp_window);
 	}
       else
@@ -2002,7 +2050,11 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	{
 	  /* Unmap the temporary window, causing the entire canvas to be
 	     redrawn. */
-	  if (GTK_WIDGET_MAPPED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+	  if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
+#else
+ 	  if (GTK_WIDGET_MAPPED (canvas))
+#endif
 	    gdk_window_hide (canvas->tmp_window);
 	}
       else
@@ -2290,7 +2342,11 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
      scrolling is unnecessary and really ugly.
      FIXME: There is a possible issue with keyboard focus/input methods here,
      since hidden windows can't have the keyboard focus. */
-  if (GTK_WIDGET_MAPPED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_MAPPED (canvas))
+#endif
     gdk_window_show (canvas->tmp_window);
 
   canvas->freeze_count++;
@@ -2312,7 +2368,11 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
 
   /* Now hide the temporary window, so the canvas window will get an expose
      event. */
-  if (GTK_WIDGET_MAPPED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
+#else
+   if (GTK_WIDGET_MAPPED (canvas))
+#endif
     gdk_window_hide (canvas->tmp_window);
 }
 
@@ -2538,7 +2598,11 @@ goo_canvas_request_update (GooCanvas   *canvas)
   canvas->need_update = TRUE;
 
   /* We have to wait until we are realized. We'll do a full update then. */
-  if (!GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (!gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (!GTK_WIDGET_REALIZED (canvas))
+#endif
     return;
 
   /* We use a higher priority than the normal GTK+ resize/redraw idle handlers
@@ -2566,7 +2630,11 @@ goo_canvas_request_redraw (GooCanvas             *canvas,
 {
   GdkRectangle rect;
 
-  if (!GTK_WIDGET_DRAWABLE (canvas) || (bounds->x1 == bounds->x2))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (!gtk_widget_is_drawable (GTK_WIDGET (canvas)) || (bounds->x1 == bounds->x2))
+#else
+   if (!GTK_WIDGET_DRAWABLE (canvas) || (bounds->x1 == bounds->x2))
+#endif
     return;
 
   /* We subtract one from the left & top edges, in case anti-aliasing makes
@@ -2846,7 +2914,11 @@ propagate_event (GooCanvas     *canvas,
   gboolean stop_emission = FALSE, valid;
 
   /* Don't emit any events if the canvas is not realized. */
-  if (!GTK_WIDGET_REALIZED (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+   if (!gtk_widget_get_realized (GTK_WIDGET (canvas)))
+#else
+   if (!GTK_WIDGET_REALIZED (canvas))
+#endif
     return FALSE;
 
   if (item)
@@ -3217,8 +3289,11 @@ goo_canvas_key_press       (GtkWidget      *widget,
 			    GdkEventKey    *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
-	
-  if (GTK_WIDGET_HAS_FOCUS (canvas) && canvas->focused_item)
+#if GTK_CHECK_VERSION (2, 19, 6)	
+   if (gtk_widget_has_focus (GTK_WIDGET (canvas)) && canvas->focused_item)
+#else
+   if (GTK_WIDGET_HAS_FOCUS (canvas) && canvas->focused_item)
+#endif 
     if (propagate_event (canvas, canvas->focused_item, "key_press_event",
 			 (GdkEvent*) event))
     return TRUE;
@@ -3232,8 +3307,12 @@ goo_canvas_key_release     (GtkWidget      *widget,
 			    GdkEventKey    *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
-	
-  if (GTK_WIDGET_HAS_FOCUS (canvas) && canvas->focused_item)
+
+#if GTK_CHECK_VERSION (2, 19, 6)	
+   if (gtk_widget_has_focus (GTK_WIDGET (canvas)) && canvas->focused_item)
+#else
+   if (GTK_WIDGET_HAS_FOCUS (canvas) && canvas->focused_item)
+#endif
     if (propagate_event (canvas, canvas->focused_item, "key_release_event",
 			 (GdkEvent*) event))
     return TRUE;
@@ -4157,7 +4236,11 @@ goo_canvas_focus (GtkWidget        *widget,
   data.text_direction = gtk_widget_get_direction (widget);
   data.start_item = NULL;
 
-  if (GTK_WIDGET_HAS_FOCUS (canvas))
+#if GTK_CHECK_VERSION (2, 19, 6)
+  if (gtk_widget_has_focus (GTK_WIDGET (canvas)))
+#else
+  if (GTK_WIDGET_HAS_FOCUS (canvas)) 
+#endif
     data.start_item = canvas->focused_item;
   else if (old_focus_child && GOO_IS_CANVAS_WIDGET (old_focus_child))
     data.start_item = g_object_get_data (G_OBJECT (old_focus_child),
