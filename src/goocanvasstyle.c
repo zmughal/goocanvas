@@ -457,8 +457,11 @@ goo_canvas_style_set_stroke_options (GooCanvasStyle *style,
 	  else if (property->id == goo_canvas_style_line_dash_id && !line_dash_set)
 	    {
 	      GooCanvasLineDash *dash = property->value.data[0].v_pointer;
-	      cairo_set_dash (cr, dash->dashes, dash->num_dashes,
-			      dash->dash_offset);
+	      if (dash)
+		cairo_set_dash (cr, dash->dashes, dash->num_dashes,
+				dash->dash_offset);
+	      else
+		cairo_set_dash (cr, NULL, 0, 0);
 	      line_dash_set = TRUE;
 	    }
 	}

@@ -1,3 +1,12 @@
+2010-05-07  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasstyle.c (goo_canvas_style_set_stroke_options): handle
+	a NULL dash setting. #617960.
+
+2010-04-28  Luis Medinas  <lmedinas@gnome.org>
+
+	* applied small patch to compile with GTK+ 3.0. #615435.
+
 2009-08-20  Murray Cumming  <murrayc@murrayc.com>
 
 	* docs/architecture.xml: Fixed documenation typo. Bug #591983. 
