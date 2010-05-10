@@ -1,5 +1,10 @@
 2010-05-10  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvastext.c: improve docs for "width" and "height" properties.
+	#595164.
+
+2010-05-10  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvaspolyline.c: don't use the reconfigure_arrows flag
 	any more - always reconfigure the arrows during an update. This
 	avoids a bug where the line width changes but the arrows don't get

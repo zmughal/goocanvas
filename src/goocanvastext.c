@@ -139,7 +139,7 @@ goo_canvas_text_install_common_properties (GObjectClass *gobject_class)
   g_object_class_install_property (gobject_class, PROP_WIDTH,
 				   g_param_spec_double ("width",
 							_("Width"),
-							_("The width to use to layout the text"),
+							_("The width to use to layout the text, or -1 to let the text use as much horizontal space as needed"),
 							-G_MAXDOUBLE,
 							G_MAXDOUBLE, -1.0,
 							G_PARAM_READWRITE));
@@ -147,7 +147,7 @@ goo_canvas_text_install_common_properties (GObjectClass *gobject_class)
   g_object_class_install_property (gobject_class, PROP_HEIGHT,
 				   g_param_spec_double ("height",
 							_("Height"),
-							_("The height to use to layout the text, or -1 to use the natural height"),
+							_("The height to use to layout the text, or -1 to let the text use as much vertical space as needed"),
 							-G_MAXDOUBLE,
 							G_MAXDOUBLE, -1.0,
 							G_PARAM_READWRITE));
