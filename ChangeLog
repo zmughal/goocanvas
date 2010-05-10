@@ -1,3 +1,11 @@
+2010-05-10  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvaspolyline.c: don't use the reconfigure_arrows flag
+	any more - always reconfigure the arrows during an update. This
+	avoids a bug where the line width changes but the arrows don't get
+	reconfigured, since the line width is an inherited property and
+	reconfigure_arrows wasn't being set when it changed.
+
 2010-05-07  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasstyle.c (goo_canvas_style_set_stroke_options): handle

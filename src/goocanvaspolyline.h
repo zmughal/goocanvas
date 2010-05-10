@@ -63,7 +63,7 @@ struct _GooCanvasPolylineData
   guint close_path	   : 1;
   guint start_arrow	   : 1;
   guint end_arrow          : 1;
-  guint reconfigure_arrows : 1;
+  guint reconfigure_arrows : 1;		/* Not used any more. */
 };
 
 

@@ -459,11 +459,6 @@ goo_canvas_polyline_reconfigure_arrows (GooCanvasPolyline *polyline)
   GooCanvasPolylineData *polyline_data = polyline->polyline_data;
   double line_width;
 
-  if (!polyline_data->reconfigure_arrows)
-    return;
-
-  polyline_data->reconfigure_arrows = FALSE;
-
   if (polyline_data->num_points < 2
       || (!polyline_data->start_arrow && !polyline_data->end_arrow))
     return;
@@ -532,7 +527,6 @@ goo_canvas_polyline_set_common_property (GObject              *object,
 	  memcpy (polyline_data->coords, points->coords,
 		  polyline_data->num_points * 2 * sizeof (double));
 	}
-      polyline_data->reconfigure_arrows = TRUE;
       g_object_notify (object, "x");
       g_object_notify (object, "y");
       g_object_notify (object, "width");
@@ -540,30 +534,24 @@ goo_canvas_polyline_set_common_property (GObject              *object,
       break;
     case PROP_CLOSE_PATH:
       polyline_data->close_path = g_value_get_boolean (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_START_ARROW:
       polyline_data->start_arrow = g_value_get_boolean (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_END_ARROW:
       polyline_data->end_arrow = g_value_get_boolean (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_ARROW_LENGTH:
       ensure_arrow_data (polyline_data);
       polyline_data->arrow_data->arrow_length = g_value_get_double (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_ARROW_WIDTH:
       ensure_arrow_data (polyline_data);
       polyline_data->arrow_data->arrow_width = g_value_get_double (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_ARROW_TIP_LENGTH:
       ensure_arrow_data (polyline_data);
       polyline_data->arrow_data->arrow_tip_length = g_value_get_double (value);
-      polyline_data->reconfigure_arrows = TRUE;
       break;
     case PROP_X:
       if (polyline_data->num_points > 0)
@@ -1009,8 +997,7 @@ goo_canvas_polyline_update  (GooCanvasItemSimple *simple,
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
   GooCanvasPolylineData *polyline_data = polyline->polyline_data;
 
-  if (polyline_data->reconfigure_arrows)
-    goo_canvas_polyline_reconfigure_arrows (polyline);
+  goo_canvas_polyline_reconfigure_arrows (polyline);
 
   /* Compute the new bounds. */
   goo_canvas_polyline_compute_bounds (polyline, cr, &simple->bounds);
