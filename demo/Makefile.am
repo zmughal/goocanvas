@@ -53,7 +53,7 @@ mv_simple_demo_LDADD = $(DEMO_LIBS)
 scalability_demo_SOURCES = \
 	scalability-demo.c
 
-scalability_demo_LDADD = $(top_builddir)/src/libgoocanva-2.0s.la @PACKAGE_LIBS@ $(INTLLIBS)
+scalability_demo_LDADD = $(DEMO_LIBS)
 
 mv_scalability_demo_SOURCES = \
 	mv-scalability-demo.c

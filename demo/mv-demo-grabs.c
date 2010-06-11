@@ -217,7 +217,7 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
   gtk_widget_show (label);
 
   fixed = gtk_fixed_new ();
-  gtk_fixed_set_has_window (GTK_FIXED (fixed), TRUE);
+  gtk_widget_set_has_window (fixed, TRUE);
   gtk_widget_set_events (fixed,
 			 GDK_EXPOSURE_MASK
 			 | GDK_BUTTON_PRESS_MASK

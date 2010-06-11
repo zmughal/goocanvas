@@ -1,5 +1,21 @@
 2010-06-11  Murray Cumming  <murrayc@murrayc.com>
 
+	Update source code for GTK+ 3.
+
+	* demo/Makefile.am: Fix a typo.
+	* demo/demo-grabs.c (create_fixed):
+	* demo/mv-demo-grabs.c (create_fixed):
+	* src/goocanvas.c (goo_canvas_grab_focus), (goo_canvas_focus):
+	* src/goocanvasatk.c (goo_canvas_item_accessible_grab_focus),
+	(goo_canvas_item_accessible_ref_state_set):
+	Replace use of gtk_fixed_set_has_window() with gtk_widget_set_has_window().
+	Replace use of GTK_WIDGET_CAN_FOCUS() with gtk_widget_get_can_focus().
+	Replace use of GTK_WIDGET_TOPLEVEL() with gtk_widget_is_toplevel().
+	
+	This seems to all work fine.
+
+2010-06-11  Murray Cumming  <murrayc@murrayc.com>
+
 	Use GTK+ 3 instead of GTK+ 2.
 
 	* goocanvas.pc.in: Rename to goocanvas-2.0.pc.in:

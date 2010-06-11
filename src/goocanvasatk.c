@@ -222,7 +222,7 @@ goo_canvas_item_accessible_grab_focus (AtkComponent    *component)
   goo_canvas_grab_focus (canvas, item);
 
   toplevel = gtk_widget_get_toplevel (GTK_WIDGET (canvas));
-  if (GTK_WIDGET_TOPLEVEL (toplevel))
+  if (gtk_widget_is_toplevel (toplevel))
     gtk_window_present (GTK_WINDOW (toplevel));
 
   return TRUE;
@@ -414,7 +414,7 @@ goo_canvas_item_accessible_ref_state_set (AtkObject *accessible)
 
   g_object_get (item, "can-focus", &can_focus, NULL);
 
-  if (GTK_WIDGET_CAN_FOCUS (GTK_WIDGET (canvas)) && can_focus)
+  if (gtk_widget_get_can_focus (GTK_WIDGET (canvas)) && can_focus)
     {
       atk_state_set_add_state (state_set, ATK_STATE_FOCUSABLE);
 

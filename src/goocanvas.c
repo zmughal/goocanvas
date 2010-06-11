@@ -3393,7 +3393,7 @@ goo_canvas_grab_focus (GooCanvas     *canvas,
 
   g_return_if_fail (GOO_IS_CANVAS (canvas));
   g_return_if_fail (GOO_IS_CANVAS_ITEM (item));
-  g_return_if_fail (GTK_WIDGET_CAN_FOCUS (canvas));
+  g_return_if_fail (gtk_widget_get_can_focus (GTK_WIDGET (canvas)));
 
   if (canvas->focused_item) {
     event.type = GDK_FOCUS_CHANGE;
@@ -4224,7 +4224,7 @@ goo_canvas_focus (GtkWidget        *widget,
   canvas = GOO_CANVAS (widget);
 
   /* If keyboard navigation has been turned off for the canvas, return FALSE.*/
-  if (!GTK_WIDGET_CAN_FOCUS (canvas))
+  if (!gtk_widget_get_can_focus (widget))
     return FALSE;
 
   /* If a child widget has the focus, try moving the focus within that. */
