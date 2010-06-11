@@ -10,9 +10,9 @@ INCLUDES = \
 #	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
 #	-DGTK_DISABLE_DEPRECATED
 
-lib_LTLIBRARIES = libgoocanvas.la
+lib_LTLIBRARIES = libgoocanvas-2.0.la
 
-libgoocanvas_la_LIBADD = @PACKAGE_LIBS@ $(INTLLIBS)
+libgoocanvas_2_0_la_LIBADD = @PACKAGE_LIBS@ $(INTLLIBS)
 
 if PLATFORM_WIN32
 no_undefined = -no-undefined
@@ -23,9 +23,9 @@ libtool_opts =				\
   -export-dynamic $(no_undefined)	\
   -rpath $(libdir)
 
-libgoocanvas_la_LDFLAGS = $(libtool_opts) 
+libgoocanvas_2_0_la_LDFLAGS = $(libtool_opts) 
 
-libgoocanvasincludedir = $(includedir)/goocanvas-1.0
+libgoocanvasincludedir = $(includedir)/goocanvas-2.0
 
 libgoocanvas_public_headers =		\
 	goocanvasellipse.h		\
@@ -45,7 +45,7 @@ libgoocanvas_public_headers =		\
 	goocanvaswidget.h		\
 	goocanvas.h
 
-libgoocanvas_la_SOURCES =		\
+libgoocanvas_2_0_la_SOURCES =		\
 	goocanvasatk.h			\
 	goocanvasatk.c			\
 	goocanvasellipse.c		\

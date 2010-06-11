@@ -7,7 +7,7 @@ includedir=@includedir@
 Name: GooCanvas
 Description: A GTK+ canvas widget using cairo
 Version: @VERSION@
-Requires: gtk+-2.0 cairo
-Libs: -L${libdir} -lgoocanvas
-Cflags: -I${includedir}/goocanvas-1.0
+Requires: gtk+-3.0 cairo
+Libs: -L${libdir} -lgoocanvas-2.0
+Cflags: -I${includedir}/goocanvas-2.0
 

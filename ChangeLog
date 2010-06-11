@@ -1,3 +1,18 @@
+2010-06-11  Murray Cumming  <murrayc@murrayc.com>
+
+	Use GTK+ 3 instead of GTK+ 2.
+
+	* goocanvas.pc.in: Rename to goocanvas-2.0.pc.in:
+	* configure.in
+	* Makefile.am
+	* demo/Makefile.am:  Depend on GTK+ 3 instead of GTK+ 2.
+	Change the library name from libgoocanvas to libgoocanvas-2.0.
+	Install the headers in <prefix>/include/goocanvas-2.0 instead of 
+	<prefix>/include/goocanvas-1.0.
+
+This is the master branch for goocanvas-2.0, using GTK+ 3
+See also the goocanvas-1.0 branch.
+
 2010-05-10  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastext.c: improve docs for "width" and "height" properties.

@@ -26,7 +26,7 @@ AC_PROG_CC
 AC_HEADER_STDC
 AM_PROG_LIBTOOL
 
-pkg_modules="gtk+-2.0 >= 2.12.0 glib-2.0 >= 2.10.0 cairo >= 1.4.0"
+pkg_modules="gtk+-3.0 >= 2.90.0 glib-2.0 >= 2.10.0 cairo >= 1.4.0"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
@@ -81,6 +81,6 @@ src/Makefile
 demo/Makefile
 docs/Makefile
 po/Makefile.in
-goocanvas.pc
+goocanvas-2.0.pc
 ])
 
