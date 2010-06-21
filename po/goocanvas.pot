@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-29 16:23+0100\n"
+"POT-Creation-Date: 2010-06-21 10:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1093,11 +1093,15 @@ msgid "The y coordinate of the text"
 msgstr ""
 
 #: src/goocanvastext.c:142
-msgid "The width to use to layout the text"
+msgid ""
+"The width to use to layout the text, or -1 to let the text use as much "
+"horizontal space as needed"
 msgstr ""
 
 #: src/goocanvastext.c:150
-msgid "The height to use to layout the text, or -1 to use the natural height"
+msgid ""
+"The height to use to layout the text, or -1 to let the text use as much "
+"vertical space as needed"
 msgstr ""
 
 #: src/goocanvastext.c:159

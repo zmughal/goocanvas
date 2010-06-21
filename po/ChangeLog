@@ -1,3 +1,7 @@
+2010-06-21  Damon Chaplin  <damon@gnome.org>
+
+	* LINGUAS: created.
+
 2008-12-29  Damon Chaplin  <damon@gnome.org>
 
 	* POTFILES.in: added goocanvasgrid.c.

@@ -418,13 +418,8 @@ goo_canvas_item_accessible_ref_state_set (AtkObject *accessible)
     {
       atk_state_set_add_state (state_set, ATK_STATE_FOCUSABLE);
 
-#if GTK_CHECK_VERSION(2, 19, 6)
-       if (gtk_widget_has_focus (GTK_WIDGET (canvas))
+      if (gtk_widget_has_focus (GTK_WIDGET (canvas))
 	  && canvas->focused_item == item)
-#else
-       if (GTK_WIDGET_HAS_FOCUS (canvas)
- 	  && canvas->focused_item == item)
-#endif
 	atk_state_set_add_state (state_set, ATK_STATE_FOCUSED);
     }
 

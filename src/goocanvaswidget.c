@@ -253,11 +253,7 @@ goo_canvas_widget_set_widget (GooCanvasWidget *witem,
 
       if (simple->canvas)
 	{
-#if GTK_CHECK_VERSION(2, 19, 6)
 	  if (gtk_widget_get_realized (GTK_WIDGET (simple->canvas)))
-#else
-	  if (GTK_WIDGET_REALIZED (simple->canvas))  
-#endif
 	    gtk_widget_set_parent_window (widget,
 					  simple->canvas->canvas_window);
 
@@ -386,11 +382,7 @@ goo_canvas_widget_set_canvas  (GooCanvasItem *item,
 
 	  if (witem->widget)
 	    {
-#if GTK_CHECK_VERSION(2, 19, 6)
 	      if (gtk_widget_get_realized (GTK_WIDGET (simple->canvas)))
-#else
- 	      if (GTK_WIDGET_REALIZED (simple->canvas))
-#endif
 		gtk_widget_set_parent_window (witem->widget,
 					      simple->canvas->canvas_window);
 

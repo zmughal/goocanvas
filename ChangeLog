@@ -1,3 +1,11 @@
+2010-06-21  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 1.90.0
+
+2010-06-21  Damon Chaplin  <damon@gnome.org>
+
+	Got rid of all the GTK_CHECK_VERSION stuff as we depend on 3.0 now.
+
 2010-06-11  Murray Cumming  <murrayc@murrayc.com>
 
 	Update source code for GTK+ 3.
