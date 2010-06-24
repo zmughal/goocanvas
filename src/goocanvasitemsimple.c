@@ -51,6 +51,7 @@ enum {
   /* Line style & width properties. */
   PROP_LINE_WIDTH,
   PROP_LINE_WIDTH_TOLERANCE,
+  PROP_LINE_WIDTH_IS_UNSCALED,
   PROP_LINE_CAP,
   PROP_LINE_JOIN,
   PROP_LINE_JOIN_MITER_LIMIT,
@@ -177,6 +178,9 @@ goo_canvas_item_simple_get_property (GObject              *object,
       break;
     case PROP_LINE_WIDTH_TOLERANCE:
       g_value_set_double (value, style ? style->line_width_tolerance : 0);
+      break;
+    case PROP_LINE_WIDTH_IS_UNSCALED:
+      g_value_set_boolean (value, style ? style->line_width_is_unscaled : FALSE);
       break;
     case PROP_LINE_CAP:
       g_value_set_enum (value, style ? style->line_cap : CAIRO_LINE_CAP_BUTT);
@@ -312,6 +316,9 @@ goo_canvas_item_simple_set_property (GObject              *object,
     case PROP_LINE_WIDTH_TOLERANCE:
       style->line_width_tolerance = g_value_get_double (value);
       need_update = FALSE;
+      break;
+    case PROP_LINE_WIDTH_IS_UNSCALED:
+      style->line_width_is_unscaled = g_value_get_boolean (value);
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
@@ -1276,7 +1283,7 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
 					   gboolean		  add_tolerance)
 {
   GooCanvasStyle *style = simple->style;
-  gdouble line_width;
+  gdouble line_width, scale;
 
   /* If no style is set, just reset the source to black and return TRUE so the
      default style will be used. */
@@ -1297,20 +1304,27 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
   if (style->antialias != CAIRO_ANTIALIAS_GRAY)
     cairo_set_antialias (cr, style->antialias);
 
-  if (add_tolerance && style->line_width_tolerance > 0)
-    {
-      if (style->line_width >= 0.0)
-	line_width = style->line_width;
-      else
-	line_width = cairo_get_line_width (cr);
-
-      cairo_set_line_width (cr, line_width + style->line_width_tolerance);
-    }
+  /* Determine the basic line width. */
+  if (style->line_width >= 0.0)
+    line_width = style->line_width;
   else
+    line_width = cairo_get_line_width (cr);
+
+  /* Add on the tolerance, if needed. */
+  if (add_tolerance)
+    line_width += style->line_width_tolerance;
+
+  /* If the line width is supposed to be unscaled, try to reverse the effects
+     of the canvas scale. We use the maximum canvas scale, since being too
+     thin is better than being too fat. */
+  if (style->line_width_is_unscaled && simple->canvas)
     {
-      if (style->line_width >= 0.0)
-	cairo_set_line_width (cr, style->line_width);
+      scale = MAX (simple->canvas->scale_x, simple->canvas->scale_y);
+      line_width /= scale;
     }
+
+  /* Set the line width. */
+  cairo_set_line_width (cr, line_width);
 
   if (style->line_cap != CAIRO_LINE_CAP_BUTT)
     cairo_set_line_cap (cr, style->line_cap);
@@ -1460,6 +1474,13 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 							_("The tolerance added to the line width when testing for mouse events"),
 							0.0, G_MAXDOUBLE, 0.0,
 							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH_IS_UNSCALED,
+				   g_param_spec_boolean ("line-width-is-unscaled",
+							 _("Line Width Is Unscaled"),
+							 _("If the line width does not grow as the canvas is scaled"),
+							 FALSE,
+							 G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_LINE_CAP,
 				   g_param_spec_enum ("line-cap",

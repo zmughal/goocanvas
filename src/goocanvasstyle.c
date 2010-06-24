@@ -27,6 +27,7 @@ enum {
   /* Line style & width properties. */
   PROP_LINE_WIDTH,
   PROP_LINE_WIDTH_TOLERANCE,
+  PROP_LINE_WIDTH_IS_UNSCALED,
   PROP_LINE_CAP,
   PROP_LINE_JOIN,
   PROP_LINE_JOIN_MITER_LIMIT,
@@ -57,8 +58,9 @@ goo_canvas_style_init (GooCanvasStyle *style)
   style->font_desc = NULL;
 
   style->line_width = -1.0;
-  style->line_width_tolerance = -1.0;
+  style->line_width_tolerance = 0.0;
   style->line_join_miter_limit = 10.0;
+  style->line_width_is_unscaled = FALSE;
 
   style->stroke_pattern_set = FALSE;
   style->fill_pattern_set = FALSE;
@@ -136,6 +138,9 @@ goo_canvas_style_get_property (GObject              *object,
       break;
     case PROP_LINE_WIDTH_TOLERANCE:
       g_value_set_double (value, style->line_width_tolerance);
+      break;
+    case PROP_LINE_WIDTH_IS_UNSCALED:
+      g_value_set_boolean (value, style->line_width_is_unscaled);
       break;
     case PROP_LINE_CAP:
       g_value_set_enum (value, style->line_cap);
@@ -237,6 +242,9 @@ goo_canvas_style_set_property (GObject              *object,
       break;
     case PROP_LINE_WIDTH_TOLERANCE:
       style->line_width_tolerance = g_value_get_double (value);
+      break;
+    case PROP_LINE_WIDTH_IS_UNSCALED:
+      style->line_width_is_unscaled = g_value_get_boolean (value);
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
@@ -380,6 +388,13 @@ goo_canvas_style_class_init (GooCanvasStyleClass *klass)
 							_("The tolerance added to the line width when testing for mouse events"),
 							0.0, G_MAXDOUBLE, 0.0,
 							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH_IS_UNSCALED,
+				   g_param_spec_boolean ("line-width-is-unscaled",
+							 _("Line Width Is Unscaled"),
+							 _("If the line width does not grow as the canvas is scaled"),
+							 FALSE,
+							 G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_LINE_CAP,
 				   g_param_spec_enum ("line-cap",

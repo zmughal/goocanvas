@@ -47,6 +47,7 @@ struct _GooCanvasStyle
   cairo_line_cap_t  line_cap        : 4;
   cairo_line_join_t line_join       : 4;
   guint hint_metrics		    : 2;
+  guint line_width_is_unscaled	    : 1;
 };
 
 struct _GooCanvasStyleClass

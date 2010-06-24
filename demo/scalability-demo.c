@@ -116,8 +116,7 @@ setup_canvas (GtkWidget *canvas)
   GooCanvasItem *root, *group, *item;
   int group_i, group_j, i, j;
   int total_items = 0, id_item_num = 0;;
-  GooCanvasStyle *style, *style2;
-  PangoFontDescription *font_desc;
+  GooCanvasStyle *style, *style2, *text_style;
   cairo_matrix_t item_matrix;
   GQuark id_quark = g_quark_from_static_string ("id");
 
@@ -126,8 +125,6 @@ setup_canvas (GtkWidget *canvas)
   g_signal_connect (root, "motion_notify_event",
 		    G_CALLBACK (on_motion_notify), NULL);
 
-  font_desc = pango_font_description_from_string ("Sans 8");
-
   style = g_object_new (GOO_TYPE_CANVAS_STYLE,
 			"fill-color", "mediumseagreen",
 			NULL);
@@ -135,6 +132,10 @@ setup_canvas (GtkWidget *canvas)
   style2 = g_object_new (GOO_TYPE_CANVAS_STYLE,
 			 "fill-color", "steelblue",
 			 NULL);
+
+  text_style = g_object_new (GOO_TYPE_CANVAS_STYLE,
+			     "font", "Sans 8",
+			     NULL);
 
   for (group_i = 0; group_i < N_GROUP_COLS; group_i++)
     {
@@ -194,13 +195,17 @@ setup_canvas (GtkWidget *canvas)
 					      item_x + item_width / 2,
 					      item_y + item_height / 2,
 					      item_width, GTK_ANCHOR_CENTER,
-					      /*"font-desc", font_desc,*/
 					      /*"height", item_height,*/
 					      /*"alignment", PANGO_ALIGN_CENTER,*/
 					      NULL);
 		  /* FIXME: This is slightly naughty, but much faster. */
 		  GOO_CANVAS_TEXT (item)->height = item_height;
 		  GOO_CANVAS_TEXT (item)->alignment = PANGO_ALIGN_CENTER;
+
+#ifdef SET_STYLE
+		  goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item, text_style);
+#endif
+
 #else
 		  item = goo_canvas_rect_new (group, item_x + 20, item_y + 4,
 					      item_width - 40, item_height - 8,
