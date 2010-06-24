@@ -50,21 +50,7 @@ enum {
 };
 
 
-static void canvas_item_interface_init      (GooCanvasItemIface  *iface);
-static void goo_canvas_widget_dispose       (GObject             *object);
-static void goo_canvas_widget_get_property  (GObject             *object,
-					     guint                param_id,
-					     GValue              *value,
-					     GParamSpec          *pspec);
-static void goo_canvas_widget_set_property  (GObject             *object,
-					     guint                param_id,
-					     const GValue        *value,
-					     GParamSpec          *pspec);
-
-G_DEFINE_TYPE_WITH_CODE (GooCanvasWidget, goo_canvas_widget,
-			 GOO_TYPE_CANVAS_ITEM_SIMPLE,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM,
-						canvas_item_interface_init))
+G_DEFINE_TYPE (GooCanvasWidget, goo_canvas_widget, GOO_TYPE_CANVAS_ITEM_SIMPLE)
 
 
 static void
@@ -510,24 +496,20 @@ goo_canvas_widget_is_item_at (GooCanvasItemSimple *simple,
 
 
 static void
-canvas_item_interface_init (GooCanvasItemIface *iface)
-{
-  iface->set_canvas     = goo_canvas_widget_set_canvas;
-  iface->set_parent	= goo_canvas_widget_set_parent;
-  iface->allocate_area  = goo_canvas_widget_allocate_area;
-}
-
-
-static void
 goo_canvas_widget_class_init (GooCanvasWidgetClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
   GooCanvasItemSimpleClass *simple_class = (GooCanvasItemSimpleClass*) klass;
 
   gobject_class->dispose = goo_canvas_widget_dispose;
 
   gobject_class->get_property = goo_canvas_widget_get_property;
   gobject_class->set_property = goo_canvas_widget_set_property;
+
+  item_class->set_canvas      = goo_canvas_widget_set_canvas;
+  item_class->set_parent      = goo_canvas_widget_set_parent;
+  item_class->allocate_area   = goo_canvas_widget_allocate_area;
 
   simple_class->simple_update        = goo_canvas_widget_update;
   simple_class->simple_paint         = goo_canvas_widget_paint;

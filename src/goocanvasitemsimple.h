@@ -57,7 +57,7 @@ typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
 struct _GooCanvasItemSimple
 {
   /* <private> */
-  GObject parent_object;
+  GooCanvasItem parent_object;
 
   /* <public> */
   GooCanvas *canvas;
@@ -104,7 +104,7 @@ struct _GooCanvasItemSimple
 struct _GooCanvasItemSimpleClass
 {
   /*< private >*/
-  GObjectClass parent_class;
+  GooCanvasItemClass parent_class;
 
   /*< public >*/
   void		 (* simple_create_path)	(GooCanvasItemSimple   *simple,

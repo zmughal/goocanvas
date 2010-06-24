@@ -479,7 +479,7 @@ goo_canvas_query_child_properties (gpointer  class,
   if (!G_TYPE_IS_CLASSED (G_TYPE_FROM_CLASS (class)))
     return NULL;
 
-  if (g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM))
+  if (GOO_IS_CANVAS_ITEM_CLASS (class))
     return goo_canvas_item_class_list_child_properties (class,
 							n_properties);
 

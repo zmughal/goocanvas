@@ -1,8 +1,8 @@
 /*
- * GooCanvas. Copyright (C) 2005 Damon Chaplin.
+ * GooCanvas. Copyright (C) 2005-2010 Damon Chaplin.
  * Released under the GNU LGPL license. See COPYING for details.
  *
- * goocanvasitem.h - interface for canvas items & groups.
+ * goocanvasitem.h - base class for canvas items.
  */
 #ifndef __GOO_CANVAS_ITEM_H__
 #define __GOO_CANVAS_ITEM_H__
@@ -55,9 +55,14 @@ GType goo_canvas_bounds_get_type (void) G_GNUC_CONST;
 
 #define GOO_TYPE_CANVAS_ITEM            (goo_canvas_item_get_type ())
 #define GOO_CANVAS_ITEM(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_ITEM, GooCanvasItem))
+#define GOO_CANVAS_ITEM_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_ITEM, GooCanvasItemClass))
 #define GOO_IS_CANVAS_ITEM(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_ITEM))
-#define GOO_CANVAS_ITEM_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GOO_TYPE_CANVAS_ITEM, GooCanvasItemIface))
+#define GOO_IS_CANVAS_ITEM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_ITEM))
+#define GOO_CANVAS_ITEM_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_ITEM, GooCanvasItemClass))
 
+
+typedef struct _GooCanvasItem       GooCanvasItem;
+typedef struct _GooCanvasItemClass  GooCanvasItemClass;
 
 /* Workaround for circular dependencies. Include this file first. */
 typedef struct _GooCanvas           GooCanvas;
@@ -66,17 +71,16 @@ typedef struct _GooCanvas           GooCanvas;
 /**
  * GooCanvasItem
  *
- * #GooCanvasItem is a typedef used for objects that implement the
- * #GooCanvasItem interface.
- *
- * (There is no actual #GooCanvasItem struct, since it is only an interface.
- * But using '#GooCanvasItem' is more helpful than using '#GObject'.)
+ * The #GooCanvasItem-struct struct contains private data only.
  */
-typedef struct _GooCanvasItem       GooCanvasItem;
+struct _GooCanvasItem
+{
+  GObject parent_object;
+};
 
 
 /**
- * GooCanvasItemIface
+ * GooCanvasItemClass
  * @get_canvas: returns the canvas the item is in.
  * @set_canvas: sets the canvas the item is in.
  * @get_n_children: returns the number of children of the item.
@@ -129,8 +133,7 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @scroll_event: signal emitted when the mouse wheel is activated within
  * the item.
  *
- * #GooCanvasItemIFace holds the virtual methods that make up the
- * #GooCanvasItem interface.
+ * #GooCanvasItemClass holds the virtual methods needed for canvas items.
  *
  * Simple canvas items only need to implement the get_parent(), set_parent(),
  * get_bounds(), get_items_at(), update() and paint() methods (and also
@@ -148,12 +151,10 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * may implement get_child_property(), set_child_property() and
  * get_transform_for_child().
  */
-typedef struct _GooCanvasItemIface  GooCanvasItemIface;
-
-struct _GooCanvasItemIface
+struct _GooCanvasItemClass
 {
   /*< private >*/
-  GTypeInterface base_iface;
+  GObjectClass parent_class;
 
   /*< public >*/
   /* Virtual methods that group items must implement. */
@@ -229,6 +230,7 @@ struct _GooCanvasItemIface
   void			(* set_style)			(GooCanvasItem		*item,
 							 GooCanvasStyle		*style);
   gboolean		(* is_visible)			(GooCanvasItem		*item);
+  gboolean		(* get_can_focus)		(GooCanvasItem		*item);
   gdouble               (* get_requested_height)	(GooCanvasItem		*item,
 							 cairo_t		*cr,
 							 gdouble		 width);

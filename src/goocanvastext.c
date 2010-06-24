@@ -59,14 +59,8 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
 			       gdouble	               *origin_x_return,
 			       gdouble	               *origin_y_return);
 
-static void goo_canvas_text_finalize     (GObject            *object);
-static void canvas_item_interface_init   (GooCanvasItemIface *iface);
 
-
-G_DEFINE_TYPE_WITH_CODE (GooCanvasText, goo_canvas_text,
-			 GOO_TYPE_CANVAS_ITEM_SIMPLE,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM,
-						canvas_item_interface_init))
+G_DEFINE_TYPE (GooCanvasText, goo_canvas_text, GOO_TYPE_CANVAS_ITEM_SIMPLE)
 
 
 static void
@@ -665,22 +659,18 @@ goo_canvas_text_get_natural_extents (GooCanvasText  *text,
 
 
 static void
-canvas_item_interface_init (GooCanvasItemIface *iface)
-{
-  iface->get_requested_height = goo_canvas_text_get_requested_height;
-}
-
-
-static void
 goo_canvas_text_class_init (GooCanvasTextClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
   GooCanvasItemSimpleClass *simple_class = (GooCanvasItemSimpleClass*) klass;
 
   gobject_class->finalize = goo_canvas_text_finalize;
 
   gobject_class->get_property = goo_canvas_text_get_property;
   gobject_class->set_property = goo_canvas_text_set_property;
+
+  item_class->get_requested_height = goo_canvas_text_get_requested_height;
 
   simple_class->simple_update        = goo_canvas_text_update;
   simple_class->simple_paint         = goo_canvas_text_paint;

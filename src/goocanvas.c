@@ -3681,6 +3681,7 @@ goo_canvas_focus_recurse (GooCanvas          *canvas,
 			  GooCanvasItem      *item,
 			  GooCanvasFocusData *data)
 {
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   GooCanvasItem *child;
   gboolean can_focus = FALSE, is_best;
   gint n_children, i;
@@ -3700,7 +3701,8 @@ goo_canvas_focus_recurse (GooCanvas          *canvas,
 	}
       else
 	{
-	  g_object_get (item, "can-focus", &can_focus, NULL);
+	  if (item_class->get_can_focus)
+	    can_focus = item_class->get_can_focus (item);
 	}
 
       /* If the item can take the focus itself, and it isn't the current

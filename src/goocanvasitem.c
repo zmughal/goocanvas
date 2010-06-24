@@ -1,16 +1,16 @@
 /*
- * GooCanvas. Copyright (C) 2005 Damon Chaplin.
+ * GooCanvas. Copyright (C) 2005-2010 Damon Chaplin.
  * Released under the GNU LGPL license. See COPYING for details.
  *
- * goocanvasitem.c - interface for canvas items & groups.
+ * goocanvasitem.c - base class for canvas items.
  */
 
 /**
  * SECTION:goocanvasitem
  * @Title: GooCanvasItem
- * @Short_Description: the interface for canvas items.
+ * @Short_Description: the base class for canvas items.
  *
- * #GooCanvasItem defines the interface that canvas items must implement,
+ * #GooCanvasItem defines the methods that canvas items must implement,
  * and contains methods for operating on canvas items.
  */
 #include <config.h>
@@ -56,33 +56,10 @@ enum {
 
 static guint canvas_item_signals[LAST_SIGNAL] = { 0 };
 
-static void goo_canvas_item_base_init (gpointer g_class);
 extern void _goo_canvas_style_init (void);
 
 
-GType
-goo_canvas_item_get_type (void)
-{
-  static GType canvas_item_type = 0;
-
-  if (!canvas_item_type)
-    {
-      static const GTypeInfo canvas_item_info =
-      {
-        sizeof (GooCanvasItemIface), /* class_size */
-	goo_canvas_item_base_init,   /* base_init */
-	NULL,			     /* base_finalize */
-      };
-
-      canvas_item_type = g_type_register_static (G_TYPE_INTERFACE,
-						 "GooCanvasItem",
-						 &canvas_item_info, 0);
-
-      g_type_interface_add_prerequisite (canvas_item_type, G_TYPE_OBJECT);
-    }
-
-  return canvas_item_type;
-}
+G_DEFINE_TYPE (GooCanvasItem, goo_canvas_item, G_TYPE_OBJECT)
 
 
 static void
@@ -99,434 +76,368 @@ child_property_notify_dispatcher (GObject     *object,
 
 
 static void
-goo_canvas_item_base_init (gpointer g_iface)
+goo_canvas_item_class_init (GooCanvasItemClass *klass)
 {
   static GObjectNotifyContext cpn_context = { 0, NULL, NULL };
-  static gboolean initialized = FALSE;
-  
-  if (!initialized)
-    {
-      GType iface_type = G_TYPE_FROM_INTERFACE (g_iface);
 
-      _goo_canvas_item_child_property_pool = g_param_spec_pool_new (TRUE);
+  GObjectClass *gobject_class = (GObjectClass*) klass;
 
-      cpn_context.quark_notify_queue = g_quark_from_static_string ("GooCanvasItem-child-property-notify-queue");
-      cpn_context.dispatcher = child_property_notify_dispatcher;
-      _goo_canvas_item_child_property_notify_context = &cpn_context;
+  _goo_canvas_item_child_property_pool = g_param_spec_pool_new (TRUE);
 
-      /* Mouse events. */
+  cpn_context.quark_notify_queue = g_quark_from_static_string ("GooCanvasItem-child-property-notify-queue");
+  cpn_context.dispatcher = child_property_notify_dispatcher;
+  _goo_canvas_item_child_property_notify_context = &cpn_context;
 
-      /**
-       * GooCanvasItem::enter-notify-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when the mouse enters an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[ENTER_NOTIFY_EVENT] =
-	g_signal_new ("enter_notify_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       enter_notify_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /* Mouse events. */
 
-      /**
-       * GooCanvasItem::leave-notify-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when the mouse leaves an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[LEAVE_NOTIFY_EVENT] =
-	g_signal_new ("leave_notify_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       leave_notify_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::enter-notify-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when the mouse enters an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[ENTER_NOTIFY_EVENT] =
+    g_signal_new ("enter_notify_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   enter_notify_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::motion-notify-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when the mouse moves within an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[MOTION_NOTIFY_EVENT] =
-	g_signal_new ("motion_notify_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       motion_notify_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::leave-notify-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when the mouse leaves an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[LEAVE_NOTIFY_EVENT] =
+    g_signal_new ("leave_notify_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   leave_notify_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::button-press-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when a mouse button is pressed in an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[BUTTON_PRESS_EVENT] =
-	g_signal_new ("button_press_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       button_press_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::motion-notify-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when the mouse moves within an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[MOTION_NOTIFY_EVENT] =
+    g_signal_new ("motion_notify_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   motion_notify_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::button-release-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when a mouse button is released in an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[BUTTON_RELEASE_EVENT] =
-	g_signal_new ("button_release_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       button_release_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::button-press-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when a mouse button is pressed in an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[BUTTON_PRESS_EVENT] =
+    g_signal_new ("button_press_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   button_press_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+
+  /**
+   * GooCanvasItem::button-release-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when a mouse button is released in an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[BUTTON_RELEASE_EVENT] =
+    g_signal_new ("button_release_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   button_release_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
 
-      /* Keyboard events. */
+  /* Keyboard events. */
 
-      /**
-       * GooCanvasItem::focus-in-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data.
-       *
-       * Emitted when the item receives the keyboard focus.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[FOCUS_IN_EVENT] =
-	g_signal_new ("focus_in_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       focus_in_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::focus-in-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data.
+   *
+   * Emitted when the item receives the keyboard focus.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[FOCUS_IN_EVENT] =
+    g_signal_new ("focus_in_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   focus_in_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::focus-out-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data.
-       *
-       * Emitted when the item loses the keyboard focus.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[FOCUS_OUT_EVENT] =
-	g_signal_new ("focus_out_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       focus_out_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::focus-out-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data.
+   *
+   * Emitted when the item loses the keyboard focus.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[FOCUS_OUT_EVENT] =
+    g_signal_new ("focus_out_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   focus_out_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::key-press-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data.
-       *
-       * Emitted when a key is pressed and the item has the keyboard
-       * focus.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[KEY_PRESS_EVENT] =
-	g_signal_new ("key_press_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       key_press_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::key-press-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data.
+   *
+   * Emitted when a key is pressed and the item has the keyboard
+   * focus.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[KEY_PRESS_EVENT] =
+    g_signal_new ("key_press_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   key_press_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::key-release-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data.
-       *
-       * Emitted when a key is released and the item has the keyboard
-       * focus.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[KEY_RELEASE_EVENT] =
-	g_signal_new ("key_release_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       key_release_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::key-release-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data.
+   *
+   * Emitted when a key is released and the item has the keyboard
+   * focus.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[KEY_RELEASE_EVENT] =
+    g_signal_new ("key_release_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   key_release_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::query-tooltip:
-       * @item: the item which received the signal.
-       * @x: the x coordinate of the mouse.
-       * @y: the y coordinate of the mouse.
-       * @keyboard_mode: %TRUE if the tooltip was triggered using the keyboard.
-       * @tooltip: a #GtkTooltip.
-       *
-       * Emitted when the mouse has paused over the item for a certain amount
-       * of time, or the tooltip was requested via the keyboard.
-       *
-       * Note that if @keyboard_mode is %TRUE, the values of @x and @y are
-       * undefined and should not be used.
-       *
-       * If the item wants to display a tooltip it should update @tooltip
-       * and return %TRUE.
-       *
-       * Returns: %TRUE if the item has set a tooltip to show.
-       */
-      canvas_item_signals[QUERY_TOOLTIP] =
-	g_signal_new ("query-tooltip",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface, query_tooltip),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__DOUBLE_DOUBLE_BOOLEAN_OBJECT,
-		      G_TYPE_BOOLEAN, 4,
-		      G_TYPE_DOUBLE,
-		      G_TYPE_DOUBLE,
-		      G_TYPE_BOOLEAN,
-		      GTK_TYPE_TOOLTIP);
+  /**
+   * GooCanvasItem::query-tooltip:
+   * @item: the item which received the signal.
+   * @x: the x coordinate of the mouse.
+   * @y: the y coordinate of the mouse.
+   * @keyboard_mode: %TRUE if the tooltip was triggered using the keyboard.
+   * @tooltip: a #GtkTooltip.
+   *
+   * Emitted when the mouse has paused over the item for a certain amount
+   * of time, or the tooltip was requested via the keyboard.
+   *
+   * Note that if @keyboard_mode is %TRUE, the values of @x and @y are
+   * undefined and should not be used.
+   *
+   * If the item wants to display a tooltip it should update @tooltip
+   * and return %TRUE.
+   *
+   * Returns: %TRUE if the item has set a tooltip to show.
+   */
+  canvas_item_signals[QUERY_TOOLTIP] =
+    g_signal_new ("query-tooltip",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass, query_tooltip),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__DOUBLE_DOUBLE_BOOLEAN_OBJECT,
+		  G_TYPE_BOOLEAN, 4,
+		  G_TYPE_DOUBLE,
+		  G_TYPE_DOUBLE,
+		  G_TYPE_BOOLEAN,
+		  GTK_TYPE_TOOLTIP);
 
-      /**
-       * GooCanvasItem::grab-broken-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data.
-       *
-       * Emitted when the item's keyboard or pointer grab was lost
-       * unexpectedly.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[GRAB_BROKEN_EVENT] =
-	g_signal_new ("grab_broken_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       grab_broken_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::grab-broken-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data.
+   *
+   * Emitted when the item's keyboard or pointer grab was lost
+   * unexpectedly.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[GRAB_BROKEN_EVENT] =
+    g_signal_new ("grab_broken_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   grab_broken_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      /**
-       * GooCanvasItem::child-notify
-       * @item: the item that received the signal.
-       * @pspec: the #GParamSpec of the changed child property.
-       *
-       * Emitted for each child property that has changed.
-       * The signal's detail holds the property name. 
-       */
-      canvas_item_signals[CHILD_NOTIFY] =
-	g_signal_new ("child_notify",
-		      iface_type,
-		      G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_DETAILED | G_SIGNAL_NO_HOOKS,
-		      G_STRUCT_OFFSET (GooCanvasItemIface, child_notify),
-		      NULL, NULL,
-		      g_cclosure_marshal_VOID__PARAM,
-		      G_TYPE_NONE, 1,
-		      G_TYPE_PARAM);
+  /**
+   * GooCanvasItem::child-notify
+   * @item: the item that received the signal.
+   * @pspec: the #GParamSpec of the changed child property.
+   *
+   * Emitted for each child property that has changed.
+   * The signal's detail holds the property name. 
+   */
+  canvas_item_signals[CHILD_NOTIFY] =
+    g_signal_new ("child_notify",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE | G_SIGNAL_DETAILED | G_SIGNAL_NO_HOOKS,
+		  G_STRUCT_OFFSET (GooCanvasItemClass, child_notify),
+		  NULL, NULL,
+		  g_cclosure_marshal_VOID__PARAM,
+		  G_TYPE_NONE, 1,
+		  G_TYPE_PARAM);
 
-      /**
-       * GooCanvasItem::animation-finished
-       * @item: the item that received the signal.
-       * @stopped: if the animation was explicitly stopped.
-       *
-       * Emitted when the item animation has finished.
-       */
-      canvas_item_signals[ANIMATION_FINISHED] =
-	g_signal_new ("animation-finished",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface, animation_finished),
-		      NULL, NULL,
-		      g_cclosure_marshal_VOID__BOOLEAN,
-		      G_TYPE_NONE, 1,
-		      G_TYPE_BOOLEAN);
+  /**
+   * GooCanvasItem::animation-finished
+   * @item: the item that received the signal.
+   * @stopped: if the animation was explicitly stopped.
+   *
+   * Emitted when the item animation has finished.
+   */
+  canvas_item_signals[ANIMATION_FINISHED] =
+    g_signal_new ("animation-finished",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass, animation_finished),
+		  NULL, NULL,
+		  g_cclosure_marshal_VOID__BOOLEAN,
+		  G_TYPE_NONE, 1,
+		  G_TYPE_BOOLEAN);
 
-      /**
-       * GooCanvasItem::scroll-event
-       * @item: the item that received the signal.
-       * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
-       *
-       * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
-       * usually configured to generate button press events for buttons 4 and 5
-       * when the wheel is turned in an item.
-       *
-       * Returns: %TRUE to stop the signal emission, or %FALSE to let it
-       *  continue.
-       */
-      canvas_item_signals[SCROLL_EVENT] =
-	g_signal_new ("scroll_event",
-		      iface_type,
-		      G_SIGNAL_RUN_LAST,
-		      G_STRUCT_OFFSET (GooCanvasItemIface,
-				       scroll_event),
-		      goo_canvas_boolean_handled_accumulator, NULL,
-		      goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
-		      G_TYPE_BOOLEAN, 2,
-		      GOO_TYPE_CANVAS_ITEM,
-		      GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
+   * GooCanvasItem::scroll-event
+   * @item: the item that received the signal.
+   * @target_item: the target of the event.
+   * @event: the event data. The x & y fields contain the mouse position
+   *  in the item's coordinate space. The x_root & y_root fields contain
+   *  the same coordinates converted to the canvas coordinate space.
+   *
+   * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
+   * usually configured to generate button press events for buttons 4 and 5
+   * when the wheel is turned in an item.
+   *
+   * Returns: %TRUE to stop the signal emission, or %FALSE to let it
+   *  continue.
+   */
+  canvas_item_signals[SCROLL_EVENT] =
+    g_signal_new ("scroll_event",
+		  G_OBJECT_CLASS_TYPE (gobject_class),
+		  G_SIGNAL_RUN_LAST,
+		  G_STRUCT_OFFSET (GooCanvasItemClass,
+				   scroll_event),
+		  goo_canvas_boolean_handled_accumulator, NULL,
+		  goo_canvas_marshal_BOOLEAN__OBJECT_BOXED,
+		  G_TYPE_BOOLEAN, 2,
+		  GOO_TYPE_CANVAS_ITEM,
+		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
 
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_object ("parent",
-								_("Parent"),
-								_("The parent item"),
-								GOO_TYPE_CANVAS_ITEM,
-								G_PARAM_READWRITE));
+  _goo_canvas_style_init ();
+}
 
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_enum ("visibility",
-							      _("Visibility"),
-							      _("When the canvas item is visible"),
-							      GOO_TYPE_CANVAS_ITEM_VISIBILITY,
-							      GOO_CANVAS_ITEM_VISIBLE,
-							      G_PARAM_READWRITE));
 
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_double ("visibility-threshold",
-								_("Visibility Threshold"),
-								_("The scale threshold at which the item becomes visible"),
-								0.0,
-								G_MAXDOUBLE,
-								0.0,
-								G_PARAM_READWRITE));
+static void
+goo_canvas_item_init (GooCanvasItem *canvas_item)
+{
 
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_boxed ("transform",
-							       _("Transform"),
-							       _("The transformation matrix of the item"),
-							       GOO_TYPE_CAIRO_MATRIX,
-							       G_PARAM_READWRITE));
-
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_flags ("pointer-events",
-							       _("Pointer Events"),
-							       _("Specifies when the item receives pointer events"),
-							       GOO_TYPE_CANVAS_POINTER_EVENTS,
-							       GOO_CANVAS_EVENTS_VISIBLE_PAINTED,
-							       G_PARAM_READWRITE));
-
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_string ("title",
-								_("Title"),
-								_("A short context-rich description of the item for use by assistive technologies"),
-								NULL,
-								G_PARAM_READWRITE));
-
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_string ("description",
-								_("Description"),
-								_("A description of the item for use by assistive technologies"),
-								NULL,
-								G_PARAM_READWRITE));
-
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_boolean ("can-focus",
-								 _("Can Focus"),
-								 _("If the item can take the keyboard focus"),
-								 FALSE,
-								 G_PARAM_READWRITE));
-
-      g_object_interface_install_property (g_iface,
-					   g_param_spec_string ("tooltip",
-								_("Tooltip"),
-								_("The tooltip to display for the item"),
-								NULL,
-								G_PARAM_READWRITE));
-
-      _goo_canvas_style_init ();
-
-      initialized = TRUE;
-    }
 }
 
 
@@ -541,15 +452,15 @@ goo_canvas_item_base_init (gpointer g_iface)
 GooCanvas*
 goo_canvas_item_get_canvas (GooCanvasItem *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->get_canvas)
+  if (item_class->get_canvas)
     {
-      return iface->get_canvas (item);
+      return item_class->get_canvas (item);
     }
   else
     {
-      GooCanvasItem *parent = iface->get_parent (item);
+      GooCanvasItem *parent = item_class->get_parent (item);
 
       if (parent)
 	return goo_canvas_item_get_canvas (parent);
@@ -572,10 +483,10 @@ void
 goo_canvas_item_set_canvas     (GooCanvasItem   *item,
 				GooCanvas       *canvas)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->set_canvas)
-    iface->set_canvas (item, canvas);
+  if (item_class->set_canvas)
+    item_class->set_canvas (item, canvas);
 }
 
 
@@ -593,12 +504,12 @@ goo_canvas_item_add_child      (GooCanvasItem       *item,
 				GooCanvasItem       *child,
 				gint                 position)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  g_return_if_fail (iface->add_child != NULL);
+  g_return_if_fail (item_class->add_child != NULL);
   g_return_if_fail (item != child);
 
-  iface->add_child (item, child, position);
+  item_class->add_child (item, child, position);
 }
 
 
@@ -615,11 +526,11 @@ goo_canvas_item_move_child     (GooCanvasItem       *item,
 				gint                 old_position,
 				gint                 new_position)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  g_return_if_fail (iface->move_child != NULL);
+  g_return_if_fail (item_class->move_child != NULL);
 
-  iface->move_child (item, old_position, new_position);
+  item_class->move_child (item, old_position, new_position);
 }
 
 
@@ -634,11 +545,11 @@ void
 goo_canvas_item_remove_child   (GooCanvasItem       *item,
 				gint                 child_num)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  g_return_if_fail (iface->remove_child != NULL);
+  g_return_if_fail (item_class->remove_child != NULL);
 
-  iface->remove_child (item, child_num);
+  item_class->remove_child (item, child_num);
 }
 
 
@@ -681,9 +592,9 @@ goo_canvas_item_find_child     (GooCanvasItem *item,
 gboolean
 goo_canvas_item_is_container (GooCanvasItem       *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_n_children ? TRUE : FALSE;
+  return item_class->get_n_children ? TRUE : FALSE;
 }
 
 
@@ -698,9 +609,9 @@ goo_canvas_item_is_container (GooCanvasItem       *item)
 gint
 goo_canvas_item_get_n_children (GooCanvasItem       *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_n_children ? iface->get_n_children (item) : 0;
+  return item_class->get_n_children ? item_class->get_n_children (item) : 0;
 }
 
 
@@ -718,9 +629,9 @@ GooCanvasItem*
 goo_canvas_item_get_child (GooCanvasItem       *item,
 			   gint                 child_num)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_child ? iface->get_child (item, child_num) : NULL;
+  return item_class->get_child ? item_class->get_child (item, child_num) : NULL;
 }
 
 
@@ -737,7 +648,7 @@ goo_canvas_item_get_parent  (GooCanvasItem *item)
 {
   g_return_val_if_fail (GOO_IS_CANVAS_ITEM (item), NULL);
 
-  return GOO_CANVAS_ITEM_GET_IFACE (item)->get_parent (item);
+  return GOO_CANVAS_ITEM_GET_CLASS (item)->get_parent (item);
 }
 
 
@@ -760,7 +671,7 @@ void
 goo_canvas_item_set_parent (GooCanvasItem *item,
 			    GooCanvasItem *parent)
 {
-  GOO_CANVAS_ITEM_GET_IFACE (item)->set_parent (item, parent);
+  GOO_CANVAS_ITEM_GET_CLASS (item)->set_parent (item, parent);
 }
 
 
@@ -776,10 +687,10 @@ goo_canvas_item_set_parent (GooCanvasItem *item,
 gboolean
 goo_canvas_item_get_is_static	(GooCanvasItem		*item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->get_is_static)
-    return iface->get_is_static (item);
+  if (item_class->get_is_static)
+    return item_class->get_is_static (item);
   return FALSE;
 }
 
@@ -800,10 +711,10 @@ void
 goo_canvas_item_set_is_static	(GooCanvasItem		*item,
 				 gboolean		 is_static)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->set_is_static)
-    iface->set_is_static (item, is_static);
+  if (item_class->set_is_static)
+    item_class->set_is_static (item, is_static);
 }
 
 
@@ -933,9 +844,9 @@ gboolean
 goo_canvas_item_get_transform  (GooCanvasItem   *item,
 				cairo_matrix_t  *transform)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_transform ? iface->get_transform (item, transform) : FALSE;
+  return item_class->get_transform ? item_class->get_transform (item, transform) : FALSE;
 }
 
 
@@ -956,14 +867,14 @@ goo_canvas_item_get_transform_for_child  (GooCanvasItem  *item,
 					  GooCanvasItem  *child,
 					  cairo_matrix_t *transform)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (child && iface->get_transform_for_child)
-    return iface->get_transform_for_child (item, child, transform);
+  if (child && item_class->get_transform_for_child)
+    return item_class->get_transform_for_child (item, child, transform);
 
   /* We fallback to the standard get_transform method. */
-  if (iface->get_transform)
-    return iface->get_transform (item, transform);
+  if (item_class->get_transform)
+    return item_class->get_transform (item, transform);
 
   return FALSE;
 }
@@ -981,7 +892,7 @@ void
 goo_canvas_item_set_transform  (GooCanvasItem        *item,
 				const cairo_matrix_t *transform)
 {
-  GOO_CANVAS_ITEM_GET_IFACE (item)->set_transform (item, transform);
+  GOO_CANVAS_ITEM_GET_CLASS (item)->set_transform (item, transform);
 }
 
 
@@ -1008,13 +919,13 @@ goo_canvas_item_get_simple_transform (GooCanvasItem   *item,
 				      gdouble         *scale,
 				      gdouble         *rotation)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t matrix = { 1, 0, 0, 1, 0, 0 };
   double x1 = 1.0, y1 = 0.0, radians;
   gboolean has_transform = FALSE;
 
-  if (iface->get_transform)
-    has_transform = iface->get_transform (item, &matrix);
+  if (item_class->get_transform)
+    has_transform = item_class->get_transform (item, &matrix);
 
   if (!has_transform)
     {
@@ -1057,13 +968,13 @@ goo_canvas_item_set_simple_transform (GooCanvasItem   *item,
 				      gdouble          scale,
 				      gdouble          rotation)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t new_matrix = { 1, 0, 0, 1, 0, 0 };
 
   cairo_matrix_translate (&new_matrix, x, y);
   cairo_matrix_scale (&new_matrix, scale, scale);
   cairo_matrix_rotate (&new_matrix, rotation * (M_PI  / 180));
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1080,12 +991,12 @@ goo_canvas_item_translate      (GooCanvasItem *item,
 				gdouble        tx,
 				gdouble        ty)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t new_matrix = { 1, 0, 0, 1, 0, 0 };
 
-  iface->get_transform (item, &new_matrix);
+  item_class->get_transform (item, &new_matrix);
   cairo_matrix_translate (&new_matrix, tx, ty);
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1102,12 +1013,12 @@ goo_canvas_item_scale          (GooCanvasItem *item,
 				gdouble        sx,
 				gdouble        sy)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t new_matrix = { 1, 0, 0, 1, 0, 0 };
 
-  iface->get_transform (item, &new_matrix);
+  item_class->get_transform (item, &new_matrix);
   cairo_matrix_scale (&new_matrix, sx, sy);
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1127,15 +1038,15 @@ goo_canvas_item_rotate         (GooCanvasItem *item,
 				gdouble        cx,
 				gdouble        cy)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t new_matrix = { 1, 0, 0, 1, 0, 0 };
   double radians = degrees * (M_PI / 180);
 
-  iface->get_transform (item, &new_matrix);
+  item_class->get_transform (item, &new_matrix);
   cairo_matrix_translate (&new_matrix, cx, cy);
   cairo_matrix_rotate (&new_matrix, radians);
   cairo_matrix_translate (&new_matrix, -cx, -cy);
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1155,16 +1066,16 @@ goo_canvas_item_skew_x         (GooCanvasItem *item,
 				gdouble        cx,
 				gdouble        cy)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t tmp, new_matrix = { 1, 0, 0, 1, 0, 0 };
   double radians = degrees * (M_PI / 180);
 
-  iface->get_transform (item, &new_matrix);
+  item_class->get_transform (item, &new_matrix);
   cairo_matrix_translate (&new_matrix, cx, cy);
   cairo_matrix_init (&tmp, 1, 0, tan (radians), 1, 0, 0);
   cairo_matrix_multiply (&new_matrix, &tmp, &new_matrix);
   cairo_matrix_translate (&new_matrix, -cx, -cy);
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1184,16 +1095,16 @@ goo_canvas_item_skew_y         (GooCanvasItem *item,
 				gdouble        cx,
 				gdouble        cy)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   cairo_matrix_t tmp, new_matrix = { 1, 0, 0, 1, 0, 0 };
   double radians = degrees * (M_PI / 180);
 
-  iface->get_transform (item, &new_matrix);
+  item_class->get_transform (item, &new_matrix);
   cairo_matrix_translate (&new_matrix, cx, cy);
   cairo_matrix_init (&tmp, 1, tan (radians), 0, 1, 0, 0);
   cairo_matrix_multiply (&new_matrix, &tmp, &new_matrix);
   cairo_matrix_translate (&new_matrix, -cx, -cy);
-  iface->set_transform (item, &new_matrix);
+  item_class->set_transform (item, &new_matrix);
 }
 
 
@@ -1209,9 +1120,9 @@ goo_canvas_item_skew_y         (GooCanvasItem *item,
 GooCanvasStyle*
 goo_canvas_item_get_style      (GooCanvasItem   *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_style ? iface->get_style (item) : NULL;
+  return item_class->get_style ? item_class->get_style (item) : NULL;
 }
 
 
@@ -1226,10 +1137,10 @@ void
 goo_canvas_item_set_style      (GooCanvasItem   *item,
 				GooCanvasStyle  *style)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->set_style)
-    iface->set_style (item, style);
+  if (item_class->set_style)
+    item_class->set_style (item, style);
 }
 
 
@@ -1266,7 +1177,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 {
   GooCanvasItem *item = anim->item;
   GooCanvasAnimateType type = anim->type;
-  GooCanvasItemIface *iface = NULL;
+  GooCanvasItemClass *item_class = NULL;
   cairo_matrix_t new_matrix;
   gboolean keep_source = TRUE;
   gdouble scale;
@@ -1274,7 +1185,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 
   GDK_THREADS_ENTER ();
 
-  iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
   if (++anim->step > anim->total_steps)
     {
@@ -1282,7 +1193,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	{
 	case GOO_CANVAS_ANIMATE_RESET:
 	  /* Reset the transform to the initial value. */
-	  iface->set_transform (item, &anim->start);
+	  item_class->set_transform (item, &anim->start);
 
 	  /* Fall through.. */
 	case GOO_CANVAS_ANIMATE_FREEZE:
@@ -1330,7 +1241,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	  cairo_matrix_rotate (&new_matrix, anim->radians_step * step);
 	}
 
-      iface->set_transform (item, &new_matrix);
+      item_class->set_transform (item, &new_matrix);
     }
 
   GDK_THREADS_LEAVE ();
@@ -1354,9 +1265,9 @@ _goo_canvas_item_animate_internal (GooCanvasItem       *item,
   GObject *object;
   cairo_matrix_t matrix = { 1, 0, 0, 1, 0, 0 };
   GooCanvasItemAnimation *anim;
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  iface->get_transform (item, &matrix);
+  item_class->get_transform (item, &matrix);
   object = (GObject*) item;
 
   anim = g_new (GooCanvasItemAnimation, 1);
@@ -1478,12 +1389,12 @@ goo_canvas_item_stop_animation (GooCanvasItem *item)
 void
 goo_canvas_item_request_update  (GooCanvasItem *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->request_update)
-    iface->request_update (item);
+  if (item_class->request_update)
+    item_class->request_update (item);
   else
-    goo_canvas_item_request_update (iface->get_parent (item));
+    goo_canvas_item_request_update (item_class->get_parent (item));
 }
 
 
@@ -1501,9 +1412,9 @@ void
 goo_canvas_item_get_bounds  (GooCanvasItem   *item,
 			     GooCanvasBounds *bounds)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  iface->get_bounds (item, bounds);
+  item_class->get_bounds (item, bounds);
 }
 
 
@@ -1536,10 +1447,10 @@ goo_canvas_item_get_items_at (GooCanvasItem  *item,
 			      gboolean        parent_is_visible,
 			      GList          *found_items)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->get_items_at)
-    return iface->get_items_at (item, x, y, cr, is_pointer_event,
+  if (item_class->get_items_at)
+    return item_class->get_items_at (item, x, y, cr, is_pointer_event,
 				parent_is_visible, found_items);
   else
     return found_items;
@@ -1563,11 +1474,11 @@ goo_canvas_item_get_items_at (GooCanvasItem  *item,
 gboolean
 goo_canvas_item_is_visible  (GooCanvasItem   *item)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
   GooCanvasItem *parent;
 
-  if (iface->is_visible)
-    return iface->is_visible (item);
+  if (item_class->is_visible)
+    return item_class->is_visible (item);
 
   /* If the item doesn't implement the is_visible method we assume it is
      visible and check its ancestors. */
@@ -1618,9 +1529,9 @@ goo_canvas_item_update      (GooCanvasItem   *item,
 			     cairo_t         *cr,
 			     GooCanvasBounds *bounds)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  iface->update (item, entire_tree, cr, bounds);
+  item_class->update (item, entire_tree, cr, bounds);
 }
 
 
@@ -1646,9 +1557,9 @@ goo_canvas_item_paint (GooCanvasItem         *item,
 		       const GooCanvasBounds *bounds,
 		       gdouble                scale)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  iface->paint (item, cr, bounds, scale);
+  item_class->paint (item, cr, bounds, scale);
 }
 
 
@@ -1671,9 +1582,9 @@ goo_canvas_item_get_requested_area (GooCanvasItem    *item,
 				    cairo_t          *cr,
 				    GooCanvasBounds  *requested_area)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  return iface->get_requested_area (item, cr, requested_area);
+  return item_class->get_requested_area (item, cr, requested_area);
 }
 
 
@@ -1699,10 +1610,10 @@ goo_canvas_item_get_requested_height (GooCanvasItem       *item,
 				      cairo_t		  *cr,
 				      gdouble              width)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  if (iface->get_requested_height)
-    return iface->get_requested_height (item, cr, width);
+  if (item_class->get_requested_height)
+    return item_class->get_requested_height (item, cr, width);
   else
     return -1;
 }
@@ -1742,9 +1653,9 @@ goo_canvas_item_allocate_area      (GooCanvasItem         *item,
 				    gdouble                x_offset,
 				    gdouble                y_offset)
 {
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
-  iface->allocate_area (item, cr, requested_area, allocated_area,
+  item_class->allocate_area (item, cr, requested_area, allocated_area,
 			x_offset, y_offset);
 }
 
@@ -1758,15 +1669,11 @@ item_get_child_property (GObject      *object,
 			 GParamSpec   *pspec,
 			 GValue       *value)
 {
-  GObjectClass *class;
-  GooCanvasItemIface *iface;
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (object);
 
-  class = g_type_class_peek (pspec->owner_type);
-
-  iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
-  iface->get_child_property ((GooCanvasItem*) object,
-			     (GooCanvasItem*) child,
-			     pspec->param_id, value, pspec);
+  item_class->get_child_property ((GooCanvasItem*) object,
+				  (GooCanvasItem*) child,
+				  pspec->param_id, value, pspec);
 }
 
 
@@ -1912,13 +1819,11 @@ canvas_item_set_child_property (GObject            *object,
     }
   else
     {
-      GObjectClass *class = g_type_class_peek (pspec->owner_type);
-      GooCanvasItemIface *iface;
+      GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (object);
 
-      iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
-      iface->set_child_property ((GooCanvasItem*) object,
-				 (GooCanvasItem*) child,
-				 pspec->param_id, &tmp_value, pspec);
+      item_class->set_child_property ((GooCanvasItem*) object,
+				      (GooCanvasItem*) child,
+				      pspec->param_id, &tmp_value, pspec);
 
       g_object_notify_queue_add (G_OBJECT (child), nqueue, pspec);
     }

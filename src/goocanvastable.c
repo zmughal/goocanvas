@@ -198,26 +198,13 @@ struct _GooCanvasTableLayoutData
   gdouble last_width;
 };
 
-static GooCanvasItemIface *goo_canvas_table_parent_iface;
-
-static void item_interface_init           (GooCanvasItemIface *iface);
-static void goo_canvas_table_finalize     (GObject            *object);
-static void goo_canvas_table_get_property (GObject            *object,
-					   guint               param_id,
-					   GValue             *value,
-					   GParamSpec         *pspec);
-static void goo_canvas_table_set_property (GObject            *object,
-					   guint               param_id,
-					   const GValue       *value,
-					   GParamSpec         *pspec);
 
 static void goo_canvas_table_init_layout_data (GooCanvasTable *table);
 static void goo_canvas_table_free_layout_data (GooCanvasTable *table);
 
-G_DEFINE_TYPE_WITH_CODE (GooCanvasTable, goo_canvas_table,
-			 GOO_TYPE_CANVAS_GROUP,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM,
-						item_interface_init))
+
+G_DEFINE_TYPE (GooCanvasTable, goo_canvas_table, GOO_TYPE_CANVAS_GROUP)
+
 
 typedef void (*InstallChildPropertyFunc) (GObjectClass*, guint, GParamSpec*);
 
@@ -387,21 +374,6 @@ goo_canvas_table_install_common_properties (GObjectClass *gobject_class,
 						_("If the item can shrink smaller than its requested size vertically"),
 						FALSE,
 						G_PARAM_READWRITE));
-}
-
-
-static void
-goo_canvas_table_class_init (GooCanvasTableClass *klass)
-{
-  GObjectClass *gobject_class = (GObjectClass*) klass;
-
-  goo_canvas_table_parent_iface = g_type_interface_peek (goo_canvas_table_parent_class, GOO_TYPE_CANVAS_ITEM);
-
-  gobject_class->finalize = goo_canvas_table_finalize;
-  gobject_class->get_property = goo_canvas_table_get_property;
-  gobject_class->set_property = goo_canvas_table_set_property;
-
-  goo_canvas_table_install_common_properties (gobject_class, goo_canvas_item_class_install_child_property);
 }
 
 
@@ -774,7 +746,7 @@ goo_canvas_table_add_child     (GooCanvasItem  *item,
   goo_canvas_table_add_child_internal (table, position);
 
   /* Let the parent GooCanvasGroup code do the rest. */
-  goo_canvas_table_parent_iface->add_child (item, child, position);
+  GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->add_child (item, child, position);
 }
 
 
@@ -827,7 +799,7 @@ goo_canvas_table_move_child    (GooCanvasItem  *item,
 					new_position);
 
   /* Let the parent GooCanvasGroup code do the rest. */
-  goo_canvas_table_parent_iface->move_child (item, old_position, new_position);
+  GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->move_child (item, old_position, new_position);
 }
 
 
@@ -843,7 +815,7 @@ goo_canvas_table_remove_child  (GooCanvasItem  *item,
   g_array_remove_index (table->children, child_num);
 
   /* Let the parent GooCanvasGroup code do the rest. */
-  goo_canvas_table_parent_iface->remove_child (item, child_num);
+  GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->remove_child (item, child_num);
 }
 
 
@@ -2558,19 +2530,30 @@ goo_canvas_table_get_transform_for_child  (GooCanvasItem  *item,
 
 
 static void
-item_interface_init (GooCanvasItemIface *iface)
+goo_canvas_table_class_init (GooCanvasTableClass *klass)
 {
-  iface->add_child               = goo_canvas_table_add_child;
-  iface->move_child              = goo_canvas_table_move_child;
-  iface->remove_child            = goo_canvas_table_remove_child;
-  iface->get_child_property      = goo_canvas_table_get_child_property;
-  iface->set_child_property      = goo_canvas_table_set_child_property;
-  iface->get_transform_for_child = goo_canvas_table_get_transform_for_child;
+  GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
 
-  iface->update                  = goo_canvas_table_update;
-  iface->get_requested_area      = goo_canvas_table_get_requested_area;
-  iface->get_requested_height    = goo_canvas_table_get_requested_height;
-  iface->allocate_area           = goo_canvas_table_allocate_area;
-  iface->paint                   = goo_canvas_table_paint;
-  iface->get_items_at	         = goo_canvas_table_get_items_at;
+  gobject_class->finalize = goo_canvas_table_finalize;
+  gobject_class->get_property = goo_canvas_table_get_property;
+  gobject_class->set_property = goo_canvas_table_set_property;
+
+  item_class->add_child               = goo_canvas_table_add_child;
+  item_class->move_child              = goo_canvas_table_move_child;
+  item_class->remove_child            = goo_canvas_table_remove_child;
+  item_class->get_child_property      = goo_canvas_table_get_child_property;
+  item_class->set_child_property      = goo_canvas_table_set_child_property;
+  item_class->get_transform_for_child = goo_canvas_table_get_transform_for_child;
+
+  item_class->update                  = goo_canvas_table_update;
+  item_class->get_requested_area      = goo_canvas_table_get_requested_area;
+  item_class->get_requested_height    = goo_canvas_table_get_requested_height;
+  item_class->allocate_area           = goo_canvas_table_allocate_area;
+  item_class->paint                   = goo_canvas_table_paint;
+  item_class->get_items_at	      = goo_canvas_table_get_items_at;
+
+  goo_canvas_table_install_common_properties (gobject_class, goo_canvas_item_class_install_child_property);
 }
+
+

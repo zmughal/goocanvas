@@ -85,263 +85,9 @@ enum {
 
 static gboolean accessibility_enabled = FALSE;
 
-static void canvas_item_interface_init          (GooCanvasItemIface   *iface);
-static void goo_canvas_item_simple_dispose      (GObject              *object);
-static void goo_canvas_item_simple_get_property (GObject              *object,
-						 guint                 prop_id,
-						 GValue               *value,
-						 GParamSpec           *pspec);
-static void goo_canvas_item_simple_set_property (GObject              *object,
-						 guint                 prop_id,
-						 const GValue         *value,
-						 GParamSpec           *pspec);
 
-static void     goo_canvas_item_simple_default_create_path (GooCanvasItemSimple   *simple,
-							    cairo_t               *cr);
-static void     goo_canvas_item_simple_default_update      (GooCanvasItemSimple   *simple,
-							    cairo_t               *cr);
-static void     goo_canvas_item_simple_default_paint       (GooCanvasItemSimple   *simple,
-							    cairo_t               *cr,
-							    const GooCanvasBounds *bounds);
-static gboolean goo_canvas_item_simple_default_is_item_at  (GooCanvasItemSimple   *simple,
-							    double                 x,
-							    double                 y,
-							    cairo_t               *cr,
-							    gboolean               is_pointer_event);
-
-
-G_DEFINE_TYPE_WITH_CODE (GooCanvasItemSimple, goo_canvas_item_simple,
-			 G_TYPE_OBJECT,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM,
-						canvas_item_interface_init))
-
-
-static void
-goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
-{
-  /* Basic drawing properties. */
-  g_object_class_install_property (gobject_class, PROP_STROKE_PATTERN,
-                                   g_param_spec_boxed ("stroke-pattern",
-						       _("Stroke Pattern"),
-						       _("The pattern to use to paint the perimeter of the item, or NULL disable painting"),
-						       GOO_TYPE_CAIRO_PATTERN,
-						       G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_FILL_PATTERN,
-                                   g_param_spec_boxed ("fill-pattern",
-						       _("Fill Pattern"),
-						       _("The pattern to use to paint the interior of the item, or NULL to disable painting"),
-						       GOO_TYPE_CAIRO_PATTERN,
-						       G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_FILL_RULE,
-				   g_param_spec_enum ("fill-rule",
-						      _("Fill Rule"),
-						      _("The fill rule used to determine which parts of the item are filled"),
-						      GOO_TYPE_CAIRO_FILL_RULE,
-						      CAIRO_FILL_RULE_WINDING,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_OPERATOR,
-				   g_param_spec_enum ("operator",
-						      _("Operator"),
-						      _("The compositing operator to use"),
-						      GOO_TYPE_CAIRO_OPERATOR,
-						      CAIRO_OPERATOR_OVER,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_ANTIALIAS,
-				   g_param_spec_enum ("antialias",
-						      _("Antialias"),
-						      _("The antialiasing mode to use"),
-						      GOO_TYPE_CAIRO_ANTIALIAS,
-						      CAIRO_ANTIALIAS_GRAY,
-						      G_PARAM_READWRITE));
-
-  /* Line style & width properties. */
-  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH,
-				   g_param_spec_double ("line-width",
-							_("Line Width"),
-							_("The line width to use for the item's perimeter"),
-							0.0, G_MAXDOUBLE, 2.0,
-							G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_LINE_CAP,
-				   g_param_spec_enum ("line-cap",
-						      _("Line Cap"),
-						      _("The line cap style to use"),
-						      GOO_TYPE_CAIRO_LINE_CAP,
-						      CAIRO_LINE_CAP_BUTT,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_LINE_JOIN,
-				   g_param_spec_enum ("line-join",
-						      _("Line Join"),
-						      _("The line join style to use"),
-						      GOO_TYPE_CAIRO_LINE_JOIN,
-						      CAIRO_LINE_JOIN_MITER,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_LINE_JOIN_MITER_LIMIT,
-				   g_param_spec_double ("line-join-miter-limit",
-							_("Miter Limit"),
-							_("The smallest angle to use with miter joins, in degrees. Bevel joins will be used below this limit"),
-							0.0, G_MAXDOUBLE, 10.0,
-							G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_LINE_DASH,
-				   g_param_spec_boxed ("line-dash",
-						       _("Line Dash"),
-						       _("The dash pattern to use"),
-						       GOO_TYPE_CANVAS_LINE_DASH,
-						       G_PARAM_READWRITE));
-
-  /* Font properties. */
-  g_object_class_install_property (gobject_class, PROP_FONT,
-				   g_param_spec_string ("font",
-							_("Font"),
-							_("The base font to use for the text"),
-							NULL,
-							G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_FONT_DESC,
-				   g_param_spec_boxed ("font-desc",
-						       _("Font Description"),
-						       _("The attributes specifying which font to use"),
-						       PANGO_TYPE_FONT_DESCRIPTION,
-						       G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_HINT_METRICS,
-				   g_param_spec_enum ("hint-metrics",
-						      _("Hint Metrics"),
-						      _("The hinting to be used for font metrics"),
-						      GOO_TYPE_CAIRO_HINT_METRICS,
-						      CAIRO_HINT_METRICS_OFF,
-						      G_PARAM_READWRITE));
-
-  /* Convenience properties - writable only. */
-  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR,
-				   g_param_spec_string ("stroke-color",
-							_("Stroke Color"),
-							_("The color to use for the item's perimeter. To disable painting set the 'stroke-pattern' property to NULL"),
-							NULL,
-							G_PARAM_WRITABLE));
-
-  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR_RGBA,
-				   g_param_spec_uint ("stroke-color-rgba",
-						      _("Stroke Color RGBA"),
-						      _("The color to use for the item's perimeter, specified as a 32-bit integer value. To disable painting set the 'stroke-pattern' property to NULL"),
-						      0, G_MAXUINT, 0,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_STROKE_PIXBUF,
-                                   g_param_spec_object ("stroke-pixbuf",
-							_("Stroke Pixbuf"),
-							_("The pixbuf to use to draw the item's perimeter. To disable painting set the 'stroke-pattern' property to NULL"),
-                                                        GDK_TYPE_PIXBUF,
-                                                        G_PARAM_WRITABLE));
-
-  g_object_class_install_property (gobject_class, PROP_FILL_COLOR,
-				   g_param_spec_string ("fill-color",
-							_("Fill Color"),
-							_("The color to use to paint the interior of the item. To disable painting set the 'fill-pattern' property to NULL"),
-							NULL,
-							G_PARAM_WRITABLE));
-
-  g_object_class_install_property (gobject_class, PROP_FILL_COLOR_RGBA,
-				   g_param_spec_uint ("fill-color-rgba",
-						      _("Fill Color RGBA"),
-						      _("The color to use to paint the interior of the item, specified as a 32-bit integer value. To disable painting set the 'fill-pattern' property to NULL"),
-						      0, G_MAXUINT, 0,
-						      G_PARAM_READWRITE));
-
-  g_object_class_install_property (gobject_class, PROP_FILL_PIXBUF,
-                                   g_param_spec_object ("fill-pixbuf",
-							_("Fill Pixbuf"),
-							_("The pixbuf to use to paint the interior of the item. To disable painting set the 'fill-pattern' property to NULL"),
-                                                        GDK_TYPE_PIXBUF,
-                                                        G_PARAM_WRITABLE));
-
-  /* Other properties. */
-  g_object_class_override_property (gobject_class, PROP_PARENT,
-				    "parent");
-
-  g_object_class_override_property (gobject_class, PROP_VISIBILITY,
-				    "visibility");
-
-  g_object_class_override_property (gobject_class, PROP_VISIBILITY_THRESHOLD,
-				    "visibility-threshold");
-
-  g_object_class_override_property (gobject_class, PROP_TRANSFORM,
-				    "transform");
-
-  g_object_class_override_property (gobject_class, PROP_POINTER_EVENTS,
-				    "pointer-events");
-
-  g_object_class_override_property (gobject_class, PROP_TITLE,
-				    "title");
-
-  g_object_class_override_property (gobject_class, PROP_DESCRIPTION,
-				    "description");
-
-  g_object_class_override_property (gobject_class, PROP_CAN_FOCUS,
-				    "can-focus");
-
-  g_object_class_override_property (gobject_class, PROP_TOOLTIP,
-				    "tooltip");
-
-  /**
-   * GooCanvasItemSimple:clip-path
-   *
-   * The sequence of commands describing the clip path of the item, specified
-   * as a string using the same syntax
-   * as in the <ulink url="http://www.w3.org/Graphics/SVG/">Scalable Vector
-   * Graphics (SVG)</ulink> path element.
-   */
-  g_object_class_install_property (gobject_class, PROP_CLIP_PATH,
-				   g_param_spec_string ("clip-path",
-							_("Clip Path"),
-							_("The sequence of path commands specifying the clip path"),
-							NULL,
-							G_PARAM_WRITABLE));
-
-  g_object_class_install_property (gobject_class, PROP_CLIP_FILL_RULE,
-				   g_param_spec_enum ("clip-fill-rule",
-						      _("Clip Fill Rule"),
-						      _("The fill rule used to determine which parts of the item are clipped"),
-						      GOO_TYPE_CAIRO_FILL_RULE,
-						      CAIRO_FILL_RULE_WINDING,
-						      G_PARAM_READWRITE));
-
-}
-
-
-static void
-goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
-{
-  GObjectClass *gobject_class = (GObjectClass*) klass;
-
-  gobject_class->dispose  = goo_canvas_item_simple_dispose;
-
-  gobject_class->get_property = goo_canvas_item_simple_get_property;
-  gobject_class->set_property = goo_canvas_item_simple_set_property;
-
-  /* Register our accessible factory, but only if accessibility is enabled. */
-  if (!ATK_IS_NO_OP_OBJECT_FACTORY (atk_registry_get_factory (atk_get_default_registry (), GTK_TYPE_WIDGET)))
-    {
-      accessibility_enabled = TRUE;
-      atk_registry_set_factory_type (atk_get_default_registry (),
-				     GOO_TYPE_CANVAS_ITEM_SIMPLE,
-				     goo_canvas_item_accessible_factory_get_type ());
-    }
-
-  goo_canvas_item_simple_install_common_properties (gobject_class);
-
-  klass->simple_create_path = goo_canvas_item_simple_default_create_path;
-  klass->simple_update      = goo_canvas_item_simple_default_update;
-  klass->simple_paint       = goo_canvas_item_simple_default_paint;
-  klass->simple_is_item_at  = goo_canvas_item_simple_default_is_item_at;
-}
+G_DEFINE_TYPE (GooCanvasItemSimple, goo_canvas_item_simple,
+	       GOO_TYPE_CANVAS_ITEM)
 
 
 static void
@@ -970,6 +716,15 @@ goo_canvas_item_simple_is_visible  (GooCanvasItem   *item)
 
 
 static gboolean
+goo_canvas_item_simple_get_can_focus  (GooCanvasItem   *item)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+
+  return simple->can_focus;
+}
+
+
+static gboolean
 goo_canvas_item_simple_get_is_static  (GooCanvasItem   *item)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
@@ -1296,33 +1051,6 @@ goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
 }
 
 
-static void
-canvas_item_interface_init (GooCanvasItemIface *iface)
-{
-  iface->get_canvas         = goo_canvas_item_simple_get_canvas;
-  iface->set_canvas         = goo_canvas_item_simple_set_canvas;
-
-  iface->get_parent	    = goo_canvas_item_simple_get_parent;
-  iface->set_parent	    = goo_canvas_item_simple_set_parent;
-  iface->get_bounds         = goo_canvas_item_simple_get_bounds;
-  iface->get_items_at	    = goo_canvas_item_simple_get_items_at;
-  iface->update             = goo_canvas_item_simple_update;
-  iface->get_requested_area = goo_canvas_item_simple_get_requested_area;
-  iface->allocate_area      = goo_canvas_item_simple_allocate_area;
-  iface->paint              = goo_canvas_item_simple_paint;
-
-  iface->get_transform      = goo_canvas_item_simple_get_transform;
-  iface->set_transform      = goo_canvas_item_simple_set_transform;
-  iface->get_style          = goo_canvas_item_simple_get_style;
-  iface->set_style          = goo_canvas_item_simple_set_style;
-  iface->is_visible         = goo_canvas_item_simple_is_visible;
-  iface->get_is_static	    = goo_canvas_item_simple_get_is_static;
-  iface->set_is_static	    = goo_canvas_item_simple_set_is_static;
-
-  iface->query_tooltip	    = goo_canvas_item_simple_query_tooltip;
-}
-
-
 /**
  * goo_canvas_item_simple_paint_path:
  * @item: a #GooCanvasItemSimple.
@@ -1615,4 +1343,298 @@ goo_canvas_item_simple_get_line_width (GooCanvasItemSimple   *simple)
     return goo_canvas_get_default_line_width (simple->canvas);
   else
     return 2.0;
+}
+
+
+static void
+goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
+{
+  GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
+
+  gobject_class->dispose  = goo_canvas_item_simple_dispose;
+
+  gobject_class->get_property = goo_canvas_item_simple_get_property;
+  gobject_class->set_property = goo_canvas_item_simple_set_property;
+
+  item_class->get_canvas         = goo_canvas_item_simple_get_canvas;
+  item_class->set_canvas         = goo_canvas_item_simple_set_canvas;
+
+  item_class->get_parent	 = goo_canvas_item_simple_get_parent;
+  item_class->set_parent	 = goo_canvas_item_simple_set_parent;
+  item_class->get_bounds         = goo_canvas_item_simple_get_bounds;
+  item_class->get_items_at	 = goo_canvas_item_simple_get_items_at;
+  item_class->update             = goo_canvas_item_simple_update;
+  item_class->get_requested_area = goo_canvas_item_simple_get_requested_area;
+  item_class->allocate_area      = goo_canvas_item_simple_allocate_area;
+  item_class->paint              = goo_canvas_item_simple_paint;
+
+  item_class->get_transform      = goo_canvas_item_simple_get_transform;
+  item_class->set_transform      = goo_canvas_item_simple_set_transform;
+  item_class->get_style          = goo_canvas_item_simple_get_style;
+  item_class->set_style          = goo_canvas_item_simple_set_style;
+  item_class->is_visible         = goo_canvas_item_simple_is_visible;
+  item_class->get_can_focus	 = goo_canvas_item_simple_get_can_focus;
+  item_class->get_is_static	 = goo_canvas_item_simple_get_is_static;
+  item_class->set_is_static	 = goo_canvas_item_simple_set_is_static;
+
+  item_class->query_tooltip	 = goo_canvas_item_simple_query_tooltip;
+
+  klass->simple_create_path = goo_canvas_item_simple_default_create_path;
+  klass->simple_update      = goo_canvas_item_simple_default_update;
+  klass->simple_paint       = goo_canvas_item_simple_default_paint;
+  klass->simple_is_item_at  = goo_canvas_item_simple_default_is_item_at;
+
+  /* Register our accessible factory, but only if accessibility is enabled. */
+  if (!ATK_IS_NO_OP_OBJECT_FACTORY (atk_registry_get_factory (atk_get_default_registry (), GTK_TYPE_WIDGET)))
+    {
+      accessibility_enabled = TRUE;
+      atk_registry_set_factory_type (atk_get_default_registry (),
+				     GOO_TYPE_CANVAS_ITEM_SIMPLE,
+				     goo_canvas_item_accessible_factory_get_type ());
+    }
+
+  /* Basic drawing properties. */
+  g_object_class_install_property (gobject_class, PROP_STROKE_PATTERN,
+                                   g_param_spec_boxed ("stroke-pattern",
+						       _("Stroke Pattern"),
+						       _("The pattern to use to paint the perimeter of the item, or NULL disable painting"),
+						       GOO_TYPE_CAIRO_PATTERN,
+						       G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_PATTERN,
+                                   g_param_spec_boxed ("fill-pattern",
+						       _("Fill Pattern"),
+						       _("The pattern to use to paint the interior of the item, or NULL to disable painting"),
+						       GOO_TYPE_CAIRO_PATTERN,
+						       G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_RULE,
+				   g_param_spec_enum ("fill-rule",
+						      _("Fill Rule"),
+						      _("The fill rule used to determine which parts of the item are filled"),
+						      GOO_TYPE_CAIRO_FILL_RULE,
+						      CAIRO_FILL_RULE_WINDING,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_OPERATOR,
+				   g_param_spec_enum ("operator",
+						      _("Operator"),
+						      _("The compositing operator to use"),
+						      GOO_TYPE_CAIRO_OPERATOR,
+						      CAIRO_OPERATOR_OVER,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_ANTIALIAS,
+				   g_param_spec_enum ("antialias",
+						      _("Antialias"),
+						      _("The antialiasing mode to use"),
+						      GOO_TYPE_CAIRO_ANTIALIAS,
+						      CAIRO_ANTIALIAS_GRAY,
+						      G_PARAM_READWRITE));
+
+  /* Line style & width properties. */
+  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH,
+				   g_param_spec_double ("line-width",
+							_("Line Width"),
+							_("The line width to use for the item's perimeter"),
+							0.0, G_MAXDOUBLE, 2.0,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_CAP,
+				   g_param_spec_enum ("line-cap",
+						      _("Line Cap"),
+						      _("The line cap style to use"),
+						      GOO_TYPE_CAIRO_LINE_CAP,
+						      CAIRO_LINE_CAP_BUTT,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_JOIN,
+				   g_param_spec_enum ("line-join",
+						      _("Line Join"),
+						      _("The line join style to use"),
+						      GOO_TYPE_CAIRO_LINE_JOIN,
+						      CAIRO_LINE_JOIN_MITER,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_JOIN_MITER_LIMIT,
+				   g_param_spec_double ("line-join-miter-limit",
+							_("Miter Limit"),
+							_("The smallest angle to use with miter joins, in degrees. Bevel joins will be used below this limit"),
+							0.0, G_MAXDOUBLE, 10.0,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_DASH,
+				   g_param_spec_boxed ("line-dash",
+						       _("Line Dash"),
+						       _("The dash pattern to use"),
+						       GOO_TYPE_CANVAS_LINE_DASH,
+						       G_PARAM_READWRITE));
+
+  /* Font properties. */
+  g_object_class_install_property (gobject_class, PROP_FONT,
+				   g_param_spec_string ("font",
+							_("Font"),
+							_("The base font to use for the text"),
+							NULL,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_FONT_DESC,
+				   g_param_spec_boxed ("font-desc",
+						       _("Font Description"),
+						       _("The attributes specifying which font to use"),
+						       PANGO_TYPE_FONT_DESCRIPTION,
+						       G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_HINT_METRICS,
+				   g_param_spec_enum ("hint-metrics",
+						      _("Hint Metrics"),
+						      _("The hinting to be used for font metrics"),
+						      GOO_TYPE_CAIRO_HINT_METRICS,
+						      CAIRO_HINT_METRICS_OFF,
+						      G_PARAM_READWRITE));
+
+  /* Convenience properties - writable only. */
+  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR,
+				   g_param_spec_string ("stroke-color",
+							_("Stroke Color"),
+							_("The color to use for the item's perimeter. To disable painting set the 'stroke-pattern' property to NULL"),
+							NULL,
+							G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR_RGBA,
+				   g_param_spec_uint ("stroke-color-rgba",
+						      _("Stroke Color RGBA"),
+						      _("The color to use for the item's perimeter, specified as a 32-bit integer value. To disable painting set the 'stroke-pattern' property to NULL"),
+						      0, G_MAXUINT, 0,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_STROKE_PIXBUF,
+                                   g_param_spec_object ("stroke-pixbuf",
+							_("Stroke Pixbuf"),
+							_("The pixbuf to use to draw the item's perimeter. To disable painting set the 'stroke-pattern' property to NULL"),
+                                                        GDK_TYPE_PIXBUF,
+                                                        G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_COLOR,
+				   g_param_spec_string ("fill-color",
+							_("Fill Color"),
+							_("The color to use to paint the interior of the item. To disable painting set the 'fill-pattern' property to NULL"),
+							NULL,
+							G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_COLOR_RGBA,
+				   g_param_spec_uint ("fill-color-rgba",
+						      _("Fill Color RGBA"),
+						      _("The color to use to paint the interior of the item, specified as a 32-bit integer value. To disable painting set the 'fill-pattern' property to NULL"),
+						      0, G_MAXUINT, 0,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_PIXBUF,
+                                   g_param_spec_object ("fill-pixbuf",
+							_("Fill Pixbuf"),
+							_("The pixbuf to use to paint the interior of the item. To disable painting set the 'fill-pattern' property to NULL"),
+                                                        GDK_TYPE_PIXBUF,
+                                                        G_PARAM_WRITABLE));
+
+  /* Other properties. */
+  g_object_class_install_property (gobject_class,
+				   PROP_PARENT,
+				   g_param_spec_object ("parent",
+							_("Parent"),
+							_("The parent item"),
+							GOO_TYPE_CANVAS_ITEM,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_VISIBILITY,
+				   g_param_spec_enum ("visibility",
+						      _("Visibility"),
+						      _("When the canvas item is visible"),
+						      GOO_TYPE_CANVAS_ITEM_VISIBILITY,
+						      GOO_CANVAS_ITEM_VISIBLE,
+						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_VISIBILITY_THRESHOLD,
+				   g_param_spec_double ("visibility-threshold",
+							_("Visibility Threshold"),
+							_("The scale threshold at which the item becomes visible"),
+							0.0,
+							G_MAXDOUBLE,
+							0.0,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_TRANSFORM,
+				   g_param_spec_boxed ("transform",
+						       _("Transform"),
+						       _("The transformation matrix of the item"),
+						       GOO_TYPE_CAIRO_MATRIX,
+						       G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_POINTER_EVENTS,
+				   g_param_spec_flags ("pointer-events",
+						       _("Pointer Events"),
+						       _("Specifies when the item receives pointer events"),
+						       GOO_TYPE_CANVAS_POINTER_EVENTS,
+						       GOO_CANVAS_EVENTS_VISIBLE_PAINTED,
+						       G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_TITLE,
+				   g_param_spec_string ("title",
+							_("Title"),
+							_("A short context-rich description of the item for use by assistive technologies"),
+							NULL,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_DESCRIPTION,
+				   g_param_spec_string ("description",
+							_("Description"),
+							_("A description of the item for use by assistive technologies"),
+							NULL,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_CAN_FOCUS,
+				   g_param_spec_boolean ("can-focus",
+							 _("Can Focus"),
+							 _("If the item can take the keyboard focus"),
+							 FALSE,
+							 G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class,
+				   PROP_TOOLTIP,
+				   g_param_spec_string ("tooltip",
+							_("Tooltip"),
+							_("The tooltip to display for the item"),
+							NULL,
+							G_PARAM_READWRITE));
+
+
+  /**
+   * GooCanvasItemSimple:clip-path
+   *
+   * The sequence of commands describing the clip path of the item, specified
+   * as a string using the same syntax
+   * as in the <ulink url="http://www.w3.org/Graphics/SVG/">Scalable Vector
+   * Graphics (SVG)</ulink> path element.
+   */
+  g_object_class_install_property (gobject_class, PROP_CLIP_PATH,
+				   g_param_spec_string ("clip-path",
+							_("Clip Path"),
+							_("The sequence of path commands specifying the clip path"),
+							NULL,
+							G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_CLIP_FILL_RULE,
+				   g_param_spec_enum ("clip-fill-rule",
+						      _("Clip Fill Rule"),
+						      _("The fill rule used to determine which parts of the item are clipped"),
+						      GOO_TYPE_CAIRO_FILL_RULE,
+						      CAIRO_FILL_RULE_WINDING,
+						      G_PARAM_READWRITE));
 }

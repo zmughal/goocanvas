@@ -52,12 +52,8 @@ enum {
   PROP_HEIGHT
 };
 
-static void canvas_item_interface_init    (GooCanvasItemIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GooCanvasGroup, goo_canvas_group,
-			 GOO_TYPE_CANVAS_ITEM_SIMPLE,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM,
-						canvas_item_interface_init))
+G_DEFINE_TYPE (GooCanvasGroup, goo_canvas_group, GOO_TYPE_CANVAS_ITEM_SIMPLE)
 
 
 static void
@@ -590,34 +586,30 @@ goo_canvas_group_paint (GooCanvasItem         *item,
 
 
 static void
-canvas_item_interface_init (GooCanvasItemIface *iface)
-{
-  iface->set_canvas     = goo_canvas_group_set_canvas;
-  iface->get_n_children = goo_canvas_group_get_n_children;
-  iface->get_child      = goo_canvas_group_get_child;
-  iface->request_update = goo_canvas_group_request_update;
-
-  iface->add_child      = goo_canvas_group_add_child;
-  iface->move_child     = goo_canvas_group_move_child;
-  iface->remove_child   = goo_canvas_group_remove_child;
-
-  iface->get_items_at	= goo_canvas_group_get_items_at;
-  iface->update         = goo_canvas_group_update;
-  iface->paint          = goo_canvas_group_paint;
-
-  iface->set_is_static  = goo_canvas_group_set_is_static;
-}
-
-
-static void
 goo_canvas_group_class_init (GooCanvasGroupClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
+  GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
 
   gobject_class->dispose  = goo_canvas_group_dispose;
   gobject_class->finalize = goo_canvas_group_finalize;
   gobject_class->get_property = goo_canvas_group_get_property;
   gobject_class->set_property = goo_canvas_group_set_property;
+
+  item_class->set_canvas     = goo_canvas_group_set_canvas;
+  item_class->get_n_children = goo_canvas_group_get_n_children;
+  item_class->get_child      = goo_canvas_group_get_child;
+  item_class->request_update = goo_canvas_group_request_update;
+
+  item_class->add_child      = goo_canvas_group_add_child;
+  item_class->move_child     = goo_canvas_group_move_child;
+  item_class->remove_child   = goo_canvas_group_remove_child;
+
+  item_class->get_items_at   = goo_canvas_group_get_items_at;
+  item_class->update         = goo_canvas_group_update;
+  item_class->paint          = goo_canvas_group_paint;
+
+  item_class->set_is_static  = goo_canvas_group_set_is_static;
 
   /* Register our accessible factory, but only if accessibility is enabled. */
   if (!ATK_IS_NO_OP_OBJECT_FACTORY (atk_registry_get_factory (atk_get_default_registry (), GTK_TYPE_WIDGET)))
