@@ -1229,25 +1229,10 @@ goo_canvas_get_rgba_value_from_pattern (cairo_pattern_t *pattern,
 }
 
 
-/* Sets a style property to the given pattern, taking ownership of it. */
-void
-goo_canvas_set_style_property_from_pattern (GooCanvasStyle  *style,
-					    GQuark           property_id,
-					    cairo_pattern_t *pattern)
-{
-  GValue tmpval = { 0 };
-
-  g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-  g_value_take_boxed (&tmpval, pattern);
-  goo_canvas_style_set_property (style, property_id, &tmpval);
-  g_value_unset (&tmpval);
-}
-
-
 cairo_pattern_t*
 goo_canvas_create_pattern_from_color_value (const GValue *value)
 {
-  GdkColor color = { 0, 0, 0, 0, };
+  GdkColor color = { 0, 0, 0, 0 };
 
   if (g_value_get_string (value))
     gdk_color_parse (g_value_get_string (value), &color);

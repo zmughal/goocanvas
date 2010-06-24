@@ -452,7 +452,7 @@ paint_vertical_lines (GooCanvasItemSimple   *simple,
   max_x = grid->x + grid->width;
   max_y = grid->y + grid->height;
 
-  has_stroke = goo_canvas_style_set_stroke_options (simple->style, cr);
+  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
   line_width = goo_canvas_item_simple_get_line_width (simple);
 
   /* If the grid's vertical grid line pattern/color has been set, use that.
@@ -512,7 +512,7 @@ paint_horizontal_lines (GooCanvasItemSimple   *simple,
   max_x = grid->x + grid->width;
   max_y = grid->y + grid->height;
 
-  has_stroke = goo_canvas_style_set_stroke_options (simple->style, cr);
+  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
   line_width = goo_canvas_item_simple_get_line_width (simple);
 
   /* If the grid's horizontal grid line pattern/color has been set, use that.
@@ -567,7 +567,7 @@ goo_canvas_grid_paint (GooCanvasItemSimple   *simple,
   gdouble half_border_width;
 
   /* Paint the background in the fill pattern/color, if one is set. */
-  if (goo_canvas_style_set_fill_options (simple->style, cr))
+  if (goo_canvas_item_simple_set_fill_options (simple, cr))
     {
       cairo_rectangle (cr, grid->x, grid->y,
 		       grid->width, grid->height);
@@ -605,7 +605,7 @@ goo_canvas_grid_paint (GooCanvasItemSimple   *simple,
       if (grid->border_pattern)
 	cairo_set_source (cr, grid->border_pattern);
       else
-	goo_canvas_style_set_stroke_options (simple->style, cr);
+	goo_canvas_item_simple_set_stroke_options (simple, cr);
 
       cairo_set_line_width (cr, grid->border_width);
       half_border_width = grid->border_width / 2.0;

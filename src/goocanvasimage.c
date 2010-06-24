@@ -279,7 +279,7 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
   cairo_matrix_translate (&matrix, -image->x, -image->y);
 
   cairo_pattern_set_matrix (image->pattern, &matrix);
-  goo_canvas_style_set_fill_options (simple->style, cr);
+  goo_canvas_item_simple_set_fill_options (simple, cr);
   cairo_set_source (cr, image->pattern);
   cairo_rectangle (cr, image->x, image->y,
 		   image->width, image->height);

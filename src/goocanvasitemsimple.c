@@ -135,9 +135,8 @@ goo_canvas_item_simple_get_property (GObject              *object,
 				     GParamSpec           *pspec)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
-  AtkObject *accessible;
   GooCanvasStyle *style = simple->style;
-  GValue *svalue;
+  AtkObject *accessible;
   gdouble line_width = 2.0;
   gchar *font = NULL;
 
@@ -157,81 +156,62 @@ goo_canvas_item_simple_get_property (GObject              *object,
 
       /* Basic drawing properties. */
     case PROP_STROKE_PATTERN:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_stroke_pattern_id);
-      g_value_set_boxed (value, svalue ? svalue->data[0].v_pointer : NULL);
+      g_value_set_boxed (value, style ? style->stroke_pattern : NULL);
       break;
     case PROP_FILL_PATTERN:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_pattern_id);
-      g_value_set_boxed (value, svalue ? svalue->data[0].v_pointer : NULL);
+      g_value_set_boxed (value, style ? style->fill_pattern : NULL);
       break;
     case PROP_FILL_RULE:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_rule_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_FILL_RULE_WINDING);
+      g_value_set_enum (value, style ? style->fill_rule : CAIRO_FILL_RULE_WINDING);
       break;
     case PROP_OPERATOR:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_operator_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_OPERATOR_OVER);
+      g_value_set_enum (value, style ? style->op : CAIRO_OPERATOR_OVER);
       break;
     case PROP_ANTIALIAS:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_antialias_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_ANTIALIAS_GRAY);
+      g_value_set_enum (value, style ? style->antialias : CAIRO_ANTIALIAS_GRAY);
       break;
 
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_width_id);
-      if (svalue)
-	line_width = svalue->data[0].v_double;
+      if (style)
+	line_width = style->line_width;
       else if (simple->canvas)
 	line_width = goo_canvas_get_default_line_width (simple->canvas);
       g_value_set_double (value, line_width);
       break;
     case PROP_LINE_CAP:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_cap_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_LINE_CAP_BUTT);
+      g_value_set_enum (value, style ? style->line_cap : CAIRO_LINE_CAP_BUTT);
       break;
     case PROP_LINE_JOIN:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_join_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_LINE_JOIN_MITER);
+      g_value_set_enum (value, style ? style->line_join : CAIRO_LINE_JOIN_MITER);
       break;
     case PROP_LINE_JOIN_MITER_LIMIT:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_join_miter_limit_id);
-      g_value_set_double (value, svalue ? svalue->data[0].v_double : 10.0);
+      g_value_set_double (value, style ? style->line_join_miter_limit : 10.0);
       break;
     case PROP_LINE_DASH:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_dash_id);
-      g_value_set_boxed (value, svalue ? svalue->data[0].v_pointer : NULL);
+      g_value_set_boxed (value, style ? style->dash : NULL);
       break;
 
       /* Font properties. */
     case PROP_FONT:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_font_desc_id);
-      if (svalue)
-	font = pango_font_description_to_string (svalue->data[0].v_pointer);
+      if (style->font_desc)
+	font = pango_font_description_to_string (style->font_desc);
       g_value_set_string (value, font);
       g_free (font);
       break;
     case PROP_FONT_DESC:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_font_desc_id);
-      g_value_set_boxed (value, svalue ? svalue->data[0].v_pointer : NULL);
+      g_value_set_boxed (value, style ? style->font_desc : NULL);
       break;
     case PROP_HINT_METRICS:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_hint_metrics_id);
-      g_value_set_enum (value, svalue ? svalue->data[0].v_long : CAIRO_HINT_METRICS_OFF);
+      g_value_set_enum (value, style->hint_metrics);
       break;
 
       /* Convenience properties. */
     case PROP_STROKE_COLOR_RGBA:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_stroke_pattern_id);
-      if (svalue)
-	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
-						value);
+      goo_canvas_get_rgba_value_from_pattern (style ? style->stroke_pattern : NULL, value);
       break;
     case PROP_FILL_COLOR_RGBA:
-      svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_pattern_id);
-      if (svalue)
-	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
-						value);
+      goo_canvas_get_rgba_value_from_pattern (style ? style->fill_pattern : NULL, value);
       break;
 
       /* Other properties. */
@@ -271,29 +251,20 @@ goo_canvas_item_simple_set_property (GObject              *object,
 {
   GooCanvasItem *item = (GooCanvasItem*) object;
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
+  GooCanvasStyle *style;
   GooCanvasItem *parent;
   AtkObject *accessible;
-  GooCanvasStyle *style;
   cairo_pattern_t *pattern;
   gboolean need_update = TRUE, recompute_bounds = FALSE;
   cairo_matrix_t *transform;
-  GValue tmpval = { 0 };
   const char *font_name;
   PangoFontDescription *font_desc = NULL;
 
-  /* See if we need to create our own style. */
+  /* See if we need to create a style. */
   if (prop_id < PROP_TRANSFORM)
     {
       if (!simple->style)
-	{
-	  simple->style = goo_canvas_style_new ();
-	}
-      else if (!simple->own_style)
-	{
-	  g_object_unref (simple->style);
-	  simple->style = goo_canvas_style_new ();
-	}
-      simple->own_style = TRUE;
+	simple->style = goo_canvas_style_new ();
     }
 
   style = simple->style;
@@ -319,89 +290,102 @@ goo_canvas_item_simple_set_property (GObject              *object,
 
       /* Basic drawing properties. */
     case PROP_STROKE_PATTERN:
-      goo_canvas_style_set_property (style, goo_canvas_style_stroke_pattern_id, value);
+      goo_canvas_style_set_stroke_pattern (style, g_value_get_boxed (value));
       break;
     case PROP_FILL_PATTERN:
-      goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, value);
+      goo_canvas_style_set_fill_pattern (style, g_value_get_boxed (value));
       break;
     case PROP_FILL_RULE:
-      goo_canvas_style_set_property (style, goo_canvas_style_fill_rule_id, value);
+      style->fill_rule = g_value_get_enum (value);
       break;
     case PROP_OPERATOR:
-      goo_canvas_style_set_property (style, goo_canvas_style_operator_id, value);
+      style->op = g_value_get_enum (value);
       break;
     case PROP_ANTIALIAS:
-      goo_canvas_style_set_property (style, goo_canvas_style_antialias_id, value);
+      style->antialias = g_value_get_enum (value);
       break;
 
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
-      goo_canvas_style_set_property (style, goo_canvas_style_line_width_id, value);
+      style->line_width = g_value_get_double (value);
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_CAP:
-      goo_canvas_style_set_property (style, goo_canvas_style_line_cap_id, value);
+      style->line_cap = g_value_get_enum (value);
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_JOIN:
-      goo_canvas_style_set_property (style, goo_canvas_style_line_join_id, value);
+      style->line_join = g_value_get_enum (value);
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_JOIN_MITER_LIMIT:
-      goo_canvas_style_set_property (style, goo_canvas_style_line_join_miter_limit_id,
-				     value);
+      style->line_join_miter_limit = g_value_get_double (value);
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_DASH:
-      goo_canvas_style_set_property (style, goo_canvas_style_line_dash_id, value);
+      goo_canvas_line_dash_unref (style->dash);
+      style->dash = g_value_get_boxed (value);
+      goo_canvas_line_dash_ref (style->dash);
       recompute_bounds = TRUE;
       break;
 
       /* Font properties. */
     case PROP_FONT:
+      if (style->font_desc)
+	pango_font_description_free (style->font_desc);
       font_name = g_value_get_string (value);
       if (font_name)
-	font_desc = pango_font_description_from_string (font_name);
-      g_value_init (&tmpval, PANGO_TYPE_FONT_DESCRIPTION);
-      g_value_take_boxed (&tmpval, font_desc);
-      goo_canvas_style_set_property (style, goo_canvas_style_font_desc_id, &tmpval);
-      g_value_unset (&tmpval);
+	style->font_desc = pango_font_description_from_string (font_name);
+      else
+	style->font_desc = NULL;
       recompute_bounds = TRUE;
       break;
     case PROP_FONT_DESC:
-      goo_canvas_style_set_property (style, goo_canvas_style_font_desc_id, value);
+      if (style->font_desc)
+	pango_font_description_free (style->font_desc);
+      font_desc = g_value_get_boxed (value);
+      if (font_desc)
+	style->font_desc = pango_font_description_copy (font_desc);
+      else
+	style->font_desc = NULL;
       recompute_bounds = TRUE;
       break;
     case PROP_HINT_METRICS:
-      goo_canvas_style_set_property (style, goo_canvas_style_hint_metrics_id, value);
+      style->hint_metrics = g_value_get_enum (value);
       recompute_bounds = TRUE;
       break;
 
       /* Convenience properties. */
     case PROP_STROKE_COLOR:
       pattern = goo_canvas_create_pattern_from_color_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
+      goo_canvas_style_set_stroke_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
     case PROP_STROKE_COLOR_RGBA:
       pattern = goo_canvas_create_pattern_from_rgba_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
+      goo_canvas_style_set_stroke_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
     case PROP_STROKE_PIXBUF:
       pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
+      goo_canvas_style_set_stroke_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
 
     case PROP_FILL_COLOR:
       pattern = goo_canvas_create_pattern_from_color_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
+      goo_canvas_style_set_fill_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
     case PROP_FILL_COLOR_RGBA:
       pattern = goo_canvas_create_pattern_from_rgba_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
+      goo_canvas_style_set_fill_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
     case PROP_FILL_PIXBUF:
       pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
-      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
+      goo_canvas_style_set_fill_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
       break;
 
       /* Other properties. */
@@ -552,39 +536,6 @@ goo_canvas_item_simple_set_transform (GooCanvasItem        *item,
     {
       g_slice_free (cairo_matrix_t, simple->transform);
       simple->transform = NULL;
-    }
-
-  goo_canvas_item_simple_changed (simple, TRUE);
-}
-
-
-static GooCanvasStyle*
-goo_canvas_item_simple_get_style (GooCanvasItem       *item)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-
-  return simple->style;
-}
-
-
-static void
-goo_canvas_item_simple_set_style (GooCanvasItem  *item,
-				  GooCanvasStyle *style)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-
-  if (simple->style)
-    g_object_unref (simple->style);
-
-  if (style)
-    {
-      simple->style = goo_canvas_style_copy (style);
-      simple->own_style = TRUE;
-    }
-  else
-    {
-      simple->style = NULL;
-      simple->own_style = FALSE;
     }
 
   goo_canvas_item_simple_changed (simple, TRUE);
@@ -743,44 +694,6 @@ goo_canvas_item_simple_set_is_static  (GooCanvasItem   *item,
 }
 
 
-/**
- * goo_canvas_item_simple_check_style:
- * @item: a #GooCanvasItemSimple.
- * 
- * This function is intended to be used by subclasses of #GooCanvasItemSimple,
- * typically in their update() or get_requested_area() methods.
- *
- * It ensures that the item's style is setup correctly. If the item has its
- * own #GooCanvasStyle it makes sure the parent is set correctly. If it
- * doesn't have its own style it uses the parent item's style.
- **/
-void
-goo_canvas_item_simple_check_style (GooCanvasItemSimple *simple)
-{
-  GooCanvasStyle *parent_style = NULL;
-
-  if (simple->parent)
-    parent_style = goo_canvas_item_get_style (simple->parent);
-
-  if (simple->own_style)
-    {
-      goo_canvas_style_set_parent (simple->style, parent_style);
-    }
-  else if (simple->style != parent_style)
-    {
-      /* The item doesn't have its own style so we use the parent's (though
-	 that may also be NULL). */
-      if (simple->style)
-	g_object_unref (simple->style);
-
-      simple->style = parent_style;
-
-      if (parent_style)
-	g_object_ref (parent_style);
-    }
-}
-
-
 static void
 goo_canvas_item_simple_update_internal  (GooCanvasItemSimple *simple,
 					 cairo_t             *cr)
@@ -790,8 +703,6 @@ goo_canvas_item_simple_update_internal  (GooCanvasItemSimple *simple,
   cairo_matrix_t transform;
 
   simple->need_update = FALSE;
-
-  goo_canvas_item_simple_check_style (simple);
 
   cairo_get_matrix (cr, &transform);
 
@@ -1064,12 +975,10 @@ void
 goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
 				   cairo_t             *cr)
 {
-  GooCanvasStyle *style = simple->style;
-
-  if (goo_canvas_style_set_fill_options (style, cr))
+  if (goo_canvas_item_simple_set_fill_options (simple, cr))
     cairo_fill_preserve (cr);
 
-  if (goo_canvas_style_set_stroke_options (style, cr))
+  if (goo_canvas_item_simple_set_stroke_options (simple, cr))
     cairo_stroke (cr);
 
   cairo_new_path (cr);
@@ -1102,16 +1011,15 @@ goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 					cairo_t             *cr,
 					GooCanvasBounds     *bounds)
 {
-  GooCanvasStyle *style = simple->style;
   GooCanvasBounds fill_bounds, stroke_bounds;
 
   /* Calculate the filled extents. */
-  goo_canvas_style_set_fill_options (style, cr);
+  goo_canvas_item_simple_set_fill_options (simple, cr);
   cairo_fill_extents (cr, &fill_bounds.x1, &fill_bounds.y1,
 		      &fill_bounds.x2, &fill_bounds.y2);
 
   /* Check the stroke. */
-  goo_canvas_style_set_stroke_options (style, cr);
+  goo_canvas_item_simple_set_stroke_options (simple, cr);
   cairo_stroke_extents (cr, &stroke_bounds.x1, &stroke_bounds.y1,
 			&stroke_bounds.x2, &stroke_bounds.y2);
 
@@ -1293,13 +1201,12 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
 				      cairo_t               *cr,
 				      GooCanvasPointerEvents pointer_events)
 {
-  GooCanvasStyle *style = simple->style;
   gboolean do_fill, do_stroke;
 
   /* Check the filled path, if required. */
   if (pointer_events & GOO_CANVAS_EVENTS_FILL_MASK)
     {
-      do_fill = goo_canvas_style_set_fill_options (style, cr);
+      do_fill = goo_canvas_item_simple_set_fill_options (simple, cr);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_fill)
 	{
 	  if (cairo_in_fill (cr, x, y))
@@ -1310,7 +1217,7 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
   /* Check the stroke, if required. */
   if (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK)
     {
-      do_stroke = goo_canvas_style_set_stroke_options (style, cr);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (cairo_in_stroke (cr, x, y))
@@ -1333,16 +1240,103 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
 gdouble
 goo_canvas_item_simple_get_line_width (GooCanvasItemSimple   *simple)
 {
-  GValue *value;
-
-  value = goo_canvas_style_get_property (simple->style,
-					 goo_canvas_style_line_width_id);
-  if (value)
-    return value->data[0].v_double;
+  if (simple->style && simple->style->line_width >= 0)
+    return simple->style->line_width;
   else if (simple->canvas)
     return goo_canvas_get_default_line_width (simple->canvas);
   else
     return 2.0;
+}
+
+
+void
+goo_canvas_item_simple_set_style (GooCanvasItemSimple   *simple,
+				  GooCanvasStyle        *style)
+{
+  if (simple->style)
+    g_object_unref (simple->style);
+
+  simple->style = style;
+  if (style)
+    g_object_ref (style);
+
+  goo_canvas_item_simple_changed (simple, TRUE);
+}
+
+
+gboolean
+goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
+					   cairo_t               *cr)
+{
+  GooCanvasStyle *style = simple->style;
+
+  /* If no style is set, just reset the source to black and return TRUE so the
+     default style will be used. */
+  if (!style)
+    {
+      cairo_set_source_rgb (cr, 0, 0, 0);
+      return TRUE;
+    }
+
+  if (style->stroke_pattern)
+    cairo_set_source (cr, style->stroke_pattern);
+  else
+    cairo_set_source_rgb (cr, 0, 0, 0);
+
+  if (style->op != CAIRO_OPERATOR_OVER)
+    cairo_set_operator (cr, style->op);
+
+  if (style->antialias != CAIRO_ANTIALIAS_GRAY)
+    cairo_set_antialias (cr, style->antialias);
+
+  if (style->line_width >= 0.0)
+    cairo_set_line_width (cr, style->line_width);
+
+  if (style->line_cap != CAIRO_LINE_CAP_BUTT)
+    cairo_set_line_cap (cr, style->line_cap);
+
+  if (style->line_join != CAIRO_LINE_JOIN_MITER)
+    cairo_set_line_join (cr, style->line_join);
+
+  if (style->line_join_miter_limit != 10.0)
+    cairo_set_miter_limit (cr, style->line_join_miter_limit);
+
+  if (style->dash)
+    cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
+		    style->dash->dash_offset);
+
+  /* If the style pattern has been explicitly set to NULL return FALSE, as no
+     stroke is wanted. */
+  if (style->stroke_pattern_set && !style->stroke_pattern)
+    return FALSE;
+
+  return TRUE;
+}
+
+
+gboolean
+goo_canvas_item_simple_set_fill_options (GooCanvasItemSimple   *simple,
+					 cairo_t               *cr)
+{
+  GooCanvasStyle *style = simple->style;
+
+  /* If no style is set, just return FALSE as no fill is needed. */
+  if (!style)
+    return FALSE;
+
+  if (style->fill_pattern)
+    cairo_set_source (cr, style->fill_pattern);
+
+  if (style->op != CAIRO_OPERATOR_OVER)
+    cairo_set_operator (cr, style->op);
+
+  if (style->antialias != CAIRO_ANTIALIAS_GRAY)
+    cairo_set_antialias (cr, style->antialias);
+
+  if (style->fill_rule != CAIRO_FILL_RULE_WINDING)
+    cairo_set_fill_rule (cr, style->fill_rule);
+
+  return style->fill_pattern ? TRUE : FALSE;
 }
 
 
@@ -1371,8 +1365,6 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 
   item_class->get_transform      = goo_canvas_item_simple_get_transform;
   item_class->set_transform      = goo_canvas_item_simple_set_transform;
-  item_class->get_style          = goo_canvas_item_simple_get_style;
-  item_class->set_style          = goo_canvas_item_simple_set_style;
   item_class->is_visible         = goo_canvas_item_simple_is_visible;
   item_class->get_can_focus	 = goo_canvas_item_simple_get_can_focus;
   item_class->get_is_static	 = goo_canvas_item_simple_get_is_static;

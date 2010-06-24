@@ -34,7 +34,8 @@ typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
  * @bounds: the bounds of the item, in device space.
  * @need_update: if the item needs to recompute its bounds and redraw.
  * @need_entire_subtree_update: if all descendants need to be updated.
- * @style: the style to draw with.
+ * @pen: the pen to draw the strokes with.
+ * @brush: the brush to fill the items with.
  * @transform: the transformation matrix of the item, or %NULL.
  * @clip_path_commands: an array of #GooCanvasPathCommand specifying the clip
  *  path of the item, or %NULL.
@@ -46,7 +47,6 @@ typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
  * @pointer_events: the #GooCanvasPointerEvents setting specifying the events
  *  the item should receive.
  * @can_focus: if the item can take the keyboard focus.
- * @own_style: if the item has its own style, rather than using its parent's.
  * @clip_fill_rule: the #cairo_fill_rule_t setting specifying the fill rule
  *  used for the clip path.
  * @is_static: if the item is static.
@@ -76,7 +76,6 @@ struct _GooCanvasItemSimple
   guint visibility			: 2;
   guint pointer_events			: 4;
   guint can_focus                       : 1;
-  guint own_style                       : 1;
   guint clip_fill_rule			: 4;
   guint is_static			: 1;
 };
@@ -133,6 +132,8 @@ struct _GooCanvasItemSimpleClass
 
 GType    goo_canvas_item_simple_get_type		(void) G_GNUC_CONST;
 
+void     goo_canvas_item_simple_set_style		(GooCanvasItemSimple   *simple,
+							 GooCanvasStyle        *style);
 
 void     goo_canvas_item_simple_get_path_bounds		(GooCanvasItemSimple	*item,
 							 cairo_t		*cr,
@@ -153,9 +154,12 @@ void     goo_canvas_item_simple_paint_path		(GooCanvasItemSimple	*item,
 
 void     goo_canvas_item_simple_changed			(GooCanvasItemSimple	*item,
 							 gboolean		 recompute_bounds);
-void     goo_canvas_item_simple_check_style		(GooCanvasItemSimple	*item);
 gdouble  goo_canvas_item_simple_get_line_width		(GooCanvasItemSimple   *item);
 
+gboolean goo_canvas_item_simple_set_stroke_options	(GooCanvasItemSimple   *simple,
+							 cairo_t               *cr);
+gboolean goo_canvas_item_simple_set_fill_options	(GooCanvasItemSimple   *simple,
+							 cairo_t               *cr);
 
 
 G_END_DECLS

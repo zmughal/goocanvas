@@ -8,7 +8,6 @@
 #define __GOO_CANVAS_ITEM_H__
 
 #include <gtk/gtk.h>
-#include "goocanvasstyle.h"
 
 G_BEGIN_DECLS
 
@@ -141,8 +140,7 @@ struct _GooCanvasItem
  * inside a layout container like #GooCanvasTable).
  *
  * Items that support transforms should also implement get_transform() and
- * set_transform(). Items that support styles should implement get_style()
- * and set_style().
+ * set_transform().
  *
  * Container items must implement get_canvas(), set_canvas(),
  * get_n_children(), get_child() and request_update(). Containers that support
@@ -226,9 +224,6 @@ struct _GooCanvasItemClass
 							 cairo_matrix_t		*transform);
   void			(* set_transform)		(GooCanvasItem		*item,
 							 const cairo_matrix_t	*transform);
-  GooCanvasStyle*	(* get_style)			(GooCanvasItem		*item);
-  void			(* set_style)			(GooCanvasItem		*item,
-							 GooCanvasStyle		*style);
   gboolean		(* is_visible)			(GooCanvasItem		*item);
   gboolean		(* get_can_focus)		(GooCanvasItem		*item);
   gdouble               (* get_requested_height)	(GooCanvasItem		*item,
@@ -392,10 +387,6 @@ void               goo_canvas_item_skew_y         (GooCanvasItem   *item,
 						   gdouble          degrees,
 						   gdouble          cx,
 						   gdouble          cy);
-
-GooCanvasStyle*    goo_canvas_item_get_style      (GooCanvasItem   *item);
-void               goo_canvas_item_set_style      (GooCanvasItem   *item,
-						   GooCanvasStyle  *style);
 
 void               goo_canvas_item_animate        (GooCanvasItem   *item,
 						   gdouble           x,

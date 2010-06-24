@@ -1826,8 +1826,6 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
 
   simple->need_update = FALSE;
 
-  goo_canvas_item_simple_check_style (simple);
-
   if (simple->visibility == GOO_CANVAS_ITEM_HIDDEN)
     return FALSE;
 
@@ -2059,8 +2057,6 @@ goo_canvas_table_update  (GooCanvasItem   *item,
       simple->need_update = FALSE;
       simple->need_entire_subtree_update = FALSE;
 
-      goo_canvas_item_simple_check_style (simple);
-
       /* We just allocate exactly what is requested. */
       if (goo_canvas_table_get_requested_area (item, cr, &tmp_bounds))
 	{
@@ -2080,7 +2076,6 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 			gdouble                scale)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasStyle *style = simple->style;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
@@ -2153,7 +2148,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   cairo_save (cr);
 
   /* Fill the table, if desired. */
-  if (goo_canvas_style_set_fill_options (style, cr))
+  if (goo_canvas_item_simple_set_fill_options (simple, cr))
     {
       cairo_rectangle (cr,
                        layout_data->border_width + vert_grid_line_width,
@@ -2165,7 +2160,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 
   /* We use the style for the stroke color, but the line cap style and line
      width are overridden here. */
-  goo_canvas_style_set_stroke_options (style, cr);
+  goo_canvas_item_simple_set_stroke_options (simple, cr);
 
   cairo_set_line_cap (cr, CAIRO_LINE_CAP_BUTT);
 

@@ -948,15 +948,18 @@ static void
 polish_diamond (GooCanvasItem *root)
 {
   GooCanvasItem *group, *item;
+  GooCanvasStyle *style;
   int i, j;
   double a, x1, y1, x2, y2;
 
-  group = goo_canvas_group_new (root,
-				"line-width", 1.0,
-				"line-cap", CAIRO_LINE_CAP_ROUND,
-				NULL);
+  group = goo_canvas_group_new (root, NULL);
   goo_canvas_item_translate (group, 270, 230);
   setup_item_signals (group);
+
+  style = g_object_new (GOO_TYPE_CANVAS_STYLE,
+			"line-width", 1.0,
+			"line-cap", CAIRO_LINE_CAP_ROUND,
+			NULL);
 
   for (i = 0; i < VERTICES; i++) {
     a = 2.0 * M_PI * i / VERTICES;
@@ -968,8 +971,11 @@ polish_diamond (GooCanvasItem *root)
       x2 = RADIUS * cos (a);
       y2 = RADIUS * sin (a);
       item = goo_canvas_polyline_new_line (group, x1, y1, x2, y2, NULL);
+      goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item, style);
     }
   }
+
+  g_object_unref (style);
 }
 
 

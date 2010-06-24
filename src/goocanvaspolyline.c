@@ -777,7 +777,7 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
       && (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK))
     {
       /* We use the stroke pattern to match the style of the line. */
-      do_stroke = goo_canvas_style_set_stroke_options (simple->style, cr);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (polyline->start_arrow)
@@ -827,7 +827,7 @@ goo_canvas_polyline_compute_bounds (GooCanvasPolyline     *polyline,
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_style_set_stroke_options (simple->style, cr);
+      goo_canvas_item_simple_set_stroke_options (simple, cr);
 
       if (polyline->start_arrow)
 	{
@@ -887,7 +887,7 @@ goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_style_set_stroke_options (simple->style, cr);
+      goo_canvas_item_simple_set_stroke_options (simple, cr);
 
       if (polyline->start_arrow)
 	{

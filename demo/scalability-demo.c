@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdlib.h>
 #include <goocanvas.h>
 
@@ -47,6 +48,12 @@ double total_width, total_height;
 double left_offset, top_offset;
 char ids[N_TOTAL_ID_ITEMS][MAX_ID_LEN];
 
+GdkPixbuf *pixbuf = NULL;
+cairo_pattern_t *pattern = NULL;
+double item_width, item_height;
+double cell_width, cell_height;
+double group_width, group_height;
+
 static clock_t start;
 
 static gboolean
@@ -75,72 +82,59 @@ on_motion_notify (GooCanvasItem *item,
 
 
 static void
+init_ids (void)
+{
+  int group_i, group_j, i, j;
+  int id_item_num = 0;;
+	
+  for (group_i = 0; group_i < N_GROUP_COLS; group_i++)
+    {
+      for (group_j = 0; group_j < N_GROUP_ROWS; group_j++)
+	{
+	  double group_x = left_offset + (group_i * group_width);
+	  double group_y = top_offset + (group_j * group_height);
+
+	  for (i = 0; i < N_COLS; i++)
+	    {
+	      for (j = 0; j < N_ROWS; j++)
+		{
+		  double item_x = (i * cell_width) + PADDING;
+		  double item_y = (j * cell_height) + PADDING;
+
+		  sprintf (ids[id_item_num++], "%.10g, %.10g",
+			   group_x + item_x, group_y + item_y);
+		}
+	    }
+	}
+    }
+}
+
+
+static void
 setup_canvas (GtkWidget *canvas)
 {
   GooCanvasItem *root, *group, *item;
-  GdkPixbuf *pixbuf = NULL;
-  cairo_pattern_t *pattern = NULL;
   int group_i, group_j, i, j;
-  double item_width, item_height;
-  double cell_width, cell_height;
-  double group_width, group_height;
   int total_items = 0, id_item_num = 0;;
-  GdkColor color = { 0, 0, 0, 0, };
   GooCanvasStyle *style, *style2;
-  GValue tmpval = { 0 };
+  PangoFontDescription *font_desc;
+  cairo_matrix_t item_matrix;
+  GQuark id_quark = g_quark_from_static_string ("id");
 
   root = goo_canvas_get_root_item (GOO_CANVAS (canvas));
 
   g_signal_connect (root, "motion_notify_event",
 		    G_CALLBACK (on_motion_notify), NULL);
 
-  g_object_set (G_OBJECT (root),
-		"font", "Sans 8",
-		NULL);
+  font_desc = pango_font_description_from_string ("Sans 8");
 
-#ifdef USE_PIXMAP
-  pixbuf = gdk_pixbuf_new_from_file("toroid.png", NULL);
-  item_width = gdk_pixbuf_get_width (pixbuf);
-  item_height = gdk_pixbuf_get_height (pixbuf);
-  pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
-#else
-  pixbuf = NULL;
-  item_width = ITEM_WIDTH;
-  item_height = 19;
-#endif
-	
-  cell_width = item_width + PADDING * 2;
-  cell_height = item_height + PADDING * 2;
+  style = g_object_new (GOO_TYPE_CANVAS_STYLE,
+			"fill-color", "mediumseagreen",
+			NULL);
 
-  group_width = N_COLS * cell_width;
-  group_height = N_ROWS * cell_height;
-
-  total_width = N_GROUP_COLS * group_width;
-  total_height = N_GROUP_ROWS * group_height;
-
-  /* We use -ve offsets to test if -ve coords are handled correctly. */
-  left_offset = -total_width / 2;
-  top_offset = -total_height / 2;
-
-  style = goo_canvas_style_new ();
-  gdk_color_parse ("mediumseagreen", &color);
-  pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-				      color.green / 65535.0,
-				      color.blue / 65535.0);
-  g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-  g_value_take_boxed (&tmpval, pattern);
-  goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, &tmpval);
-  g_value_unset (&tmpval);
-
-  style2 = goo_canvas_style_new ();
-  gdk_color_parse ("steelblue", &color);
-  pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-				      color.green / 65535.0,
-				      color.blue / 65535.0);
-  g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
-  g_value_take_boxed (&tmpval, pattern);
-  goo_canvas_style_set_property (style2, goo_canvas_style_fill_pattern_id, &tmpval);
-  g_value_unset (&tmpval);
+  style2 = g_object_new (GOO_TYPE_CANVAS_STYLE,
+			 "fill-color", "steelblue",
+			 NULL);
 
   for (group_i = 0; group_i < N_GROUP_COLS; group_i++)
     {
@@ -160,13 +154,10 @@ setup_canvas (GtkWidget *canvas)
 		  double item_x = (i * cell_width) + PADDING;
 		  double item_y = (j * cell_height) + PADDING;
 #ifdef ROTATE
-		  double rotation = i % 10 * 2;
+		  double rotation = (i % 10 * 2) * M_PI / 180;
 		  double rotation_x = item_x + item_width / 2;
 		  double rotation_y = item_y + item_height / 2;
 #endif
-
-		  sprintf (ids[id_item_num], "%.10g, %.10g",
-			   group_x + item_x, group_y + item_y);
 
 #ifdef USE_PIXMAP
 		  item = goo_canvas_image_new (group, NULL, item_x, item_y,
@@ -179,15 +170,20 @@ setup_canvas (GtkWidget *canvas)
 					      item_width, item_height,
 					      NULL);
 #ifdef SET_STYLE
-		  goo_canvas_item_set_style (item, (j % 2) ? style : style2);
+		  goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item, (j % 2) ? style : style2);
 #endif
 #ifdef ROTATE
-		  goo_canvas_item_rotate (item, rotation, rotation_x, rotation_y);
+		  cairo_matrix_init_identity (&item_matrix);
+		  cairo_matrix_translate (&item_matrix, rotation_x, rotation_y);
+		  cairo_matrix_rotate (&item_matrix, rotation);
+		  cairo_matrix_translate (&item_matrix, -rotation_x, -rotation_y);
+		  goo_canvas_item_set_transform (item, &item_matrix);
 #endif
 #endif
-		  g_object_set_data (G_OBJECT (item), "id",
-				     ids[id_item_num]);
-
+#if 1
+		  g_object_set_qdata (G_OBJECT (item), id_quark,
+				      ids[id_item_num]);
+#endif
 #if 0
 		  g_signal_connect (item, "motion_notify_event",
 				    G_CALLBACK (on_motion_notify), NULL);
@@ -197,8 +193,14 @@ setup_canvas (GtkWidget *canvas)
 		  item = goo_canvas_text_new (group, ids[id_item_num],
 					      item_x + item_width / 2,
 					      item_y + item_height / 2,
-					      -1, GTK_ANCHOR_CENTER,
+					      item_width, GTK_ANCHOR_CENTER,
+					      /*"font-desc", font_desc,*/
+					      /*"height", item_height,*/
+					      /*"alignment", PANGO_ALIGN_CENTER,*/
 					      NULL);
+		  /* FIXME: This is slightly naughty, but much faster. */
+		  GOO_CANVAS_TEXT (item)->height = item_height;
+		  GOO_CANVAS_TEXT (item)->alignment = PANGO_ALIGN_CENTER;
 #else
 		  item = goo_canvas_rect_new (group, item_x + 20, item_y + 4,
 					      item_width - 40, item_height - 8,
@@ -206,8 +208,7 @@ setup_canvas (GtkWidget *canvas)
 #endif
 
 #ifdef ROTATE
-		  goo_canvas_item_rotate (item, rotation, rotation_x,
-					  rotation_y);
+		  goo_canvas_item_set_transform (item, &item_matrix);
 #endif
 		  id_item_num++;
 		  total_items += 2;
@@ -258,6 +259,32 @@ GtkWidget *
 create_canvas (void)
 {
   GtkWidget *canvas;
+
+#ifdef USE_PIXMAP
+  pixbuf = gdk_pixbuf_new_from_file("toroid.png", NULL);
+  item_width = gdk_pixbuf_get_width (pixbuf);
+  item_height = gdk_pixbuf_get_height (pixbuf);
+  pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
+#else
+  pixbuf = NULL;
+  item_width = ITEM_WIDTH;
+  item_height = 19;
+#endif
+
+  cell_width = item_width + PADDING * 2;
+  cell_height = item_height + PADDING * 2;
+
+  group_width = N_COLS * cell_width;
+  group_height = N_ROWS * cell_height;
+
+  total_width = N_GROUP_COLS * group_width;
+  total_height = N_GROUP_ROWS * group_height;
+
+  /* We use -ve offsets to test if -ve coords are handled correctly. */
+  left_offset = -total_width / 2;
+  top_offset = -total_height / 2;
+
+  init_ids ();
 
   /* Create the canvas. */
   canvas = goo_canvas_new ();

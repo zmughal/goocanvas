@@ -404,8 +404,6 @@ goo_canvas_group_update  (GooCanvasItem   *item,
       simple->need_update = FALSE;
       simple->need_entire_subtree_update = FALSE;
 
-      goo_canvas_item_simple_check_style (simple);
-
       simple->bounds.x1 = simple->bounds.y1 = 0.0;
       simple->bounds.x2 = simple->bounds.y2 = 0.0;
 

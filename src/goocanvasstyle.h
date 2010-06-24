@@ -1,45 +1,16 @@
 /*
- * GooCanvas. Copyright (C) 2005-6 Damon Chaplin.
+ * GooCanvas. Copyright (C) 2005-2010 Damon Chaplin.
  * Released under the GNU LGPL license. See COPYING for details.
  *
- * goocanvasstyle.h - cascading styles.
+ * goocanvasstyle.h - 
  */
 #ifndef __GOO_CANVAS_STYLE_H__
 #define __GOO_CANVAS_STYLE_H__
 
 #include <gtk/gtk.h>
+#include <goocanvasutils.h>
 
 G_BEGIN_DECLS
-
-
-/* GQuarks for the basic properties. */
-extern GQuark goo_canvas_style_stroke_pattern_id;
-extern GQuark goo_canvas_style_fill_pattern_id;
-extern GQuark goo_canvas_style_fill_rule_id;
-extern GQuark goo_canvas_style_operator_id;
-extern GQuark goo_canvas_style_antialias_id;
-extern GQuark goo_canvas_style_line_width_id;
-extern GQuark goo_canvas_style_line_cap_id;
-extern GQuark goo_canvas_style_line_join_id;
-extern GQuark goo_canvas_style_line_join_miter_limit_id;
-extern GQuark goo_canvas_style_line_dash_id;
-extern GQuark goo_canvas_style_font_desc_id;
-extern GQuark goo_canvas_style_hint_metrics_id;
-
-
-/**
- * GooCanvasStyleProperty
- * @id: the unique property identifier.
- * @value: the value of the property.
- *
- * #GooCanvasStyleProperty represents a property setting.
- */
-typedef struct _GooCanvasStyleProperty GooCanvasStyleProperty;
-struct _GooCanvasStyleProperty
-{
-  GQuark id;
-  GValue value;
-};
 
 
 #define GOO_TYPE_CANVAS_STYLE            (goo_canvas_style_get_type ())
@@ -53,22 +24,28 @@ struct _GooCanvasStyleProperty
 typedef struct _GooCanvasStyle       GooCanvasStyle;
 typedef struct _GooCanvasStyleClass  GooCanvasStyleClass;
 
-/**
- * GooCanvasStyle
- * @parent: the parent style.
- * @properties: an array of #GooCanvasStyleProperty property settings.
- *
- * #GooCanvasStyle holds the style properties of a canvas item, as well as a
- * pointer to the parent style.
- */
 struct _GooCanvasStyle
 {
-  /* <private> */
   GObject parent_object;
 
-  /* <public> */
-  GooCanvasStyle *parent;
-  GArray *properties;
+  /*< private >*/
+  cairo_pattern_t *stroke_pattern;
+  cairo_pattern_t *fill_pattern;
+
+  GooCanvasLineDash *dash;
+  PangoFontDescription *font_desc;
+
+  gdouble line_width;
+  gdouble line_join_miter_limit;
+
+  guint stroke_pattern_set	    : 1;
+  guint fill_pattern_set	    : 1;
+  cairo_operator_t  op              : 6;
+  cairo_antialias_t antialias       : 4;
+  cairo_fill_rule_t fill_rule       : 3;
+  cairo_line_cap_t  line_cap        : 4;
+  cairo_line_join_t line_join       : 4;
+  guint hint_metrics		    : 2;
 };
 
 struct _GooCanvasStyleClass
@@ -85,25 +62,14 @@ struct _GooCanvasStyleClass
 };
 
 
-GType           goo_canvas_style_get_type           (void) G_GNUC_CONST;
-GooCanvasStyle* goo_canvas_style_new                (void);
-GooCanvasStyle* goo_canvas_style_copy               (GooCanvasStyle *style);
+GType           goo_canvas_style_get_type          (void) G_GNUC_CONST;
+GooCanvasStyle* goo_canvas_style_new               (void);
 
-GooCanvasStyle* goo_canvas_style_get_parent         (GooCanvasStyle *style);
-void            goo_canvas_style_set_parent         (GooCanvasStyle *style,
-						     GooCanvasStyle *parent);
+void         goo_canvas_style_set_stroke_pattern (GooCanvasStyle    *style,
+						  cairo_pattern_t   *pattern);
+void         goo_canvas_style_set_fill_pattern   (GooCanvasStyle    *style,
+						  cairo_pattern_t   *pattern);
 
-GValue*         goo_canvas_style_get_property       (GooCanvasStyle *style,
-						     GQuark          property_id);
-void            goo_canvas_style_set_property	    (GooCanvasStyle *style,
-						     GQuark          property_id,
-						     const GValue   *value);
-
-/* Convenience functions to set the standard cairo stroke and fill options. */
-gboolean        goo_canvas_style_set_stroke_options (GooCanvasStyle *style,
-						     cairo_t        *cr);
-gboolean        goo_canvas_style_set_fill_options   (GooCanvasStyle *style,
-						     cairo_t        *cr);
 
 G_END_DECLS
 

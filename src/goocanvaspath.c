@@ -447,7 +447,7 @@ goo_canvas_path_is_item_at (GooCanvasItemSimple *simple,
   gboolean do_fill;
 
   /* By default only check the fill if a fill color/pattern is specified. */
-  do_fill = goo_canvas_style_set_fill_options (simple->style, cr);
+  do_fill = goo_canvas_item_simple_set_fill_options (simple, cr);
   if (!do_fill)
     pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
 

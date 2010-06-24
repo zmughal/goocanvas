@@ -264,8 +264,6 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
 			       gdouble	               *origin_y_return)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) text;
-  GooCanvasStyle *style = simple->style;
-  GValue *svalue;
   PangoLayout *layout;
   PangoContext *context;
   PangoRectangle ink_rect, logical_rect;
@@ -288,17 +286,12 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
   else
     pango_layout_set_text (layout, string, -1);
 
-  svalue = goo_canvas_style_get_property (style,
-					  goo_canvas_style_font_desc_id);
-  if (svalue)
-    pango_layout_set_font_description (layout, svalue->data[0].v_pointer);
-
-  svalue = goo_canvas_style_get_property (style,
-					  goo_canvas_style_hint_metrics_id);
-  if (svalue)
-    hint_metrics = svalue->data[0].v_long;
+  if (simple->style && simple->style->font_desc)
+    pango_layout_set_font_description (layout, simple->style->font_desc);
 
   font_options = cairo_font_options_create ();
+  if (simple->style)
+    hint_metrics = simple->style->hint_metrics;
   cairo_font_options_set_hint_metrics (font_options, hint_metrics);
   pango_cairo_context_set_font_options (context, font_options);
   cairo_font_options_destroy (font_options);
@@ -432,27 +425,70 @@ goo_canvas_text_update  (GooCanvasItemSimple *simple,
      layout container and settings. */
   text->layout_width = text->width;
 
-  /* Compute the new bounds. */
-  layout = goo_canvas_text_create_layout (text, text->layout_width, cr,
-					  &simple->bounds, NULL, NULL);
-  g_object_unref (layout);
+  /* If the text is going to be clipped we can use the text's width and height
+     to calculate the bounds, which is much faster. */
+  if (text->width > 0.0 && text->height > 0.0)
+    {
+      simple->bounds.x1 = text->x;
+      simple->bounds.y1 = text->y;
 
-  /* If the height is set, use that. */
-  if (text->height > 0.0)
-    simple->bounds.y2 = simple->bounds.y1 + text->height;
+      switch (text->anchor)
+	{
+	case GTK_ANCHOR_N:
+	case GTK_ANCHOR_CENTER:
+	case GTK_ANCHOR_S:
+	  simple->bounds.x1 -= text->width / 2.0;
+	break;
+	case GTK_ANCHOR_NE:
+	case GTK_ANCHOR_E:
+	case GTK_ANCHOR_SE:
+	  simple->bounds.x1 -= text->width;
+	  break;
+	default:
+	  break;
+	}
+
+      switch (text->anchor)
+	{
+	case GTK_ANCHOR_W:
+	case GTK_ANCHOR_CENTER:
+	case GTK_ANCHOR_E:
+	  simple->bounds.y1 -= text->height / 2.0;
+	  break;
+	case GTK_ANCHOR_SW:
+	case GTK_ANCHOR_S:
+	case GTK_ANCHOR_SE:
+	  simple->bounds.y1 -= text->height;
+	  break;
+	default:
+	  break;
+	}
+
+      simple->bounds.x2 = simple->bounds.x1 + text->width;
+      simple->bounds.y2 = simple->bounds.y1 + text->height;
+    }
+  else
+    {
+      /* Compute the new bounds. */
+      layout = goo_canvas_text_create_layout (text, text->layout_width, cr,
+					      &simple->bounds, NULL, NULL);
+      g_object_unref (layout);
+
+      /* If the height is set, use that. */
+      if (text->height > 0.0)
+	simple->bounds.y2 = simple->bounds.y1 + text->height;
+    }
 }
 
 
 static gboolean
-goo_canvas_text_is_unpainted (GooCanvasStyle *style)
+goo_canvas_text_is_unpainted (GooCanvasText *text)
 {
-  GValue *value;
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) text;
+  GooCanvasStyle *style = simple->style;
 
-  value = goo_canvas_style_get_property (style,
-					 goo_canvas_style_fill_pattern_id);
-
-  /* We only return TRUE if the value is explicitly set to NULL. */
-  if (value && !value->data[0].v_pointer)
+  /* We only return TRUE if the fill pattern is explicitly set to NULL. */
+  if (style && style->fill_pattern_set && !style->fill_pattern)
     return TRUE;
   return FALSE;
 }
@@ -481,7 +517,7 @@ goo_canvas_text_is_item_at (GooCanvasItemSimple *simple,
 
   if (is_pointer_event
       && simple->pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK
-      && goo_canvas_text_is_unpainted (simple->style))
+      && goo_canvas_text_is_unpainted (text))
     return FALSE;
 
   /* Check if the point is outside the clipped height. */
@@ -547,7 +583,7 @@ goo_canvas_text_paint (GooCanvasItemSimple   *simple,
   if (!text->text || !text->text[0])
     return;
 
-  goo_canvas_style_set_fill_options (simple->style, cr);
+  goo_canvas_item_simple_set_fill_options (simple, cr);
 
   cairo_new_path (cr);
   layout = goo_canvas_text_create_layout (text, text->layout_width, cr,

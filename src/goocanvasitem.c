@@ -56,8 +56,6 @@ enum {
 
 static guint canvas_item_signals[LAST_SIGNAL] = { 0 };
 
-extern void _goo_canvas_style_init (void);
-
 
 G_DEFINE_TYPE (GooCanvasItem, goo_canvas_item, G_TYPE_OBJECT)
 
@@ -429,8 +427,6 @@ goo_canvas_item_class_init (GooCanvasItemClass *klass)
 		  G_TYPE_BOOLEAN, 2,
 		  GOO_TYPE_CANVAS_ITEM,
 		  GDK_TYPE_EVENT | G_SIGNAL_TYPE_STATIC_SCOPE);
-
-  _goo_canvas_style_init ();
 }
 
 
@@ -1105,42 +1101,6 @@ goo_canvas_item_skew_y         (GooCanvasItem *item,
   cairo_matrix_multiply (&new_matrix, &tmp, &new_matrix);
   cairo_matrix_translate (&new_matrix, -cx, -cy);
   item_class->set_transform (item, &new_matrix);
-}
-
-
-/**
- * goo_canvas_item_get_style:
- * @item: an item.
- * 
- * Gets the item's style. If the item doesn't have its own style it will return
- * its parent's style.
- * 
- * Returns: the item's style.
- **/
-GooCanvasStyle*
-goo_canvas_item_get_style      (GooCanvasItem   *item)
-{
-  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
-
-  return item_class->get_style ? item_class->get_style (item) : NULL;
-}
-
-
-/**
- * goo_canvas_item_set_style:
- * @item: an item.
- * @style: a style.
- * 
- * Sets the item's style, by copying the properties from the given style.
- **/
-void
-goo_canvas_item_set_style      (GooCanvasItem   *item,
-				GooCanvasStyle  *style)
-{
-  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
-
-  if (item_class->set_style)
-    item_class->set_style (item, style);
 }
 
 
