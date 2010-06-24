@@ -1320,7 +1320,11 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
   if (style->line_width_is_unscaled && simple->canvas)
     {
       scale = MAX (simple->canvas->scale_x, simple->canvas->scale_y);
-      line_width /= scale;
+
+      /* We only want to shrink the lines as the canvas is scaled up.
+	 We don't want to affect the line width when the scales are < 1. */
+      if (scale > 1.0)
+	line_width /= scale;
     }
 
   /* Set the line width. */

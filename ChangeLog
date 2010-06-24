@@ -1,3 +1,38 @@
+2010-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* Added "line-width-is-unscaled" property to GooCanvasItemSimple
+	to specify that the line does not grow larger as the canvas is
+	zoomed in (though it does shrink when the canvas is shrunk).
+
+	To do this it multiplies the line width by (1 / canvas scale).
+	If the canvas has different x & y scales it uses the maximum, which
+	seems to work OK.
+
+	GnomeCanvas had a similar feature. See also #573456.
+
+2010-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* Added "line-width-tolerance" property to GooCanvasItemSimple.
+	It is added to the line width when doing hit-testing to make it
+	easier to select narrow lines. (It is also added to the line width
+	when calculating the item bounds, since the item bounds must include
+	the area for hit-testing.) #603769
+
+2010-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* Changed from using a cascading style sheet to a simple style object,
+	as the style code was a bit complicated and not that useful.
+
+2010-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* Changed GooCanvasItem from an interface to an abstract base class.
+	Interfaces are a bit awkward to use and a bit slower.
+
+2010-06-24  Damon Chaplin  <damon@gnome.org>
+
+	* Removed the model/view option, as it made the canvas item code
+	too complicated.
+
 2010-06-21  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 1.90.0
