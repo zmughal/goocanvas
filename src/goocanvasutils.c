@@ -483,10 +483,6 @@ goo_canvas_query_child_properties (gpointer  class,
     return goo_canvas_item_class_list_child_properties (class,
 							n_properties);
 
-  if (g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM_MODEL))
-    return goo_canvas_item_model_class_list_child_properties (class,
-							      n_properties);
-
   return NULL;
 }
 

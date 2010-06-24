@@ -61,7 +61,6 @@ GType goo_canvas_bounds_get_type (void) G_GNUC_CONST;
 
 /* Workaround for circular dependencies. Include this file first. */
 typedef struct _GooCanvas           GooCanvas;
-typedef struct _GooCanvasItemModel  GooCanvasItemModel;
 
 
 /**
@@ -113,8 +112,6 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @set_is_static: notifies the item whether it is static or not.
  * @get_requested_height: returns the requested height of the item,
  *  given a particular allocated width, using the parent's coordinate space.
- * @get_model: gets the model that the canvas item is viewing.
- * @set_model: sets the model that the canvas item will view.
  * @enter_notify_event: signal emitted when the mouse enters the item.
  * @leave_notify_event: signal emitted when the mouse leaves the item.
  * @motion_notify_event: signal emitted when the mouse moves within the item.
@@ -235,11 +232,6 @@ struct _GooCanvasItemIface
   gdouble               (* get_requested_height)	(GooCanvasItem		*item,
 							 cairo_t		*cr,
 							 gdouble		 width);
-
-  /* Virtual methods that model/view items must implement. */
-  GooCanvasItemModel*	(* get_model)			(GooCanvasItem		*item);
-  void			(* set_model)			(GooCanvasItem		*item,
-							 GooCanvasItemModel	*model);
 
 
   /* Signals. */
@@ -426,10 +418,6 @@ GList*		   goo_canvas_item_get_items_at   (GooCanvasItem   *item,
 						   gboolean         parent_is_visible,
 						   GList           *found_items);
 gboolean           goo_canvas_item_is_visible     (GooCanvasItem   *item);
-
-GooCanvasItemModel* goo_canvas_item_get_model	  (GooCanvasItem      *item);
-void                goo_canvas_item_set_model	  (GooCanvasItem      *item,
-						   GooCanvasItemModel *model);
 
 void               goo_canvas_item_request_update (GooCanvasItem   *item);
 void		   goo_canvas_item_ensure_updated (GooCanvasItem   *item);

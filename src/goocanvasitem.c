@@ -1238,7 +1238,6 @@ struct _GooCanvasItemAnimation
 {
   GooCanvasAnimateType type;
   GooCanvasItem *item;
-  GooCanvasItemModel *model;
   int step, total_steps;
   cairo_matrix_t start;
   gdouble x_start, y_start, scale_start, radians_start;
@@ -1266,10 +1265,8 @@ static gboolean
 goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 {
   GooCanvasItem *item = anim->item;
-  GooCanvasItemModel *model = anim->model;
   GooCanvasAnimateType type = anim->type;
   GooCanvasItemIface *iface = NULL;
-  GooCanvasItemModelIface *model_iface = NULL;
   cairo_matrix_t new_matrix;
   gboolean keep_source = TRUE;
   gdouble scale;
@@ -1277,10 +1274,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 
   GDK_THREADS_ENTER ();
 
-  if (model)
-    model_iface = GOO_CANVAS_ITEM_MODEL_GET_IFACE (model);
-  else
-    iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+  iface = GOO_CANVAS_ITEM_GET_IFACE (item);
 
   if (++anim->step > anim->total_steps)
     {
@@ -1288,10 +1282,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	{
 	case GOO_CANVAS_ANIMATE_RESET:
 	  /* Reset the transform to the initial value. */
-	  if (model)
-	    model_iface->set_transform (model, &anim->start);
-	  else
-	    iface->set_transform (item, &anim->start);
+	  iface->set_transform (item, &anim->start);
 
 	  /* Fall through.. */
 	case GOO_CANVAS_ANIMATE_FREEZE:
@@ -1299,16 +1290,8 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	  anim->timeout_id = 0;
 	  /* This will result in a call to goo_canvas_item_free_animation()
 	     above. We've set the timeout_id to 0 so it isn't removed twice. */
-	  if (model)
-	    {
-	      g_object_set_data (G_OBJECT (model), animation_key, NULL);
-	      g_signal_emit_by_name (model, "animation-finished", FALSE);
-	    }
-	  else
-	    {
-	      g_object_set_data (G_OBJECT (item), animation_key, NULL);
-	      g_signal_emit_by_name (item, "animation-finished", FALSE);
-	    }
+	  g_object_set_data (G_OBJECT (item), animation_key, NULL);
+	  g_signal_emit_by_name (item, "animation-finished", FALSE);
 	  break;
 
 	case GOO_CANVAS_ANIMATE_RESTART:
@@ -1347,10 +1330,7 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 	  cairo_matrix_rotate (&new_matrix, anim->radians_step * step);
 	}
 
-      if (model)
-	model_iface->set_transform (model, &new_matrix);
-      else
-	iface->set_transform (item, &new_matrix);
+      iface->set_transform (item, &new_matrix);
     }
 
   GDK_THREADS_LEAVE ();
@@ -1362,7 +1342,6 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
 
 void
 _goo_canvas_item_animate_internal (GooCanvasItem       *item,
-				   GooCanvasItemModel  *model,
 				   gdouble              x,
 				   gdouble              y,
 				   gdouble              scale,
@@ -1375,24 +1354,14 @@ _goo_canvas_item_animate_internal (GooCanvasItem       *item,
   GObject *object;
   cairo_matrix_t matrix = { 1, 0, 0, 1, 0, 0 };
   GooCanvasItemAnimation *anim;
+  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
 
-  if (item)
-    {
-      GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
-      iface->get_transform (item, &matrix);
-      object = (GObject*) item;
-    }
-  else
-    {
-      GooCanvasItemModelIface *iface = GOO_CANVAS_ITEM_MODEL_GET_IFACE (model);
-      iface->get_transform (model, &matrix);
-      object = (GObject*) model;
-    }
+  iface->get_transform (item, &matrix);
+  object = (GObject*) item;
 
   anim = g_new (GooCanvasItemAnimation, 1);
   anim->type = type;
   anim->item = item;
-  anim->model = model;
   anim->step = 0;
   anim->total_steps = duration / step_time;
   anim->start = matrix;
@@ -1472,7 +1441,7 @@ goo_canvas_item_animate        (GooCanvasItem *item,
 				gint           step_time,
 				GooCanvasAnimateType type)
 {
-  _goo_canvas_item_animate_internal (item, NULL, x, y, scale, degrees,
+  _goo_canvas_item_animate_internal (item, x, y, scale, degrees,
 				     absolute, duration, step_time, type);
 }
 
@@ -1607,41 +1576,6 @@ goo_canvas_item_is_visible  (GooCanvasItem   *item)
     return goo_canvas_item_is_visible (parent);
 
   return TRUE;
-}
-
-
-/**
- * goo_canvas_item_get_model:
- * @item: a #GooCanvasItem.
- * 
- * Gets the model of the given canvas item.
- * 
- * Returns: the item's model, or %NULL if it has no model.
- **/
-GooCanvasItemModel*
-goo_canvas_item_get_model	  (GooCanvasItem   *item)
-{
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
-
-  return iface->get_model ? iface->get_model (item) : NULL;
-}
-
-
-/**
- * goo_canvas_item_set_model:
- * @item: a #GooCanvasItem.
- * @model: a #GooCanvasItemModel.
- * 
- * Sets the model of the given canvas item.
- **/
-void
-goo_canvas_item_set_model	  (GooCanvasItem      *item,
-				   GooCanvasItemModel *model)
-{
-  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
-
-  if (iface->set_model)
-    iface->set_model (item, model);
 }
 
 
@@ -1822,31 +1756,17 @@ static inline void
 item_get_child_property (GObject      *object,
 			 GObject      *child,
 			 GParamSpec   *pspec,
-			 GValue       *value,
-			 gboolean      is_model)
+			 GValue       *value)
 {
   GObjectClass *class;
+  GooCanvasItemIface *iface;
 
   class = g_type_class_peek (pspec->owner_type);
 
-  if (is_model)
-    {
-      GooCanvasItemModelIface *iface;
-
-      iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM_MODEL);
-      iface->get_child_property ((GooCanvasItemModel*) object,
-				 (GooCanvasItemModel*) child,
-				 pspec->param_id, value, pspec);
-    }
-  else
-    {
-      GooCanvasItemIface *iface;
-
-      iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
-      iface->get_child_property ((GooCanvasItem*) object,
-				 (GooCanvasItem*) child,
-				 pspec->param_id, value, pspec);
-    }
+  iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
+  iface->get_child_property ((GooCanvasItem*) object,
+			     (GooCanvasItem*) child,
+			     pspec->param_id, value, pspec);
 }
 
 
@@ -1855,8 +1775,7 @@ _goo_canvas_item_get_child_property_internal (GObject              *object,
 					      GObject              *child,
 					      const gchar          *property_name,
 					      GValue               *value,
-					      GParamSpecPool       *property_pool,
-					      gboolean              is_model)
+					      GParamSpecPool       *property_pool)
 {
   GParamSpec *pspec;
 
@@ -1900,7 +1819,7 @@ _goo_canvas_item_get_child_property_internal (GObject              *object,
 	  g_value_init (&tmp_value, G_PARAM_SPEC_VALUE_TYPE (pspec));
 	  prop_value = &tmp_value;
 	}
-      item_get_child_property (object, child, pspec, prop_value, is_model);
+      item_get_child_property (object, child, pspec, prop_value);
       if (prop_value != value)
 	{
 	  g_value_transform (prop_value, value);
@@ -1917,8 +1836,7 @@ _goo_canvas_item_get_child_properties_internal (GObject              *object,
 						GObject              *child,
 						va_list	              var_args,
 						GParamSpecPool       *property_pool,
-						GObjectNotifyContext *notify_context,
-						gboolean              is_model)
+						GObjectNotifyContext *notify_context)
 {
   g_object_ref (object);
   g_object_ref (child);
@@ -1948,7 +1866,7 @@ _goo_canvas_item_get_child_properties_internal (GObject              *object,
 	  break;
 	}
       g_value_init (&value, G_PARAM_SPEC_VALUE_TYPE (pspec));
-      item_get_child_property (object, child, pspec, &value, is_model);
+      item_get_child_property (object, child, pspec, &value);
       G_VALUE_LCOPY (&value, var_args, 0, &error);
       if (error)
 	{
@@ -1970,8 +1888,7 @@ canvas_item_set_child_property (GObject            *object,
 				GObject            *child,
 				GParamSpec         *pspec,
 				const GValue       *value,
-				GObjectNotifyQueue *nqueue,
-				gboolean            is_model)
+				GObjectNotifyQueue *nqueue)
 {
   GValue tmp_value = { 0, };
 
@@ -1996,25 +1913,12 @@ canvas_item_set_child_property (GObject            *object,
   else
     {
       GObjectClass *class = g_type_class_peek (pspec->owner_type);
+      GooCanvasItemIface *iface;
 
-      if (is_model)
-	{
-	  GooCanvasItemModelIface *iface;
-
-	  iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM_MODEL);
-	  iface->set_child_property ((GooCanvasItemModel*) object,
-				     (GooCanvasItemModel*) child,
-				     pspec->param_id, &tmp_value, pspec);
-	}
-      else
-	{
-	  GooCanvasItemIface *iface;
-
-	  iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
-	  iface->set_child_property ((GooCanvasItem*) object,
-				     (GooCanvasItem*) child,
-				     pspec->param_id, &tmp_value, pspec);
-	}
+      iface = g_type_interface_peek (class, GOO_TYPE_CANVAS_ITEM);
+      iface->set_child_property ((GooCanvasItem*) object,
+				 (GooCanvasItem*) child,
+				 pspec->param_id, &tmp_value, pspec);
 
       g_object_notify_queue_add (G_OBJECT (child), nqueue, pspec);
     }
@@ -2028,8 +1932,7 @@ _goo_canvas_item_set_child_property_internal (GObject              *object,
 					      const gchar          *property_name,
 					      const GValue         *value,
 					      GParamSpecPool       *property_pool,
-					      GObjectNotifyContext *notify_context,
-					      gboolean              is_model)
+					      GObjectNotifyContext *notify_context)
 {
   GObjectNotifyQueue *nqueue;
   GParamSpec *pspec;
@@ -2052,8 +1955,7 @@ _goo_canvas_item_set_child_property_internal (GObject              *object,
 	       G_OBJECT_TYPE_NAME (object));
   else
     {
-      canvas_item_set_child_property (object, child, pspec,
-				      value, nqueue, is_model);
+      canvas_item_set_child_property (object, child, pspec, value, nqueue);
     }
   g_object_notify_queue_thaw (child, nqueue);
   g_object_unref (object);
@@ -2066,8 +1968,7 @@ _goo_canvas_item_set_child_properties_internal (GObject              *object,
 						GObject              *child,
 						va_list	              var_args,
 						GParamSpecPool       *property_pool,
-						GObjectNotifyContext *notify_context,
-						gboolean              is_model)
+						GObjectNotifyContext *notify_context)
 {
   GObjectNotifyQueue *nqueue;
 
@@ -2112,8 +2013,7 @@ _goo_canvas_item_set_child_properties_internal (GObject              *object,
 	   */
 	  break;
 	}
-      canvas_item_set_child_property (object, child, pspec, &value, nqueue,
-				      is_model);
+      canvas_item_set_child_property (object, child, pspec, &value, nqueue);
       g_value_unset (&value);
     }
   g_object_notify_queue_thaw (G_OBJECT (child), nqueue);
@@ -2143,7 +2043,7 @@ goo_canvas_item_get_child_property (GooCanvasItem *item,
   g_return_if_fail (property_name != NULL);
   g_return_if_fail (G_IS_VALUE (value));
 
-  _goo_canvas_item_get_child_property_internal ((GObject*) item, (GObject*) child, property_name, value, _goo_canvas_item_child_property_pool, FALSE);
+  _goo_canvas_item_get_child_property_internal ((GObject*) item, (GObject*) child, property_name, value, _goo_canvas_item_child_property_pool);
 }
 
 
@@ -2167,7 +2067,7 @@ goo_canvas_item_set_child_property (GooCanvasItem   *item,
   g_return_if_fail (property_name != NULL);
   g_return_if_fail (G_IS_VALUE (value));
 
-  _goo_canvas_item_set_child_property_internal ((GObject*) item, (GObject*) child, property_name, value, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context, FALSE);
+  _goo_canvas_item_set_child_property_internal ((GObject*) item, (GObject*) child, property_name, value, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context);
 }
 
 
@@ -2188,7 +2088,7 @@ goo_canvas_item_get_child_properties_valist (GooCanvasItem   *item,
   g_return_if_fail (GOO_IS_CANVAS_ITEM (item));
   g_return_if_fail (GOO_IS_CANVAS_ITEM (child));
 
-  _goo_canvas_item_get_child_properties_internal ((GObject*) item, (GObject*) child, var_args, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context, FALSE);
+  _goo_canvas_item_get_child_properties_internal ((GObject*) item, (GObject*) child, var_args, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context);
 }
 
 
@@ -2208,7 +2108,7 @@ goo_canvas_item_set_child_properties_valist (GooCanvasItem   *item,
   g_return_if_fail (GOO_IS_CANVAS_ITEM (item));
   g_return_if_fail (GOO_IS_CANVAS_ITEM (child));
 
-  _goo_canvas_item_set_child_properties_internal ((GObject*) item, (GObject*) child, var_args, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context, FALSE);
+  _goo_canvas_item_set_child_properties_internal ((GObject*) item, (GObject*) child, var_args, _goo_canvas_item_child_property_pool, _goo_canvas_item_child_property_notify_context);
 }
 
 

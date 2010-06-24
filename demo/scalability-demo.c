@@ -3,7 +3,7 @@
 
 #if 1
 #define N_GROUP_COLS 25
-#define N_GROUP_ROWS 20
+#define N_GROUP_ROWS 200
 #define N_COLS 10
 #define N_ROWS 10
 #define ITEM_WIDTH 400

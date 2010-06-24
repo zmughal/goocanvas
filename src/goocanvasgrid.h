@@ -13,10 +13,26 @@
 G_BEGIN_DECLS
 
 
-/* This is the data used by both model and view classes. */
-typedef struct _GooCanvasGridData   GooCanvasGridData;
-struct _GooCanvasGridData
+#define GOO_TYPE_CANVAS_GRID            (goo_canvas_grid_get_type ())
+#define GOO_CANVAS_GRID(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_GRID, GooCanvasGrid))
+#define GOO_CANVAS_GRID_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_GRID, GooCanvasGridClass))
+#define GOO_IS_CANVAS_GRID(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_GRID))
+#define GOO_IS_CANVAS_GRID_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_GRID))
+#define GOO_CANVAS_GRID_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_GRID, GooCanvasGridClass))
+
+
+typedef struct _GooCanvasGrid       GooCanvasGrid;
+typedef struct _GooCanvasGridClass  GooCanvasGridClass;
+
+/**
+ * GooCanvasGrid
+ *
+ * The #GooCanvasGrid-struct struct contains private data only.
+ */
+struct _GooCanvasGrid
 {
+  GooCanvasItemSimple parent_object;
+
   /* The area that the grid covers. */
   gdouble x, y, width, height;
 
@@ -46,30 +62,6 @@ struct _GooCanvasGridData
   guint vert_grid_lines_on_top : 1;
 };
 
-
-#define GOO_TYPE_CANVAS_GRID            (goo_canvas_grid_get_type ())
-#define GOO_CANVAS_GRID(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_GRID, GooCanvasGrid))
-#define GOO_CANVAS_GRID_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_GRID, GooCanvasGridClass))
-#define GOO_IS_CANVAS_GRID(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_GRID))
-#define GOO_IS_CANVAS_GRID_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_GRID))
-#define GOO_CANVAS_GRID_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_GRID, GooCanvasGridClass))
-
-
-typedef struct _GooCanvasGrid       GooCanvasGrid;
-typedef struct _GooCanvasGridClass  GooCanvasGridClass;
-
-/**
- * GooCanvasGrid
- *
- * The #GooCanvasGrid-struct struct contains private data only.
- */
-struct _GooCanvasGrid
-{
-  GooCanvasItemSimple parent_object;
-
-  GooCanvasGridData *grid_data;
-};
-
 struct _GooCanvasGridClass
 {
   GooCanvasItemSimpleClass parent_class;
@@ -96,56 +88,6 @@ GooCanvasItem* goo_canvas_grid_new           (GooCanvasItem      *parent,
 					      gdouble             y_offset,
 					      ...);
 
-
-
-#define GOO_TYPE_CANVAS_GRID_MODEL            (goo_canvas_grid_model_get_type ())
-#define GOO_CANVAS_GRID_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_GRID_MODEL, GooCanvasGridModel))
-#define GOO_CANVAS_GRID_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_GRID_MODEL, GooCanvasGridModelClass))
-#define GOO_IS_CANVAS_GRID_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_GRID_MODEL))
-#define GOO_IS_CANVAS_GRID_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_GRID_MODEL))
-#define GOO_CANVAS_GRID_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_GRID_MODEL, GooCanvasGridModelClass))
-
-
-typedef struct _GooCanvasGridModel       GooCanvasGridModel;
-typedef struct _GooCanvasGridModelClass  GooCanvasGridModelClass;
-
-/**
- * GooCanvasGridModel
- *
- * The #GooCanvasGridModel-struct struct contains private data only.
- */
-struct _GooCanvasGridModel
-{
-  GooCanvasItemModelSimple parent_object;
-
-  GooCanvasGridData grid_data;
-};
-
-struct _GooCanvasGridModelClass
-{
-  GooCanvasItemModelSimpleClass parent_class;
-
-  /*< private >*/
-
-  /* Padding for future expansion */
-  void (*_goo_canvas_reserved1) (void);
-  void (*_goo_canvas_reserved2) (void);
-  void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
-};
-
-
-GType               goo_canvas_grid_model_get_type (void) G_GNUC_CONST;
-GooCanvasItemModel* goo_canvas_grid_model_new      (GooCanvasItemModel *parent,
-						    gdouble             x,
-						    gdouble             y,
-						    gdouble             width,
-						    gdouble             height,
-						    gdouble             x_step,
-						    gdouble             y_step,
-						    gdouble             x_offset,
-						    gdouble             y_offset,
-						    ...);
 
 
 G_END_DECLS

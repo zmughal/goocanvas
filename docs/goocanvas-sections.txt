@@ -14,29 +14,9 @@ GOO_IS_CANVAS_TABLE_CLASS
 GOO_CANVAS_TABLE_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasTableData
 GooCanvasTableDimension
 GooCanvasTableLayoutData
 GooCanvasTableClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvastablemodel</FILE>
-<TITLE>GooCanvasTableModel</TITLE>
-GooCanvasTableModel
-goo_canvas_table_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_TABLE_MODEL
-goo_canvas_table_model_get_type
-GOO_CANVAS_TABLE_MODEL
-GOO_CANVAS_TABLE_MODEL_CLASS
-GOO_IS_CANVAS_TABLE_MODEL
-GOO_IS_CANVAS_TABLE_MODEL_CLASS
-GOO_CANVAS_TABLE_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasTableModelClass
 </SECTION>
 
 <SECTION>
@@ -55,27 +35,7 @@ GOO_IS_CANVAS_RECT_CLASS
 GOO_CANVAS_RECT_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasRectData
 GooCanvasRectClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvasrectmodel</FILE>
-<TITLE>GooCanvasRectModel</TITLE>
-GooCanvasRectModel
-goo_canvas_rect_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_RECT_MODEL
-goo_canvas_rect_model_get_type
-GOO_CANVAS_RECT_MODEL
-GOO_CANVAS_RECT_MODEL_CLASS
-GOO_IS_CANVAS_RECT_MODEL
-GOO_IS_CANVAS_RECT_MODEL_CLASS
-GOO_CANVAS_RECT_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasRectModelClass
 </SECTION>
 
 <SECTION>
@@ -116,10 +76,6 @@ goo_canvas_item_set_canvas
 <SUBSECTION>
 goo_canvas_item_get_parent
 goo_canvas_item_set_parent
-
-<SUBSECTION>
-goo_canvas_item_get_model
-goo_canvas_item_set_model
 
 <SUBSECTION>
 goo_canvas_item_is_container
@@ -165,69 +121,6 @@ GOO_CANVAS_ITEM_GET_IFACE
 </SECTION>
 
 <SECTION>
-<FILE>goocanvasitemmodel</FILE>
-GooCanvasItemModel
-GooCanvasItemModelIface
-
-<SUBSECTION>
-goo_canvas_item_model_translate
-goo_canvas_item_model_scale
-goo_canvas_item_model_rotate
-goo_canvas_item_model_skew_x
-goo_canvas_item_model_skew_y
-goo_canvas_item_model_get_transform
-goo_canvas_item_model_set_transform
-goo_canvas_item_model_get_simple_transform
-goo_canvas_item_model_set_simple_transform
-
-<SUBSECTION>
-goo_canvas_item_model_animate
-goo_canvas_item_model_stop_animation
-
-<SUBSECTION>
-goo_canvas_item_model_raise
-goo_canvas_item_model_lower
-
-<SUBSECTION>
-goo_canvas_item_model_remove
-
-<SUBSECTION>
-goo_canvas_item_model_get_parent
-goo_canvas_item_model_set_parent
-
-<SUBSECTION>
-goo_canvas_item_model_is_container
-goo_canvas_item_model_get_n_children
-goo_canvas_item_model_get_child
-goo_canvas_item_model_add_child
-goo_canvas_item_model_move_child
-goo_canvas_item_model_remove_child
-goo_canvas_item_model_find_child
-
-<SUBSECTION>
-goo_canvas_item_model_get_style
-goo_canvas_item_model_set_style
-
-<SUBSECTION>
-goo_canvas_item_model_class_install_child_property
-goo_canvas_item_model_class_list_child_properties
-goo_canvas_item_model_class_find_child_property
-goo_canvas_item_model_get_child_property
-goo_canvas_item_model_set_child_property
-goo_canvas_item_model_get_child_properties
-goo_canvas_item_model_get_child_properties_valist
-goo_canvas_item_model_set_child_properties
-goo_canvas_item_model_set_child_properties_valist
-
-<SUBSECTION Standard>
-GOO_CANVAS_ITEM_MODEL
-GOO_IS_CANVAS_ITEM_MODEL
-GOO_TYPE_CANVAS_ITEM_MODEL
-goo_canvas_item_model_get_type
-GOO_CANVAS_ITEM_MODEL_GET_IFACE
-</SECTION>
-
-<SECTION>
 <FILE>goocanvasgroup</FILE>
 <TITLE>GooCanvasGroup</TITLE>
 GooCanvasGroup
@@ -247,25 +140,6 @@ GooCanvasGroupClass
 </SECTION>
 
 <SECTION>
-<FILE>goocanvasgroupmodel</FILE>
-<TITLE>GooCanvasGroupModel</TITLE>
-GooCanvasGroupModel
-goo_canvas_group_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_GROUP_MODEL
-goo_canvas_group_model_get_type
-GOO_CANVAS_GROUP_MODEL
-GOO_CANVAS_GROUP_MODEL_CLASS
-GOO_IS_CANVAS_GROUP_MODEL
-GOO_IS_CANVAS_GROUP_MODEL_CLASS
-GOO_CANVAS_GROUP_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasGroupModelClass
-</SECTION>
-
-<SECTION>
 <FILE>goocanvaspath</FILE>
 <TITLE>GooCanvasPath</TITLE>
 GooCanvasPath
@@ -281,29 +155,9 @@ GOO_IS_CANVAS_PATH_CLASS
 GOO_CANVAS_PATH_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasPathData
 goo_canvas_path_command_type_get_type
 GOO_TYPE_CANVAS_PATH_COMMAND_TYPE
 GooCanvasPathClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvaspathmodel</FILE>
-<TITLE>GooCanvasPathModel</TITLE>
-GooCanvasPathModel
-goo_canvas_path_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_PATH_MODEL
-GOO_CANVAS_PATH_MODEL
-goo_canvas_path_model_get_type
-GOO_CANVAS_PATH_MODEL_CLASS
-GOO_IS_CANVAS_PATH_MODEL
-GOO_IS_CANVAS_PATH_MODEL_CLASS
-GOO_CANVAS_PATH_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasPathModelClass
 </SECTION>
 
 <SECTION>
@@ -322,27 +176,7 @@ GOO_IS_CANVAS_ELLIPSE_CLASS
 GOO_CANVAS_ELLIPSE_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasEllipseData
 GooCanvasEllipseClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvasellipsemodel</FILE>
-<TITLE>GooCanvasEllipseModel</TITLE>
-GooCanvasEllipseModel
-goo_canvas_ellipse_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_ELLIPSE_MODEL
-GOO_CANVAS_ELLIPSE_MODEL
-goo_canvas_ellipse_model_get_type
-GOO_CANVAS_ELLIPSE_MODEL_CLASS
-GOO_IS_CANVAS_ELLIPSE_MODEL
-GOO_IS_CANVAS_ELLIPSE_MODEL_CLASS
-GOO_CANVAS_ELLIPSE_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasEllipseModelClass
 </SECTION>
 
 <SECTION>
@@ -357,14 +191,10 @@ goo_canvas_new
 <SUBSECTION>
 goo_canvas_get_root_item
 goo_canvas_set_root_item
-goo_canvas_get_root_item_model
-goo_canvas_set_root_item_model
 
 <SUBSECTION>
 goo_canvas_get_static_root_item
 goo_canvas_set_static_root_item
-goo_canvas_get_static_root_item_model
-goo_canvas_set_static_root_item_model
 
 <SUBSECTION>
 goo_canvas_get_bounds
@@ -373,7 +203,6 @@ goo_canvas_get_scale
 goo_canvas_set_scale
 
 <SUBSECTION>
-goo_canvas_get_item
 goo_canvas_get_item_at
 goo_canvas_get_items_at
 goo_canvas_get_items_in_area
@@ -400,8 +229,6 @@ goo_canvas_keyboard_ungrab
 
 <SUBSECTION>
 goo_canvas_create_cairo_context
-goo_canvas_create_item
-goo_canvas_unregister_item
 goo_canvas_register_widget_item
 goo_canvas_unregister_widget_item
 goo_canvas_update
@@ -439,27 +266,7 @@ GOO_IS_CANVAS_TEXT_CLASS
 GOO_CANVAS_TEXT_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasTextData
 GooCanvasTextClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvastextmodel</FILE>
-<TITLE>GooCanvasTextModel</TITLE>
-GooCanvasTextModel
-goo_canvas_text_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_TEXT_MODEL
-GOO_CANVAS_TEXT_MODEL
-goo_canvas_text_model_get_type
-GOO_CANVAS_TEXT_MODEL_CLASS
-GOO_IS_CANVAS_TEXT_MODEL
-GOO_IS_CANVAS_TEXT_MODEL_CLASS
-GOO_CANVAS_TEXT_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasTextModelClass
 </SECTION>
 
 <SECTION>
@@ -479,37 +286,15 @@ GOO_IS_CANVAS_POLYLINE_CLASS
 GOO_CANVAS_POLYLINE_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasPolylineData
 NUM_ARROW_POINTS
 GooCanvasPolylineArrowData
 GooCanvasPolylineClass
 </SECTION>
 
 <SECTION>
-<FILE>goocanvaspolylinemodel</FILE>
-<TITLE>GooCanvasPolylineModel</TITLE>
-GooCanvasPolylineModel
-goo_canvas_polyline_model_new
-goo_canvas_polyline_model_new_line
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_POLYLINE_MODEL
-GOO_CANVAS_POLYLINE_MODEL
-goo_canvas_polyline_model_get_type
-GOO_CANVAS_POLYLINE_MODEL_CLASS
-GOO_IS_CANVAS_POLYLINE_MODEL
-GOO_IS_CANVAS_POLYLINE_MODEL_CLASS
-GOO_CANVAS_POLYLINE_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasPolylineModelClass
-</SECTION>
-
-<SECTION>
 <FILE>goocanvasitemsimple</FILE>
 <TITLE>GooCanvasItemSimple</TITLE>
 GooCanvasItemSimple
-GooCanvasItemSimpleData
 GooCanvasItemSimpleClass
 
 <SUBSECTION>
@@ -521,7 +306,6 @@ goo_canvas_item_simple_user_bounds_to_parent
 goo_canvas_item_simple_check_in_path
 goo_canvas_item_simple_paint_path
 goo_canvas_item_simple_changed
-goo_canvas_item_simple_set_model
 
 <SUBSECTION Standard>
 GOO_CANVAS_ITEM_SIMPLE
@@ -533,24 +317,6 @@ GOO_IS_CANVAS_ITEM_SIMPLE_CLASS
 GOO_CANVAS_ITEM_SIMPLE_GET_CLASS
 
 <SUBSECTION Private>
-</SECTION>
-
-<SECTION>
-<FILE>goocanvasitemmodelsimple</FILE>
-<TITLE>GooCanvasItemModelSimple</TITLE>
-GooCanvasItemModelSimple
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE
-goo_canvas_item_model_simple_get_type
-GOO_CANVAS_ITEM_MODEL_SIMPLE
-GOO_CANVAS_ITEM_MODEL_SIMPLE_CLASS
-GOO_IS_CANVAS_ITEM_MODEL_SIMPLE
-GOO_IS_CANVAS_ITEM_MODEL_SIMPLE_CLASS
-GOO_CANVAS_ITEM_MODEL_SIMPLE_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasItemModelSimpleClass
 </SECTION>
 
 <SECTION>
@@ -569,27 +335,7 @@ GOO_IS_CANVAS_IMAGE_CLASS
 GOO_CANVAS_IMAGE_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasImageData
 GooCanvasImageClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvasimagemodel</FILE>
-<TITLE>GooCanvasImageModel</TITLE>
-GooCanvasImageModel
-goo_canvas_image_model_new
-
-<SUBSECTION Standard>
-GOO_TYPE_CANVAS_IMAGE_MODEL
-GOO_CANVAS_IMAGE_MODEL
-goo_canvas_image_model_get_type
-GOO_CANVAS_IMAGE_MODEL_CLASS
-GOO_IS_CANVAS_IMAGE_MODEL
-GOO_IS_CANVAS_IMAGE_MODEL_CLASS
-GOO_CANVAS_IMAGE_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasImageModelClass
 </SECTION>
 
 <SECTION>
@@ -608,27 +354,7 @@ GOO_IS_CANVAS_GRID_CLASS
 GOO_CANVAS_GRID_GET_CLASS
 
 <SUBSECTION Private>
-GooCanvasGridData
 GooCanvasGridClass
-</SECTION>
-
-<SECTION>
-<FILE>goocanvasgridmodel</FILE>
-<TITLE>GooCanvasGridModel</TITLE>
-GooCanvasGridModel
-goo_canvas_grid_model_new
-
-<SUBSECTION Standard>
-GOO_CANVAS_GRID_MODEL
-GOO_IS_CANVAS_GRID_MODEL
-GOO_TYPE_CANVAS_GRID_MODEL
-goo_canvas_grid_model_get_type
-GOO_CANVAS_GRID_MODEL_CLASS
-GOO_IS_CANVAS_GRID_MODEL_CLASS
-GOO_CANVAS_GRID_MODEL_GET_CLASS
-
-<SUBSECTION Private>
-GooCanvasGridModelClass
 </SECTION>
 
 <SECTION>

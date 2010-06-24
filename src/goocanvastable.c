@@ -97,7 +97,7 @@ typedef enum
 } GooCanvasTableChildFlags;
 
 
-/* This is used in the GooCanvasTableData children GArray to keep the child
+/* This is used in the GooCanvasTable children GArray to keep the child
    properties for each of the children. */
 typedef struct _GooCanvasTableChild  GooCanvasTableChild;
 struct _GooCanvasTableChild
@@ -212,7 +212,7 @@ static void goo_canvas_table_set_property (GObject            *object,
 					   GParamSpec         *pspec);
 
 static void goo_canvas_table_init_layout_data (GooCanvasTable *table);
-static void goo_canvas_table_free_layout_data (GooCanvasTableData *table_data);
+static void goo_canvas_table_free_layout_data (GooCanvasTable *table);
 
 G_DEFINE_TYPE_WITH_CODE (GooCanvasTable, goo_canvas_table,
 			 GOO_TYPE_CANVAS_GROUP,
@@ -405,65 +405,38 @@ goo_canvas_table_class_init (GooCanvasTableClass *klass)
 }
 
 
-/* This initializes the common table data. */
-static void
-goo_canvas_table_init_data (GooCanvasTableData *table_data)
-{
-  gint d;
-
-  table_data->width = -1.0;
-  table_data->height = -1.0;
-
-  for (d = 0; d < 2; d++)
-    {
-      table_data->dimensions[d].size = 0;
-      table_data->dimensions[d].default_spacing = 0.0;
-      table_data->dimensions[d].spacings = NULL;
-      table_data->dimensions[d].homogeneous = FALSE;
-    }
-
-  table_data->border_width = 0.0;
-
-  table_data->children = g_array_new (0, 0, sizeof (GooCanvasTableChild));
-
-  table_data->layout_data = g_slice_new (GooCanvasTableLayoutData);
-  table_data->layout_data->x = 0.0;
-  table_data->layout_data->y = 0.0;
-
-  table_data->layout_data->children = NULL;
-  for (d = 0; d < 2; d++)
-    {
-      table_data->layout_data->dldata[d] = NULL;
-      table_data->layout_data->prop_grid_line_width[d] = 0.0;
-      table_data->layout_data->grid_line_width[d] = 0.0;
-      table_data->layout_data->border_spacing[d] = 0.0;
-    }
-}
-
-
-/* This frees the contents of the table data, but not the struct itself. */
-static void
-goo_canvas_table_free_data (GooCanvasTableData *table_data)
-{
-  gint d;
-
-  g_array_free (table_data->children, TRUE);
-
-  for (d = 0; d < 2; d++)
-    {
-      g_free (table_data->dimensions[d].spacings);
-      table_data->dimensions[d].spacings = NULL;
-    }
-
-  goo_canvas_table_free_layout_data (table_data);
-}
-
-
 static void
 goo_canvas_table_init (GooCanvasTable *table)
 {
-  table->table_data = g_slice_new0 (GooCanvasTableData);
-  goo_canvas_table_init_data (table->table_data);
+  gint d;
+
+  table->width = -1.0;
+  table->height = -1.0;
+
+  for (d = 0; d < 2; d++)
+    {
+      table->dimensions[d].size = 0;
+      table->dimensions[d].default_spacing = 0.0;
+      table->dimensions[d].spacings = NULL;
+      table->dimensions[d].homogeneous = FALSE;
+    }
+
+  table->border_width = 0.0;
+
+  table->children = g_array_new (0, 0, sizeof (GooCanvasTableChild));
+
+  table->layout_data = g_slice_new (GooCanvasTableLayoutData);
+  table->layout_data->x = 0.0;
+  table->layout_data->y = 0.0;
+
+  table->layout_data->children = NULL;
+  for (d = 0; d < 2; d++)
+    {
+      table->layout_data->dldata[d] = NULL;
+      table->layout_data->prop_grid_line_width[d] = 0.0;
+      table->layout_data->grid_line_width[d] = 0.0;
+      table->layout_data->border_spacing[d] = 0.0;
+    }
 }
 
 
@@ -547,71 +520,20 @@ goo_canvas_table_new (GooCanvasItem  *parent,
 static void
 goo_canvas_table_finalize (GObject *object)
 {
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
   GooCanvasTable *table = (GooCanvasTable*) object;
+  gint d;
 
-  /* Free our data if we didn't have a model. (If we had a model it would
-     have been reset in dispose() and simple_data will be NULL.) */
-  if (simple->simple_data)
+  g_array_free (table->children, TRUE);
+
+  for (d = 0; d < 2; d++)
     {
-      goo_canvas_table_free_data (table->table_data);
-      g_slice_free (GooCanvasTableData, table->table_data);
+      g_free (table->dimensions[d].spacings);
+      table->dimensions[d].spacings = NULL;
     }
-  table->table_data = NULL;
+
+  goo_canvas_table_free_layout_data (table);
 
   G_OBJECT_CLASS (goo_canvas_table_parent_class)->finalize (object);
-}
-
-
-static void
-goo_canvas_table_get_common_property (GObject              *object,
-				      GooCanvasTableData   *table_data,
-				      guint                 prop_id,
-				      GValue               *value,
-				      GParamSpec           *pspec)
-{
-  switch (prop_id)
-    {
-    case PROP_X:
-      g_value_set_double (value, table_data->layout_data->x);
-      break;
-    case PROP_Y:
-      g_value_set_double (value, table_data->layout_data->y);
-      break;
-    case PROP_WIDTH:
-      g_value_set_double (value, table_data->width);
-      break;
-    case PROP_HEIGHT:
-      g_value_set_double (value, table_data->height);
-      break;
-    case PROP_ROW_SPACING:
-      g_value_set_double (value, table_data->dimensions[VERT].default_spacing);
-      break;
-    case PROP_COLUMN_SPACING:
-      g_value_set_double (value, table_data->dimensions[HORZ].default_spacing);
-      break;
-    case PROP_HOMOGENEOUS_ROWS:
-      g_value_set_boolean (value, table_data->dimensions[VERT].homogeneous);
-      break;
-    case PROP_HOMOGENEOUS_COLUMNS:
-      g_value_set_boolean (value, table_data->dimensions[HORZ].homogeneous);
-      break;
-    case PROP_X_BORDER_SPACING:
-      g_value_set_double (value, table_data->layout_data->border_spacing[HORZ]);
-      break;
-    case PROP_Y_BORDER_SPACING:
-      g_value_set_double (value, table_data->layout_data->border_spacing[VERT]);
-      break;
-    case PROP_HORZ_GRID_LINE_WIDTH:
-      g_value_set_double (value, table_data->layout_data->prop_grid_line_width[HORZ]);
-      break;
-    case PROP_VERT_GRID_LINE_WIDTH:
-      g_value_set_double (value, table_data->layout_data->prop_grid_line_width[VERT]);
-      break;
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-      break;
-    }
 }
 
 
@@ -623,64 +545,48 @@ goo_canvas_table_get_property (GObject              *object,
 {
   GooCanvasTable *table = (GooCanvasTable*) object;
 
-  goo_canvas_table_get_common_property (object, table->table_data,
-                                        prop_id, value, pspec);
-}
-
-
-static gboolean
-goo_canvas_table_set_common_property (GObject              *object,
-				      GooCanvasTableData   *table_data,
-				      guint                 prop_id,
-				      const GValue         *value,
-				      GParamSpec           *pspec)
-{
-  gboolean recompute_bounds = TRUE;
-
   switch (prop_id)
     {
     case PROP_X:
-      table_data->layout_data->x = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->x);
       break;
     case PROP_Y:
-      table_data->layout_data->y = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->y);
       break;
     case PROP_WIDTH:
-      table_data->width = g_value_get_double (value);
+      g_value_set_double (value, table->width);
       break;
     case PROP_HEIGHT:
-      table_data->height = g_value_get_double (value);
+      g_value_set_double (value, table->height);
       break;
     case PROP_ROW_SPACING:
-      table_data->dimensions[VERT].default_spacing = g_value_get_double (value);
+      g_value_set_double (value, table->dimensions[VERT].default_spacing);
       break;
     case PROP_COLUMN_SPACING:
-      table_data->dimensions[HORZ].default_spacing = g_value_get_double (value);
+      g_value_set_double (value, table->dimensions[HORZ].default_spacing);
       break;
     case PROP_HOMOGENEOUS_ROWS:
-      table_data->dimensions[VERT].homogeneous = g_value_get_boolean (value);
+      g_value_set_boolean (value, table->dimensions[VERT].homogeneous);
       break;
     case PROP_HOMOGENEOUS_COLUMNS:
-      table_data->dimensions[HORZ].homogeneous = g_value_get_boolean (value);
+      g_value_set_boolean (value, table->dimensions[HORZ].homogeneous);
       break;
     case PROP_X_BORDER_SPACING:
-      table_data->layout_data->border_spacing[HORZ] = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->border_spacing[HORZ]);
       break;
     case PROP_Y_BORDER_SPACING:
-      table_data->layout_data->border_spacing[VERT] = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->border_spacing[VERT]);
       break;
     case PROP_HORZ_GRID_LINE_WIDTH:
-      table_data->layout_data->prop_grid_line_width[HORZ] = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->prop_grid_line_width[HORZ]);
       break;
     case PROP_VERT_GRID_LINE_WIDTH:
-      table_data->layout_data->prop_grid_line_width[VERT] = g_value_get_double (value);
+      g_value_set_double (value, table->layout_data->prop_grid_line_width[VERT]);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
-
-  return recompute_bounds;
 }
 
 
@@ -692,64 +598,97 @@ goo_canvas_table_set_property (GObject              *object,
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
   GooCanvasTable *table = (GooCanvasTable*) object;
-  gboolean recompute_bounds;
 
-  if (simple->model)
+  switch (prop_id)
     {
-      g_warning ("Can't set property of a canvas item with a model - set the model property instead");
-      return;
+    case PROP_X:
+      table->layout_data->x = g_value_get_double (value);
+      break;
+    case PROP_Y:
+      table->layout_data->y = g_value_get_double (value);
+      break;
+    case PROP_WIDTH:
+      table->width = g_value_get_double (value);
+      break;
+    case PROP_HEIGHT:
+      table->height = g_value_get_double (value);
+      break;
+    case PROP_ROW_SPACING:
+      table->dimensions[VERT].default_spacing = g_value_get_double (value);
+      break;
+    case PROP_COLUMN_SPACING:
+      table->dimensions[HORZ].default_spacing = g_value_get_double (value);
+      break;
+    case PROP_HOMOGENEOUS_ROWS:
+      table->dimensions[VERT].homogeneous = g_value_get_boolean (value);
+      break;
+    case PROP_HOMOGENEOUS_COLUMNS:
+      table->dimensions[HORZ].homogeneous = g_value_get_boolean (value);
+      break;
+    case PROP_X_BORDER_SPACING:
+      table->layout_data->border_spacing[HORZ] = g_value_get_double (value);
+      break;
+    case PROP_Y_BORDER_SPACING:
+      table->layout_data->border_spacing[VERT] = g_value_get_double (value);
+      break;
+    case PROP_HORZ_GRID_LINE_WIDTH:
+      table->layout_data->prop_grid_line_width[HORZ] = g_value_get_double (value);
+      break;
+    case PROP_VERT_GRID_LINE_WIDTH:
+      table->layout_data->prop_grid_line_width[VERT] = g_value_get_double (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
     }
 
-  recompute_bounds = goo_canvas_table_set_common_property (object,
-							   table->table_data,
-							   prop_id, value,
-							   pspec);
-  goo_canvas_item_simple_changed (simple, recompute_bounds);
+  goo_canvas_item_simple_changed (simple, TRUE);
 }
 
 
 static void
-goo_canvas_table_update_dimensions (GooCanvasTableData    *table_data,
+goo_canvas_table_update_dimensions (GooCanvasTable    *table,
 				    GooCanvasTableChild   *table_child)
 {
   GooCanvasTableLayoutData *layout_data;
   gint d, size[2], i;
-  layout_data = table_data->layout_data;
+  layout_data = table->layout_data;
   size[0] = table_child->start[0] + table_child->size[0];
   size[1] = table_child->start[1] + table_child->size[1];
 
   for (d = 0; d < 2; d++)
     {
-      if (size[d] > table_data->dimensions[d].size)
+      if (size[d] > table->dimensions[d].size)
         {
 	  /* Resize the spacings array and the layout data array. */
-          table_data->dimensions[d].spacings = g_realloc (table_data->dimensions[d].spacings, size[d] * sizeof (gdouble));
+          table->dimensions[d].spacings = g_realloc (table->dimensions[d].spacings, size[d] * sizeof (gdouble));
           layout_data->dldata[d] = g_renew (GooCanvasTableDimensionLayoutData, layout_data->dldata[d], size[d]);
 
           /* Initialize new spacings to -1.0 so the default is used, and
 	     set the new grid_line_visibility arrays to NULL. */
-          for (i = table_data->dimensions[d].size; i < size[d]; i++)
+          for (i = table->dimensions[d].size; i < size[d]; i++)
 	    {
-	      table_data->dimensions[d].spacings[i] = -1.0;
+	      table->dimensions[d].spacings[i] = -1.0;
 	      layout_data->dldata[d][i].grid_line_visibility = NULL;
 	    }
         }
     }
 
-  table_data->dimensions[0].size = MAX (size[0], table_data->dimensions[0].size);
-  table_data->dimensions[1].size = MAX (size[1], table_data->dimensions[1].size);
+  table->dimensions[0].size = MAX (size[0], table->dimensions[0].size);
+  table->dimensions[1].size = MAX (size[1], table->dimensions[1].size);
 }
+
 
 /* Sets or unsets grid line visibility for a given child */
 static void
-goo_canvas_update_grid_line_visibility (GooCanvasTableData *table_data)
+goo_canvas_update_grid_line_visibility (GooCanvasTable *table)
 {
   GooCanvasTableLayoutData *layout_data;
   GooCanvasTableChild *table_child;
   guint32 grid_line_size;
   gint d, d2, child_num, i, j;
 
-  layout_data = table_data->layout_data;
+  layout_data = table->layout_data;
   for (d = 0; d < 2; d++)
     {
       /* This is the opposite dimension. */
@@ -760,11 +699,11 @@ goo_canvas_update_grid_line_visibility (GooCanvasTableData *table_data)
          we store the grid lines (right to) a particular column for each row.
          Therefore we need one bit for each row. This is also why this depends
          on dimensions[1-d] instead of dimensions[d]. */
-      grid_line_size = ((table_data->dimensions[d2].size + 31) / 32);
+      grid_line_size = ((table->dimensions[d2].size + 31) / 32);
 
       /* Allocate or reallocate the grid_line_visibility arrays and initialize
 	 all grid lines to visible (by setting to the arrays to all 0xFF). */
-      for (i = 0; i + 1 < table_data->dimensions[d].size; i++)
+      for (i = 0; i + 1 < table->dimensions[d].size; i++)
 	{
 	  layout_data->dldata[d][i].grid_line_visibility
 	    = g_realloc (layout_data->dldata[d][i].grid_line_visibility,
@@ -774,9 +713,9 @@ goo_canvas_update_grid_line_visibility (GooCanvasTableData *table_data)
 	}
 
       /* Remove lines for each child spanning multiple rows/colmuns */
-      for (child_num = 0; child_num < table_data->children->len; child_num++)
+      for (child_num = 0; child_num < table->children->len; child_num++)
         {
-          table_child = &g_array_index (table_data->children,
+          table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
 
           /* Foreach cell the child is spanning */
@@ -797,7 +736,7 @@ goo_canvas_update_grid_line_visibility (GooCanvasTableData *table_data)
 }
 
 static void
-goo_canvas_table_add_child_internal (GooCanvasTableData *table_data,
+goo_canvas_table_add_child_internal (GooCanvasTable *table,
 				     gint                position)
 {
   GooCanvasTableChild table_child;
@@ -818,10 +757,10 @@ goo_canvas_table_add_child_internal (GooCanvasTableData *table_data,
     }
 
   if (position < 0)
-    position = table_data->children->len;
-  g_array_insert_val (table_data->children, position, table_child);
+    position = table->children->len;
+  g_array_insert_val (table->children, position, table_child);
 
-  goo_canvas_table_update_dimensions (table_data, &table_child);
+  goo_canvas_table_update_dimensions (table, &table_child);
 }
 
 
@@ -830,11 +769,9 @@ goo_canvas_table_add_child     (GooCanvasItem  *item,
 				GooCanvasItem  *child,
 				gint            position)
 {
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
 
-  if (!simple->model)
-    goo_canvas_table_add_child_internal (table->table_data, position);
+  goo_canvas_table_add_child_internal (table, position);
 
   /* Let the parent GooCanvasGroup code do the rest. */
   goo_canvas_table_parent_iface->add_child (item, child, position);
@@ -842,14 +779,14 @@ goo_canvas_table_add_child     (GooCanvasItem  *item,
 
 
 static void
-goo_canvas_table_move_child_internal    (GooCanvasTableData *table_data,
+goo_canvas_table_move_child_internal    (GooCanvasTable *table,
 					 gint	             old_position,
 					 gint                new_position)
 {
   GooCanvasTableChild *table_child, tmp_child;
 
   /* Copy the child temporarily. */
-  table_child = &g_array_index (table_data->children, GooCanvasTableChild,
+  table_child = &g_array_index (table->children, GooCanvasTableChild,
 				old_position);
   tmp_child = *table_child;
 
@@ -858,22 +795,22 @@ goo_canvas_table_move_child_internal    (GooCanvasTableData *table_data,
     {
       /* Move the items down one place. */
       g_memmove (table_child,
-		 &g_array_index (table_data->children, GooCanvasTableChild,
+		 &g_array_index (table->children, GooCanvasTableChild,
 				 old_position + 1),
 		 sizeof (GooCanvasTableChild) * (new_position - old_position));
     }
   else
     {
       /* Move the items up one place. */
-      g_memmove (&g_array_index (table_data->children, GooCanvasTableChild,
+      g_memmove (&g_array_index (table->children, GooCanvasTableChild,
 				 new_position + 1),
-		 &g_array_index (table_data->children, GooCanvasTableChild,
+		 &g_array_index (table->children, GooCanvasTableChild,
 				 new_position),
 		 sizeof (GooCanvasTableChild) * (old_position - new_position));
     }
 
   /* Copy the child into its new position. */
-  table_child = &g_array_index (table_data->children, GooCanvasTableChild,
+  table_child = &g_array_index (table->children, GooCanvasTableChild,
 				new_position);
   *table_child = tmp_child;
 }
@@ -884,12 +821,10 @@ goo_canvas_table_move_child    (GooCanvasItem  *item,
 				gint	        old_position,
 				gint            new_position)
 {
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
 
-  if (!simple->model)
-    goo_canvas_table_move_child_internal (table->table_data, old_position,
-					  new_position);
+  goo_canvas_table_move_child_internal (table, old_position,
+					new_position);
 
   /* Let the parent GooCanvasGroup code do the rest. */
   goo_canvas_table_parent_iface->move_child (item, old_position, new_position);
@@ -900,14 +835,12 @@ static void
 goo_canvas_table_remove_child  (GooCanvasItem  *item,
 				gint            child_num)
 {
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
 
   g_return_if_fail (child_num < group->items->len);
 
-  if (!simple->model)
-    g_array_remove_index (table->table_data->children, child_num);
+  g_array_remove_index (table->children, child_num);
 
   /* Let the parent GooCanvasGroup code do the rest. */
   goo_canvas_table_parent_iface->remove_child (item, child_num);
@@ -995,7 +928,7 @@ goo_canvas_table_get_child_property (GooCanvasItem     *item,
     {
       if (group->items->pdata[child_num] == child)
 	{
-	  table_child = &g_array_index (table->table_data->children,
+	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
 	  goo_canvas_table_get_common_child_property ((GObject*) table,
 						      table_child,
@@ -1009,7 +942,7 @@ goo_canvas_table_get_child_property (GooCanvasItem     *item,
 
 static void
 goo_canvas_table_set_common_child_property (GObject             *object,
-					    GooCanvasTableData  *table_data,
+					    GooCanvasTable  *table,
 					    GooCanvasTableChild *table_child,
 					    guint                property_id,
 					    const GValue        *value,
@@ -1092,7 +1025,7 @@ goo_canvas_table_set_common_child_property (GObject             *object,
       break;
     }
 
-  goo_canvas_table_update_dimensions (table_data, table_child);
+  goo_canvas_table_update_dimensions (table, table_child);
 }
 
 
@@ -1113,10 +1046,10 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
     {
       if (group->items->pdata[child_num] == child)
 	{
-	  table_child = &g_array_index (table->table_data->children,
+	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
 	  goo_canvas_table_set_common_child_property ((GObject*) table,
-						      table->table_data,
+						      table,
 						      table_child,
 						      property_id, value,
 						      pspec);
@@ -1128,49 +1061,26 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
 }
 
 
-static void
-goo_canvas_table_set_model    (GooCanvasItem      *item,
-			       GooCanvasItemModel *model)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-
-  /* If our table_data was allocated, free it. */
-  if (!simple->model)
-    {
-      goo_canvas_table_free_data (table->table_data);
-      g_slice_free (GooCanvasTableData, table->table_data);
-    }
-
-  /* Now use the new model's table_data instead. */
-  table->table_data = &tmodel->table_data;
-
-  /* Let the parent GooCanvasGroup code do the rest. */
-  goo_canvas_table_parent_iface->set_model (item, model);
-}
-
-
 /*
  * Size requisition/allocation code.
  */
 
 static void
-goo_canvas_table_free_layout_data (GooCanvasTableData *table_data)
+goo_canvas_table_free_layout_data (GooCanvasTable *table)
 {
   gint i;
 
-  if (table_data->layout_data)
+  if (table->layout_data)
     {
-      for (i = 0; i < table_data->dimensions[VERT].size; i++)
-        g_free (table_data->layout_data->dldata[VERT][i].grid_line_visibility);
-      for (i = 0; i < table_data->dimensions[HORZ].size; i++)
-        g_free (table_data->layout_data->dldata[HORZ][i].grid_line_visibility);
-      g_free (table_data->layout_data->dldata[HORZ]);
-      g_free (table_data->layout_data->dldata[VERT]);
-      g_free (table_data->layout_data->children);
-      g_slice_free (GooCanvasTableLayoutData, table_data->layout_data);
-      table_data->layout_data = NULL;
+      for (i = 0; i < table->dimensions[VERT].size; i++)
+        g_free (table->layout_data->dldata[VERT][i].grid_line_visibility);
+      for (i = 0; i < table->dimensions[HORZ].size; i++)
+        g_free (table->layout_data->dldata[HORZ][i].grid_line_visibility);
+      g_free (table->layout_data->dldata[HORZ]);
+      g_free (table->layout_data->dldata[VERT]);
+      g_free (table->layout_data->children);
+      g_slice_free (GooCanvasTableLayoutData, table->layout_data);
+      table->layout_data = NULL;
     }
 }
 
@@ -1180,14 +1090,13 @@ static void
 goo_canvas_table_init_layout_data (GooCanvasTable *table)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) table;
-  GooCanvasTableData *table_data = table->table_data;
   GooCanvasTableDimension *dimension;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *dldata;
   gint d, i;
 
   layout_data->children = g_new (GooCanvasTableChildLayoutData,
-				 table_data->children->len);
+				 table->children->len);
   layout_data->last_width = -1;
 
   /* If we are not yet added to a canvas, integer layout is irrelevant anyway.
@@ -1197,7 +1106,7 @@ goo_canvas_table_init_layout_data (GooCanvasTable *table)
     layout_data->integer_layout = simple->canvas->integer_layout;
   else
     layout_data->integer_layout = FALSE;
-  layout_data->border_width = table_data->border_width;
+  layout_data->border_width = table->border_width;
   if (layout_data->integer_layout)
     layout_data->border_width = floor (layout_data->border_width + 0.5);
 
@@ -1211,7 +1120,7 @@ goo_canvas_table_init_layout_data (GooCanvasTable *table)
 
   for (d = 0; d < 2; d++)
     {
-      dimension = &table_data->dimensions[d];
+      dimension = &table->dimensions[d];
 
       /* Already allocated in goo_canvas_table_update_dimensions() */
       /*layout_data->dldata[d] = g_renew (GooCanvasTableDimensionLayoutData,
@@ -1243,7 +1152,7 @@ goo_canvas_table_init_layout_data (GooCanvasTable *table)
     }
 
   /* Update grid line visibility */
-  goo_canvas_update_grid_line_visibility (table_data);
+  goo_canvas_update_grid_line_visibility (table);
 }
 
 
@@ -1257,8 +1166,7 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
 				    cairo_t        *cr)
 {
   GooCanvasGroup *group = (GooCanvasGroup*) table;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimension *dimension;
   GooCanvasTableDimensionLayoutData *dldata;
   GooCanvasTableChild *child;
@@ -1268,9 +1176,9 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
   gint i, j, d, start, end;
   guint8 flags;
 
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
       child_item = group->items->pdata[i];
 
       /* Children will return FALSE if they don't need space allocated. */
@@ -1327,9 +1235,9 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
     }
 
   /* Now handle children that span more than one row or column. */
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
 
       if (layout_data->children[i].requested_size[HORZ] < 0.0)
 	continue;
@@ -1378,7 +1286,7 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
      changed after this point. */
   for (d = 0; d < 2; d++)
     {
-      dimension = &table_data->dimensions[d];
+      dimension = &table->dimensions[d];
       dldata = layout_data->dldata[d];
 
       for (i = 0; i < dimension->size; i++)
@@ -1407,9 +1315,8 @@ static void
 goo_canvas_table_size_request_pass1 (GooCanvasTable *table,
 				     gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableDimension *dimension = &table_data->dimensions[d];
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableDimension *dimension = &table->dimensions[d];
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *dldata = layout_data->dldata[d];
   GooCanvasTableChild *child;
   gdouble requested_size;
@@ -1418,9 +1325,9 @@ goo_canvas_table_size_request_pass1 (GooCanvasTable *table,
   for (i = 0; i < dimension->size; i++)
     dldata[i].requisition = 0.0;
 
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
 
       requested_size = layout_data->children[i].requested_size[d];
 
@@ -1445,20 +1352,19 @@ static void
 goo_canvas_table_size_request_pass2 (GooCanvasTable *table,
 				     gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *dldata = layout_data->dldata[d];
   gdouble max_size = 0.0;
   gint i;
   
-  if (table_data->dimensions[d].homogeneous)
+  if (table->dimensions[d].homogeneous)
     {
       /* Calculate the maximum row or column size. */
-      for (i = 0; i < table_data->dimensions[d].size; i++)
+      for (i = 0; i < table->dimensions[d].size; i++)
 	max_size = MAX (max_size, dldata[i].requisition);
 
       /* Use the maximum size for all rows or columns. */
-      for (i = 0; i < table_data->dimensions[d].size; i++)
+      for (i = 0; i < table->dimensions[d].size; i++)
 	dldata[i].requisition = max_size;
     }
 }
@@ -1471,15 +1377,14 @@ static void
 goo_canvas_table_size_request_pass3 (GooCanvasTable *table,
 				     gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *dldata;
   GooCanvasTableChild *child;
   gint i, j;
   
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
       
       if (layout_data->children[i].requested_size[HORZ] <= 0.0)
 	continue;
@@ -1559,9 +1464,8 @@ static void
 goo_canvas_table_size_allocate_init (GooCanvasTable *table,
 				     gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
-  GooCanvasTableDimension *dimension = &table_data->dimensions[d];
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
+  GooCanvasTableDimension *dimension = &table->dimensions[d];
   GooCanvasTableDimensionLayoutData *dldata = layout_data->dldata[d];
   gint i;
   
@@ -1576,8 +1480,7 @@ static void
 goo_canvas_table_size_allocate_pass1 (GooCanvasTable *table,
 				      gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimension *dimension;
   GooCanvasTableDimensionLayoutData *dldata;
   gdouble total_size, size_to_allocate, natural_size, extra, old_extra;
@@ -1587,7 +1490,7 @@ goo_canvas_table_size_allocate_pass1 (GooCanvasTable *table,
    *  then we have to expand any expandable rows and columns
    *  to fill in the extra space.
    */
-  dimension = &table_data->dimensions[d];
+  dimension = &table->dimensions[d];
   dldata = layout_data->dldata[d];
 
   natural_size = 0;
@@ -1626,7 +1529,7 @@ goo_canvas_table_size_allocate_pass1 (GooCanvasTable *table,
 	 the children expand, or if there are no children, or if we were
 	 allocated less space than we requested and any children shrink.
 	 If so, we divide up all the allocated space. */
-      if (nexpand || table_data->children->len == 0
+      if (nexpand || table->children->len == 0
 	  || (natural_size > total_size && nshrink))
 	{
 	  size_to_allocate = total_size;
@@ -1726,14 +1629,13 @@ static void
 goo_canvas_table_size_allocate_pass2 (GooCanvasTable *table,
 				      gint            d)
 {
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimension *dimension;
   GooCanvasTableDimensionLayoutData *dldata;
   gdouble pos;
   gint i;
 
-  dimension = &table_data->dimensions[d];
+  dimension = &table->dimensions[d];
   dldata = layout_data->dldata[d];
 
   pos = layout_data->border_width + layout_data->border_spacing[d] + layout_data->grid_line_width[1-d];
@@ -1762,8 +1664,7 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) table;
   GooCanvasGroup *group = (GooCanvasGroup*) table;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
   GooCanvasTableDimensionLayoutData *columns = layout_data->dldata[HORZ];
   GooCanvasTableChild *child;
@@ -1779,9 +1680,9 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
   if (simple->canvas)
     direction = gtk_widget_get_direction (GTK_WIDGET (simple->canvas));
 
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
       child_item = group->items->pdata[i];
       child_data = &layout_data->children[i];
 
@@ -1862,8 +1763,7 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
 {
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
   GooCanvasTableDimensionLayoutData *columns = layout_data->dldata[HORZ];
   GooCanvasTableChild *child;
@@ -1884,9 +1784,9 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
   goo_canvas_table_size_allocate_pass2 (table, HORZ);
 
   /* Now check if any child changes height based on their allocated width. */
-  for (i = 0; i < table_data->children->len; i++)
+  for (i = 0; i < table->children->len; i++)
     {
-      child = &g_array_index (table_data->children, GooCanvasTableChild, i);
+      child = &g_array_index (table->children, GooCanvasTableChild, i);
       child_item = group->items->pdata[i];
       child_data = &layout_data->children[i];
 
@@ -1918,7 +1818,7 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
   goo_canvas_table_size_request_pass3 (table, VERT);
   goo_canvas_table_size_request_pass2 (table, VERT);
 
-  end = table_data->dimensions[VERT].size - 1;
+  end = table->dimensions[VERT].size - 1;
   for (row = 0; row <= end; row++)
     {
       height += rows[row].requisition;
@@ -1938,16 +1838,14 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
 				     GooCanvasBounds      *requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows, *columns;
   gdouble width = 0.0, height = 0.0;
   gint row, column, end;
 
   /* Request a redraw of the existing bounds */
-  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
   
   /* We reset the bounds to 0, just in case we are hidden or aren't allocated
      any area. */
@@ -1958,12 +1856,12 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
 
   goo_canvas_item_simple_check_style (simple);
 
-  if (simple_data->visibility == GOO_CANVAS_ITEM_HIDDEN)
+  if (simple->visibility == GOO_CANVAS_ITEM_HIDDEN)
     return FALSE;
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   cairo_translate (cr, layout_data->x, layout_data->y);
 
@@ -1981,7 +1879,7 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   rows = layout_data->dldata[VERT];
   columns = layout_data->dldata[HORZ];
 
-  end = table_data->dimensions[HORZ].size - 1;
+  end = table->dimensions[HORZ].size - 1;
   for (column = 0; column <= end; column++)
     {
       width += columns[column].requisition;
@@ -1994,8 +1892,8 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   layout_data->natural_size[HORZ] = width;
 
   /* If the width has been set, that overrides the calculations. */
-  if (table_data->width > 0.0)
-    width = table_data->width;
+  if (table->width > 0.0)
+    width = table->width;
 
   layout_data->requested_size[HORZ] = width;
   layout_data->allocated_size[HORZ] = width;
@@ -2008,7 +1906,7 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   goo_canvas_table_size_request_pass3 (table, VERT);
   goo_canvas_table_size_request_pass2 (table, VERT);
 
-  end = table_data->dimensions[VERT].size - 1;
+  end = table->dimensions[VERT].size - 1;
   for (row = 0; row <= end; row++)
     {
       height += rows[row].requisition;
@@ -2021,8 +1919,8 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   layout_data->natural_size[VERT] = height;
 
   /* If the height has been set, that overrides the calculations. */
-  if (table_data->height > 0.0)
-    height = table_data->height;
+  if (table->height > 0.0)
+    height = table->height;
 
   layout_data->requested_size[VERT] = height;
 
@@ -2046,28 +1944,26 @@ goo_canvas_table_get_requested_height (GooCanvasItem    *item,
 				       gdouble           width)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   gdouble allocated_width = width, height;
 
   /* If we have a transformation besides a simple scale & translation, just
      return -1 as we can't adjust the height in that case. */
-  if (simple_data->transform && (simple_data->transform->xy != 0.0
-				 || simple_data->transform->yx != 0.0))
+  if (simple->transform && (simple->transform->xy != 0.0
+				 || simple->transform->yx != 0.0))
     return -1;
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   cairo_translate (cr, layout_data->x, layout_data->y);
 
   /* Convert the width from the parent's coordinate space. Note that we only
      need to support a simple scale operation here. */
-  if (simple_data->transform)
-    allocated_width /= simple_data->transform->xx;
+  if (simple->transform)
+    allocated_width /= simple->transform->xx;
   layout_data->allocated_size[HORZ] = allocated_width;
 
   if (layout_data->integer_layout)
@@ -2080,8 +1976,8 @@ goo_canvas_table_get_requested_height (GooCanvasItem    *item,
   /* Convert to the parent's coordinate space. As above,  we only need to
      support a simple scale operation here. */
   height = layout_data->natural_size[VERT];
-  if (simple_data->transform)
-    height *= simple_data->transform->yy;
+  if (simple->transform)
+    height *= simple->transform->yy;
 
   /* Return the new requested height of the table. */
   return height;
@@ -2097,10 +1993,8 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
 				gdouble                y_offset)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   gdouble requested_width, requested_height, allocated_width, allocated_height;
   gdouble width_proportion, height_proportion, min_proportion;
 
@@ -2115,8 +2009,8 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
 
   /* If the table is rotated we have to scale it to make sure it fits in the
      allocated area. */
-  if (simple_data->transform && (simple_data->transform->xy != 0.0
-				 || simple_data->transform->yx != 0.0))
+  if (simple->transform && (simple->transform->xy != 0.0
+				 || simple->transform->yx != 0.0))
     {
       /* Calculate the minimum proportion, which we'll use to scale our
 	 original width & height requests. */
@@ -2145,15 +2039,15 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
   cairo_save (cr);
   cairo_translate (cr, -(allocated_area->x1 - requested_area->x1),
 		   -(allocated_area->y1 - requested_area->y1));
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
   cairo_translate (cr, layout_data->x, layout_data->y);
   goo_canvas_table_update_requested_heights (item, cr);
   cairo_restore (cr);
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
   cairo_translate (cr, layout_data->x, layout_data->y);
 
   /* Calculate the table's bounds. */
@@ -2175,7 +2069,7 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
 
   cairo_restore (cr);
 
-  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
 }
 
 
@@ -2214,17 +2108,15 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 			gdouble                scale)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
-  GooCanvasStyle *style = simple_data->style;
+  GooCanvasStyle *style = simple->style;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
   GooCanvasTableDimensionLayoutData *columns = layout_data->dldata[HORZ];
   gdouble vert_grid_line_width = layout_data->grid_line_width[VERT];
   gdouble horz_grid_line_width = layout_data->grid_line_width[HORZ];
-  GArray *children = table_data->children;
+  GArray *children = table->children;
   GooCanvasTableChild *table_child;
   GooCanvasItem *child;
   gboolean check_clip = FALSE, clip;
@@ -2241,22 +2133,22 @@ goo_canvas_table_paint (GooCanvasItem         *item,
     return;
 
   /* Check if the item should be visible. */
-  if (simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-      || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-	  && simple->canvas->scale < simple_data->visibility_threshold))
+  if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+	  && simple->canvas->scale < simple->visibility_threshold))
     return;
 
   /* Paint all the items in the group. */
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
   cairo_translate (cr, layout_data->x, layout_data->y);
 
   /* Clip with the table's clip path, if it is set. */
-  if (simple_data->clip_path_commands)
+  if (simple->clip_path_commands)
     {
-      goo_canvas_create_path (simple_data->clip_path_commands, cr);
-      cairo_set_fill_rule (cr, simple_data->clip_fill_rule);
+      goo_canvas_create_path (simple->clip_path_commands, cr);
+      cairo_set_fill_rule (cr, simple->clip_fill_rule);
       cairo_clip (cr);
     }
 
@@ -2322,9 +2214,9 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 
       /* Inner lines. Make sure we don't do overlapping drawing operations,
          so we could easily draw alpha transparent borders */
-      for (i = 0; i + 1 < table_data->dimensions[VERT].size; i++)
+      for (i = 0; i + 1 < table->dimensions[VERT].size; i++)
         {
-          for (j = 0; j < table_data->dimensions[HORZ].size; j++)
+          for (j = 0; j < table->dimensions[HORZ].size; j++)
             {
               cur_grid_line_visibility = GOO_CANVAS_TABLE_IS_GRID_LINE_VISIBLE(layout_data->dldata[VERT], i, j);
               if (cur_grid_line_visibility)
@@ -2347,7 +2239,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
                   if (simple->canvas->integer_layout)
                     half_spacing_after = ceil (half_spacing_after);
 
-                  if (j == table_data->dimensions[HORZ].size - 1)
+                  if (j == table->dimensions[HORZ].size - 1)
                     line_end = frame_width - layout_data->border_width - vert_grid_line_width;
                   else
                     line_end = columns[j + 1].start - half_spacing_after;
@@ -2382,9 +2274,9 @@ goo_canvas_table_paint (GooCanvasItem         *item,
          so we could easily draw alpha transparent borders. We need to
          take additionally care that we don't cross already drawn
          horizontal lines. */
-      for (i = 0; i + 1 < table_data->dimensions[HORZ].size; i++)
+      for (i = 0; i + 1 < table->dimensions[HORZ].size; i++)
         {
-          for (j = 0; j < table_data->dimensions[VERT].size; j++)
+          for (j = 0; j < table->dimensions[VERT].size; j++)
             {
               cur_grid_line_visibility = GOO_CANVAS_TABLE_IS_GRID_LINE_VISIBLE(layout_data->dldata[HORZ], i, j);
               if (cur_grid_line_visibility)
@@ -2415,7 +2307,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
                       half_spacing_after = ceil (half_spacing_after);
                     }
 
-                  if (j == table_data->dimensions[VERT].size - 1)
+                  if (j == table->dimensions[VERT].size - 1)
                     line_end = frame_height - layout_data->border_width - horz_grid_line_width;
                   else
                     /* Don't draw bottom part if already drawn by horizontal grid line */
@@ -2516,14 +2408,12 @@ goo_canvas_table_get_items_at (GooCanvasItem  *item,
 			       GList          *found_items)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
-  GooCanvasTableData *table_data = table->table_data;
-  GooCanvasTableLayoutData *layout_data = table_data->layout_data;
+  GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
   GooCanvasTableDimensionLayoutData *columns = layout_data->dldata[HORZ];
-  GArray *children = table_data->children;
+  GArray *children = table->children;
   GooCanvasTableChild *table_child;
   GooCanvasItem *child;
   gboolean visible = parent_visible, check_clip = FALSE;
@@ -2539,30 +2429,30 @@ goo_canvas_table_get_items_at (GooCanvasItem  *item,
       || simple->bounds.y1 > y || simple->bounds.y2 < y)
     return found_items;
 
-  if (simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-      || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-	  && simple->canvas->scale < simple_data->visibility_threshold))
+  if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+	  && simple->canvas->scale < simple->visibility_threshold))
     visible = FALSE;
 
   /* Check if the group should receive events. */
   if (is_pointer_event
-      && (simple_data->pointer_events == GOO_CANVAS_EVENTS_NONE
-	  || ((simple_data->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK)
+      && (simple->pointer_events == GOO_CANVAS_EVENTS_NONE
+	  || ((simple->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK)
 	      && !visible)))
     return found_items;
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
   cairo_translate (cr, layout_data->x, layout_data->y);
 
   cairo_device_to_user (cr, &user_x, &user_y);
 
   /* If the table has a clip path, check if the point is inside it. */
-  if (simple_data->clip_path_commands)
+  if (simple->clip_path_commands)
     {
-      goo_canvas_create_path (simple_data->clip_path_commands, cr);
-      cairo_set_fill_rule (cr, simple_data->clip_fill_rule);
+      goo_canvas_create_path (simple->clip_path_commands, cr);
+      cairo_set_fill_rule (cr, simple->clip_fill_rule);
       if (!cairo_in_fill (cr, user_x, user_y))
 	{
 	  cairo_restore (cr);
@@ -2640,10 +2530,9 @@ goo_canvas_table_get_transform_for_child  (GooCanvasItem  *item,
   gboolean has_transform = FALSE;
   gint child_num;
 
-
-  if (simple->simple_data->transform)
+  if (simple->transform)
     {
-      *transform = *simple->simple_data->transform;
+      *transform = *simple->transform;
       has_transform = TRUE;
     }
   else
@@ -2655,7 +2544,7 @@ goo_canvas_table_get_transform_for_child  (GooCanvasItem  *item,
     {
       if (group->items->pdata[child_num] == child)
 	{
-	  table_child = &g_array_index (table->table_data->children,
+	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
 	  cairo_matrix_translate (transform, table_child->position[HORZ],
 				  table_child->position[VERT]);
@@ -2684,330 +2573,4 @@ item_interface_init (GooCanvasItemIface *iface)
   iface->allocate_area           = goo_canvas_table_allocate_area;
   iface->paint                   = goo_canvas_table_paint;
   iface->get_items_at	         = goo_canvas_table_get_items_at;
-
-  iface->set_model               = goo_canvas_table_set_model;
-}
-
-
-
-/**
- * SECTION:goocanvastablemodel
- * @Title: GooCanvasTableModel
- * @Short_Description: a model for a table container to layout items.
- *
- * #GooCanvasTableModel is a model for a table container used to lay out other
- * canvas items. It is used in a similar way to how the GtkTable widget is used
- * to lay out GTK+ widgets.
- *
- * Item models are added to the table using the normal methods, then
- * goo_canvas_item_model_set_child_properties() is used to specify how each
- * child item is to be positioned within the table (i.e. which row and column
- * it is in, how much padding it should have and whether it should expand or
- * shrink).
- *
- * #GooCanvasTableModel is a subclass of #GooCanvasItemModelSimple and so
- * inherits all of the style properties such as "stroke-color", "fill-color"
- * and "line-width". Setting a style property on a #GooCanvasTableModel will
- * affect all children of the #GooCanvasTableModel (unless the children
- * override the property setting).
- *
- * #GooCanvasTableModel implements the #GooCanvasItemModel interface, so you
- * can use the #GooCanvasItemModel functions such as
- * goo_canvas_item_model_raise() and goo_canvas_item_rotate(), and the
- * properties such as "visibility" and "pointer-events".
- *
- * To create a #GooCanvasTableModel use goo_canvas_table_model_new().
- *
- * To get or set the properties of an existing #GooCanvasTableModel, use
- * g_object_get() and g_object_set().
- */
-
-static GooCanvasItemModelIface *goo_canvas_table_model_parent_iface;
-
-static void item_model_interface_init (GooCanvasItemModelIface *iface);
-static void goo_canvas_table_model_finalize (GObject *object);
-static void goo_canvas_table_model_get_property (GObject            *object,
-						 guint               param_id,
-						 GValue             *value,
-						 GParamSpec         *pspec);
-static void goo_canvas_table_model_set_property (GObject            *object,
-						 guint               param_id,
-						 const GValue       *value,
-						 GParamSpec         *pspec);
-
-G_DEFINE_TYPE_WITH_CODE (GooCanvasTableModel, goo_canvas_table_model,
-			 GOO_TYPE_CANVAS_GROUP_MODEL,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM_MODEL,
-						item_model_interface_init))
-
-
-static void
-goo_canvas_table_model_class_init (GooCanvasTableModelClass *klass)
-{
-  GObjectClass *gobject_class = (GObjectClass*) klass;
-
-  goo_canvas_table_model_parent_iface = g_type_interface_peek (goo_canvas_table_model_parent_class, GOO_TYPE_CANVAS_ITEM_MODEL);
-
-  gobject_class->finalize = goo_canvas_table_model_finalize;
-
-  gobject_class->get_property = goo_canvas_table_model_get_property;
-  gobject_class->set_property = goo_canvas_table_model_set_property;
-
-  goo_canvas_table_install_common_properties (gobject_class, goo_canvas_item_model_class_install_child_property);
-}
-
-
-static void
-goo_canvas_table_model_init (GooCanvasTableModel *tmodel)
-{
-  goo_canvas_table_init_data (&tmodel->table_data);
-}
-
-
-/**
- * goo_canvas_table_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
- *  assume ownership of the item, and the item will automatically be freed when
- *  it is removed from the parent. Otherwise call g_object_unref() to free it.
- * @...: optional pairs of property names and values, and a terminating %NULL.
- * 
- * Creates a new table model.
- *
- * <!--PARAMETERS-->
- *
- * Here's an example showing how to create a table with a square, a circle and
- * a triangle in it:
- *
- * <informalexample><programlisting>
- *  GooCanvasItemModel *table, *square, *circle, *triangle;
- *
- *  table = goo_canvas_table_model_new (root,
- *                                      "row-spacing", 4.0,
- *                                      "column-spacing", 4.0,
- *                                      NULL);
- *  goo_canvas_item_model_translate (table, 400, 200);
- *
- *  square = goo_canvas_rect_model_new (table, 0.0, 0.0, 50.0, 50.0,
- *                                      "fill-color", "red",
- *                                      NULL);
- *  goo_canvas_item_model_set_child_properties (table, square,
- *                                              "row", 0,
- *                                              "column", 0,
- *                                              NULL);
- *
- *  circle = goo_canvas_ellipse_model_new (table, 0.0, 0.0, 25.0, 25.0,
- *                                         "fill-color", "blue",
- *                                         NULL);
- *  goo_canvas_item_model_set_child_properties (table, circle,
- *                                              "row", 0,
- *                                              "column", 1,
- *                                              NULL);
- *
- *  triangle = goo_canvas_polyline_model_new (table, TRUE, 3,
- *                                            25.0, 0.0, 0.0, 50.0, 50.0, 50.0,
- *                                            "fill-color", "yellow",
- *                                            NULL);
- *  goo_canvas_item_model_set_child_properties (table, triangle,
- *                                              "row", 0,
- *                                              "column", 2,
- *                                              NULL);
- * </programlisting></informalexample>
- * 
- * Returns: a new table model.
- **/
-GooCanvasItemModel*
-goo_canvas_table_model_new (GooCanvasItemModel *parent,
-			    ...)
-{
-  GooCanvasItemModel *model;
-  va_list var_args;
-  const char *first_property;
-
-  model = g_object_new (GOO_TYPE_CANVAS_TABLE_MODEL, NULL);
-
-  va_start (var_args, parent);
-  first_property = va_arg (var_args, char*);
-  if (first_property)
-    g_object_set_valist (G_OBJECT (model), first_property, var_args);
-  va_end (var_args);
-
-  if (parent)
-    {
-      goo_canvas_item_model_add_child (parent, model, -1);
-      g_object_unref (model);
-    }
-
-  return model;
-}
-
-
-static void
-goo_canvas_table_model_finalize (GObject *object)
-{
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) object;
-
-  goo_canvas_table_free_data (&tmodel->table_data);
-
-  G_OBJECT_CLASS (goo_canvas_table_model_parent_class)->finalize (object);
-}
-
-
-static void
-goo_canvas_table_model_get_property (GObject              *object,
-				     guint                 prop_id,
-				     GValue               *value,
-				     GParamSpec           *pspec)
-{
-  GooCanvasTableModel *emodel = (GooCanvasTableModel*) object;
-
-  goo_canvas_table_get_common_property (object, &emodel->table_data,
-					prop_id, value, pspec);
-}
-
-
-static void
-goo_canvas_table_model_set_property (GObject              *object,
-				     guint                 prop_id,
-				     const GValue         *value,
-				     GParamSpec           *pspec)
-{
-  GooCanvasTableModel *emodel = (GooCanvasTableModel*) object;
-  gboolean recompute_bounds;
-
-  recompute_bounds = goo_canvas_table_set_common_property (object,
-							   &emodel->table_data,
-							   prop_id, value,
-							   pspec);
-  g_signal_emit_by_name (emodel, "changed", recompute_bounds);
-}
-
-
-static void
-goo_canvas_table_model_add_child     (GooCanvasItemModel *model,
-				      GooCanvasItemModel *child,
-				      gint                position)
-{
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-
-  goo_canvas_table_add_child_internal (&tmodel->table_data, position);
-
-  /* Let the parent GooCanvasGroupModel code do the rest. */
-  goo_canvas_table_model_parent_iface->add_child (model, child, position);
-}
-
-
-static void
-goo_canvas_table_model_move_child    (GooCanvasItemModel *model,
-				      gint	          old_position,
-				      gint                new_position)
-{
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-
-  goo_canvas_table_move_child_internal (&tmodel->table_data, old_position,
-					new_position);
-
-  /* Let the parent GooCanvasGroupModel code do the rest. */
-  goo_canvas_table_model_parent_iface->move_child (model, old_position,
-						   new_position);
-}
-
-
-static void
-goo_canvas_table_model_remove_child  (GooCanvasItemModel *model,
-				      gint                child_num)
-{
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-
-  g_array_remove_index (tmodel->table_data.children, child_num);
-
-  /* Let the parent GooCanvasGroupModel code do the rest. */
-  goo_canvas_table_model_parent_iface->remove_child (model, child_num);
-}
-
-
-static void
-goo_canvas_table_model_get_child_property (GooCanvasItemModel *model,
-					   GooCanvasItemModel *child,
-					   guint               property_id,
-					   GValue             *value,
-					   GParamSpec         *pspec)
-{
-  GooCanvasGroupModel *gmodel = (GooCanvasGroupModel*) model;
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-  GooCanvasTableChild *table_child;
-  gint child_num;
-
-  for (child_num = 0; child_num < gmodel->children->len; child_num++)
-    {
-      if (gmodel->children->pdata[child_num] == child)
-	{
-	  table_child = &g_array_index (tmodel->table_data.children,
-					GooCanvasTableChild, child_num);
-	  goo_canvas_table_get_common_child_property ((GObject*) tmodel,
-						      table_child,
-						      property_id, value,
-						      pspec);
-	  break;
-	}
-    }
-}
-
-
-static void
-goo_canvas_table_model_set_child_property (GooCanvasItemModel *model,
-					   GooCanvasItemModel *child,
-					   guint               property_id,
-					   const GValue       *value,
-					   GParamSpec         *pspec)
-{
-  GooCanvasGroupModel *gmodel = (GooCanvasGroupModel*) model;
-  GooCanvasTableModel *tmodel = (GooCanvasTableModel*) model;
-  GooCanvasTableChild *table_child;
-  gint child_num;
-
-  for (child_num = 0; child_num < gmodel->children->len; child_num++)
-    {
-      if (gmodel->children->pdata[child_num] == child)
-	{
-	  table_child = &g_array_index (tmodel->table_data.children,
-					GooCanvasTableChild, child_num);
-	  goo_canvas_table_set_common_child_property ((GObject*) tmodel,
-						      &tmodel->table_data,
-						      table_child,
-						      property_id, value,
-						      pspec);
-	  break;
-	}
-    }
-
-  g_signal_emit_by_name (tmodel, "changed", TRUE);
-}
-
-
-static GooCanvasItem*
-goo_canvas_table_model_create_item (GooCanvasItemModel *model,
-				    GooCanvas          *canvas)
-{
-  GooCanvasItem *item;
-
-  item = goo_canvas_table_new (NULL, NULL);
-  /* Note that we set the canvas before the model, since we may need the
-     canvas to create any child items. */
-  goo_canvas_item_set_canvas (item, canvas);
-  goo_canvas_item_set_model (item, model);
-
-  return item;
-}
-
-
-static void
-item_model_interface_init (GooCanvasItemModelIface *iface)
-{
-  iface->add_child          = goo_canvas_table_model_add_child;
-  iface->move_child         = goo_canvas_table_model_move_child;
-  iface->remove_child       = goo_canvas_table_model_remove_child;
-  iface->get_child_property = goo_canvas_table_model_get_child_property;
-  iface->set_child_property = goo_canvas_table_model_set_child_property;
-
-  iface->create_item        = goo_canvas_table_model_create_item;
 }

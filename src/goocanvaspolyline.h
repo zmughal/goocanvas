@@ -51,22 +51,6 @@ struct _GooCanvasPolylineArrowData
 };
 
 
-/* This is the data used by both model and view classes. */
-typedef struct _GooCanvasPolylineData   GooCanvasPolylineData;
-struct _GooCanvasPolylineData
-{
-  gdouble *coords;
-
-  GooCanvasPolylineArrowData *arrow_data;
-
-  guint num_points	   : 16;
-  guint close_path	   : 1;
-  guint start_arrow	   : 1;
-  guint end_arrow          : 1;
-  guint reconfigure_arrows : 1;		/* Not used any more. */
-};
-
-
 #define GOO_TYPE_CANVAS_POLYLINE            (goo_canvas_polyline_get_type ())
 #define GOO_CANVAS_POLYLINE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_POLYLINE, GooCanvasPolyline))
 #define GOO_CANVAS_POLYLINE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_POLYLINE, GooCanvasPolylineClass))
@@ -87,7 +71,14 @@ struct _GooCanvasPolyline
 {
   GooCanvasItemSimple parent;
 
-  GooCanvasPolylineData *polyline_data;
+  gdouble *coords;
+
+  GooCanvasPolylineArrowData *arrow_data;
+
+  guint num_points	   : 16;
+  guint close_path	   : 1;
+  guint start_arrow	   : 1;
+  guint end_arrow          : 1;
 };
 
 struct _GooCanvasPolylineClass
@@ -119,57 +110,6 @@ GooCanvasItem*      goo_canvas_polyline_new_line       (GooCanvasItem      *pare
 							...);
 
 
-
-#define GOO_TYPE_CANVAS_POLYLINE_MODEL            (goo_canvas_polyline_model_get_type ())
-#define GOO_CANVAS_POLYLINE_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_POLYLINE_MODEL, GooCanvasPolylineModel))
-#define GOO_CANVAS_POLYLINE_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_POLYLINE_MODEL, GooCanvasPolylineModelClass))
-#define GOO_IS_CANVAS_POLYLINE_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_POLYLINE_MODEL))
-#define GOO_IS_CANVAS_POLYLINE_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_POLYLINE_MODEL))
-#define GOO_CANVAS_POLYLINE_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_POLYLINE_MODEL, GooCanvasPolylineModelClass))
-
-
-typedef struct _GooCanvasPolylineModel       GooCanvasPolylineModel;
-typedef struct _GooCanvasPolylineModelClass  GooCanvasPolylineModelClass;
-
-/**
- * GooCanvasPolylineModel
- *
- * The #GooCanvasPolylineModel-struct struct contains private data only.
- */
-struct _GooCanvasPolylineModel
-{
-  GooCanvasItemModelSimple parent_object;
-
-  GooCanvasPolylineData polyline_data;
-};
-
-struct _GooCanvasPolylineModelClass
-{
-  GooCanvasItemModelSimpleClass parent_class;
-
-  /*< private >*/
-
-  /* Padding for future expansion */
-  void (*_goo_canvas_reserved1) (void);
-  void (*_goo_canvas_reserved2) (void);
-  void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
-};
-
-
-GType               goo_canvas_polyline_model_get_type  (void) G_GNUC_CONST;
-
-GooCanvasItemModel* goo_canvas_polyline_model_new      (GooCanvasItemModel *parent,
-							gboolean            close_path,
-							gint                num_points,
-							...);
-
-GooCanvasItemModel* goo_canvas_polyline_model_new_line (GooCanvasItemModel *parent,
-							gdouble             x1,
-							gdouble             y1,
-							gdouble             x2,
-							gdouble             y2,
-							...);
 
 G_END_DECLS
 

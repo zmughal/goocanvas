@@ -28,9 +28,6 @@
  * It doesn't support rendering of widgets to a given cairo_t, which
  * means you can't output the widget to a pdf or postscript file.
  * </para></listitem><listitem><para>
- * It doesn't have a model/view variant like the other standard items,
- * so it can only be used in a simple canvas without a model.
- * </para></listitem><listitem><para>
  * It can't be made a static item.
  * </para></listitem></itemizedlist>
  */
@@ -246,7 +243,7 @@ goo_canvas_widget_set_widget (GooCanvasWidget *witem,
       g_object_ref (witem->widget);
       g_object_set_data (G_OBJECT (witem->widget), "goo-canvas-item", witem);
 
-      if (simple->simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE)
+      if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE)
 	gtk_widget_hide (widget);
       else
 	gtk_widget_show (widget);
@@ -308,7 +305,7 @@ goo_canvas_widget_get_property  (GObject             *object,
       g_value_set_enum (value, witem->anchor);
       break;
     case PROP_VISIBILITY:
-      g_value_set_enum (value, simple->simple_data->visibility);
+      g_value_set_enum (value, simple->visibility);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -347,8 +344,8 @@ goo_canvas_widget_set_property  (GObject             *object,
       witem->anchor = g_value_get_enum (value);
       break;
     case PROP_VISIBILITY:
-      simple->simple_data->visibility = g_value_get_enum (value);
-      if (simple->simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE)
+      simple->visibility = g_value_get_enum (value);
+      if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE)
 	gtk_widget_hide (witem->widget);
       else
 	gtk_widget_show (witem->widget);

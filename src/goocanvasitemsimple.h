@@ -9,15 +9,31 @@
 
 #include <gtk/gtk.h>
 #include "goocanvasitem.h"
-#include "goocanvasitemmodel.h"
 #include "goocanvasstyle.h"
 #include "goocanvasutils.h"
 
 G_BEGIN_DECLS
 
 
+#define GOO_TYPE_CANVAS_ITEM_SIMPLE            (goo_canvas_item_simple_get_type ())
+#define GOO_CANVAS_ITEM_SIMPLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimple))
+#define GOO_CANVAS_ITEM_SIMPLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimpleClass))
+#define GOO_IS_CANVAS_ITEM_SIMPLE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE))
+#define GOO_IS_CANVAS_ITEM_SIMPLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_ITEM_SIMPLE))
+#define GOO_CANVAS_ITEM_SIMPLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimpleClass))
+
+
+typedef struct _GooCanvasItemSimple       GooCanvasItemSimple;
+typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
+
+
 /**
- * GooCanvasItemSimpleData
+ * GooCanvasItemSimple
+ * @canvas: the canvas.
+ * @parent: the parent item.
+ * @bounds: the bounds of the item, in device space.
+ * @need_update: if the item needs to recompute its bounds and redraw.
+ * @need_entire_subtree_update: if all descendants need to be updated.
  * @style: the style to draw with.
  * @transform: the transformation matrix of the item, or %NULL.
  * @clip_path_commands: an array of #GooCanvasPathCommand specifying the clip
@@ -35,59 +51,6 @@ G_BEGIN_DECLS
  *  used for the clip path.
  * @is_static: if the item is static.
  *
- * This is the data common to both the model and view classes.
- */
-typedef struct _GooCanvasItemSimpleData   GooCanvasItemSimpleData;
-struct _GooCanvasItemSimpleData
-{
-  GooCanvasStyle *style;
-  cairo_matrix_t *transform;
-  GArray *clip_path_commands;
-  gchar *tooltip;
-
-  /*< public >*/
-  gdouble visibility_threshold;
-  guint visibility			: 2;
-  guint pointer_events			: 4;
-  guint can_focus                       : 1;
-  guint own_style                       : 1;
-  guint clip_fill_rule			: 4;
-  guint is_static			: 1;
-
-  /*< private >*/
-  /* We might use this in future for a cache setting - never/always/visible. */
-  guint cache_setting			: 2;
-  /* We might need this for tooltips in future. */
-  guint has_tooltip			: 1;
-};
-
-
-#define GOO_TYPE_CANVAS_ITEM_SIMPLE            (goo_canvas_item_simple_get_type ())
-#define GOO_CANVAS_ITEM_SIMPLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimple))
-#define GOO_CANVAS_ITEM_SIMPLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimpleClass))
-#define GOO_IS_CANVAS_ITEM_SIMPLE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE))
-#define GOO_IS_CANVAS_ITEM_SIMPLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_ITEM_SIMPLE))
-#define GOO_CANVAS_ITEM_SIMPLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_ITEM_SIMPLE, GooCanvasItemSimpleClass))
-
-
-typedef struct _GooCanvasItemSimple       GooCanvasItemSimple;
-typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
-
-typedef struct _GooCanvasItemModelSimple       GooCanvasItemModelSimple;
-
-/**
- * GooCanvasItemSimple
- * @canvas: the canvas.
- * @parent: the parent item.
- * @model: the item's model, if it has one.
- * @simple_data: data that is common to both the model and view classes. If
- *  the canvas item has a model, this will point to the model's
- *  #GooCanvasItemSimpleData, otherwise the canvas item will have its own
- *  #GooCanvasItemSimpleData.
- * @bounds: the bounds of the item, in device space.
- * @need_update: if the item needs to recompute its bounds and redraw.
- * @need_entire_subtree_update: if all descendants need to be updated.
- *
  * The #GooCanvasItemSimple-struct struct contains the basic data needed to
  * implement canvas items.
  */
@@ -99,15 +62,23 @@ struct _GooCanvasItemSimple
   /* <public> */
   GooCanvas *canvas;
   GooCanvasItem *parent;
-  GooCanvasItemModelSimple *model;
-  GooCanvasItemSimpleData *simple_data;
+  GooCanvasStyle *style;
+  cairo_matrix_t *transform;
+  GArray *clip_path_commands;
+  gchar *tooltip;
+
   GooCanvasBounds bounds;
+
+  gdouble visibility_threshold;
+
   guint	need_update			: 1;
   guint need_entire_subtree_update      : 1;
-
-  /* <private> */
-  /* We might use this in future for things like a cache. */
-  gpointer priv;
+  guint visibility			: 2;
+  guint pointer_events			: 4;
+  guint can_focus                       : 1;
+  guint own_style                       : 1;
+  guint clip_fill_rule			: 4;
+  guint is_static			: 1;
 };
 
 /**
@@ -184,62 +155,7 @@ void     goo_canvas_item_simple_changed			(GooCanvasItemSimple	*item,
 							 gboolean		 recompute_bounds);
 void     goo_canvas_item_simple_check_style		(GooCanvasItemSimple	*item);
 gdouble  goo_canvas_item_simple_get_line_width		(GooCanvasItemSimple   *item);
-void	 goo_canvas_item_simple_set_model		(GooCanvasItemSimple	*item,
-							 GooCanvasItemModel	*model);
 
-
-
-
-
-#define GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE            (goo_canvas_item_model_simple_get_type ())
-#define GOO_CANVAS_ITEM_MODEL_SIMPLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE, GooCanvasItemModelSimple))
-#define GOO_CANVAS_ITEM_MODEL_SIMPLE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE, GooCanvasItemModelSimpleClass))
-#define GOO_IS_CANVAS_ITEM_MODEL_SIMPLE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE))
-#define GOO_IS_CANVAS_ITEM_MODEL_SIMPLE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE))
-#define GOO_CANVAS_ITEM_MODEL_SIMPLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_ITEM_MODEL_SIMPLE, GooCanvasItemModelSimpleClass))
-
-
-typedef struct _GooCanvasItemModelSimpleClass  GooCanvasItemModelSimpleClass;
-
-/**
- * GooCanvasItemModelSimple
- * @parent: the parent model.
- * @simple_data: data used by the canvas item for viewing the model.
- *
- * The #GooCanvasItemModelSimple-struct struct contains the basic data needed
- * to implement canvas item models.
- */
-struct _GooCanvasItemModelSimple
-{
-  GObject parent_object;
-
-  /*< public >*/
-  GooCanvasItemModel *parent;
-  GooCanvasItemSimpleData simple_data;
-
-  /*< private >*/
-
-  /* The title and description of the item for accessibility. */
-  gchar *title;
-  gchar *description;
-};
-
-
-struct _GooCanvasItemModelSimpleClass
-{
-  GObjectClass parent_class;
-
-  /*< private >*/
-
-  /* Padding for future expansion */
-  void (*_goo_canvas_reserved1) (void);
-  void (*_goo_canvas_reserved2) (void);
-  void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
-};
-
-
-GType    goo_canvas_item_model_simple_get_type  (void) G_GNUC_CONST;
 
 
 G_END_DECLS

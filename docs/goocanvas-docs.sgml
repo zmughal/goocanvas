@@ -10,7 +10,6 @@
     <title>Introduction</title>
     <xi:include href="xml/overview.xml"/>
     <xi:include href="xml/simple-canvas.xml"/>
-    <xi:include href="xml/model-view-canvas.xml"/>
     <xi:include href="xml/architecture.xml"/>
     <xi:include href="xml/coordinates.xml"/>
     <xi:include href="xml/creating-items.xml"/>
@@ -21,9 +20,7 @@
     <title>Core Objects</title>
     <xi:include href="xml/goocanvas.xml"/>
     <xi:include href="xml/goocanvasitem.xml"/>
-    <xi:include href="xml/goocanvasitemmodel.xml"/>
     <xi:include href="xml/goocanvasitemsimple.xml"/>
-    <xi:include href="xml/goocanvasitemmodelsimple.xml"/>
     <xi:include href="xml/goocanvasstyle.xml"/>
   </chapter>
 
@@ -39,19 +36,6 @@
     <xi:include href="xml/goocanvastext.xml"/>
     <xi:include href="xml/goocanvaswidget.xml"/>
     <xi:include href="xml/goocanvastable.xml"/>
-  </chapter>
-
-  <chapter>
-    <title>Standard Canvas Item Models</title>
-    <xi:include href="xml/goocanvasgroupmodel.xml"/>
-    <xi:include href="xml/goocanvasellipsemodel.xml"/>
-    <xi:include href="xml/goocanvasgridmodel.xml"/>
-    <xi:include href="xml/goocanvasimagemodel.xml"/>
-    <xi:include href="xml/goocanvaspathmodel.xml"/>
-    <xi:include href="xml/goocanvaspolylinemodel.xml"/>
-    <xi:include href="xml/goocanvasrectmodel.xml"/>
-    <xi:include href="xml/goocanvastextmodel.xml"/>
-    <xi:include href="xml/goocanvastablemodel.xml"/>
   </chapter>
 
   <chapter>

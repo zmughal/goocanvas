@@ -33,7 +33,6 @@ libgoocanvas_public_headers =		\
 	goocanvasgroup.h		\
 	goocanvasimage.h		\
 	goocanvasitem.h			\
-	goocanvasitemmodel.h		\
 	goocanvasitemsimple.h		\
 	goocanvaspolyline.h		\
 	goocanvaspath.h			\
@@ -54,7 +53,6 @@ libgoocanvas_2_0_la_SOURCES =		\
 	goocanvasgroup.c		\
 	goocanvasimage.c		\
 	goocanvasitem.c			\
-	goocanvasitemmodel.c		\
 	goocanvasitemsimple.c		\
 	goocanvasmarshal.c		\
 	goocanvaspolyline.c		\

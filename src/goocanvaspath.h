@@ -13,15 +13,6 @@
 G_BEGIN_DECLS
 
 
-/* This is the data used by both model and view classes. */
-typedef struct _GooCanvasPathData   GooCanvasPathData;
-struct _GooCanvasPathData
-{
-  /* An array of GooCanvasPathCommand. */
-  GArray *path_commands;
-};
-
-
 #define GOO_TYPE_CANVAS_PATH            (goo_canvas_path_get_type ())
 #define GOO_CANVAS_PATH(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_PATH, GooCanvasPath))
 #define GOO_CANVAS_PATH_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_PATH, GooCanvasPathClass))
@@ -42,7 +33,8 @@ struct _GooCanvasPath
 {
   GooCanvasItemSimple parent;
 
-  GooCanvasPathData *path_data;
+  /* An array of GooCanvasPathCommand. */
+  GArray *path_commands;
 };
 
 struct _GooCanvasPathClass
@@ -65,50 +57,6 @@ GooCanvasItem*      goo_canvas_path_new       (GooCanvasItem      *parent,
 					       const gchar        *path_data,
 					       ...);
 
-
-
-#define GOO_TYPE_CANVAS_PATH_MODEL            (goo_canvas_path_model_get_type ())
-#define GOO_CANVAS_PATH_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_PATH_MODEL, GooCanvasPathModel))
-#define GOO_CANVAS_PATH_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_PATH_MODEL, GooCanvasPathModelClass))
-#define GOO_IS_CANVAS_PATH_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_PATH_MODEL))
-#define GOO_IS_CANVAS_PATH_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_PATH_MODEL))
-#define GOO_CANVAS_PATH_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_PATH_MODEL, GooCanvasPathModelClass))
-
-
-typedef struct _GooCanvasPathModel       GooCanvasPathModel;
-typedef struct _GooCanvasPathModelClass  GooCanvasPathModelClass;
-
-/**
- * GooCanvasPathModel
- *
- * The #GooCanvasPathModel-struct struct contains private data only.
- */
-struct _GooCanvasPathModel
-{
-  GooCanvasItemModelSimple parent_object;
-
-  GooCanvasPathData path_data;
-};
-
-struct _GooCanvasPathModelClass
-{
-  GooCanvasItemModelSimpleClass parent_class;
-
-  /*< private >*/
-
-  /* Padding for future expansion */
-  void (*_goo_canvas_reserved1) (void);
-  void (*_goo_canvas_reserved2) (void);
-  void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
-};
-
-
-GType               goo_canvas_path_model_get_type  (void) G_GNUC_CONST;
-
-GooCanvasItemModel* goo_canvas_path_model_new (GooCanvasItemModel *parent,
-					       const gchar        *path_data,
-					       ...);
 
 
 G_END_DECLS

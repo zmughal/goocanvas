@@ -25,8 +25,6 @@ G_BEGIN_DECLS
 typedef struct _GooCanvasGroup            GooCanvasGroup;
 typedef struct _GooCanvasGroupClass       GooCanvasGroupClass;
 
-typedef struct _GooCanvasGroupModel       GooCanvasGroupModel;
-typedef struct _GooCanvasGroupModelClass  GooCanvasGroupModelClass;
 
 /**
  * GooCanvasGroup
@@ -40,6 +38,8 @@ struct _GooCanvasGroup
   /* An array of pointers to GooCanvasItems. The first element is at the
      bottom of the display stack and the last element is at the top. */
   GPtrArray *items;
+
+  gdouble x, y, width, height;
 };
 
 struct _GooCanvasGroupClass
@@ -60,48 +60,6 @@ GType          goo_canvas_group_get_type    (void) G_GNUC_CONST;
 GooCanvasItem* goo_canvas_group_new         (GooCanvasItem  *parent,
 					     ...);
 
-
-
-#define GOO_TYPE_CANVAS_GROUP_MODEL            (goo_canvas_group_model_get_type ())
-#define GOO_CANVAS_GROUP_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GOO_TYPE_CANVAS_GROUP_MODEL, GooCanvasGroupModel))
-#define GOO_CANVAS_GROUP_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GOO_TYPE_CANVAS_GROUP_MODEL, GooCanvasGroupModelClass))
-#define GOO_IS_CANVAS_GROUP_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GOO_TYPE_CANVAS_GROUP_MODEL))
-#define GOO_IS_CANVAS_GROUP_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GOO_TYPE_CANVAS_GROUP_MODEL))
-#define GOO_CANVAS_GROUP_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GOO_TYPE_CANVAS_GROUP_MODEL, GooCanvasGroupModelClass))
-
-
-
-/**
- * GooCanvasGroupModel
- *
- * The #GooCanvasGroupModel-struct struct contains private data only.
- */
-struct _GooCanvasGroupModel
-{
-  GooCanvasItemModelSimple parent_object;
-
-  /* An array of pointers to GooCanvasItemModels. The first element is at the
-     bottom of the display stack and the last element is at the top. */
-  GPtrArray *children;
-};
-
-struct _GooCanvasGroupModelClass
-{
-  GooCanvasItemModelSimpleClass parent_class;
-
-  /*< private >*/
-
-  /* Padding for future expansion */
-  void (*_goo_canvas_reserved1) (void);
-  void (*_goo_canvas_reserved2) (void);
-  void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
-};
-
-
-GType               goo_canvas_group_model_get_type (void) G_GNUC_CONST;
-GooCanvasItemModel* goo_canvas_group_model_new      (GooCanvasItemModel  *parent,
-						     ...);
 
 
 G_END_DECLS

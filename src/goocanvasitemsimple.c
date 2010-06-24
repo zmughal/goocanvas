@@ -87,7 +87,6 @@ static gboolean accessibility_enabled = FALSE;
 
 static void canvas_item_interface_init          (GooCanvasItemIface   *iface);
 static void goo_canvas_item_simple_dispose      (GObject              *object);
-static void goo_canvas_item_simple_finalize     (GObject              *object);
 static void goo_canvas_item_simple_get_property (GObject              *object,
 						 guint                 prop_id,
 						 GValue               *value,
@@ -299,14 +298,6 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
    * as in the <ulink url="http://www.w3.org/Graphics/SVG/">Scalable Vector
    * Graphics (SVG)</ulink> path element.
    */
-  /**
-   * GooCanvasItemModelSimple:clip-path
-   *
-   * The sequence of commands describing the clip path of the item, specified
-   * as a string using the same syntax
-   * as in the <ulink url="http://www.w3.org/Graphics/SVG/">Scalable Vector
-   * Graphics (SVG)</ulink> path element.
-   */
   g_object_class_install_property (gobject_class, PROP_CLIP_PATH,
 				   g_param_spec_string ("clip-path",
 							_("Clip Path"),
@@ -331,7 +322,6 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
   GObjectClass *gobject_class = (GObjectClass*) klass;
 
   gobject_class->dispose  = goo_canvas_item_simple_dispose;
-  gobject_class->finalize = goo_canvas_item_simple_finalize;
 
   gobject_class->get_property = goo_canvas_item_simple_get_property;
   gobject_class->set_property = goo_canvas_item_simple_set_property;
@@ -355,55 +345,16 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 
 
 static void
-goo_canvas_item_simple_init (GooCanvasItemSimple *item)
+goo_canvas_item_simple_init (GooCanvasItemSimple *simple)
 {
-  GooCanvasBounds *bounds = &item->bounds;
+  GooCanvasBounds *bounds = &simple->bounds;
 
   bounds->x1 = bounds->y1 = bounds->x2 = bounds->y2 = 0.0;
-  item->simple_data = g_slice_new0 (GooCanvasItemSimpleData);
-  item->simple_data->visibility = GOO_CANVAS_ITEM_VISIBLE;
-  item->simple_data->pointer_events = GOO_CANVAS_EVENTS_VISIBLE_PAINTED;
-  item->simple_data->clip_fill_rule = CAIRO_FILL_RULE_WINDING;
-  item->need_update = TRUE;
-  item->need_entire_subtree_update = TRUE;
-}
-
-
-static void
-goo_canvas_item_simple_reset_model (GooCanvasItemSimple *simple)
-{
-  if (simple->model)
-    {
-      g_signal_handlers_disconnect_matched (simple->model, G_SIGNAL_MATCH_DATA,
-					    0, 0, NULL, NULL, simple);
-      g_object_unref (simple->model);
-      simple->model = NULL;
-      simple->simple_data = NULL;
-    }
-}
-
-
-/* Frees the contents of the GooCanvasItemSimpleData, but not the struct. */
-static void
-goo_canvas_item_simple_free_data (GooCanvasItemSimpleData *simple_data)
-{
-  if (simple_data)
-    {
-      if (simple_data->style)
-	{
-	  g_object_unref (simple_data->style);
-	  simple_data->style = NULL;
-	}
-
-      if (simple_data->clip_path_commands)
-	{
-	  g_array_free (simple_data->clip_path_commands, TRUE);
-	  simple_data->clip_path_commands = NULL;
-	}
-
-      g_slice_free (cairo_matrix_t, simple_data->transform);
-      simple_data->transform = NULL;
-    }
+  simple->visibility = GOO_CANVAS_ITEM_VISIBLE;
+  simple->pointer_events = GOO_CANVAS_EVENTS_VISIBLE_PAINTED;
+  simple->clip_fill_rule = CAIRO_FILL_RULE_WINDING;
+  simple->need_update = TRUE;
+  simple->need_entire_subtree_update = TRUE;
 }
 
 
@@ -412,45 +363,52 @@ goo_canvas_item_simple_dispose (GObject *object)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
 
-  /* Remove the view from the GooCanvas hash table. */
-  if (simple->canvas && simple->model)
-    goo_canvas_unregister_item (simple->canvas,
-				(GooCanvasItemModel*) simple->model);
+  if (simple->style)
+    {
+      g_object_unref (simple->style);
+      simple->style = NULL;
+    }
 
-  goo_canvas_item_simple_reset_model (simple);
-  goo_canvas_item_simple_free_data (simple->simple_data);
+  if (simple->clip_path_commands)
+    {
+      g_array_free (simple->clip_path_commands, TRUE);
+      simple->clip_path_commands = NULL;
+    }
+
+  g_slice_free (cairo_matrix_t, simple->transform);
+  simple->transform = NULL;
 
   G_OBJECT_CLASS (goo_canvas_item_simple_parent_class)->dispose (object);
 }
 
 
 static void
-goo_canvas_item_simple_finalize (GObject *object)
+goo_canvas_item_simple_get_property (GObject              *object,
+				     guint                 prop_id,
+				     GValue               *value,
+				     GParamSpec           *pspec)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
-
-  g_slice_free (GooCanvasItemSimpleData, simple->simple_data);
-  simple->simple_data = NULL;
-
-  G_OBJECT_CLASS (goo_canvas_item_simple_parent_class)->finalize (object);
-}
-
-
-static void
-goo_canvas_item_simple_get_common_property (GObject                 *object,
-					    GooCanvasItemSimpleData *simple_data,
-					    GooCanvas               *canvas,
-					    guint                    prop_id,
-					    GValue                  *value,
-					    GParamSpec              *pspec)
-{
-  GooCanvasStyle *style = simple_data->style;
+  AtkObject *accessible;
+  GooCanvasStyle *style = simple->style;
   GValue *svalue;
   gdouble line_width = 2.0;
   gchar *font = NULL;
 
   switch (prop_id)
     {
+    case PROP_PARENT:
+      g_value_set_object (value, simple->parent);
+      break;
+    case PROP_TITLE:
+      accessible = atk_gobject_accessible_for_object (object);
+      g_value_set_string (value, atk_object_get_name (accessible));
+      break;
+    case PROP_DESCRIPTION:
+      accessible = atk_gobject_accessible_for_object (object);
+      g_value_set_string (value, atk_object_get_description (accessible));
+      break;
+
       /* Basic drawing properties. */
     case PROP_STROKE_PATTERN:
       svalue = goo_canvas_style_get_property (style, goo_canvas_style_stroke_pattern_id);
@@ -478,8 +436,8 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
       svalue = goo_canvas_style_get_property (style, goo_canvas_style_line_width_id);
       if (svalue)
 	line_width = svalue->data[0].v_double;
-      else if (canvas)
-	line_width = goo_canvas_get_default_line_width (canvas);
+      else if (simple->canvas)
+	line_width = goo_canvas_get_default_line_width (simple->canvas);
       g_value_set_double (value, line_width);
       break;
     case PROP_LINE_CAP:
@@ -532,25 +490,25 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
 
       /* Other properties. */
     case PROP_TRANSFORM:
-      g_value_set_boxed (value, simple_data->transform);
+      g_value_set_boxed (value, simple->transform);
       break;
     case PROP_VISIBILITY:
-      g_value_set_enum (value, simple_data->visibility);
+      g_value_set_enum (value, simple->visibility);
       break;
     case PROP_VISIBILITY_THRESHOLD:
-      g_value_set_double (value, simple_data->visibility_threshold);
+      g_value_set_double (value, simple->visibility_threshold);
       break;
     case PROP_POINTER_EVENTS:
-      g_value_set_flags (value, simple_data->pointer_events);
+      g_value_set_flags (value, simple->pointer_events);
       break;
     case PROP_CAN_FOCUS:
-      g_value_set_boolean (value, simple_data->can_focus);
+      g_value_set_boolean (value, simple->can_focus);
       break;
     case PROP_CLIP_FILL_RULE:
-      g_value_set_enum (value, simple_data->clip_fill_rule);
+      g_value_set_enum (value, simple->clip_fill_rule);
       break;
     case PROP_TOOLTIP:
-      g_value_set_string (value, simple_data->tooltip);
+      g_value_set_string (value, simple->tooltip);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -560,47 +518,18 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
 
 
 static void
-goo_canvas_item_simple_get_property (GObject              *object,
+goo_canvas_item_simple_set_property (GObject              *object,
 				     guint                 prop_id,
-				     GValue               *value,
+				     const GValue         *value,
 				     GParamSpec           *pspec)
 {
+  GooCanvasItem *item = (GooCanvasItem*) object;
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
+  GooCanvasItem *parent;
   AtkObject *accessible;
-
-  switch (prop_id)
-    {
-    case PROP_PARENT:
-      g_value_set_object (value, simple->parent);
-      break;
-    case PROP_TITLE:
-      accessible = atk_gobject_accessible_for_object (object);
-      g_value_set_string (value, atk_object_get_name (accessible));
-      break;
-    case PROP_DESCRIPTION:
-      accessible = atk_gobject_accessible_for_object (object);
-      g_value_set_string (value, atk_object_get_description (accessible));
-      break;
-    default:
-      goo_canvas_item_simple_get_common_property (object, simple_data,
-						  simple->canvas, prop_id,
-						  value, pspec);
-      break;
-    }
-}
-
-
-static gboolean
-goo_canvas_item_simple_set_common_property (GObject                 *object,
-					    GooCanvasItemSimpleData *simple_data,
-					    guint                    prop_id,
-					    const GValue            *value,
-					    GParamSpec              *pspec)
-{
   GooCanvasStyle *style;
   cairo_pattern_t *pattern;
-  gboolean recompute_bounds = FALSE;
+  gboolean need_update = TRUE, recompute_bounds = FALSE;
   cairo_matrix_t *transform;
   GValue tmpval = { 0 };
   const char *font_name;
@@ -609,22 +538,39 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
   /* See if we need to create our own style. */
   if (prop_id < PROP_TRANSFORM)
     {
-      if (!simple_data->style)
+      if (!simple->style)
 	{
-	  simple_data->style = goo_canvas_style_new ();
+	  simple->style = goo_canvas_style_new ();
 	}
-      else if (!simple_data->own_style)
+      else if (!simple->own_style)
 	{
-	  g_object_unref (simple_data->style);
-	  simple_data->style = goo_canvas_style_new ();
+	  g_object_unref (simple->style);
+	  simple->style = goo_canvas_style_new ();
 	}
-      simple_data->own_style = TRUE;
+      simple->own_style = TRUE;
     }
 
-  style = simple_data->style;
+  style = simple->style;
 
   switch (prop_id)
     {
+    case PROP_PARENT:
+      parent = g_value_get_object (value);
+      goo_canvas_item_remove (item);
+      goo_canvas_item_add_child (parent, item, -1);
+      need_update = FALSE;
+      break;
+    case PROP_TITLE:
+      accessible = atk_gobject_accessible_for_object (object);
+      atk_object_set_name (accessible, g_value_get_string (value));
+      need_update = FALSE;
+      break;
+    case PROP_DESCRIPTION:
+      accessible = atk_gobject_accessible_for_object (object);
+      atk_object_set_description (accessible, g_value_get_string (value));
+      need_update = FALSE;
+      break;
+
       /* Basic drawing properties. */
     case PROP_STROKE_PATTERN:
       goo_canvas_style_set_property (style, goo_canvas_style_stroke_pattern_id, value);
@@ -714,88 +660,43 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
 
       /* Other properties. */
     case PROP_TRANSFORM:
-      g_slice_free (cairo_matrix_t, simple_data->transform);
+      g_slice_free (cairo_matrix_t, simple->transform);
       transform = g_value_get_boxed (value);
-      simple_data->transform = goo_cairo_matrix_copy (transform);
+      simple->transform = goo_cairo_matrix_copy (transform);
       recompute_bounds = TRUE;
       break;
     case PROP_VISIBILITY:
-      simple_data->visibility = g_value_get_enum (value);
+      simple->visibility = g_value_get_enum (value);
       break;
     case PROP_VISIBILITY_THRESHOLD:
-      simple_data->visibility_threshold = g_value_get_double (value);
+      simple->visibility_threshold = g_value_get_double (value);
       break;
     case PROP_POINTER_EVENTS:
-      simple_data->pointer_events = g_value_get_flags (value);
+      simple->pointer_events = g_value_get_flags (value);
       break;
     case PROP_CAN_FOCUS:
-      simple_data->can_focus = g_value_get_boolean (value);
+      simple->can_focus = g_value_get_boolean (value);
       break;
     case PROP_CLIP_PATH:
-      if (simple_data->clip_path_commands)
-	g_array_free (simple_data->clip_path_commands, TRUE);
-      simple_data->clip_path_commands = goo_canvas_parse_path_data (g_value_get_string (value));
+      if (simple->clip_path_commands)
+	g_array_free (simple->clip_path_commands, TRUE);
+      simple->clip_path_commands = goo_canvas_parse_path_data (g_value_get_string (value));
       recompute_bounds = TRUE;
       break;
     case PROP_CLIP_FILL_RULE:
-      simple_data->clip_fill_rule = g_value_get_enum (value);
+      simple->clip_fill_rule = g_value_get_enum (value);
       recompute_bounds = TRUE;
       break;
     case PROP_TOOLTIP:
-      simple_data->tooltip = g_value_dup_string (value);
+      simple->tooltip = g_value_dup_string (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
 
-  return recompute_bounds;
-}
-
-
-static void
-goo_canvas_item_simple_set_property (GObject              *object,
-				     guint                 prop_id,
-				     const GValue         *value,
-				     GParamSpec           *pspec)
-{
-  GooCanvasItem *item = (GooCanvasItem*) object;
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
-  GooCanvasItem *parent;
-  AtkObject *accessible;
-  gboolean recompute_bounds;
-
-  if (simple->model)
-    {
-      g_warning ("Can't set property of a canvas item with a model - set the model property instead");
-      return;
-    }
-
-  switch (prop_id)
-    {
-    case PROP_PARENT:
-      parent = g_value_get_object (value);
-      goo_canvas_item_remove (item);
-      goo_canvas_item_add_child (parent, item, -1);
-      break;
-    case PROP_TITLE:
-      accessible = atk_gobject_accessible_for_object (object);
-      atk_object_set_name (accessible, g_value_get_string (value));
-      break;
-    case PROP_DESCRIPTION:
-      accessible = atk_gobject_accessible_for_object (object);
-      atk_object_set_description (accessible, g_value_get_string (value));
-      break;
-    default:
-      recompute_bounds = goo_canvas_item_simple_set_common_property (object,
-								     simple_data,
-								     prop_id,
-								     value,
-								     pspec);
-      goo_canvas_item_simple_changed (simple, recompute_bounds);
-      break;
-    }
+  if (need_update)
+    goo_canvas_item_simple_changed (simple, recompute_bounds);
 }
 
 
@@ -846,7 +747,6 @@ goo_canvas_item_simple_set_parent (GooCanvasItem  *item,
  * 
  * This function is intended to be used by subclasses of #GooCanvasItemSimple.
  *
- * It is used as a callback for the "changed" signal of the item models.
  * It requests an update or redraw of the item as appropriate.
  **/
 void
@@ -854,7 +754,6 @@ goo_canvas_item_simple_changed    (GooCanvasItemSimple *item,
 				   gboolean             recompute_bounds)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
   if (recompute_bounds)
     {
@@ -871,7 +770,7 @@ goo_canvas_item_simple_changed    (GooCanvasItemSimple *item,
   else
     {
       if (item->canvas)
-	goo_canvas_request_item_redraw (item->canvas, &item->bounds, simple_data->is_static);
+	goo_canvas_request_item_redraw (item->canvas, &item->bounds, simple->is_static);
     }
 }
 
@@ -881,12 +780,11 @@ goo_canvas_item_simple_get_transform (GooCanvasItem       *item,
 				      cairo_matrix_t      *matrix)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  if (!simple_data->transform)
+  if (!simple->transform)
     return FALSE;
 
-  *matrix = *simple_data->transform;
+  *matrix = *simple->transform;
   return TRUE;
 }
 
@@ -896,19 +794,18 @@ goo_canvas_item_simple_set_transform (GooCanvasItem        *item,
 				      const cairo_matrix_t *transform)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
   if (transform)
     {
-      if (!simple_data->transform)
-	simple_data->transform = g_slice_new (cairo_matrix_t);
+      if (!simple->transform)
+	simple->transform = g_slice_new (cairo_matrix_t);
 
-      *simple_data->transform = *transform;
+      *simple->transform = *transform;
     }
   else
     {
-      g_slice_free (cairo_matrix_t, simple_data->transform);
-      simple_data->transform = NULL;
+      g_slice_free (cairo_matrix_t, simple->transform);
+      simple->transform = NULL;
     }
 
   goo_canvas_item_simple_changed (simple, TRUE);
@@ -920,7 +817,7 @@ goo_canvas_item_simple_get_style (GooCanvasItem       *item)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
 
-  return simple->simple_data->style;
+  return simple->style;
 }
 
 
@@ -929,20 +826,19 @@ goo_canvas_item_simple_set_style (GooCanvasItem  *item,
 				  GooCanvasStyle *style)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  if (simple_data->style)
-    g_object_unref (simple_data->style);
+  if (simple->style)
+    g_object_unref (simple->style);
 
   if (style)
     {
-      simple_data->style = goo_canvas_style_copy (style);
-      simple_data->own_style = TRUE;
+      simple->style = goo_canvas_style_copy (style);
+      simple->own_style = TRUE;
     }
   else
     {
-      simple_data->style = NULL;
-      simple_data->own_style = FALSE;
+      simple->style = NULL;
+      simple->own_style = FALSE;
     }
 
   goo_canvas_item_simple_changed (simple, TRUE);
@@ -973,7 +869,6 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (item);
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   double user_x = x, user_y = y;
   cairo_matrix_t matrix;
   gboolean add_item = FALSE;
@@ -989,19 +884,19 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
   /* Check if the item should receive events. */
   if (is_pointer_event)
     {
-      if (simple_data->pointer_events == GOO_CANVAS_EVENTS_NONE)
+      if (simple->pointer_events == GOO_CANVAS_EVENTS_NONE)
 	return found_items;
-      if (simple_data->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK
+      if (simple->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK
 	  && (!parent_visible
-	      || simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-	      || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-		  && simple->canvas->scale < simple_data->visibility_threshold)))
+	      || simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+	      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+		  && simple->canvas->scale < simple->visibility_threshold)))
 	return found_items;
     }
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   cairo_device_to_user (cr, &user_x, &user_y);
 
@@ -1011,10 +906,10 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
   cairo_set_matrix (cr, &matrix);
 
   /* If the item has a clip path, check if the point is inside it. */
-  if (simple_data->clip_path_commands)
+  if (simple->clip_path_commands)
     {
-      goo_canvas_create_path (simple_data->clip_path_commands, cr);
-      cairo_set_fill_rule (cr, simple_data->clip_fill_rule);
+      goo_canvas_create_path (simple->clip_path_commands, cr);
+      cairo_set_fill_rule (cr, simple->clip_fill_rule);
       if (!cairo_in_fill (cr, user_x, user_y))
 	{
 	  cairo_restore (cr);
@@ -1042,12 +937,10 @@ goo_canvas_item_simple_default_is_item_at (GooCanvasItemSimple *simple,
 					   gboolean             is_pointer_event)
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (simple);
-
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasPointerEvents pointer_events = GOO_CANVAS_EVENTS_ALL;
 
   if (is_pointer_event)
-    pointer_events = simple_data->pointer_events;
+    pointer_events = simple->pointer_events;
 
   /* Use the virtual method subclasses define to create the path. */
   class->simple_create_path (simple, cr);
@@ -1063,11 +956,10 @@ static gboolean
 goo_canvas_item_simple_is_visible  (GooCanvasItem   *item)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  if (simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-      || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-	  && simple->canvas->scale < simple_data->visibility_threshold))
+  if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+	  && simple->canvas->scale < simple->visibility_threshold))
     return FALSE;
 
   if (simple->parent)
@@ -1081,9 +973,8 @@ static gboolean
 goo_canvas_item_simple_get_is_static  (GooCanvasItem   *item)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  return simple_data->is_static;
+  return simple->is_static;
 }
 
 
@@ -1092,9 +983,8 @@ goo_canvas_item_simple_set_is_static  (GooCanvasItem   *item,
 				       gboolean         is_static)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  simple_data->is_static = is_static;
+  simple->is_static = is_static;
 }
 
 
@@ -1110,26 +1000,25 @@ goo_canvas_item_simple_set_is_static  (GooCanvasItem   *item,
  * doesn't have its own style it uses the parent item's style.
  **/
 void
-goo_canvas_item_simple_check_style (GooCanvasItemSimple *item)
+goo_canvas_item_simple_check_style (GooCanvasItemSimple *simple)
 {
-  GooCanvasItemSimpleData *simple_data = item->simple_data;
   GooCanvasStyle *parent_style = NULL;
 
-  if (item->parent)
-    parent_style = goo_canvas_item_get_style (item->parent);
+  if (simple->parent)
+    parent_style = goo_canvas_item_get_style (simple->parent);
 
-  if (simple_data->own_style)
+  if (simple->own_style)
     {
-      goo_canvas_style_set_parent (simple_data->style, parent_style);
+      goo_canvas_style_set_parent (simple->style, parent_style);
     }
-  else if (simple_data->style != parent_style)
+  else if (simple->style != parent_style)
     {
       /* The item doesn't have its own style so we use the parent's (though
 	 that may also be NULL). */
-      if (simple_data->style)
-	g_object_unref (simple_data->style);
+      if (simple->style)
+	g_object_unref (simple->style);
 
-      simple_data->style = parent_style;
+      simple->style = parent_style;
 
       if (parent_style)
 	g_object_ref (parent_style);
@@ -1142,7 +1031,6 @@ goo_canvas_item_simple_update_internal  (GooCanvasItemSimple *simple,
 					 cairo_t             *cr)
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (simple);
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasBounds tmp_bounds;
   cairo_matrix_t transform;
 
@@ -1155,11 +1043,11 @@ goo_canvas_item_simple_update_internal  (GooCanvasItemSimple *simple,
   class->simple_update (simple, cr);
 
   /* Modify the extents by the item's clip path. */
-  if (simple_data->clip_path_commands)
+  if (simple->clip_path_commands)
     {
       cairo_identity_matrix (cr);
-      goo_canvas_create_path (simple_data->clip_path_commands, cr);
-      cairo_set_fill_rule (cr, simple_data->clip_fill_rule);
+      goo_canvas_create_path (simple->clip_path_commands, cr);
+      cairo_set_fill_rule (cr, simple->clip_fill_rule);
       cairo_fill_extents (cr, &tmp_bounds.x1, &tmp_bounds.y1,
 			  &tmp_bounds.x2, &tmp_bounds.y2);
       simple->bounds.x1 = MAX (simple->bounds.x1, tmp_bounds.x1);
@@ -1198,18 +1086,17 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
 				GooCanvasBounds *bounds)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   cairo_matrix_t matrix;
   double x_offset, y_offset;
 
   if (entire_tree || simple->need_update)
     {
       /* Request a redraw of the existing bounds. */
-      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
 
       cairo_save (cr);
-      if (simple_data->transform)
-	cairo_transform (cr, simple_data->transform);
+      if (simple->transform)
+	cairo_transform (cr, simple->transform);
 
       /* Remove any current translation, to avoid the 16-bit cairo limit. */
       cairo_get_matrix (cr, &matrix);
@@ -1232,7 +1119,7 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
       cairo_restore (cr);
 
       /* Request a redraw of the new bounds. */
-      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
     }
 
   *bounds = simple->bounds;
@@ -1245,16 +1132,15 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
 					   GooCanvasBounds  *requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   cairo_matrix_t matrix;
   double x_offset, y_offset;
 
   /* Request a redraw of the existing bounds. */
-  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   /* Remove any current translation, to avoid the 16-bit cairo limit. */
   cairo_get_matrix (cr, &matrix);
@@ -1265,7 +1151,7 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
 
   goo_canvas_item_simple_update_internal (simple, cr);
 
-  if (simple->simple_data->visibility == GOO_CANVAS_ITEM_HIDDEN)
+  if (simple->visibility == GOO_CANVAS_ITEM_HIDDEN)
     {
       simple->bounds.x1 = simple->bounds.x2 = 0.0;
       simple->bounds.y1 = simple->bounds.y2 = 0.0;
@@ -1320,7 +1206,6 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
 					   gdouble                y_offset)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
   /* Simple items can't resize at all, so we just adjust the bounds x & y
      positions here, and let the item be clipped if necessary. */
@@ -1330,7 +1215,7 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
   simple->bounds.y2 += y_offset;
 
   /* Request a redraw of the new bounds. */
-  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
+  goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
 }
 
 
@@ -1342,7 +1227,6 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (item);
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
   /* Skip the item if the bounds don't intersect the expose rectangle. */
   if (simple->bounds.x1 > bounds->x2 || simple->bounds.x2 < bounds->x1
@@ -1350,20 +1234,20 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
     return;
 
   /* Check if the item should be visible. */
-  if (simple_data->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-      || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-	  && scale < simple_data->visibility_threshold))
+  if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+	  && scale < simple->visibility_threshold))
     return;
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   /* Clip with the item's clip path, if it is set. */
-  if (simple_data->clip_path_commands)
+  if (simple->clip_path_commands)
     {
-      goo_canvas_create_path (simple_data->clip_path_commands, cr);
-      cairo_set_fill_rule (cr, simple_data->clip_fill_rule);
+      goo_canvas_create_path (simple->clip_path_commands, cr);
+      cairo_set_fill_rule (cr, simple->clip_fill_rule);
       cairo_clip (cr);
     }
 
@@ -1393,109 +1277,6 @@ goo_canvas_item_simple_default_create_path (GooCanvasItemSimple   *simple,
 }
 
 
-static void
-goo_canvas_item_simple_title_changed (GooCanvasItemModelSimple *smodel,
-				      GParamSpec               *pspec,
-				      GooCanvasItemSimple      *item)
-{
-  AtkObject *accessible;
-
-  accessible = atk_gobject_accessible_for_object (G_OBJECT (item));
-  atk_object_set_name (accessible, smodel->title);
-}
-
-
-static void
-goo_canvas_item_simple_description_changed (GooCanvasItemModelSimple *smodel,
-					    GParamSpec               *pspec,
-					    GooCanvasItemSimple      *item)
-{
-  AtkObject *accessible;
-
-  accessible = atk_gobject_accessible_for_object (G_OBJECT (item));
-  atk_object_set_description (accessible, smodel->description);
-}
-
-
-static void
-goo_canvas_item_simple_setup_accessibility (GooCanvasItemSimple      *item)
-{
-  GooCanvasItemModelSimple *smodel = item->model;
-  AtkObject *accessible;
-
-  accessible = atk_gobject_accessible_for_object (G_OBJECT (item));
-  if (!ATK_IS_NO_OP_OBJECT (accessible))
-    {
-      if (smodel->title)
-	atk_object_set_name (accessible, smodel->title);
-      if (smodel->description)
-	atk_object_set_description (accessible, smodel->description);
-
-      g_signal_connect (smodel, "notify::title",
-			G_CALLBACK (goo_canvas_item_simple_title_changed),
-			item);
-      g_signal_connect (smodel, "notify::description",
-			G_CALLBACK (goo_canvas_item_simple_description_changed),
-			item);
-    }
-}
-
-
-static void
-goo_canvas_item_model_simple_changed (GooCanvasItemModelSimple *smodel,
-				      gboolean                  recompute_bounds,
-				      GooCanvasItemSimple      *simple)
-{
-  goo_canvas_item_simple_changed (simple, recompute_bounds);
-}
-
-
-static GooCanvasItemModel*
-goo_canvas_item_simple_get_model    (GooCanvasItem      *item)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  return (GooCanvasItemModel*) simple->model;
-}
-
-
-/**
- * goo_canvas_item_simple_set_model:
- * @item: a #GooCanvasItemSimple.
- * @model: the model that @item will view.
- * 
- * This function should be called by subclasses of #GooCanvasItemSimple
- * in their set_model() method.
- **/
-void
-goo_canvas_item_simple_set_model (GooCanvasItemSimple  *item,
-				  GooCanvasItemModel   *model)
-{
-  g_return_if_fail (model != NULL);
-
-  goo_canvas_item_simple_reset_model (item);
-  goo_canvas_item_simple_free_data (item->simple_data);
-  g_slice_free (GooCanvasItemSimpleData, item->simple_data);
-
-  item->model = g_object_ref (model);
-  item->simple_data = &item->model->simple_data;
-
-  if (accessibility_enabled)
-    goo_canvas_item_simple_setup_accessibility (item);
-
-  g_signal_connect (model, "changed",
-		    G_CALLBACK (goo_canvas_item_model_simple_changed),
-		    item);
-}
-
-
-static void
-goo_canvas_item_simple_set_model_internal    (GooCanvasItem      *item,
-					      GooCanvasItemModel *model)
-{
-  goo_canvas_item_simple_set_model ((GooCanvasItemSimple*) item, model);
-}
-
-
 static gboolean
 goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
 				      gdouble         x,
@@ -1504,11 +1285,10 @@ goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
 				      GtkTooltip     *tooltip)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
 
-  if (simple_data->tooltip)
+  if (simple->tooltip)
     {
-      gtk_tooltip_set_markup (tooltip, simple_data->tooltip);
+      gtk_tooltip_set_markup (tooltip, simple->tooltip);
       return TRUE;
     }
 
@@ -1539,9 +1319,6 @@ canvas_item_interface_init (GooCanvasItemIface *iface)
   iface->get_is_static	    = goo_canvas_item_simple_get_is_static;
   iface->set_is_static	    = goo_canvas_item_simple_set_is_static;
 
-  iface->get_model          = goo_canvas_item_simple_get_model;
-  iface->set_model          = goo_canvas_item_simple_set_model_internal;
-
   iface->query_tooltip	    = goo_canvas_item_simple_query_tooltip;
 }
 
@@ -1556,10 +1333,10 @@ canvas_item_interface_init (GooCanvasItemIface *iface)
  * It paints the current path, using the item's style settings.
  **/
 void
-goo_canvas_item_simple_paint_path (GooCanvasItemSimple *item,
+goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
 				   cairo_t             *cr)
 {
-  GooCanvasStyle *style = item->simple_data->style;
+  GooCanvasStyle *style = simple->style;
 
   if (goo_canvas_style_set_fill_options (style, cr))
     cairo_fill_preserve (cr);
@@ -1593,11 +1370,11 @@ goo_canvas_item_simple_paint_path (GooCanvasItemSimple *item,
  * transformation matrix to the identity matrix.
  **/
 void
-goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *item,
+goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 					cairo_t             *cr,
 					GooCanvasBounds     *bounds)
 {
-  GooCanvasStyle *style = item->simple_data->style;
+  GooCanvasStyle *style = simple->style;
   GooCanvasBounds fill_bounds, stroke_bounds;
 
   /* Calculate the filled extents. */
@@ -1724,12 +1501,11 @@ goo_canvas_item_simple_user_bounds_to_device (GooCanvasItemSimple *item,
  * needed.
  **/
 void
-goo_canvas_item_simple_user_bounds_to_parent (GooCanvasItemSimple *item,
+goo_canvas_item_simple_user_bounds_to_parent (GooCanvasItemSimple *simple,
 					      cairo_t             *cr,
 					      GooCanvasBounds     *bounds)
 {
-  GooCanvasItemSimpleData *simple_data = item->simple_data;
-  cairo_matrix_t *transform = simple_data->transform;
+  cairo_matrix_t *transform = simple->transform;
   GooCanvasBounds tmp_bounds, tmp_bounds2;
 
   if (!transform)
@@ -1783,13 +1559,13 @@ goo_canvas_item_simple_user_bounds_to_parent (GooCanvasItemSimple *item,
  * Returns: %TRUE if the given point is in the current path.
  **/
 gboolean
-goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *item,
+goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
 				      gdouble                x,
 				      gdouble                y,
 				      cairo_t               *cr,
 				      GooCanvasPointerEvents pointer_events)
 {
-  GooCanvasStyle *style = item->simple_data->style;
+  GooCanvasStyle *style = simple->style;
   gboolean do_fill, do_stroke;
 
   /* Check the filled path, if required. */
@@ -1827,270 +1603,16 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *item,
  * Returns: the item's line width.
  **/
 gdouble
-goo_canvas_item_simple_get_line_width (GooCanvasItemSimple   *item)
+goo_canvas_item_simple_get_line_width (GooCanvasItemSimple   *simple)
 {
   GValue *value;
 
-  value = goo_canvas_style_get_property (item->simple_data->style,
+  value = goo_canvas_style_get_property (simple->style,
 					 goo_canvas_style_line_width_id);
   if (value)
     return value->data[0].v_double;
-  else if (item->canvas)
-    return goo_canvas_get_default_line_width (item->canvas);
+  else if (simple->canvas)
+    return goo_canvas_get_default_line_width (simple->canvas);
   else
     return 2.0;
-}
-
-
-/**
- * SECTION:goocanvasitemmodelsimple
- * @Title: GooCanvasItemModelSimple
- * @Short_Description: the base class for the standard canvas item models.
- * @Stability_Level: 
- * @See_Also: 
- *
- * #GooCanvasItemModelSimple is used as a base class for the standard canvas
- * item models. It can also be used as the base class for new custom canvas
- * item models.
- *
- * It provides default implementations for many of the #GooCanvasItemModel
- * methods.
- *
- * Subclasses of #GooCanvasItemModelSimple only need to implement the
- * create_item() method of the #GooCanvasItemModel interface, to create
- * the default canvas item to view the item model.
- */
-
-
-static void item_model_interface_init  (GooCanvasItemModelIface *iface);
-static void goo_canvas_item_model_simple_dispose  (GObject *object);
-static void goo_canvas_item_model_simple_finalize (GObject *object);
-static void goo_canvas_item_model_simple_get_property (GObject              *object,
-						       guint                 prop_id,
-						       GValue               *value,
-						       GParamSpec           *pspec);
-static void goo_canvas_item_model_simple_set_property (GObject              *object,
-						       guint                 prop_id,
-						       const GValue         *value,
-						       GParamSpec           *pspec);
-
-G_DEFINE_TYPE_WITH_CODE (GooCanvasItemModelSimple,
-			 goo_canvas_item_model_simple, G_TYPE_OBJECT,
-			 G_IMPLEMENT_INTERFACE (GOO_TYPE_CANVAS_ITEM_MODEL,
-						item_model_interface_init))
-
-
-static void
-goo_canvas_item_model_simple_class_init (GooCanvasItemModelSimpleClass *klass)
-{
-  GObjectClass *gobject_class = (GObjectClass*) klass;
-
-  gobject_class->dispose  = goo_canvas_item_model_simple_dispose;
-  gobject_class->finalize = goo_canvas_item_model_simple_finalize;
-
-  gobject_class->get_property = goo_canvas_item_model_simple_get_property;
-  gobject_class->set_property = goo_canvas_item_model_simple_set_property;
-
-  goo_canvas_item_simple_install_common_properties (gobject_class);
-}
-
-
-static void
-goo_canvas_item_model_simple_init (GooCanvasItemModelSimple *smodel)
-{
-  smodel->simple_data.visibility = GOO_CANVAS_ITEM_VISIBLE;
-  smodel->simple_data.pointer_events = GOO_CANVAS_EVENTS_VISIBLE_PAINTED;
-  smodel->simple_data.clip_fill_rule = CAIRO_FILL_RULE_WINDING;
-}
-
-
-static void
-goo_canvas_item_model_simple_dispose (GObject *object)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) object;
-
-  goo_canvas_item_simple_free_data (&smodel->simple_data);
-
-  G_OBJECT_CLASS (goo_canvas_item_model_simple_parent_class)->dispose (object);
-}
-
-
-static void
-goo_canvas_item_model_simple_finalize (GObject *object)
-{
-  /*GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) object;*/
-
-  G_OBJECT_CLASS (goo_canvas_item_model_simple_parent_class)->finalize (object);
-}
-
-
-static void
-goo_canvas_item_model_simple_get_property (GObject              *object,
-					   guint                 prop_id,
-					   GValue               *value,
-					   GParamSpec           *pspec)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) object;
-  GooCanvasItemSimpleData *simple_data = &smodel->simple_data;
-
-  switch (prop_id)
-    {
-    case PROP_PARENT:
-      g_value_set_object (value, smodel->parent);
-      break;
-    case PROP_TITLE:
-      g_value_set_string (value, smodel->title);
-      break;
-    case PROP_DESCRIPTION:
-      g_value_set_string (value, smodel->description);
-      break;
-    default:
-      goo_canvas_item_simple_get_common_property (object, simple_data, NULL,
-						  prop_id, value, pspec);
-      break;
-    }
-}
-
-
-extern void _goo_canvas_item_model_emit_changed (GooCanvasItemModel *model,
-						 gboolean            recompute_bounds);
-
-static void
-goo_canvas_item_model_simple_set_property (GObject              *object,
-					   guint                 prop_id,
-					   const GValue         *value,
-					   GParamSpec           *pspec)
-{
-  GooCanvasItemModel *model = (GooCanvasItemModel*) object;
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) object;
-  GooCanvasItemSimpleData *simple_data = &smodel->simple_data;
-  GooCanvasItemModel *parent;
-  gboolean recompute_bounds;
-
-  switch (prop_id)
-    {
-    case PROP_PARENT:
-      parent = g_value_get_object (value);
-      goo_canvas_item_model_remove (model);
-      goo_canvas_item_model_add_child (parent, model, -1);
-      break;
-    case PROP_TITLE:
-      g_free (smodel->title);
-      smodel->title = g_value_dup_string (value);
-      break;
-    case PROP_DESCRIPTION:
-      g_free (smodel->description);
-      smodel->description = g_value_dup_string (value);
-      break;
-    default:
-      recompute_bounds = goo_canvas_item_simple_set_common_property (object,
-								     simple_data,
-								     prop_id,
-								     value,
-								     pspec);
-      _goo_canvas_item_model_emit_changed (model, recompute_bounds);
-      break;
-    }
-}
-
-
-static GooCanvasItemModel*
-goo_canvas_item_model_simple_get_parent (GooCanvasItemModel   *model)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-  return smodel->parent;
-}
-
-
-static void
-goo_canvas_item_model_simple_set_parent (GooCanvasItemModel   *model,
-					 GooCanvasItemModel   *parent)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-  smodel->parent = parent;
-}
-
-
-static gboolean
-goo_canvas_item_model_simple_get_transform (GooCanvasItemModel  *model,
-					    cairo_matrix_t      *matrix)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-  GooCanvasItemSimpleData *simple_data = &smodel->simple_data;
-
-  if (!simple_data->transform)
-    return FALSE;
-
-  *matrix = *simple_data->transform;
-  return TRUE;
-}
-
-
-static void
-goo_canvas_item_model_simple_set_transform (GooCanvasItemModel   *model,
-					    const cairo_matrix_t *transform)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-  GooCanvasItemSimpleData *simple_data = &smodel->simple_data;
-
-  if (transform)
-    {
-      if (!simple_data->transform)
-	simple_data->transform = g_slice_new (cairo_matrix_t);
-
-      *simple_data->transform = *transform;
-    }
-  else
-    {
-      g_slice_free (cairo_matrix_t, simple_data->transform);
-      simple_data->transform = NULL;
-    }
-
-  _goo_canvas_item_model_emit_changed (model, TRUE);
-}
-
-
-static GooCanvasStyle*
-goo_canvas_item_model_simple_get_style (GooCanvasItemModel  *model)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-
-  return smodel->simple_data.style;
-}
-
-
-static void
-goo_canvas_item_model_simple_set_style (GooCanvasItemModel *model,
-					GooCanvasStyle     *style)
-{
-  GooCanvasItemModelSimple *smodel = (GooCanvasItemModelSimple*) model;
-  GooCanvasItemSimpleData *simple_data = &smodel->simple_data;
-
-  if (simple_data->style)
-    g_object_unref (simple_data->style);
-
-  if (style)
-    {
-      simple_data->style = goo_canvas_style_copy (style);
-      simple_data->own_style = TRUE;
-    }
-  else
-    {
-      simple_data->style = NULL;
-      simple_data->own_style = FALSE;
-    }
-
-  _goo_canvas_item_model_emit_changed (model, TRUE);
-}
-
-
-static void
-item_model_interface_init  (GooCanvasItemModelIface *iface)
-{
-  iface->get_parent     = goo_canvas_item_model_simple_get_parent;
-  iface->set_parent     = goo_canvas_item_model_simple_set_parent;
-  iface->get_transform  = goo_canvas_item_model_simple_get_transform;
-  iface->set_transform  = goo_canvas_item_model_simple_set_transform;
-  iface->get_style      = goo_canvas_item_model_simple_get_style;
-  iface->set_style      = goo_canvas_item_model_simple_set_style;
 }

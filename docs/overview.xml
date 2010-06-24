@@ -17,8 +17,6 @@
     <title>Features</title>
     <itemizedlist>
     <listitem><para>
-      Optional model/view split.
-    </para></listitem><listitem><para>
       Uses interfaces for items and views.
     </para></listitem><listitem><para>
       Basic items - rect/ellipse/polyline/text/image/grid/group.

@@ -99,7 +99,7 @@ goo_demo_item_paint (GooCanvasItemSimple   *simple,
 		 demo_item->y + demo_item->height);
   cairo_line_to (cr, demo_item->x + demo_item->width, demo_item->y);
   cairo_close_path (cr);
-  goo_canvas_style_set_fill_options (simple->simple_data->style, cr);
+  goo_canvas_style_set_fill_options (simple->style, cr);
   cairo_fill (cr);
 }
 

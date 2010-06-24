@@ -42,11 +42,11 @@ struct _GooCanvas
 {
   GtkContainer container;
 
-  /* The model for the root item, in model/view mode. */
-  GooCanvasItemModel *root_item_model;
-
   /* The root canvas item. */
   GooCanvasItem *root_item;
+
+  /* The root item for the static items. */
+  GooCanvasItem *static_root_item;
 
   /* The bounds of the canvas, in canvas units (not pixels). */
   GooCanvasBounds bounds;
@@ -136,9 +136,6 @@ struct _GooCanvas
      the contents unnecessarily (i.e. when we zoom in/out). */
   GdkWindow *tmp_window;
 
-  /* A hash table mapping canvas item models to canvas items. */
-  GHashTable *model_to_item;
-
   /* The units of the canvas, which applies to all item coords. */
   GtkUnit units;
 
@@ -152,17 +149,15 @@ struct _GooCanvas
 
   /* The list of child widgets (using GooCanvasWidget items). */
   GList *widget_items;
+
+  /* The last window position, used for static items. */
+  gint window_x, window_y;
 };
 
 /**
  * GooCanvasClass
- * @create_item: a virtual method that subclasses may override to create custom
- *  canvas items for item models.
- * @item_created: signal emitted when a new canvas item has been created.
- *  Applications can connect to this to setup signal handlers for the new item.
  *
- * The #GooCanvasClass-struct struct contains one virtual method that
- * subclasses may override.
+ * The #GooCanvasClass-struct struct contains private data only.
  */
 struct _GooCanvasClass
 {
@@ -173,18 +168,7 @@ struct _GooCanvasClass
 					     GtkAdjustment      *hadjustment,
 					     GtkAdjustment      *vadjustment);
 
-  /* Virtual methods. */
-  /*< public >*/
-  GooCanvasItem* (* create_item)	    (GooCanvas          *canvas,
-					     GooCanvasItemModel *model);
-
-  /* Signals. */
-  void           (* item_created)	    (GooCanvas          *canvas,
-					     GooCanvasItem      *item,
-					     GooCanvasItemModel *model);
-
   /*< private >*/
-
   /* Padding for future expansion */
   void (*_goo_canvas_reserved1) (void);
   void (*_goo_canvas_reserved2) (void);
@@ -204,20 +188,10 @@ GooCanvasItem*  goo_canvas_get_root_item    (GooCanvas		*canvas);
 void            goo_canvas_set_root_item    (GooCanvas		*canvas,
 					     GooCanvasItem      *item);
 
-GooCanvasItemModel* goo_canvas_get_root_item_model (GooCanvas	       *canvas);
-void                goo_canvas_set_root_item_model (GooCanvas	       *canvas,
-						    GooCanvasItemModel *model);
-
 GooCanvasItem*  goo_canvas_get_static_root_item    (GooCanvas		*canvas);
 void            goo_canvas_set_static_root_item    (GooCanvas		*canvas,
 						    GooCanvasItem      *item);
 
-GooCanvasItemModel* goo_canvas_get_static_root_item_model (GooCanvas	       *canvas);
-void                goo_canvas_set_static_root_item_model (GooCanvas	       *canvas,
-							   GooCanvasItemModel *model);
-
-GooCanvasItem*  goo_canvas_get_item	    (GooCanvas		*canvas,
-					     GooCanvasItemModel *model);
 GooCanvasItem*  goo_canvas_get_item_at	    (GooCanvas		*canvas,
 					     gdouble             x,
 					     gdouble             y,
@@ -306,10 +280,6 @@ void		goo_canvas_keyboard_ungrab  (GooCanvas		*canvas,
  * Internal functions, mainly for canvas subclasses and item implementations.
  */
 cairo_t*	goo_canvas_create_cairo_context	(GooCanvas *canvas);
-GooCanvasItem*	goo_canvas_create_item	    (GooCanvas          *canvas,
-					     GooCanvasItemModel *model);
-void		goo_canvas_unregister_item  (GooCanvas		*canvas,
-					     GooCanvasItemModel *model);
 void		goo_canvas_update	    (GooCanvas		*canvas);
 void		goo_canvas_request_update   (GooCanvas		*canvas);
 void		goo_canvas_request_redraw   (GooCanvas		*canvas,

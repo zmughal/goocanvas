@@ -4,14 +4,14 @@ INCLUDES = \
 	-I$(top_srcdir)/src \
 	-I$(top_builddir)/src \
 	@PACKAGE_CFLAGS@
-	
+
 DEMO_LIBS = $(top_builddir)/src/libgoocanvas-2.0.la @PACKAGE_LIBS@ $(INTLLIBS)
 
 #	-DG_DISABLE_DEPRECATED -DPANGO_DISABLE_DEPRECATED \
 #	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
 #	-DGTK_DISABLE_DEPRECATED
 
-noinst_PROGRAMS = demo table-demo generic-position-demo simple-demo scalability-demo units-demo widgets-demo mv-demo mv-table-demo mv-generic-position-demo mv-simple-demo mv-scalability-demo
+noinst_PROGRAMS = demo table-demo generic-position-demo simple-demo scalability-demo units-demo widgets-demo
 
 demo_SOURCES = \
 	demo.c demo-fifteen.c demo-scalability.c demo-grabs.c \
@@ -22,43 +22,20 @@ demo_SOURCES = \
 
 demo_LDADD = $(DEMO_LIBS)
 
-mv_demo_SOURCES = \
-	mv-demo.c mv-demo-fifteen.c mv-demo-scalability.c mv-demo-grabs.c \
-	mv-demo-arrowhead.c mv-demo-features.c mv-demo-events.c \
-	mv-demo-paths.c mv-demo-focus.c mv-demo-animation.c \
-	mv-demo-clipping.c mv-demo-table.c
-
-mv_demo_LDADD = $(DEMO_LIBS)
-
 table_demo_SOURCES = \
 	table-demo.c
 
 table_demo_LDADD = $(DEMO_LIBS)
-
-mv_table_demo_SOURCES = \
-	mv-table-demo.c
-
-mv_table_demo_LDADD = $(DEMO_LIBS)
 
 simple_demo_SOURCES = \
 	simple-demo.c
 
 simple_demo_LDADD = $(DEMO_LIBS)
 
-mv_simple_demo_SOURCES = \
-	mv-simple-demo.c
-
-mv_simple_demo_LDADD = $(DEMO_LIBS)
-
 scalability_demo_SOURCES = \
 	scalability-demo.c
 
 scalability_demo_LDADD = $(DEMO_LIBS)
-
-mv_scalability_demo_SOURCES = \
-	mv-scalability-demo.c
-
-mv_scalability_demo_LDADD = $(DEMO_LIBS)
 
 units_demo_SOURCES = \
 	units-demo.c
@@ -74,11 +51,6 @@ generic_position_demo_SOURCES = \
 	generic-position-demo.c
 
 generic_position_demo_LDADD = $(DEMO_LIBS)
-
-mv_generic_position_demo_SOURCES = \
-	mv-generic-position-demo.c
-
-mv_generic_position_demo_LDADD = $(DEMO_LIBS)
 
 EXTRA_DIST = flower.png toroid.png
 
