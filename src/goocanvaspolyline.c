@@ -768,7 +768,7 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
     pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
 
   goo_canvas_polyline_create_path (polyline, cr);
-  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events))
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
     return TRUE;
 
   /* Check the arrows, if the polyline has them. */
@@ -777,7 +777,7 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
       && (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK))
     {
       /* We use the stroke pattern to match the style of the line. */
-      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, TRUE);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (polyline->start_arrow)
@@ -820,14 +820,14 @@ goo_canvas_polyline_compute_bounds (GooCanvasPolyline     *polyline,
   cairo_identity_matrix (cr);
 
   goo_canvas_polyline_create_path (polyline, cr);
-  goo_canvas_item_simple_get_path_bounds (simple, cr, bounds);
+  goo_canvas_item_simple_get_path_bounds (simple, cr, bounds, TRUE);
 
   /* Add on the arrows, if required. */
   if ((polyline->start_arrow || polyline->end_arrow)
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_item_simple_set_stroke_options (simple, cr);
+      goo_canvas_item_simple_set_stroke_options (simple, cr, TRUE);
 
       if (polyline->start_arrow)
 	{
@@ -880,14 +880,14 @@ goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
     return;
 
   goo_canvas_polyline_create_path (polyline, cr);
-  goo_canvas_item_simple_paint_path (simple, cr);
+  goo_canvas_item_simple_paint_path (simple, cr, FALSE);
 
   /* Paint the arrows, if required. */
   if ((polyline->start_arrow || polyline->end_arrow)
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_item_simple_set_stroke_options (simple, cr);
+      goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
 
       if (polyline->start_arrow)
 	{

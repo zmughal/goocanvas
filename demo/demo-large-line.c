@@ -210,7 +210,7 @@ goo_demo_large_line_paint (GooCanvasItemSimple   *simple,
   GooDemoLargeLine *item = (GooDemoLargeLine*) simple;
   gdouble line_width;
 
-  goo_canvas_item_simple_set_stroke_options (simple, cr);
+  goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
   line_width = goo_canvas_item_simple_get_line_width (simple);
   paint_large_line (item, cr, bounds, line_width,
 		    item->x1, item->y1, item->x2, item->y2);

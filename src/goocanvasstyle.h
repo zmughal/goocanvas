@@ -36,6 +36,7 @@ struct _GooCanvasStyle
   PangoFontDescription *font_desc;
 
   gdouble line_width;
+  gdouble line_width_tolerance;
   gdouble line_join_miter_limit;
 
   guint stroke_pattern_set	    : 1;

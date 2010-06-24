@@ -50,6 +50,7 @@ enum {
 
   /* Line style & width properties. */
   PROP_LINE_WIDTH,
+  PROP_LINE_WIDTH_TOLERANCE,
   PROP_LINE_CAP,
   PROP_LINE_JOIN,
   PROP_LINE_JOIN_MITER_LIMIT,
@@ -137,7 +138,6 @@ goo_canvas_item_simple_get_property (GObject              *object,
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
   GooCanvasStyle *style = simple->style;
   AtkObject *accessible;
-  gdouble line_width = 2.0;
   gchar *font = NULL;
 
   switch (prop_id)
@@ -173,11 +173,10 @@ goo_canvas_item_simple_get_property (GObject              *object,
 
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
-      if (style)
-	line_width = style->line_width;
-      else if (simple->canvas)
-	line_width = goo_canvas_get_default_line_width (simple->canvas);
-      g_value_set_double (value, line_width);
+      g_value_set_double (value, style ? style->line_width : -1);
+      break;
+    case PROP_LINE_WIDTH_TOLERANCE:
+      g_value_set_double (value, style ? style->line_width_tolerance : 0);
       break;
     case PROP_LINE_CAP:
       g_value_set_enum (value, style ? style->line_cap : CAIRO_LINE_CAP_BUTT);
@@ -309,6 +308,10 @@ goo_canvas_item_simple_set_property (GObject              *object,
     case PROP_LINE_WIDTH:
       style->line_width = g_value_get_double (value);
       recompute_bounds = TRUE;
+      break;
+    case PROP_LINE_WIDTH_TOLERANCE:
+      style->line_width_tolerance = g_value_get_double (value);
+      need_update = FALSE;
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
@@ -642,7 +645,7 @@ goo_canvas_item_simple_default_is_item_at (GooCanvasItemSimple *simple,
   /* Use the virtual method subclasses define to create the path. */
   class->simple_create_path (simple, cr);
 
-  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events))
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
     return TRUE;
 
   return FALSE;
@@ -741,7 +744,7 @@ goo_canvas_item_simple_default_update (GooCanvasItemSimple   *simple,
   cairo_identity_matrix (cr);
 
   class->simple_create_path (simple, cr);
-  goo_canvas_item_simple_get_path_bounds (simple, cr, &simple->bounds);
+  goo_canvas_item_simple_get_path_bounds (simple, cr, &simple->bounds, TRUE);
 }
 
 
@@ -931,7 +934,7 @@ goo_canvas_item_simple_default_paint (GooCanvasItemSimple   *simple,
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (simple);
 
   class->simple_create_path (simple, cr);
-  goo_canvas_item_simple_paint_path (simple, cr);
+  goo_canvas_item_simple_paint_path (simple, cr, FALSE);
 }
 
 
@@ -973,12 +976,13 @@ goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
  **/
 void
 goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
-				   cairo_t             *cr)
+				   cairo_t             *cr,
+				   gboolean             add_tolerance)
 {
   if (goo_canvas_item_simple_set_fill_options (simple, cr))
     cairo_fill_preserve (cr);
 
-  if (goo_canvas_item_simple_set_stroke_options (simple, cr))
+  if (goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance))
     cairo_stroke (cr);
 
   cairo_new_path (cr);
@@ -1009,7 +1013,8 @@ goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
 void
 goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 					cairo_t             *cr,
-					GooCanvasBounds     *bounds)
+					GooCanvasBounds     *bounds,
+					gboolean             add_tolerance)
 {
   GooCanvasBounds fill_bounds, stroke_bounds;
 
@@ -1019,7 +1024,7 @@ goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 		      &fill_bounds.x2, &fill_bounds.y2);
 
   /* Check the stroke. */
-  goo_canvas_item_simple_set_stroke_options (simple, cr);
+  goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance);
   cairo_stroke_extents (cr, &stroke_bounds.x1, &stroke_bounds.y1,
 			&stroke_bounds.x2, &stroke_bounds.y2);
 
@@ -1199,7 +1204,8 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
 				      gdouble                x,
 				      gdouble                y,
 				      cairo_t               *cr,
-				      GooCanvasPointerEvents pointer_events)
+				      GooCanvasPointerEvents pointer_events,
+				      gboolean               add_tolerance)
 {
   gboolean do_fill, do_stroke;
 
@@ -1217,7 +1223,7 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
   /* Check the stroke, if required. */
   if (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK)
     {
-      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (cairo_in_stroke (cr, x, y))
@@ -1266,9 +1272,11 @@ goo_canvas_item_simple_set_style (GooCanvasItemSimple   *simple,
 
 gboolean
 goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
-					   cairo_t               *cr)
+					   cairo_t               *cr,
+					   gboolean		  add_tolerance)
 {
   GooCanvasStyle *style = simple->style;
+  gdouble line_width;
 
   /* If no style is set, just reset the source to black and return TRUE so the
      default style will be used. */
@@ -1289,8 +1297,20 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
   if (style->antialias != CAIRO_ANTIALIAS_GRAY)
     cairo_set_antialias (cr, style->antialias);
 
-  if (style->line_width >= 0.0)
-    cairo_set_line_width (cr, style->line_width);
+  if (add_tolerance && style->line_width_tolerance > 0)
+    {
+      if (style->line_width >= 0.0)
+	line_width = style->line_width;
+      else
+	line_width = cairo_get_line_width (cr);
+
+      cairo_set_line_width (cr, line_width + style->line_width_tolerance);
+    }
+  else
+    {
+      if (style->line_width >= 0.0)
+	cairo_set_line_width (cr, style->line_width);
+    }
 
   if (style->line_cap != CAIRO_LINE_CAP_BUTT)
     cairo_set_line_cap (cr, style->line_cap);
@@ -1429,8 +1449,16 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
   g_object_class_install_property (gobject_class, PROP_LINE_WIDTH,
 				   g_param_spec_double ("line-width",
 							_("Line Width"),
-							_("The line width to use for the item's perimeter"),
-							0.0, G_MAXDOUBLE, 2.0,
+							_("The line width to use for the item's perimeter, or -1 to use the default line width"),
+							-G_MAXDOUBLE,
+							G_MAXDOUBLE, -1.0,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH_TOLERANCE,
+				   g_param_spec_double ("line-width-tolerance",
+							_("Line Width Tolerance"),
+							_("The tolerance added to the line width when testing for mouse events"),
+							0.0, G_MAXDOUBLE, 0.0,
 							G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_LINE_CAP,

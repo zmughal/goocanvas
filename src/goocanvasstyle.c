@@ -26,6 +26,7 @@ enum {
 
   /* Line style & width properties. */
   PROP_LINE_WIDTH,
+  PROP_LINE_WIDTH_TOLERANCE,
   PROP_LINE_CAP,
   PROP_LINE_JOIN,
   PROP_LINE_JOIN_MITER_LIMIT,
@@ -56,6 +57,7 @@ goo_canvas_style_init (GooCanvasStyle *style)
   style->font_desc = NULL;
 
   style->line_width = -1.0;
+  style->line_width_tolerance = -1.0;
   style->line_join_miter_limit = 10.0;
 
   style->stroke_pattern_set = FALSE;
@@ -131,6 +133,9 @@ goo_canvas_style_get_property (GObject              *object,
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
       g_value_set_double (value, style->line_width);
+      break;
+    case PROP_LINE_WIDTH_TOLERANCE:
+      g_value_set_double (value, style->line_width_tolerance);
       break;
     case PROP_LINE_CAP:
       g_value_set_enum (value, style->line_cap);
@@ -229,6 +234,9 @@ goo_canvas_style_set_property (GObject              *object,
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
       style->line_width = g_value_get_double (value);
+      break;
+    case PROP_LINE_WIDTH_TOLERANCE:
+      style->line_width_tolerance = g_value_get_double (value);
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
@@ -361,8 +369,16 @@ goo_canvas_style_class_init (GooCanvasStyleClass *klass)
   g_object_class_install_property (gobject_class, PROP_LINE_WIDTH,
 				   g_param_spec_double ("line-width",
 							_("Line Width"),
-							_("The line width to use for the item's perimeter"),
-							0.0, G_MAXDOUBLE, 2.0,
+							_("The line width to use for the item's perimeter, or -1 to use the default line width"),
+							-G_MAXDOUBLE,
+							G_MAXDOUBLE, -1.0,
+							G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_LINE_WIDTH_TOLERANCE,
+				   g_param_spec_double ("line-width-tolerance",
+							_("Line Width Tolerance"),
+							_("The tolerance added to the line width when testing for mouse events"),
+							0.0, G_MAXDOUBLE, 0.0,
 							G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_LINE_CAP,

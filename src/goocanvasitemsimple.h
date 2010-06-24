@@ -34,8 +34,7 @@ typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
  * @bounds: the bounds of the item, in device space.
  * @need_update: if the item needs to recompute its bounds and redraw.
  * @need_entire_subtree_update: if all descendants need to be updated.
- * @pen: the pen to draw the strokes with.
- * @brush: the brush to fill the items with.
+ * @style: the style to draw the item with.
  * @transform: the transformation matrix of the item, or %NULL.
  * @clip_path_commands: an array of #GooCanvasPathCommand specifying the clip
  *  path of the item, or %NULL.
@@ -137,7 +136,8 @@ void     goo_canvas_item_simple_set_style		(GooCanvasItemSimple   *simple,
 
 void     goo_canvas_item_simple_get_path_bounds		(GooCanvasItemSimple	*item,
 							 cairo_t		*cr,
-							 GooCanvasBounds	*bounds);
+							 GooCanvasBounds	*bounds,
+							 gboolean                add_tolerance);
 void     goo_canvas_item_simple_user_bounds_to_device	(GooCanvasItemSimple	*item,
 							 cairo_t		*cr,
 							 GooCanvasBounds	*bounds);
@@ -148,18 +148,21 @@ gboolean goo_canvas_item_simple_check_in_path		(GooCanvasItemSimple	*item,
 							 gdouble		 x,
 							 gdouble		 y,
 							 cairo_t		*cr,
-							 GooCanvasPointerEvents  pointer_events);
+							 GooCanvasPointerEvents  pointer_events,
+							 gboolean                add_tolerance);
 void     goo_canvas_item_simple_paint_path		(GooCanvasItemSimple	*item,
-							 cairo_t		*cr);
+							 cairo_t		*cr,
+							 gboolean		 add_tolerance);
 
 void     goo_canvas_item_simple_changed			(GooCanvasItemSimple	*item,
 							 gboolean		 recompute_bounds);
-gdouble  goo_canvas_item_simple_get_line_width		(GooCanvasItemSimple   *item);
+gdouble  goo_canvas_item_simple_get_line_width		(GooCanvasItemSimple    *item);
 
-gboolean goo_canvas_item_simple_set_stroke_options	(GooCanvasItemSimple   *simple,
-							 cairo_t               *cr);
-gboolean goo_canvas_item_simple_set_fill_options	(GooCanvasItemSimple   *simple,
-							 cairo_t               *cr);
+gboolean goo_canvas_item_simple_set_stroke_options	(GooCanvasItemSimple    *simple,
+							 cairo_t                *cr,
+							 gboolean		 add_tolerance);
+gboolean goo_canvas_item_simple_set_fill_options	(GooCanvasItemSimple    *simple,
+							 cairo_t                *cr);
 
 
 G_END_DECLS
