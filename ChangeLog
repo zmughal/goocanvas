@@ -1,5 +1,11 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvastable.c (goo_canvas_table_size_allocate_pass3):
+	handle RTL direction when clipping children. Though it should
+	possibly clip off the left of the child rather than the left.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c: added "before-initial-expose" flag which we use
 	to ignore any redraw requests before the initial expose (since we
 	know the entire canvas needs redrawing anyway). This speeds up the
