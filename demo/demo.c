@@ -1095,6 +1095,7 @@ setup_lines (GooCanvasItem *root)
 				       "stroke-color", "blue",
 				       "line-width", 1.0,
 				       "line-width-tolerance", 4.0,
+				       "line-width-is-unscaled", TRUE,
 				       "start-arrow", TRUE,
 				       "end-arrow", TRUE,
 				       "arrow-tip-length", 5.0,

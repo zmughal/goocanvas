@@ -351,13 +351,24 @@ static void
 goo_canvas_polyline_reconfigure_arrows (GooCanvasPolyline *polyline)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) polyline;
-  double line_width;
+  GooCanvasStyle *style = simple->style;
+  double line_width, scale;
 
   if (polyline->num_points < 2
       || (!polyline->start_arrow && !polyline->end_arrow))
     return;
 
   line_width = goo_canvas_item_simple_get_line_width (simple);
+  if (style && style->line_width_is_unscaled && simple->canvas)
+    {
+      scale = MAX (simple->canvas->scale_x, simple->canvas->scale_y);
+
+      /* We only want to shrink the lines as the canvas is scaled up.
+	 We don't want to affect the line width when the scales are < 1. */
+      if (scale > 1.0)
+	line_width /= scale;
+    }
+
   ensure_arrow_data (polyline);
 
   if (polyline->start_arrow)
@@ -754,6 +765,7 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
 {
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
   GooCanvasPointerEvents pointer_events = GOO_CANVAS_EVENTS_ALL;
+  GooCanvasStyle *style = simple->style;
   gboolean do_stroke;
 
   if (polyline->num_points == 0)
@@ -767,6 +779,8 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
   if (!(polyline->close_path && polyline->num_points > 2))
     pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
 
+  if (style && style->line_width_is_unscaled)
+    goo_canvas_polyline_reconfigure_arrows (polyline);
   goo_canvas_polyline_create_path (polyline, cr);
   if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
     return TRUE;
@@ -875,10 +889,13 @@ goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
 			   const GooCanvasBounds *bounds)
 {
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
+  GooCanvasStyle *style = simple->style;
 
   if (polyline->num_points == 0)
     return;
 
+  if (style && style->line_width_is_unscaled)
+    goo_canvas_polyline_reconfigure_arrows (polyline);
   goo_canvas_polyline_create_path (polyline, cr);
   goo_canvas_item_simple_paint_path (simple, cr);
 

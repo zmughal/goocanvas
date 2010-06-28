@@ -1,5 +1,15 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvaspolyline.c (goo_canvas_polyline_reconfigure_arrows)
+	(goo_canvas_polyline_is_item_at, goo_canvas_polyline_paint): if the
+	line width is unscaled, don't scale the arrows either. To do this we
+	have to recalculate the arrow coordinates before every operation.
+
+	* demo/demo.c (setup_lines): set "line-width-is-unscaled" for one
+	of the small lines with arrows, to test the above.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* demo/demo-events.c: added tooltips to explain which items should
 	be getting events.
 
