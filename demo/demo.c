@@ -26,7 +26,7 @@ static void setup_canvas (GooCanvas *canvas);
 GtkWidget *create_canvas_fifteen (void);
 GtkWidget *create_canvas_features (void);
 GtkWidget *create_canvas_arrowhead (void);
-GtkWidget *create_canvas_scalability (void);
+GtkWidget *create_canvas_groups (void);
 GtkWidget *create_grabs_page (void);
 GtkWidget *create_events_page (void);
 GtkWidget *create_paths_page (void);
@@ -844,7 +844,7 @@ create_stipple (const char *color_name, guchar stipple_data[16])
 static void
 setup_rectangles (GooCanvasItem *root)
 {
-  GooCanvasItem *item;
+  GooCanvasItem *item, *child;
   cairo_pattern_t *pattern;
   static guchar stipple_data[16] = {
     0, 0, 0, 255,   0, 0, 0, 0,   0, 0, 0, 0,     0, 0, 0, 255
@@ -866,6 +866,32 @@ setup_rectangles (GooCanvasItem *root)
 			      NULL);
   cairo_pattern_destroy (pattern);
   setup_item_signals (item);
+
+  child = goo_canvas_rect_new (item, 80, 30, 20, 20,
+			      "fill-color", "orange",
+			      "tooltip", "Child of Medium Sea Green stippled rectangle",
+			      NULL);
+  setup_item_signals (child);
+
+  child = goo_canvas_rect_new (item, 170, 30, 20, 20,
+			      "fill-color", "orange",
+			      "tooltip", "Child of Medium Sea Green stippled rectangle",
+			      NULL);
+  setup_item_signals (child);
+
+  child = goo_canvas_rect_new (item, 80, 90, 20, 20,
+			      "fill-color", "orange",
+			      "tooltip", "Child of Medium Sea Green stippled rectangle",
+			      NULL);
+  setup_item_signals (child);
+
+  child = goo_canvas_rect_new (item, 170, 90, 20, 20,
+			      "fill-color", "orange",
+			      "tooltip", "Child of Medium Sea Green stippled rectangle",
+			      NULL);
+  setup_item_signals (child);
+
+
 
   item = goo_canvas_rect_new (root, 10, 80, 70, 60,
 			      "fill-color", "steelblue",
@@ -1554,6 +1580,7 @@ create_window ()
 		    NULL);
 
   notebook = gtk_notebook_new ();
+  gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook), TRUE);
   gtk_widget_show (notebook);
   gtk_container_add (GTK_CONTAINER (window), notebook);
 
@@ -1579,8 +1606,8 @@ create_window ()
 #endif
 #if 1
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    create_canvas_scalability (),
-			    gtk_label_new ("Scalability"));
+			    create_canvas_groups (),
+			    gtk_label_new ("Groups"));
 #endif
 #if 1
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),

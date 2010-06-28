@@ -36,6 +36,10 @@
 #define USE_TEXT
 #endif
 
+#if 1
+#define SET_IDS
+#endif
+
 #if 0
 #define USE_PIXMAP 
 #endif
@@ -181,7 +185,7 @@ setup_canvas (GtkWidget *canvas)
 		  goo_canvas_item_set_transform (item, &item_matrix);
 #endif
 #endif
-#if 1
+#ifdef SET_IDS
 		  g_object_set_qdata (G_OBJECT (item), id_quark,
 				      ids[id_item_num]);
 #endif
@@ -289,7 +293,9 @@ create_canvas (void)
   left_offset = -total_width / 2;
   top_offset = -total_height / 2;
 
+#ifdef SET_IDS
   init_ids ();
+#endif
 
   /* Create the canvas. */
   canvas = goo_canvas_new ();

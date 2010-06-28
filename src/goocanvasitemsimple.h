@@ -66,6 +66,10 @@ struct _GooCanvasItemSimple
   GArray *clip_path_commands;
   gchar *tooltip;
 
+  /* An array of pointers to GooCanvasItems. The first element is at the
+     bottom of the display stack and the last element is at the top. */
+  GPtrArray *children;
+
   GooCanvasBounds bounds;
 
   gdouble visibility_threshold;

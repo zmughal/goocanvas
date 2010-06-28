@@ -745,7 +745,7 @@ goo_canvas_table_add_child     (GooCanvasItem  *item,
 
   goo_canvas_table_add_child_internal (table, position);
 
-  /* Let the parent GooCanvasGroup code do the rest. */
+  /* Let the parent GooCanvasItemSimple code do the rest. */
   GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->add_child (item, child, position);
 }
 
@@ -798,7 +798,7 @@ goo_canvas_table_move_child    (GooCanvasItem  *item,
   goo_canvas_table_move_child_internal (table, old_position,
 					new_position);
 
-  /* Let the parent GooCanvasGroup code do the rest. */
+  /* Let the parent GooCanvasItemSimple code do the rest. */
   GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->move_child (item, old_position, new_position);
 }
 
@@ -807,14 +807,13 @@ static void
 goo_canvas_table_remove_child  (GooCanvasItem  *item,
 				gint            child_num)
 {
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
 
-  g_return_if_fail (child_num < group->items->len);
+  g_return_if_fail (child_num < table->children->len);
 
   g_array_remove_index (table->children, child_num);
 
-  /* Let the parent GooCanvasGroup code do the rest. */
+  /* Let the parent GooCanvasItemSimple code do the rest. */
   GOO_CANVAS_ITEM_CLASS (goo_canvas_table_parent_class)->remove_child (item, child_num);
 }
 
@@ -891,14 +890,14 @@ goo_canvas_table_get_child_property (GooCanvasItem     *item,
 				     GValue            *value,
 				     GParamSpec        *pspec)
 {
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableChild *table_child;
   gint child_num;
 
-  for (child_num = 0; child_num < group->items->len; child_num++)
+  for (child_num = 0; child_num < simple->children->len; child_num++)
     {
-      if (group->items->pdata[child_num] == child)
+      if (simple->children->pdata[child_num] == child)
 	{
 	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
@@ -1009,14 +1008,13 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
 				     GParamSpec        *pspec)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableChild *table_child;
   gint child_num;
 
-  for (child_num = 0; child_num < group->items->len; child_num++)
+  for (child_num = 0; child_num < simple->children->len; child_num++)
     {
-      if (group->items->pdata[child_num] == child)
+      if (simple->children->pdata[child_num] == child)
 	{
 	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);
@@ -1137,7 +1135,7 @@ static void
 goo_canvas_table_size_request_init (GooCanvasTable *table,
 				    cairo_t        *cr)
 {
-  GooCanvasGroup *group = (GooCanvasGroup*) table;
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) table;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimension *dimension;
   GooCanvasTableDimensionLayoutData *dldata;
@@ -1151,7 +1149,7 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
   for (i = 0; i < table->children->len; i++)
     {
       child = &g_array_index (table->children, GooCanvasTableChild, i);
-      child_item = group->items->pdata[i];
+      child_item = simple->children->pdata[i];
 
       /* Children will return FALSE if they don't need space allocated. */
       allocate = goo_canvas_item_get_requested_area (child_item, cr, &bounds);
@@ -1169,6 +1167,15 @@ goo_canvas_table_size_request_init (GooCanvasTable *table,
 
       layout_data->children[i].requested_size[HORZ] = bounds.x2 - bounds.x1;
       layout_data->children[i].requested_size[VERT] = bounds.y2 - bounds.y1;
+
+#if 0
+      g_print ("Table Child '%s' requested area: %g, %g  %g x %g\n",
+	       g_object_get_data (G_OBJECT (child_item), "id"),
+	       layout_data->children[i].requested_position[HORZ],
+	       layout_data->children[i].requested_position[VERT],
+	       layout_data->children[i].requested_size[HORZ],
+	       layout_data->children[i].requested_size[VERT]);
+#endif
 
       layout_data->children[i].start_pad[HORZ] = child->start_pad[HORZ];
       layout_data->children[i].end_pad[HORZ] = child->end_pad[HORZ];
@@ -1635,7 +1642,6 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
 				      gdouble         table_y_offset)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) table;
-  GooCanvasGroup *group = (GooCanvasGroup*) table;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
   GooCanvasTableDimensionLayoutData *columns = layout_data->dldata[HORZ];
@@ -1652,10 +1658,15 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
   if (simple->canvas)
     direction = gtk_widget_get_direction (GTK_WIDGET (simple->canvas));
 
+  /* FIXME: Testing. This doesn't work for the clipped shapes in the demo. */
+#if 0
+  direction = GTK_TEXT_DIR_RTL;
+#endif
+
   for (i = 0; i < table->children->len; i++)
     {
       child = &g_array_index (table->children, GooCanvasTableChild, i);
-      child_item = group->items->pdata[i];
+      child_item = simple->children->pdata[i];
       child_data = &layout_data->children[i];
 
       requested_width = child_data->requested_size[HORZ];
@@ -1696,7 +1707,7 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
 	}
 
       if (direction == GTK_TEXT_DIR_RTL)
-	x = layout_data->allocated_size[HORZ] - width;
+	x = layout_data->allocated_size[HORZ] - width - x;
 
       requested_area.x1 = layout_data->children[i].requested_position[HORZ];
       requested_area.y1 = layout_data->children[i].requested_position[VERT];
@@ -1721,6 +1732,14 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
       x_offset += table_x_offset;
       y_offset += table_y_offset;
 
+#if 0
+      g_print ("Table Child '%s' allocated area: %g, %g  %g x %g\n",
+	       g_object_get_data (G_OBJECT (child_item), "id"),
+	       allocated_area.x1, allocated_area.y1,
+	       allocated_area.x2 - allocated_area.x1,
+	       allocated_area.y2 - allocated_area.y1);
+#endif
+
       goo_canvas_item_allocate_area (child_item, cr, &requested_area,
 				     &allocated_area, x_offset, y_offset);
 
@@ -1733,7 +1752,7 @@ static void
 goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
 					   cairo_t	       *cr)
 {
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
@@ -1759,7 +1778,7 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
   for (i = 0; i < table->children->len; i++)
     {
       child = &g_array_index (table->children, GooCanvasTableChild, i);
-      child_item = group->items->pdata[i];
+      child_item = simple->children->pdata[i];
       child_data = &layout_data->children[i];
 
       requested_width = child_data->requested_size[HORZ];
@@ -1815,6 +1834,10 @@ goo_canvas_table_get_requested_area (GooCanvasItem        *item,
   GooCanvasTableDimensionLayoutData *rows, *columns;
   gdouble width = 0.0, height = 0.0;
   gint row, column, end;
+
+#if 0
+  g_print ("\nIn Table get_requested_area\n");
+#endif
 
   /* Request a redraw of the existing bounds */
   goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
@@ -1968,6 +1991,10 @@ goo_canvas_table_allocate_area (GooCanvasItem         *item,
   gdouble requested_width, requested_height, allocated_width, allocated_height;
   gdouble width_proportion, height_proportion, min_proportion;
 
+#if 0
+  g_print ("\nIn Table allocate_area\n");
+#endif
+
   requested_width = requested_area->x2 - requested_area->x1;
   requested_height = requested_area->y2 - requested_area->y1;
   allocated_width = allocated_area->x2 - allocated_area->x1;
@@ -2076,7 +2103,6 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 			gdouble                scale)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
@@ -2297,9 +2323,9 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 
   cairo_restore (cr);
 
-  for (i = 0; i < group->items->len; i++)
+  for (i = 0; i < simple->children->len; i++)
     {
-      child = group->items->pdata[i];
+      child = simple->children->pdata[i];
 
       table_child = &g_array_index (children, GooCanvasTableChild, i);
       clip = FALSE;
@@ -2375,7 +2401,6 @@ goo_canvas_table_get_items_at (GooCanvasItem  *item,
 			       GList          *found_items)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableLayoutData *layout_data = table->layout_data;
   GooCanvasTableDimensionLayoutData *rows = layout_data->dldata[VERT];
@@ -2435,9 +2460,9 @@ goo_canvas_table_get_items_at (GooCanvasItem  *item,
 
   /* Step up from the bottom of the children to the top, adding any items
      found to the start of the list. */
-  for (i = 0; i < group->items->len; i++)
+  for (i = 0; i < simple->children->len; i++)
     {
-      child = group->items->pdata[i];
+      child = simple->children->pdata[i];
 
       table_child = &g_array_index (children, GooCanvasTableChild, i);
 
@@ -2491,7 +2516,6 @@ goo_canvas_table_get_transform_for_child  (GooCanvasItem  *item,
 					   cairo_matrix_t *transform)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableChild *table_child;
   gboolean has_transform = FALSE;
@@ -2507,9 +2531,9 @@ goo_canvas_table_get_transform_for_child  (GooCanvasItem  *item,
       cairo_matrix_init_identity (transform);
     }
 
-  for (child_num = 0; child_num < group->items->len; child_num++)
+  for (child_num = 0; child_num < simple->children->len; child_num++)
     {
-      if (group->items->pdata[child_num] == child)
+      if (simple->children->pdata[child_num] == child)
 	{
 	  table_child = &g_array_index (table->children,
 					GooCanvasTableChild, child_num);

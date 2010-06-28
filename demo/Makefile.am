@@ -14,7 +14,7 @@ DEMO_LIBS = $(top_builddir)/src/libgoocanvas-2.0.la @PACKAGE_LIBS@ $(INTLLIBS)
 noinst_PROGRAMS = demo table-demo generic-position-demo simple-demo scalability-demo units-demo widgets-demo
 
 demo_SOURCES = \
-	demo.c demo-fifteen.c demo-scalability.c demo-grabs.c \
+	demo.c demo-fifteen.c demo-groups.c demo-grabs.c \
 	demo-arrowhead.c demo-features.c demo-events.c \
 	demo-paths.c demo-focus.c demo-item.h demo-item.c demo-animation.c \
 	demo-clipping.c demo-table.c demo-large-line.h demo-large-line.c \

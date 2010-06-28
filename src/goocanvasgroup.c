@@ -59,8 +59,6 @@ G_DEFINE_TYPE (GooCanvasGroup, goo_canvas_group, GOO_TYPE_CANVAS_ITEM_SIMPLE)
 static void
 goo_canvas_group_init (GooCanvasGroup *group)
 {
-  group->items = g_ptr_array_sized_new (8);
-
   group->x = 0.0;
   group->y = 0.0;
   group->width = -1.0;
@@ -104,37 +102,6 @@ goo_canvas_group_new (GooCanvasItem *parent,
     }
 
   return item;
-}
-
-
-static void
-goo_canvas_group_dispose (GObject *object)
-{
-  GooCanvasGroup *group = (GooCanvasGroup*) object;
-  gint i;
-
-  /* Unref all the items in the group. */
-  for (i = 0; i < group->items->len; i++)
-    {
-      GooCanvasItem *item = group->items->pdata[i];
-      goo_canvas_item_set_parent (item, NULL);
-      g_object_unref (item);
-    }
-
-  g_ptr_array_set_size (group->items, 0);
-
-  G_OBJECT_CLASS (goo_canvas_group_parent_class)->dispose (object);
-}
-
-
-static void
-goo_canvas_group_finalize (GObject *object)
-{
-  GooCanvasGroup *group = (GooCanvasGroup*) object;
-
-  g_ptr_array_free (group->items, TRUE);
-
-  G_OBJECT_CLASS (goo_canvas_group_parent_class)->finalize (object);
 }
 
 
@@ -200,191 +167,6 @@ goo_canvas_group_set_property (GObject                  *object,
 
 
 static void
-goo_canvas_group_add_child     (GooCanvasItem  *item,
-				GooCanvasItem  *child,
-				gint            position)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-  AtkObject *atk_obj, *child_atk_obj;
-
-  g_object_ref (child);
-
-  if (position >= 0)
-    {
-      goo_canvas_util_ptr_array_insert (group->items, child, position);
-    }
-  else
-    {
-      position = group->items->len;
-      g_ptr_array_add (group->items, child);
-    }
-
-  goo_canvas_item_set_parent (child, item);
-  goo_canvas_item_set_is_static (child, simple->is_static);
-
-  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
-  atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
-  if (!ATK_IS_NO_OP_OBJECT (atk_obj))
-    {
-      child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
-      g_signal_emit_by_name (atk_obj, "children_changed::add",
-			     position, child_atk_obj);
-    }
-
-  goo_canvas_item_request_update (item);
-}
-
-
-static void
-goo_canvas_group_move_child    (GooCanvasItem  *item,
-				gint	        old_position,
-				gint            new_position)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-  GooCanvasItem *child;
-  GooCanvasBounds bounds;
-
-  /* Request a redraw of the item's bounds. */
-  child = group->items->pdata[old_position];
-  if (simple->canvas)
-    {
-      goo_canvas_item_get_bounds (child, &bounds);
-      goo_canvas_request_item_redraw (simple->canvas, &bounds,
-				      simple->is_static);
-    }
-
-  goo_canvas_util_ptr_array_move (group->items, old_position, new_position);
-
-  goo_canvas_item_request_update (item);
-}
-
-
-static void
-goo_canvas_group_remove_child  (GooCanvasItem  *item,
-				gint            child_num)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-  GooCanvasItem *child;
-  GooCanvasBounds bounds;
-  AtkObject *atk_obj, *child_atk_obj;
-
-  g_return_if_fail (child_num < group->items->len);
-
-  /* Request a redraw of the item's bounds. */
-  child = group->items->pdata[child_num];
-  if (simple->canvas)
-    {
-      goo_canvas_item_get_bounds (child, &bounds);
-      goo_canvas_request_item_redraw (simple->canvas, &bounds,
-				      simple->is_static);
-    }
-
-  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
-  atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
-  if (!ATK_IS_NO_OP_OBJECT (atk_obj))
-    {
-      child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
-      g_signal_emit_by_name (atk_obj, "children_changed::remove",
-			     child_num, child_atk_obj);
-    }
-
-  g_ptr_array_remove_index (group->items, child_num);
-
-  goo_canvas_item_set_parent (child, NULL);
-  g_object_unref (child);
-
-  goo_canvas_item_request_update (item);
-}
-
-
-static gint
-goo_canvas_group_get_n_children (GooCanvasItem  *item)
-{
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-
-  return group->items->len;
-}
-
-
-static GooCanvasItem*
-goo_canvas_group_get_child   (GooCanvasItem       *item,
-			      gint                 child_num)
-{
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-
-  if (child_num < group->items->len)
-    return group->items->pdata[child_num];
-  return NULL;
-}
-
-
-/* This is only used to set the canvas of the root group. It isn't normally
-   needed by apps. */
-static void
-goo_canvas_group_set_canvas  (GooCanvasItem *item,
-			      GooCanvas     *canvas)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-  gint i;
-
-  if (simple->canvas == canvas)
-    return;
-
-  simple->canvas = canvas;
-
-  /* Recursively set the canvas of all child items. */
-  for (i = 0; i < group->items->len; i++)
-    {
-      GooCanvasItem *item = group->items->pdata[i];
-      goo_canvas_item_set_canvas (item, canvas);
-    }
-}
-
-
-static void
-goo_canvas_group_set_is_static  (GooCanvasItem *item,
-				 gboolean       is_static)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasGroup *group = (GooCanvasGroup*) item;
-  gint i;
-
-  if (simple->is_static == is_static)
-    return;
-
-  simple->is_static = is_static;
-
-  /* Recursively set the canvas of all child items. */
-  for (i = 0; i < group->items->len; i++)
-    {
-      GooCanvasItem *item = group->items->pdata[i];
-      goo_canvas_item_set_is_static (item, is_static);
-    }
-}
-
-
-static void
-goo_canvas_group_request_update  (GooCanvasItem *item)
-{
-  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-
-  if (!simple->need_update)
-    {
-      simple->need_update = TRUE;
-
-      if (simple->parent)
-	goo_canvas_item_request_update (simple->parent);
-      else if (simple->canvas)
-	goo_canvas_request_update (simple->canvas);
-    }
-}
-
-
-static void
 goo_canvas_group_update  (GooCanvasItem   *item,
 			  gboolean         entire_tree,
 			  cairo_t         *cr,
@@ -407,41 +189,44 @@ goo_canvas_group_update  (GooCanvasItem   *item,
       simple->bounds.x1 = simple->bounds.y1 = 0.0;
       simple->bounds.x2 = simple->bounds.y2 = 0.0;
 
-      cairo_save (cr);
-      if (simple->transform)
-        cairo_transform (cr, simple->transform);
+      if (simple->children)
+	{
+	  cairo_save (cr);
+	  if (simple->transform)
+	    cairo_transform (cr, simple->transform);
 
-      cairo_translate (cr, group->x, group->y);
+	  cairo_translate (cr, group->x, group->y);
 
-      for (i = 0; i < group->items->len; i++)
-        {
-          GooCanvasItem *child = group->items->pdata[i];
+	  for (i = 0; i < simple->children->len; i++)
+	    {
+	      GooCanvasItem *child = simple->children->pdata[i];
 
-          goo_canvas_item_update (child, entire_tree, cr, &child_bounds);
+	      goo_canvas_item_update (child, entire_tree, cr, &child_bounds);
           
-          /* If the child has non-empty bounds, compute the union. */
-          if (child_bounds.x1 < child_bounds.x2
-              && child_bounds.y1 < child_bounds.y2)
-            {
-              if (initial_bounds)
-                {
-                  simple->bounds.x1 = child_bounds.x1;
-                  simple->bounds.y1 = child_bounds.y1;
-                  simple->bounds.x2 = child_bounds.x2;
-                  simple->bounds.y2 = child_bounds.y2;
-                  initial_bounds = FALSE;
-                }
-              else
-                {
-                  simple->bounds.x1 = MIN (simple->bounds.x1, child_bounds.x1);
-                  simple->bounds.y1 = MIN (simple->bounds.y1, child_bounds.y1);
-                  simple->bounds.x2 = MAX (simple->bounds.x2, child_bounds.x2);
-                  simple->bounds.y2 = MAX (simple->bounds.y2, child_bounds.y2);
-                }
-            }
-        }
+	      /* If the child has non-empty bounds, compute the union. */
+	      if (child_bounds.x1 < child_bounds.x2
+		  && child_bounds.y1 < child_bounds.y2)
+		{
+		  if (initial_bounds)
+		    {
+		      simple->bounds.x1 = child_bounds.x1;
+		      simple->bounds.y1 = child_bounds.y1;
+		      simple->bounds.x2 = child_bounds.x2;
+		      simple->bounds.y2 = child_bounds.y2;
+		      initial_bounds = FALSE;
+		    }
+		  else
+		    {
+		      simple->bounds.x1 = MIN (simple->bounds.x1, child_bounds.x1);
+		      simple->bounds.y1 = MIN (simple->bounds.y1, child_bounds.y1);
+		      simple->bounds.x2 = MAX (simple->bounds.x2, child_bounds.x2);
+		      simple->bounds.y2 = MAX (simple->bounds.y2, child_bounds.y2);
+		    }
+		}
+	    }
 
-      cairo_restore (cr);
+	  cairo_restore (cr);
+	}
     }
 
   *bounds = simple->bounds;
@@ -518,14 +303,18 @@ goo_canvas_group_get_items_at (GooCanvasItem  *item,
 
   /* Step up from the bottom of the children to the top, adding any items
      found to the start of the list. */
-  for (i = 0; i < group->items->len; i++)
+  if (simple->children)
     {
-      GooCanvasItem *child = group->items->pdata[i];
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
 
-      found_items = goo_canvas_item_get_items_at (child, x, y, cr,
-						  is_pointer_event, visible,
-						  found_items);
+	  found_items = goo_canvas_item_get_items_at (child, x, y, cr,
+						      is_pointer_event, visible,
+						      found_items);
+	}
     }
+
   cairo_restore (cr);
 
   return found_items;
@@ -574,11 +363,15 @@ goo_canvas_group_paint (GooCanvasItem         *item,
       cairo_clip (cr);
     }
 
-  for (i = 0; i < group->items->len; i++)
+  if (simple->children)
     {
-      GooCanvasItem *child = group->items->pdata[i];
-      goo_canvas_item_paint (child, cr, bounds, scale);
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
+	  goo_canvas_item_paint (child, cr, bounds, scale);
+	}
     }
+
   cairo_restore (cr);
 }
 
@@ -589,25 +382,12 @@ goo_canvas_group_class_init (GooCanvasGroupClass *klass)
   GObjectClass *gobject_class = (GObjectClass*) klass;
   GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
 
-  gobject_class->dispose  = goo_canvas_group_dispose;
-  gobject_class->finalize = goo_canvas_group_finalize;
   gobject_class->get_property = goo_canvas_group_get_property;
   gobject_class->set_property = goo_canvas_group_set_property;
-
-  item_class->set_canvas     = goo_canvas_group_set_canvas;
-  item_class->get_n_children = goo_canvas_group_get_n_children;
-  item_class->get_child      = goo_canvas_group_get_child;
-  item_class->request_update = goo_canvas_group_request_update;
-
-  item_class->add_child      = goo_canvas_group_add_child;
-  item_class->move_child     = goo_canvas_group_move_child;
-  item_class->remove_child   = goo_canvas_group_remove_child;
 
   item_class->get_items_at   = goo_canvas_group_get_items_at;
   item_class->update         = goo_canvas_group_update;
   item_class->paint          = goo_canvas_group_paint;
-
-  item_class->set_is_static  = goo_canvas_group_set_is_static;
 
   /* Register our accessible factory, but only if accessibility is enabled. */
   if (!ATK_IS_NO_OP_OBJECT_FACTORY (atk_registry_get_factory (atk_get_default_registry (), GTK_TYPE_WIDGET)))

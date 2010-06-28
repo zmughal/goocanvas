@@ -87,6 +87,16 @@ enum {
 
 static gboolean accessibility_enabled = FALSE;
 
+#define HORZ 0
+#define VERT 1
+
+typedef struct _GooCanvasItemSimpleChildLayoutData GooCanvasItemSimpleChildLayoutData;
+struct _GooCanvasItemSimpleChildLayoutData
+{
+  gdouble requested_position[2];
+  gdouble requested_size[2];
+};
+
 
 G_DEFINE_TYPE (GooCanvasItemSimple, goo_canvas_item_simple,
 	       GOO_TYPE_CANVAS_ITEM)
@@ -110,6 +120,19 @@ static void
 goo_canvas_item_simple_dispose (GObject *object)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
+  gint i;
+
+  /* Unref all the items in the group. */
+  if (simple->children)
+    {
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *item = simple->children->pdata[i];
+	  goo_canvas_item_set_parent (item, NULL);
+	  g_object_unref (item);
+	}
+      g_ptr_array_set_size (simple->children, 0);
+    }
 
   if (simple->style)
     {
@@ -127,6 +150,18 @@ goo_canvas_item_simple_dispose (GObject *object)
   simple->transform = NULL;
 
   G_OBJECT_CLASS (goo_canvas_item_simple_parent_class)->dispose (object);
+}
+
+
+static void
+goo_canvas_item_simple_finalize (GObject *object)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
+
+  if (simple->children)
+    g_ptr_array_free (simple->children, TRUE);
+
+  G_OBJECT_CLASS (goo_canvas_item_simple_parent_class)->finalize (object);
 }
 
 
@@ -457,7 +492,22 @@ goo_canvas_item_simple_set_canvas  (GooCanvasItem *item,
 				    GooCanvas     *canvas)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  gint i;
+
+  if (simple->canvas == canvas)
+    return;
+
   simple->canvas = canvas;
+
+  /* Recursively set the canvas of all child items. */
+  if (simple->children)
+    {
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *item = simple->children->pdata[i];
+	  goo_canvas_item_set_canvas (item, canvas);
+	}
+    }
 }
 
 
@@ -580,9 +630,10 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (item);
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  double user_x = x, user_y = y;
+  double user_x = x, user_y = y, old_x0, old_y0;
   cairo_matrix_t matrix;
-  gboolean add_item = FALSE;
+  gboolean visible = parent_visible;
+  gint i;
 
   if (simple->need_update)
     goo_canvas_item_ensure_updated (item);
@@ -592,18 +643,17 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
       || simple->bounds.y1 > y || simple->bounds.y2 < y)
     return found_items;
 
+  if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
+      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
+	  && simple->canvas->scale < simple->visibility_threshold))
+    visible = FALSE;
+
   /* Check if the item should receive events. */
-  if (is_pointer_event)
-    {
-      if (simple->pointer_events == GOO_CANVAS_EVENTS_NONE)
-	return found_items;
-      if (simple->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK
-	  && (!parent_visible
-	      || simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
-	      || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-		  && simple->canvas->scale < simple->visibility_threshold)))
-	return found_items;
-    }
+  if (is_pointer_event
+      && (simple->pointer_events == GOO_CANVAS_EVENTS_NONE
+	  || ((simple->pointer_events & GOO_CANVAS_EVENTS_VISIBLE_MASK)
+	      && !visible)))
+    return found_items;
 
   cairo_save (cr);
   if (simple->transform)
@@ -613,6 +663,8 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
 
   /* Remove any current translation, to avoid the 16-bit cairo limit. */
   cairo_get_matrix (cr, &matrix);
+  old_x0 = matrix.x0;
+  old_y0 = matrix.y0;
   matrix.x0 = matrix.y0 = 0.0;
   cairo_set_matrix (cr, &matrix);
 
@@ -628,15 +680,30 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
 	}
     }
 
-  add_item = class->simple_is_item_at (simple, user_x, user_y, cr,
-                                       is_pointer_event);
+  if (class->simple_is_item_at (simple, user_x, user_y, cr, is_pointer_event))
+    found_items = g_list_prepend (found_items, item);
+
+  /* Step up from the bottom of the children to the top, adding any items
+     found to the start of the list. */
+  if (simple->children)
+    {
+      matrix.x0 = old_x0;
+      matrix.y0 = old_y0;
+      cairo_set_matrix (cr, &matrix);
+
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
+
+	  found_items = goo_canvas_item_get_items_at (child, x, y, cr,
+						      is_pointer_event, visible,
+						      found_items);
+	}
+    }
 
   cairo_restore (cr);
 
-  if (add_item)
-    return g_list_prepend (found_items, item);
-  else
-    return found_items;
+  return found_items;
 }
 
 
@@ -703,8 +770,39 @@ goo_canvas_item_simple_set_is_static  (GooCanvasItem   *item,
 				       gboolean         is_static)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  gint i;
+
+  if (simple->is_static == is_static)
+    return;
 
   simple->is_static = is_static;
+
+  /* Recursively set the canvas of all child items. */
+  if (simple->children)
+    {
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *item = simple->children->pdata[i];
+	  goo_canvas_item_set_is_static (item, is_static);
+	}
+    }
+}
+
+
+static void
+goo_canvas_item_simple_request_update  (GooCanvasItem *item)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+
+  if (!simple->need_update)
+    {
+      simple->need_update = TRUE;
+
+      if (simple->parent)
+	goo_canvas_item_request_update (simple->parent);
+      else if (simple->canvas)
+	goo_canvas_request_update (simple->canvas);
+    }
 }
 
 
@@ -766,11 +864,17 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
 				GooCanvasBounds *bounds)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasBounds child_bounds;
   cairo_matrix_t matrix;
   double x_offset, y_offset;
+  gint i;
 
   if (entire_tree || simple->need_update)
     {
+      if (simple->need_entire_subtree_update)
+	entire_tree = TRUE;
+      simple->need_entire_subtree_update = FALSE;
+
       /* Request a redraw of the existing bounds. */
       goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
 
@@ -800,6 +904,32 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
 
       /* Request a redraw of the new bounds. */
       goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
+
+      /* Now handle any children. */
+      if (simple->children)
+	{
+	  cairo_save (cr);
+	  if (simple->transform)
+	    cairo_transform (cr, simple->transform);
+
+	  for (i = 0; i < simple->children->len; i++)
+	    {
+	      GooCanvasItem *child = simple->children->pdata[i];
+
+	      goo_canvas_item_update (child, entire_tree, cr, &child_bounds);
+          
+	      /* If the child has non-empty bounds, compute the union. */
+	      if (child_bounds.x1 < child_bounds.x2
+		  && child_bounds.y1 < child_bounds.y2)
+		{
+		  simple->bounds.x1 = MIN (simple->bounds.x1, child_bounds.x1);
+		  simple->bounds.y1 = MIN (simple->bounds.y1, child_bounds.y1);
+		  simple->bounds.x2 = MAX (simple->bounds.x2, child_bounds.x2);
+		  simple->bounds.y2 = MAX (simple->bounds.y2, child_bounds.y2);
+		}
+	    }
+	  cairo_restore (cr);
+	}
     }
 
   *bounds = simple->bounds;
@@ -812,8 +942,11 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
 					   GooCanvasBounds  *requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleChildLayoutData *layout_data;
+  GooCanvasBounds bounds;
   cairo_matrix_t matrix;
   double x_offset, y_offset;
+  gint i;
 
   /* Request a redraw of the existing bounds. */
   goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
@@ -831,6 +964,9 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
 
   goo_canvas_item_simple_update_internal (simple, cr);
 
+  /* FIXME: Should we make sure the children get updated even if we are
+     hidden? If we don't, we need to ensure they do get updated if the
+     visibility changes. */
   if (simple->visibility == GOO_CANVAS_ITEM_HIDDEN)
     {
       simple->bounds.x1 = simple->bounds.x2 = 0.0;
@@ -861,6 +997,57 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
   cairo_device_to_user (cr, &simple->bounds.x1, &simple->bounds.y1);
   cairo_device_to_user (cr, &simple->bounds.x2, &simple->bounds.y2);
 
+  /* Handle any children. */
+  if (simple->children && simple->children->len)
+    {
+      layout_data = g_new (GooCanvasItemSimpleChildLayoutData,
+			   simple->children->len);
+      g_object_set_data_full ((GObject*) simple, "child-layout-data",
+			      layout_data, g_free);
+
+#if 0
+      g_print ("Simple '%s' base requested area: %g, %g  %g x %g\n",
+	       g_object_get_data (G_OBJECT (simple), "id"),
+	       simple->bounds.x1, simple->bounds.y1,
+	       simple->bounds.x2 - simple->bounds.x1,
+	       simple->bounds.y2 - simple->bounds.y1);
+#endif
+
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
+
+	  /* Children will return FALSE if they don't need space allocated. */
+	  if (goo_canvas_item_get_requested_area (child, cr, &bounds))
+	    {
+	      /* Remember the requested position and size of the child. */
+	      layout_data[i].requested_position[HORZ] = bounds.x1;
+	      layout_data[i].requested_position[VERT] = bounds.y1;
+	      layout_data[i].requested_size[HORZ] = bounds.x2 - bounds.x1;
+	      layout_data[i].requested_size[VERT] = bounds.y2 - bounds.y1;
+
+#if 0
+	      g_print ("Child '%s' requested area: %g, %g  %g x %g\n",
+		       g_object_get_data (G_OBJECT (child), "id"),
+		       layout_data[i].requested_position[HORZ],
+		       layout_data[i].requested_position[VERT],
+		       layout_data[i].requested_size[HORZ],
+		       layout_data[i].requested_size[VERT]);
+#endif
+	      simple->bounds.x1 = MIN (simple->bounds.x1, bounds.x1);
+	      simple->bounds.y1 = MIN (simple->bounds.y1, bounds.y1);
+	      simple->bounds.x2 = MAX (simple->bounds.x2, bounds.x2);
+	      simple->bounds.y2 = MAX (simple->bounds.y2, bounds.y2);
+	    }
+	  else
+	    {
+	      layout_data[i].requested_position[HORZ] = 0.0;
+	      layout_data[i].requested_position[VERT] = 0.0;
+	      layout_data[i].requested_size[HORZ] = -1.0;
+	      layout_data[i].requested_size[VERT] = -1.0;
+	    }
+	}
+    }
 
   /* Copy the user bounds to the requested area. */
   *requested_area = simple->bounds;
@@ -872,6 +1059,14 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
   goo_canvas_item_simple_user_bounds_to_device (simple, cr, &simple->bounds);
 
   cairo_restore (cr);
+
+#if 0
+  if (simple->children && simple->children->len)
+    g_print ("Total requested area: %g, %g  %g x %g\n",
+	     requested_area->x1, requested_area->y1,
+	     requested_area->x2 - requested_area->x1,
+	     requested_area->y2 - requested_area->y1);
+#endif
 
   return TRUE;
 }
@@ -886,6 +1081,11 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
 					   gdouble                y_offset)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleChildLayoutData *layout_data;
+  GooCanvasBounds child_requested_area, child_allocated_area;
+  gdouble child_x_offset = x_offset, child_y_offset = y_offset;
+  gdouble width, height;
+  gint i;
 
   /* Simple items can't resize at all, so we just adjust the bounds x & y
      positions here, and let the item be clipped if necessary. */
@@ -896,6 +1096,59 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
 
   /* Request a redraw of the new bounds. */
   goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
+
+  /* Now handle any children. */
+  if (simple->children && simple->children->len)
+    {
+      layout_data = g_object_get_data ((GObject*) simple, "child-layout-data");
+
+      cairo_save (cr);
+      if (simple->transform)
+	cairo_transform (cr, simple->transform);
+
+      /* Convert the offsets to our coordinate space. */
+      cairo_device_to_user (cr, &child_x_offset, &child_y_offset);
+
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
+
+	  width = layout_data[i].requested_size[HORZ];
+	  height = layout_data[i].requested_size[VERT];
+
+	  /* We use the requested area we saved in get_requested_area(). */
+	  child_requested_area.x1 = layout_data[i].requested_position[HORZ];
+	  child_requested_area.y1 = layout_data[i].requested_position[VERT];
+	  child_requested_area.x2 = child_requested_area.x1 + width;
+	  child_requested_area.y2 = child_requested_area.y1 + height;
+
+	  /* For the allocated area, we use the requested area shifted by the
+	     offsets in this item's coordinate space. */
+	  child_allocated_area.x1 = child_requested_area.x1;
+	  child_allocated_area.y1 = child_requested_area.y1;
+	  child_allocated_area.x1 += child_x_offset;
+	  child_allocated_area.y1 += child_y_offset;
+	  child_allocated_area.x2 = child_allocated_area.x1 + width;
+	  child_allocated_area.y2 = child_allocated_area.y1 + height;
+
+#if 0
+	  g_print ("Child '%s' allocated area: %g, %g  %g x %g\n",
+		   g_object_get_data (G_OBJECT (child), "id"),
+		   child_allocated_area.x1, child_allocated_area.y1,
+		   child_allocated_area.x2 - child_allocated_area.x1,
+		   child_allocated_area.y2 - child_allocated_area.y1);
+#endif
+	  goo_canvas_item_allocate_area (child, cr, &child_requested_area,
+					 &child_allocated_area,
+					 x_offset, y_offset);
+
+	}
+
+      /* Free the layout data. */
+      g_object_set_data ((GObject*) simple, "child-layout-data", NULL);
+
+      cairo_restore (cr);
+    }
 }
 
 
@@ -907,6 +1160,7 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (item);
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  gint i;
 
   /* Skip the item if the bounds don't intersect the expose rectangle. */
   if (simple->bounds.x1 > bounds->x2 || simple->bounds.x2 < bounds->x1
@@ -932,6 +1186,16 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
     }
 
   class->simple_paint (simple, cr, bounds);
+
+  /* Paint the children. */
+  if (simple->children)
+    {
+      for (i = 0; i < simple->children->len; i++)
+	{
+	  GooCanvasItem *child = simple->children->pdata[i];
+	  goo_canvas_item_paint (child, cr, bounds, scale);
+	}
+    }
 
   cairo_restore (cr);
 }
@@ -1383,12 +1647,146 @@ goo_canvas_item_simple_set_fill_options (GooCanvasItemSimple   *simple,
 
 
 static void
+goo_canvas_item_simple_add_child     (GooCanvasItem  *item,
+				      GooCanvasItem  *child,
+				      gint            position)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  AtkObject *atk_obj, *child_atk_obj;
+
+  g_object_ref (child);
+
+  if (!simple->children)
+    simple->children = g_ptr_array_sized_new (8);
+
+  if (position >= 0)
+    {
+      goo_canvas_util_ptr_array_insert (simple->children, child, position);
+    }
+  else
+    {
+      position = simple->children->len;
+      g_ptr_array_add (simple->children, child);
+    }
+
+  goo_canvas_item_set_parent (child, item);
+  goo_canvas_item_set_is_static (child, simple->is_static);
+
+  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
+  if (accessibility_enabled)
+    {
+      atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
+      if (!ATK_IS_NO_OP_OBJECT (atk_obj))
+	{
+	  child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
+	  g_signal_emit_by_name (atk_obj, "children_changed::add",
+				 position, child_atk_obj);
+	}
+    }
+
+  goo_canvas_item_request_update (item);
+}
+
+
+static void
+goo_canvas_item_simple_move_child    (GooCanvasItem  *item,
+				      gint	      old_position,
+				      gint            new_position)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItem *child;
+  GooCanvasBounds bounds;
+
+  g_return_if_fail (simple->children != NULL);
+  g_return_if_fail (old_position < simple->children->len);
+  g_return_if_fail (new_position < simple->children->len);
+
+  /* Request a redraw of the item's bounds. */
+  child = simple->children->pdata[old_position];
+  if (simple->canvas)
+    {
+      goo_canvas_item_get_bounds (child, &bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &bounds,
+				      simple->is_static);
+    }
+
+  goo_canvas_util_ptr_array_move (simple->children, old_position, new_position);
+
+  goo_canvas_item_request_update (item);
+}
+
+
+static void
+goo_canvas_item_simple_remove_child  (GooCanvasItem  *item,
+				      gint            child_num)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItem *child;
+  GooCanvasBounds bounds;
+  AtkObject *atk_obj, *child_atk_obj;
+
+  g_return_if_fail (simple->children != NULL);
+  g_return_if_fail (child_num < simple->children->len);
+
+  /* Request a redraw of the item's bounds. */
+  child = simple->children->pdata[child_num];
+  if (simple->canvas)
+    {
+      goo_canvas_item_get_bounds (child, &bounds);
+      goo_canvas_request_item_redraw (simple->canvas, &bounds,
+				      simple->is_static);
+    }
+
+  /* Emit the "children_changed" ATK signal, if ATK is enabled. */
+  if (accessibility_enabled)
+    {
+      atk_obj = atk_gobject_accessible_for_object (G_OBJECT (item));
+      if (!ATK_IS_NO_OP_OBJECT (atk_obj))
+	{
+	  child_atk_obj = atk_gobject_accessible_for_object (G_OBJECT (child));
+	  g_signal_emit_by_name (atk_obj, "children_changed::remove",
+				 child_num, child_atk_obj);
+	}
+    }
+
+  g_ptr_array_remove_index (simple->children, child_num);
+
+  goo_canvas_item_set_parent (child, NULL);
+  g_object_unref (child);
+
+  goo_canvas_item_request_update (item);
+}
+
+
+static gint
+goo_canvas_item_simple_get_n_children (GooCanvasItem  *item)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+
+  return simple->children ? simple->children->len : 0;
+}
+
+
+static GooCanvasItem*
+goo_canvas_item_simple_get_child   (GooCanvasItem       *item,
+				    gint                 child_num)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+
+  if (simple->children && child_num < simple->children->len)
+    return simple->children->pdata[child_num];
+  return NULL;
+}
+
+
+static void
 goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 {
   GObjectClass *gobject_class = (GObjectClass*) klass;
   GooCanvasItemClass *item_class = (GooCanvasItemClass*) klass;
 
   gobject_class->dispose  = goo_canvas_item_simple_dispose;
+  gobject_class->finalize = goo_canvas_item_simple_finalize;
 
   gobject_class->get_property = goo_canvas_item_simple_get_property;
   gobject_class->set_property = goo_canvas_item_simple_set_property;
@@ -1396,10 +1794,17 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
   item_class->get_canvas         = goo_canvas_item_simple_get_canvas;
   item_class->set_canvas         = goo_canvas_item_simple_set_canvas;
 
+  item_class->add_child          = goo_canvas_item_simple_add_child;
+  item_class->move_child         = goo_canvas_item_simple_move_child;
+  item_class->remove_child       = goo_canvas_item_simple_remove_child;
+  item_class->get_n_children     = goo_canvas_item_simple_get_n_children;
+  item_class->get_child          = goo_canvas_item_simple_get_child;
+
   item_class->get_parent	 = goo_canvas_item_simple_get_parent;
   item_class->set_parent	 = goo_canvas_item_simple_set_parent;
   item_class->get_bounds         = goo_canvas_item_simple_get_bounds;
   item_class->get_items_at	 = goo_canvas_item_simple_get_items_at;
+  item_class->request_update     = goo_canvas_item_simple_request_update;
   item_class->update             = goo_canvas_item_simple_update;
   item_class->get_requested_area = goo_canvas_item_simple_get_requested_area;
   item_class->allocate_area      = goo_canvas_item_simple_allocate_area;

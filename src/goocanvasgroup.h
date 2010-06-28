@@ -35,10 +35,6 @@ struct _GooCanvasGroup
 {
   GooCanvasItemSimple parent_object;
 
-  /* An array of pointers to GooCanvasItems. The first element is at the
-     bottom of the display stack and the last element is at the top. */
-  GPtrArray *items;
-
   gdouble x, y, width, height;
 };
 

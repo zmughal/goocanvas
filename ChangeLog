@@ -1,5 +1,15 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* Made GooCanvasItemSimple implement the group methods, so all
+	subclasses can have child items.
+
+	Added "Groups" demo page to test this.
+
+	Removed "Scalability" demo page as it wasn't very useful and we have
+	the separate scalability test app which is a better scalability test.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasgroup.c (goo_canvas_group_paint): use the scale
 	argument rather than the canvas scale.
 
