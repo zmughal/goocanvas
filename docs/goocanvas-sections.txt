@@ -41,7 +41,6 @@ GooCanvasRectClass
 <SECTION>
 <FILE>goocanvasitem</FILE>
 GooCanvasItem
-GooCanvasItemIface
 
 <SUBSECTION>
 goo_canvas_item_translate
@@ -88,10 +87,6 @@ goo_canvas_item_remove_child
 goo_canvas_item_get_transform_for_child
 
 <SUBSECTION>
-goo_canvas_item_get_style
-goo_canvas_item_set_style
-
-<SUBSECTION>
 goo_canvas_item_request_update
 goo_canvas_item_ensure_updated
 goo_canvas_item_update
@@ -117,7 +112,10 @@ GOO_CANVAS_ITEM
 GOO_IS_CANVAS_ITEM
 GOO_TYPE_CANVAS_ITEM
 goo_canvas_item_get_type
-GOO_CANVAS_ITEM_GET_IFACE
+GOO_CANVAS_ITEM_CLASS
+GOO_CANVAS_ITEM_GET_CLASS
+GOO_IS_CANVAS_ITEM_CLASS
+GooCanvasItemClass
 </SECTION>
 
 <SECTION>
@@ -298,7 +296,6 @@ GooCanvasItemSimple
 GooCanvasItemSimpleClass
 
 <SUBSECTION>
-goo_canvas_item_simple_check_style
 goo_canvas_item_simple_get_line_width
 goo_canvas_item_simple_get_path_bounds
 goo_canvas_item_simple_user_bounds_to_device
@@ -306,6 +303,9 @@ goo_canvas_item_simple_user_bounds_to_parent
 goo_canvas_item_simple_check_in_path
 goo_canvas_item_simple_paint_path
 goo_canvas_item_simple_changed
+goo_canvas_item_simple_set_fill_options
+goo_canvas_item_simple_set_stroke_options
+goo_canvas_item_simple_set_style
 
 <SUBSECTION Standard>
 GOO_CANVAS_ITEM_SIMPLE
@@ -380,37 +380,13 @@ GooCanvasWidgetClass
 <FILE>goocanvasstyle</FILE>
 <TITLE>GooCanvasStyle</TITLE>
 GooCanvasStyle
-GooCanvasStyleProperty
 
 <SUBSECTION>
 goo_canvas_style_new
-goo_canvas_style_copy
 
 <SUBSECTION>
-goo_canvas_style_get_parent
-goo_canvas_style_set_parent
-
-<SUBSECTION>
-goo_canvas_style_get_property
-goo_canvas_style_set_property
-
-<SUBSECTION>
-goo_canvas_style_set_fill_options
-goo_canvas_style_set_stroke_options
-
-<SUBSECTION>
-goo_canvas_style_antialias_id
-goo_canvas_style_fill_pattern_id
-goo_canvas_style_fill_rule_id
-goo_canvas_style_font_desc_id
-goo_canvas_style_hint_metrics_id
-goo_canvas_style_line_cap_id
-goo_canvas_style_line_dash_id
-goo_canvas_style_line_join_id
-goo_canvas_style_line_join_miter_limit_id
-goo_canvas_style_line_width_id
-goo_canvas_style_operator_id
-goo_canvas_style_stroke_pattern_id
+goo_canvas_style_set_fill_pattern
+goo_canvas_style_set_stroke_pattern
 
 <SUBSECTION Standard>
 GOO_CANVAS_STYLE

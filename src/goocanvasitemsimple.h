@@ -31,6 +31,7 @@ typedef struct _GooCanvasItemSimpleClass  GooCanvasItemSimpleClass;
  * GooCanvasItemSimple
  * @canvas: the canvas.
  * @parent: the parent item.
+ * @children: the children of the item.
  * @bounds: the bounds of the item, in device space.
  * @need_update: if the item needs to recompute its bounds and redraw.
  * @need_entire_subtree_update: if all descendants need to be updated.

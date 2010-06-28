@@ -1273,6 +1273,8 @@ goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
  * @item: a #GooCanvasItemSimple.
  * @cr: a cairo context.
  * @bounds: the #GooCanvasBounds struct to store the resulting bounding box.
+ * @add_tolerance: if the line width tolerance setting should be added to the
+ *  line width when calculating the bounds.
  * 
  * This function is intended to be used by subclasses of #GooCanvasItemSimple,
  * typically in their update() or get_requested_area() methods.
@@ -1466,6 +1468,8 @@ goo_canvas_item_simple_user_bounds_to_parent (GooCanvasItemSimple *simple,
  * @y: the y coordinate of the point.
  * @cr: a cairo context.
  * @pointer_events: specifies which parts of the path to check.
+ * @add_tolerance: if the line width tolerance setting should be added to
+ *  the line width for the check.
  * 
  * This function is intended to be used by subclasses of #GooCanvasItemSimple.
  *
