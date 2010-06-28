@@ -1,5 +1,10 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* demo/demo-events.c: added tooltips to explain which items should
+	be getting events.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvastable.c (goo_canvas_table_size_allocate_pass3):
 	handle RTL direction when clipping children. Though it should
 	possibly clip off the left of the child rather than the left.
