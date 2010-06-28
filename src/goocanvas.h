@@ -88,6 +88,9 @@ struct _GooCanvas
      useful when there are sticky items to reduce flicker, but is slower. */
   guint redraw_when_scrolled : 1;
 
+  /* If the canvas hasn't received the initial expose event yet. */
+  guint before_initial_expose : 1;
+
   /* This is the padding around the automatic bounds. */
   gdouble bounds_padding;
 

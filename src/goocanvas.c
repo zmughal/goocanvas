@@ -442,6 +442,7 @@ goo_canvas_init (GooCanvas *canvas)
   canvas->anchor = GTK_ANCHOR_NORTH_WEST;
   canvas->clear_background = TRUE;
   canvas->redraw_when_scrolled = FALSE;
+  canvas->before_initial_expose = TRUE;
 
   /* Set the default bounds to a reasonable size. */
   canvas->bounds.x1 = 0.0;
@@ -2242,6 +2243,11 @@ goo_canvas_request_item_redraw (GooCanvas             *canvas,
 				const GooCanvasBounds *bounds,
 				gboolean               is_static)
 {
+  /* If the canvas hasn't been painted yet, we can just return as it all needs
+     a redraw. This can save a lot of time if there are lots of items. */
+  if (canvas->before_initial_expose)
+    return;
+
   if (is_static)
     request_static_redraw (canvas, bounds);
   else
@@ -2282,7 +2288,10 @@ goo_canvas_expose_event (GtkWidget      *widget,
   double x1, y1, x2, y2;
 
   if (!canvas->root_item)
-    return FALSE;
+    {
+      canvas->before_initial_expose = FALSE;
+      return FALSE;
+    }
 
   if (event->window != canvas->canvas_window)
     return FALSE;
@@ -2354,6 +2363,8 @@ goo_canvas_expose_event (GtkWidget      *widget,
   cairo_destroy (cr);
 
   GTK_WIDGET_CLASS (goo_canvas_parent_class)->expose_event (widget, event);
+
+  canvas->before_initial_expose = FALSE;
 
   return FALSE;
 }

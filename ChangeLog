@@ -1,5 +1,12 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c: added "before-initial-expose" flag which we use
+	to ignore any redraw requests before the initial expose (since we
+	know the entire canvas needs redrawing anyway). This speeds up the
+	creation of lots of items, e.g. scalability-demo.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitemsimple.c:
 	(goo_canvas_item_simple_paint_path): removed "add_tolerance" argument
 	as it is never needed for painting.
