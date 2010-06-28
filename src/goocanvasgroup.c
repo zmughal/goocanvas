@@ -550,7 +550,7 @@ goo_canvas_group_paint (GooCanvasItem         *item,
   /* Check if the item should be visible. */
   if (simple->visibility <= GOO_CANVAS_ITEM_INVISIBLE
       || (simple->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
-	  && simple->canvas->scale < simple->visibility_threshold))
+	  && scale < simple->visibility_threshold))
     return;
 
   /* Paint all the items in the group. */

@@ -1,5 +1,10 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasgroup.c (goo_canvas_group_paint): use the scale
+	argument rather than the canvas scale.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property): 
 	handle setting "clip-path" to NULL to reset it.
 
