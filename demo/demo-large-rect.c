@@ -160,7 +160,7 @@ goo_demo_large_rect_paint (GooCanvasItemSimple   *simple,
   line_width = goo_canvas_item_simple_get_line_width (simple);
   create_large_rect_path (item, cr, bounds, line_width,
 			  item->x, item->y, item->width, item->height);
-  goo_canvas_item_simple_paint_path (simple, cr, FALSE);
+  goo_canvas_item_simple_paint_path (simple, cr);
 }
 
 

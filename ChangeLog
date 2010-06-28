@@ -1,5 +1,11 @@
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemsimple.c:
+	(goo_canvas_item_simple_paint_path): removed "add_tolerance" argument
+	as it is never needed for painting.
+
+2010-06-28  Damon Chaplin  <damon@gnome.org>
+
 	* docs/goocanvas-sections.txt:
 	* src/goocanvasitemsimple.c:
 	* src/goocanvasitemsimple.h: update docs.

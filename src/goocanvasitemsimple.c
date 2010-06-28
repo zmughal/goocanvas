@@ -1209,7 +1209,7 @@ goo_canvas_item_simple_default_paint (GooCanvasItemSimple   *simple,
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (simple);
 
   class->simple_create_path (simple, cr);
-  goo_canvas_item_simple_paint_path (simple, cr, FALSE);
+  goo_canvas_item_simple_paint_path (simple, cr);
 }
 
 
@@ -1251,13 +1251,12 @@ goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
  **/
 void
 goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
-				   cairo_t             *cr,
-				   gboolean             add_tolerance)
+				   cairo_t             *cr)
 {
   if (goo_canvas_item_simple_set_fill_options (simple, cr))
     cairo_fill_preserve (cr);
 
-  if (goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance))
+  if (goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE))
     cairo_stroke (cr);
 
   cairo_new_path (cr);

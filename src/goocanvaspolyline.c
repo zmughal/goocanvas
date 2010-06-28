@@ -880,7 +880,7 @@ goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
     return;
 
   goo_canvas_polyline_create_path (polyline, cr);
-  goo_canvas_item_simple_paint_path (simple, cr, FALSE);
+  goo_canvas_item_simple_paint_path (simple, cr);
 
   /* Paint the arrows, if required. */
   if ((polyline->start_arrow || polyline->end_arrow)

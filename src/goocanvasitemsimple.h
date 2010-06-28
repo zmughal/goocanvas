@@ -156,8 +156,7 @@ gboolean goo_canvas_item_simple_check_in_path		(GooCanvasItemSimple	*item,
 							 GooCanvasPointerEvents  pointer_events,
 							 gboolean                add_tolerance);
 void     goo_canvas_item_simple_paint_path		(GooCanvasItemSimple	*item,
-							 cairo_t		*cr,
-							 gboolean		 add_tolerance);
+							 cairo_t		*cr);
 
 void     goo_canvas_item_simple_changed			(GooCanvasItemSimple	*item,
 							 gboolean		 recompute_bounds);
