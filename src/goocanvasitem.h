@@ -209,6 +209,8 @@ struct _GooCanvasItemClass
 							 const GooCanvasBounds	*bounds,
 							 gdouble		 scale);
 
+  /* Virtual methods that canvas items must implement if they are going to be
+     used in a layout container such as GooCanvasTable. */
   gboolean		(* get_requested_area)		(GooCanvasItem		*item,
 							 cairo_t		*cr,
 							 GooCanvasBounds	*requested_area);
@@ -226,6 +228,9 @@ struct _GooCanvasItemClass
 							 const cairo_matrix_t	*transform);
   gboolean		(* is_visible)			(GooCanvasItem		*item);
   gboolean		(* get_can_focus)		(GooCanvasItem		*item);
+  gboolean		(* get_is_static)		(GooCanvasItem		*item);
+  void			(* set_is_static)		(GooCanvasItem		*item,
+							 gboolean		 is_static);
   gdouble               (* get_requested_height)	(GooCanvasItem		*item,
 							 cairo_t		*cr,
 							 gdouble		 width);
@@ -259,27 +264,22 @@ struct _GooCanvasItemClass
   gboolean		(* key_release_event)		(GooCanvasItem		*item,
 							 GooCanvasItem		*target,
 							 GdkEventKey		*event);
+  gboolean		(* scroll_event)		(GooCanvasItem		*item,
+							 GooCanvasItem		*target,
+							 GdkEventScroll		*event);
   gboolean		(* grab_broken_event)		(GooCanvasItem		*item,
 							 GooCanvasItem		*target,
 							 GdkEventGrabBroken	*event);
-  void			(* child_notify)		(GooCanvasItem		*item,
-							 GParamSpec		*pspec);
+
   gboolean		(* query_tooltip)		(GooCanvasItem		*item,
 							 gdouble		 x,
 							 gdouble		 y,
 							 gboolean		 keyboard_tooltip,
 							 GtkTooltip		*tooltip);
-
-  gboolean		(* get_is_static)		(GooCanvasItem		*item);
-  void			(* set_is_static)		(GooCanvasItem		*item,
-							 gboolean		 is_static);
-
   void			(* animation_finished)		(GooCanvasItem           *item,
 							 gboolean                 stopped);
-
-  gboolean		(* scroll_event)		(GooCanvasItem		*item,
-							 GooCanvasItem		*target,
-							 GdkEventScroll		*event);
+  void			(* child_notify)		(GooCanvasItem		*item,
+							 GParamSpec		*pspec);
 
   /*< private >*/
 
@@ -288,6 +288,10 @@ struct _GooCanvasItemClass
   void (*_goo_canvas_reserved2) (void);
   void (*_goo_canvas_reserved3) (void);
   void (*_goo_canvas_reserved4) (void);
+  void (*_goo_canvas_reserved5) (void);
+  void (*_goo_canvas_reserved6) (void);
+  void (*_goo_canvas_reserved7) (void);
+  void (*_goo_canvas_reserved8) (void);
 };
 
 
@@ -295,7 +299,8 @@ GType              goo_canvas_item_get_type       (void) G_GNUC_CONST;
 
 
 /*
- * Group functions - these should only be called on container items.
+ * Group functions - functions for adding & removing children and setting their
+ * properties.
  */
 gint               goo_canvas_item_get_n_children (GooCanvasItem   *item);
 GooCanvasItem*     goo_canvas_item_get_child      (GooCanvasItem   *item,

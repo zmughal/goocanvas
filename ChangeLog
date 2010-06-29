@@ -1,3 +1,7 @@
+2010-06-29  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitem.h: rearranged a bit.
+
 2010-06-28  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvaspolyline.c (goo_canvas_polyline_reconfigure_arrows)
