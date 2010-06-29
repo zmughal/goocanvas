@@ -1,5 +1,13 @@
 2010-06-29  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_update)
+	(goo_canvas_item_simple_paint): fixed a few painting bugs.
+
+	* demo/demo.c: only scale the text items if the shift key is pressed
+	while mouse-scrolling. Otherwise it is confusing.
+
+2010-06-29  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitem.h: rearranged a bit.
 
 2010-06-28  Damon Chaplin  <damon@gnome.org>

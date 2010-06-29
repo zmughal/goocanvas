@@ -900,10 +900,15 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
       simple->bounds.x2 += x_offset;
       simple->bounds.y2 += y_offset;
 
-      cairo_restore (cr);
+#if 0
+      g_print ("Simple '%s' bounds: %g, %g  %g x %g\n",
+	       g_object_get_data (G_OBJECT (simple), "id"),
+	       simple->bounds.x1, simple->bounds.y1,
+	       simple->bounds.x2 - simple->bounds.x1,
+	       simple->bounds.y2 - simple->bounds.y1);
+#endif
 
-      /* Request a redraw of the new bounds. */
-      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
+      cairo_restore (cr);
 
       /* Now handle any children. */
       if (simple->children)
@@ -926,10 +931,29 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
 		  simple->bounds.y1 = MIN (simple->bounds.y1, child_bounds.y1);
 		  simple->bounds.x2 = MAX (simple->bounds.x2, child_bounds.x2);
 		  simple->bounds.y2 = MAX (simple->bounds.y2, child_bounds.y2);
+
+#if 0
+		  g_print ("Child '%s' bounds: %g, %g  %g x %g\n",
+			   g_object_get_data (G_OBJECT (child), "id"),
+			   child_bounds.x1, child_bounds.y1,
+			   child_bounds.x2 - child_bounds.x1,
+			   child_bounds.y2 - child_bounds.y1);
+#endif
 		}
 	    }
 	  cairo_restore (cr);
+
+#if 0
+	  g_print ("Simple '%s' bounds with children: %g, %g  %g x %g\n",
+		   g_object_get_data (G_OBJECT (simple), "id"),
+		   simple->bounds.x1, simple->bounds.y1,
+		   simple->bounds.x2 - simple->bounds.x1,
+		   simple->bounds.y2 - simple->bounds.y1);
+#endif
 	}
+
+      /* Request a redraw of the new bounds. */
+      goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
     }
 
   *bounds = simple->bounds;
@@ -1187,17 +1211,23 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
 
   class->simple_paint (simple, cr, bounds);
 
+  cairo_restore (cr);
+
   /* Paint the children. */
   if (simple->children)
     {
+      cairo_save (cr);
+      if (simple->transform)
+	cairo_transform (cr, simple->transform);
+
       for (i = 0; i < simple->children->len; i++)
 	{
 	  GooCanvasItem *child = simple->children->pdata[i];
 	  goo_canvas_item_paint (child, cr, bounds, scale);
 	}
-    }
 
-  cairo_restore (cr);
+      cairo_restore (cr);
+    }
 }
 
 

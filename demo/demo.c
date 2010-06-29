@@ -395,13 +395,21 @@ on_scroll (GooCanvasItem *item,
   g_print ("received 'scroll-event' signal\n");
 #endif
 
-  if (event->direction == GDK_SCROLL_UP)
-    goo_canvas_item_scale (item, 1.1, 1.1);
-  else if (event->direction == GDK_SCROLL_DOWN)
-    goo_canvas_item_scale (item, 0.909, 0.909);
-  else return FALSE;
+  if (event->state & GDK_SHIFT_MASK)
+    {
+      if (event->direction == GDK_SCROLL_UP)
+	{
+	  goo_canvas_item_scale (item, 1.1, 1.1);
+	  return TRUE;
+	}
+      else if (event->direction == GDK_SCROLL_DOWN)
+	{
+	  goo_canvas_item_scale (item, 0.909, 0.909);
+	  return TRUE;
+	}
+    }
 
-  return TRUE;
+  return FALSE;
 }
 
 static gboolean
@@ -866,30 +874,35 @@ setup_rectangles (GooCanvasItem *root)
 			      NULL);
   cairo_pattern_destroy (pattern);
   setup_item_signals (item);
+  g_object_set_data (item, "id", "SeaGreen");
 
   child = goo_canvas_rect_new (item, 80, 30, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
+  g_object_set_data (child, "id", "Orange1");
 
   child = goo_canvas_rect_new (item, 170, 30, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
+  g_object_set_data (child, "id", "Orange2");
 
   child = goo_canvas_rect_new (item, 80, 90, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
+  g_object_set_data (child, "id", "Orange3");
 
   child = goo_canvas_rect_new (item, 170, 90, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
+  g_object_set_data (child, "id", "Orange4");
 
 
 
