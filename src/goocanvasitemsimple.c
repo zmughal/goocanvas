@@ -603,7 +603,7 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
   gboolean recompute_bounds = FALSE;
   cairo_matrix_t *transform;
   GValue tmpval = { 0 };
-  const char *font_name;
+  const char *font_name, *path_data;
   PangoFontDescription *font_desc = NULL;
 
   /* See if we need to create our own style. */
@@ -734,7 +734,11 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
     case PROP_CLIP_PATH:
       if (simple_data->clip_path_commands)
 	g_array_free (simple_data->clip_path_commands, TRUE);
-      simple_data->clip_path_commands = goo_canvas_parse_path_data (g_value_get_string (value));
+      path_data = g_value_get_string (value);
+      if (path_data)
+	simple_data->clip_path_commands = goo_canvas_parse_path_data (path_data);
+      else
+	simple_data->clip_path_commands = NULL;
       recompute_bounds = TRUE;
       break;
     case PROP_CLIP_FILL_RULE:

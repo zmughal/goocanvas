@@ -1823,7 +1823,7 @@ goo_canvas_table_size_allocate_pass3 (GooCanvasTable *table,
 	}
 
       if (direction == GTK_TEXT_DIR_RTL)
-	x = layout_data->allocated_size[HORZ] - width;
+	x = layout_data->allocated_size[HORZ] - width - x;
 
       requested_area.x1 = layout_data->children[i].requested_position[HORZ];
       requested_area.y1 = layout_data->children[i].requested_position[VERT];
@@ -2229,11 +2229,12 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   GooCanvasItem *child;
   gboolean check_clip = FALSE, clip;
   gint start_column, end_column, start_row, end_row, i, j;
-  gdouble x, y, end_x, end_y;
+  gdouble x, y, end_x, end_y, clip_width, clip_height;
   gdouble frame_width, frame_height;
   gdouble line_start, line_end;
   gdouble spacing, half_spacing_before, half_spacing_after;
   gboolean old_grid_line_visibility, cur_grid_line_visibility;
+  GtkTextDirection direction = GTK_TEXT_DIR_NONE;
 
   /* Skip the item if the bounds don't intersect the expose rectangle. */
   if (simple->bounds.x1 > bounds->x2 || simple->bounds.x2 < bounds->x1
@@ -2245,6 +2246,9 @@ goo_canvas_table_paint (GooCanvasItem         *item,
       || (simple_data->visibility == GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD
 	  && simple->canvas->scale < simple_data->visibility_threshold))
     return;
+
+  if (simple->canvas)
+    direction = gtk_widget_get_direction (GTK_WIDGET (simple->canvas));
 
   /* Paint all the items in the group. */
   cairo_save (cr);
@@ -2487,8 +2491,14 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 	  /* Only clip the child if it may have been shrunk. */
 	  if (clip)
 	    {
+	      clip_width = end_x - x;
+	      clip_height = end_y - y;
+
+	      if (direction == GTK_TEXT_DIR_RTL)
+		x = layout_data->allocated_size[HORZ] - clip_width - x;
+
 	      cairo_save (cr);
-	      cairo_rectangle (cr, x, y, end_x - x, end_y - y);
+	      cairo_rectangle (cr, x, y, clip_width, clip_height);
 	      cairo_clip (cr);
 	    }
 	}

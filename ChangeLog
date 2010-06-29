@@ -1,3 +1,23 @@
+2010-06-29  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property):
+	handle setting "clip-path" to NULL to reset it.
+
+	* src/goocanvastable.c: try to handle RTL direction better.
+
+	* src/goocanvasgroup.c (goo_canvas_group_paint): use the scale
+	argument rather than the canvas scale.
+
+	* src/goocanvas.c: added "before-initial-expose" flag which we use
+	to ignore any redraw requests before the initial expose (since we
+	know the entire canvas needs redrawing anyway). This speeds up the
+	creation of lots of items, e.g. scalability-demo.
+
+	* demo/Makefile.am (mv_demo_LDADD, demo_LDADD): added -lm to compile.
+
+	* demo/mv-scalability-demo.c:
+	* demo/scalability-demo.c: updated to compare with the new-api code.
+
 2010-05-10  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastext.c: improve docs for "width" and "height" properties.

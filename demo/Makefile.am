@@ -18,7 +18,7 @@ demo_SOURCES = \
 	demo-clipping.c demo-table.c demo-large-line.h demo-large-line.c \
 	demo-large-items.c demo-large-rect.h demo-large-rect.c
 
-demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS)
+demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS) -lm
 
 mv_demo_SOURCES = \
 	mv-demo.c mv-demo-fifteen.c mv-demo-scalability.c mv-demo-grabs.c \
@@ -26,7 +26,7 @@ mv_demo_SOURCES = \
 	mv-demo-paths.c mv-demo-focus.c mv-demo-animation.c \
 	mv-demo-clipping.c mv-demo-table.c
 
-mv_demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS)
+mv_demo_LDADD = $(top_builddir)/src/libgoocanvas.la @PACKAGE_LIBS@ $(INTLLIBS) -lm
 
 table_demo_SOURCES = \
 	table-demo.c
