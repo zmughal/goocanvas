@@ -995,7 +995,6 @@ goo_canvas_polyline_update  (GooCanvasItemSimple *simple,
 			     cairo_t             *cr)
 {
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
-  GooCanvasPolylineData *polyline_data = polyline->polyline_data;
 
   goo_canvas_polyline_reconfigure_arrows (polyline);
 
