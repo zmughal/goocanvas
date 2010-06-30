@@ -874,35 +874,35 @@ setup_rectangles (GooCanvasItem *root)
 			      NULL);
   cairo_pattern_destroy (pattern);
   setup_item_signals (item);
-  g_object_set_data (item, "id", "SeaGreen");
+  g_object_set_data (G_OBJECT (item), "id", "SeaGreen");
 
   child = goo_canvas_rect_new (item, 80, 30, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
-  g_object_set_data (child, "id", "Orange1");
+  g_object_set_data (G_OBJECT (child), "id", "Orange1");
 
   child = goo_canvas_rect_new (item, 170, 30, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
-  g_object_set_data (child, "id", "Orange2");
+  g_object_set_data (G_OBJECT (child), "id", "Orange2");
 
   child = goo_canvas_rect_new (item, 80, 90, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
-  g_object_set_data (child, "id", "Orange3");
+  g_object_set_data (G_OBJECT (child), "id", "Orange3");
 
   child = goo_canvas_rect_new (item, 170, 90, 20, 20,
 			      "fill-color", "orange",
 			      "tooltip", "Child of Medium Sea Green stippled rectangle",
 			      NULL);
   setup_item_signals (child);
-  g_object_set_data (child, "id", "Orange4");
+  g_object_set_data (G_OBJECT (child), "id", "Orange4");
 
 
 

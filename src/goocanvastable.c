@@ -2113,7 +2113,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   gdouble frame_width, frame_height;
   gdouble line_start, line_end;
   gdouble spacing, half_spacing_before, half_spacing_after;
-  gboolean old_grid_line_visibility, cur_grid_line_visibility;
+  gboolean old_grid_line_visibility = FALSE, cur_grid_line_visibility;
   GtkTextDirection direction = GTK_TEXT_DIR_NONE;
 
   /* Skip the item if the bounds don't intersect the expose rectangle. */

@@ -1,5 +1,11 @@
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
+	* demo/demo.c (setup_rectangles):
+	* src/goocanvastable.c (goo_canvas_table_paint):
+	* demo/demo-grabs.c (create_fixed): fixed a few warnings.
+
+2010-06-30  Damon Chaplin  <damon@gnome.org>
+
 	* docs: removed model-view-canvas.xml and added empty internal subset
 	"[]" to the DOCTYPEs to keep gtk-doc happy.
 
