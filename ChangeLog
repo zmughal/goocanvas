@@ -1,5 +1,13 @@
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property): if
+	a shared style is being used, make a copy of it before setting the
+	property.
+
+	* src/goocanvasstyle.c (goo_canvas_style_copy): new function.
+
+2010-06-30  Damon Chaplin  <damon@gnome.org>
+
 	* demo/demo.c (setup_rectangles):
 	* src/goocanvastable.c (goo_canvas_table_paint):
 	* demo/demo-grabs.c (create_fixed): fixed a few warnings.
