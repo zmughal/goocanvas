@@ -4013,3 +4013,49 @@ goo_canvas_query_tooltip (GtkWidget  *widget,
   return GTK_WIDGET_CLASS (goo_canvas_parent_class)->query_tooltip (widget, x, y, keyboard_tip, tooltip);
 }
 
+
+static void
+goo_canvas_update_items_using_style_recurse (GooCanvasItem  *item,
+					     GooCanvasStyle *style,
+					     gboolean        recompute_bounds)
+{
+  GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  gint n_children, i;
+
+  if (GOO_IS_CANVAS_ITEM_SIMPLE (item) && simple->style == style)
+    goo_canvas_item_simple_changed (simple, TRUE);
+
+  n_children = goo_canvas_item_get_n_children (item);
+  for (i = 0; i < n_children; i++)
+    {
+      GooCanvasItem *child = goo_canvas_item_get_child (item, i);
+      goo_canvas_update_items_using_style_recurse (child, style,
+						   recompute_bounds);
+    }
+}
+
+
+/**
+ * goo_canvas_update_items_using_style:
+ * @canvas: a #GooCanvas.
+ * @style: a #GooCanvasStyle.
+ * @recompute_bounds: %TRUE if the bounds of the items should be recomputed,
+ *  e.g. if the line width has been changed.
+ *
+ * Requests an update of all canvas items using the given style.
+ * This function must be called when many items are using a shared
+ * #GooCanvasStyle which has been changed.
+ **/
+void
+goo_canvas_update_items_using_style (GooCanvas      *canvas,
+				     GooCanvasStyle *style,
+				     gboolean        recompute_bounds)
+{
+  if (canvas->root_item)
+    goo_canvas_update_items_using_style_recurse (canvas->root_item,
+						 style, recompute_bounds);
+
+  if (canvas->static_root_item)
+    goo_canvas_update_items_using_style_recurse (canvas->static_root_item,
+						 style, recompute_bounds);
+}

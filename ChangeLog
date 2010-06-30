@@ -1,5 +1,12 @@
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (goo_canvas_update_items_using_style): new function
+	to update items when they are using a shared style.
+
+	* demo/demo.c: added "Change Style" button to test the above.
+
+2010-06-30  Damon Chaplin  <damon@gnome.org>
+
 	* demo/scalability-demo.c: fixed the USE_PIXMAP test.
 
 2010-06-30  Damon Chaplin  <damon@gnome.org>

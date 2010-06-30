@@ -22,6 +22,8 @@ static GooCanvasItem *ellipse2, *textitem;
 static gboolean dragging = FALSE;
 static double drag_x, drag_y;
 
+static GooCanvasStyle *diamond_style = NULL;
+
 static void setup_canvas (GooCanvas *canvas);
 GtkWidget *create_canvas_fifteen (void);
 GtkWidget *create_canvas_features (void);
@@ -192,6 +194,41 @@ change_bounds_clicked (GtkWidget *button, GooCanvas *canvas)
 		NULL);
 
   bounds_num = (bounds_num + 1) % 6;
+}
+
+
+static void
+change_style_clicked (GtkWidget *button, GooCanvas *canvas)
+{
+  static gint last_state = 0;
+
+  if (last_state == 0)
+    {
+      g_object_set (diamond_style,
+		    "line-width", 3.0,
+		    "stroke-color", "orange",
+		    NULL);
+      goo_canvas_update_items_using_style (canvas, diamond_style, TRUE);
+      last_state = 1;
+    }
+  else if (last_state == 1)
+    {
+      g_object_set (diamond_style,
+		    "line-width", 1.0,
+		    "stroke-color", "red",
+		    NULL);
+      goo_canvas_update_items_using_style (canvas, diamond_style, TRUE);
+      last_state = 2;
+    }
+  else
+    {
+      g_object_set (diamond_style,
+		    "stroke-color", "black",
+		    "line-width", 1.0,
+		    NULL);
+      goo_canvas_update_items_using_style (canvas, diamond_style, FALSE);
+      last_state = 0;
+    }
 }
 
 
@@ -609,6 +646,13 @@ create_canvas_primitives ()
 			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
+	w = gtk_button_new_with_label("Change Style");
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_widget_show (w);
+	g_signal_connect (w, "clicked",
+			  G_CALLBACK (change_style_clicked),
+			  canvas);
+
 	hbox = gtk_hbox_new (FALSE, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
@@ -988,7 +1032,6 @@ static void
 polish_diamond (GooCanvasItem *root)
 {
   GooCanvasItem *group, *item;
-  GooCanvasStyle *style;
   int i, j;
   double a, x1, y1, x2, y2;
 
@@ -996,10 +1039,10 @@ polish_diamond (GooCanvasItem *root)
   goo_canvas_item_translate (group, 270, 230);
   setup_item_signals (group);
 
-  style = g_object_new (GOO_TYPE_CANVAS_STYLE,
-			"line-width", 1.0,
-			"line-cap", CAIRO_LINE_CAP_ROUND,
-			NULL);
+  diamond_style = g_object_new (GOO_TYPE_CANVAS_STYLE,
+				"line-width", 1.0,
+				"line-cap", CAIRO_LINE_CAP_ROUND,
+				NULL);
 
   for (i = 0; i < VERTICES; i++) {
     a = 2.0 * M_PI * i / VERTICES;
@@ -1011,11 +1054,10 @@ polish_diamond (GooCanvasItem *root)
       x2 = RADIUS * cos (a);
       y2 = RADIUS * sin (a);
       item = goo_canvas_polyline_new_line (group, x1, y1, x2, y2, NULL);
-      goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item, style);
+      goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item,
+					diamond_style);
     }
   }
-
-  g_object_unref (style);
 }
 
 

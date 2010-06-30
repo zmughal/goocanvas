@@ -236,6 +236,11 @@ void            goo_canvas_render	    (GooCanvas		   *canvas,
 					     const GooCanvasBounds *bounds,
 					     gdouble                scale);
 
+void            goo_canvas_update_items_using_style (GooCanvas      *canvas,
+						     GooCanvasStyle *style,
+						     gboolean        recompute_bounds);
+
+
 /*
  * Coordinate conversion.
  */
