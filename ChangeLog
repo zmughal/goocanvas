@@ -1,3 +1,11 @@
+2010-06-30  Damon Chaplin  <damon@gnome.org>
+
+	* docs: added empty internal subset "[]" to the DOCTYPEs to keep
+	gtk-doc happy.
+
+	* src/goocanvas.c (goo_canvas_expose_event): do a cairo_save()/restore()
+	around painting the main items, so the static items don't get clipped.
+
 2010-06-29  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property):
