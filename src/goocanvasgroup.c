@@ -229,6 +229,14 @@ goo_canvas_group_update  (GooCanvasItem   *item,
 	}
     }
 
+#if 0
+  g_print ("Group '%s' bounds with children: %g, %g  %g x %g\n",
+	   (gchar*) g_object_get_data (G_OBJECT (simple), "id"),
+	   simple->bounds.x1, simple->bounds.y1,
+	   simple->bounds.x2 - simple->bounds.x1,
+	   simple->bounds.y2 - simple->bounds.y1);
+#endif
+
   *bounds = simple->bounds;
 }
 

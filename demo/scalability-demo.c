@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <goocanvas.h>
+#include "goocanvasprivate.h"
 
 #if 1
 #define N_GROUP_COLS 25
@@ -125,6 +126,9 @@ setup_canvas (GtkWidget *canvas)
   GQuark id_quark = g_quark_from_static_string ("id");
 
   root = goo_canvas_get_root_item (GOO_CANVAS (canvas));
+#ifdef SET_IDS
+  g_object_set_data ((GObject*) root, "id", "root");
+#endif
 
   g_signal_connect (root, "motion_notify_event",
 		    G_CALLBACK (on_motion_notify), NULL);
@@ -166,10 +170,14 @@ setup_canvas (GtkWidget *canvas)
 
 #ifdef USE_PIXMAP
 		  item = goo_canvas_image_new (group, NULL, item_x, item_y,
-					       "pattern", pattern,
-					       "width", item_width,
-					       "height", item_height,
+					       /*"pattern", pattern,*/
+					       /*"width", item_width,*/
+					       /*"height", item_height,*/
 					       NULL);
+		  /* FIXME: This is slightly naughty, but much faster. */
+		  GOO_CANVAS_IMAGE (item)->pattern = cairo_pattern_reference (pattern);
+		  GOO_CANVAS_IMAGE (item)->width = item_width;
+		  GOO_CANVAS_IMAGE (item)->height = item_height;
 #else
 		  item = goo_canvas_rect_new (group, item_x, item_y,
 					      item_width, item_height,
@@ -177,6 +185,8 @@ setup_canvas (GtkWidget *canvas)
 #ifdef SET_STYLE
 		  goo_canvas_item_simple_set_style ((GooCanvasItemSimple*) item, (j % 2) ? style : style2);
 #endif
+#endif
+
 #ifdef ROTATE
 		  cairo_matrix_init_identity (&item_matrix);
 		  cairo_matrix_translate (&item_matrix, rotation_x, rotation_y);
@@ -184,7 +194,7 @@ setup_canvas (GtkWidget *canvas)
 		  cairo_matrix_translate (&item_matrix, -rotation_x, -rotation_y);
 		  goo_canvas_item_set_transform (item, &item_matrix);
 #endif
-#endif
+
 #ifdef SET_IDS
 		  g_object_set_qdata (G_OBJECT (item), id_quark,
 				      ids[id_item_num]);
