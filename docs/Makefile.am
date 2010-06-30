@@ -59,7 +59,6 @@ HTML_IMAGES=
 expand_content_files=				\
 	overview.xml				\
 	simple-canvas.xml			\
-	model-view-canvas.xml			\
 	wysiwyg.xml				\
 	architecture.xml			\
 	coordinates.xml				\
