@@ -298,11 +298,18 @@ goo_canvas_item_simple_set_property (GObject              *object,
   const char *font_name, *path_data;
   PangoFontDescription *font_desc = NULL;
 
-  /* See if we need to create a style. */
+  /* See if we need to create our own style or copy a shared style. */
   if (prop_id < PROP_TRANSFORM)
     {
       if (!simple->style)
-	simple->style = goo_canvas_style_new ();
+	{
+	  simple->style = goo_canvas_style_new ();
+	}
+      else if (((GObject*)simple->style)->ref_count > 1)
+	{
+	  g_object_unref ((GObject*) simple->style);
+	  simple->style = goo_canvas_style_copy (simple->style);
+	}
     }
 
   style = simple->style;

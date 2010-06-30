@@ -80,6 +80,42 @@ goo_canvas_style_new (void)
 }
 
 
+GooCanvasStyle*
+goo_canvas_style_copy (GooCanvasStyle* style)
+{
+  GooCanvasStyle *copy;
+
+  copy = g_object_new (GOO_TYPE_CANVAS_STYLE, NULL);
+
+  if (style->stroke_pattern)
+    copy->stroke_pattern = cairo_pattern_reference (style->stroke_pattern);
+
+  if (style->fill_pattern)
+    copy->fill_pattern = cairo_pattern_reference (style->fill_pattern);
+
+  if (style->dash)
+    copy->dash = goo_canvas_line_dash_ref (style->dash);
+
+  if (style->font_desc)
+    copy->font_desc = pango_font_description_copy (style->font_desc);
+
+  copy->line_width = style->line_width;
+  copy->line_width_tolerance = style->line_width_tolerance;
+  copy->line_join_miter_limit = style->line_join_miter_limit;
+  copy->stroke_pattern_set = style->stroke_pattern_set;
+  copy->fill_pattern_set = style->fill_pattern_set;
+  copy->op = style->op;
+  copy->antialias = style->antialias;
+  copy->fill_rule = style->fill_rule;
+  copy->line_cap = style->line_cap;
+  copy->line_join = style->line_join;
+  copy->hint_metrics = style->hint_metrics;
+  copy->line_width_is_unscaled = style->line_width_is_unscaled;
+
+  return copy;
+}
+
+
 static void
 goo_canvas_style_finalize (GObject *object)
 {

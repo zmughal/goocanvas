@@ -64,8 +64,10 @@ struct _GooCanvasStyleClass
 };
 
 
-GType           goo_canvas_style_get_type          (void) G_GNUC_CONST;
-GooCanvasStyle* goo_canvas_style_new               (void);
+GType           goo_canvas_style_get_type        (void) G_GNUC_CONST;
+GooCanvasStyle* goo_canvas_style_new             (void);
+
+GooCanvasStyle* goo_canvas_style_copy		 (GooCanvasStyle* style);
 
 void         goo_canvas_style_set_stroke_pattern (GooCanvasStyle    *style,
 						  cairo_pattern_t   *pattern);
