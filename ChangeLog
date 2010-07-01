@@ -1,5 +1,10 @@
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (goo_canvas_expose_event): do a cairo_save()/restore()
+	around painting the main items, so the static items don't get clipped.
+
+2010-06-30  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (goo_canvas_update_items_using_style): new function
 	to update items when they are using a shared style.
 

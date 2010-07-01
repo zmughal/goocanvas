@@ -2307,6 +2307,8 @@ goo_canvas_expose_event (GtkWidget      *widget,
 
   cr = goo_canvas_create_cairo_context (canvas);
 
+  cairo_save (cr);
+
   if (canvas->need_update)
     goo_canvas_update_internal (canvas, cr);
 
@@ -2357,6 +2359,8 @@ goo_canvas_expose_event (GtkWidget      *widget,
     }
 
   goo_canvas_item_paint (canvas->root_item, cr, &bounds, canvas->scale);
+
+  cairo_restore (cr);
 
   paint_static_items (canvas, event, cr);
 
