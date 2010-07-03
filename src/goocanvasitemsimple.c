@@ -639,7 +639,7 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   double user_x = x, user_y = y, old_x0, old_y0;
   cairo_matrix_t matrix;
-  gboolean visible = parent_visible;
+  gboolean visible = parent_visible, check_item = TRUE;
   gint i;
 
   if (simple->need_update)
@@ -681,13 +681,10 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
       goo_canvas_create_path (simple->clip_path_commands, cr);
       cairo_set_fill_rule (cr, simple->clip_fill_rule);
       if (!cairo_in_fill (cr, user_x, user_y))
-	{
-	  cairo_restore (cr);
-	  return found_items;
-	}
+	check_item = FALSE;
     }
 
-  if (class->simple_is_item_at (simple, user_x, user_y, cr, is_pointer_event))
+  if (check_item && class->simple_is_item_at (simple, user_x, user_y, cr, is_pointer_event))
     found_items = g_list_prepend (found_items, item);
 
   /* Step up from the bottom of the children to the top, adding any items

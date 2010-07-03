@@ -1,3 +1,11 @@
+2010-07-01  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_items_at):
+	make the clip-path only affect the item itself, not the children,
+	since that is what we currently do in paint() and update().
+	Clipping the children may be better but it is slightly awkward due
+	to all the coordinate conversions/hacks etc.
+
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_expose_event): do a cairo_save()/restore()
