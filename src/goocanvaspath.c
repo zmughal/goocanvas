@@ -456,7 +456,8 @@ goo_canvas_path_is_item_at (GooCanvasItemSimple *simple,
     pointer_events = simple->pointer_events;
 
   goo_canvas_path_create_path (simple, cr);
-  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events,
+					    simple->canvas->scale))
     return TRUE;
 
   return FALSE;

@@ -440,7 +440,8 @@ calculate_start_position (gdouble start_pos,
 static void
 paint_vertical_lines (GooCanvasItemSimple   *simple,
 		      cairo_t               *cr,
-		      const GooCanvasBounds *bounds)
+		      const GooCanvasBounds *bounds,
+		      gdouble                scale)
 {
   GooCanvasGrid *grid = (GooCanvasGrid*) simple;
   double x, max_x, max_y, max_bounds_x, line_width;
@@ -452,7 +453,7 @@ paint_vertical_lines (GooCanvasItemSimple   *simple,
   max_x = grid->x + grid->width;
   max_y = grid->y + grid->height;
 
-  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_PAINT, scale);
   line_width = goo_canvas_item_simple_get_line_width (simple);
 
   /* If the grid's vertical grid line pattern/color has been set, use that.
@@ -500,7 +501,8 @@ paint_vertical_lines (GooCanvasItemSimple   *simple,
 static void
 paint_horizontal_lines (GooCanvasItemSimple   *simple,
 			cairo_t               *cr,
-			const GooCanvasBounds *bounds)
+			const GooCanvasBounds *bounds,
+			gdouble                scale)
 {
   GooCanvasGrid *grid = (GooCanvasGrid*) simple;
   double y, max_x, max_y, max_bounds_y, line_width;
@@ -512,7 +514,7 @@ paint_horizontal_lines (GooCanvasItemSimple   *simple,
   max_x = grid->x + grid->width;
   max_y = grid->y + grid->height;
 
-  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+  has_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_PAINT, scale);
   line_width = goo_canvas_item_simple_get_line_width (simple);
 
   /* If the grid's horizontal grid line pattern/color has been set, use that.
@@ -560,7 +562,8 @@ paint_horizontal_lines (GooCanvasItemSimple   *simple,
 static void
 goo_canvas_grid_paint (GooCanvasItemSimple   *simple,
 		       cairo_t               *cr,
-		       const GooCanvasBounds *bounds)
+		       const GooCanvasBounds *bounds,
+		       gdouble                scale)
 {
   GooCanvasGrid *grid = (GooCanvasGrid*) simple;
   GooCanvasBounds redraw_bounds = *bounds;
@@ -588,13 +591,13 @@ goo_canvas_grid_paint (GooCanvasItemSimple   *simple,
   /* Paint the grid lines, in the required order. */
   if (grid->vert_grid_lines_on_top)
     {
-      paint_horizontal_lines (simple, cr, &redraw_bounds);
-      paint_vertical_lines (simple, cr, &redraw_bounds);
+      paint_horizontal_lines (simple, cr, &redraw_bounds, scale);
+      paint_vertical_lines (simple, cr, &redraw_bounds, scale);
     }
   else
     {
-      paint_vertical_lines (simple, cr, &redraw_bounds);
-      paint_horizontal_lines (simple, cr, &redraw_bounds);
+      paint_vertical_lines (simple, cr, &redraw_bounds, scale);
+      paint_horizontal_lines (simple, cr, &redraw_bounds, scale);
     }
 
   cairo_restore (cr);
@@ -605,7 +608,7 @@ goo_canvas_grid_paint (GooCanvasItemSimple   *simple,
       if (grid->border_pattern)
 	cairo_set_source (cr, grid->border_pattern);
       else
-	goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+	goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_PAINT, scale);
 
       cairo_set_line_width (cr, grid->border_width);
       half_border_width = grid->border_width / 2.0;

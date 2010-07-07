@@ -152,7 +152,8 @@ create_large_rect_path (GooDemoLargeRect      *rect,
 static void
 goo_demo_large_rect_paint (GooCanvasItemSimple   *simple,
 			   cairo_t               *cr,
-			   const GooCanvasBounds *bounds)
+			   const GooCanvasBounds *bounds,
+			   gdouble                scale)
 {
   GooDemoLargeRect *item = (GooDemoLargeRect*) simple;
   gdouble line_width;
@@ -160,7 +161,7 @@ goo_demo_large_rect_paint (GooCanvasItemSimple   *simple,
   line_width = goo_canvas_item_simple_get_line_width (simple);
   create_large_rect_path (item, cr, bounds, line_width,
 			  item->x, item->y, item->width, item->height);
-  goo_canvas_item_simple_paint_path (simple, cr);
+  goo_canvas_item_simple_paint_path (simple, cr, scale);
 }
 
 

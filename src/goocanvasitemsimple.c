@@ -727,7 +727,8 @@ goo_canvas_item_simple_default_is_item_at (GooCanvasItemSimple *simple,
   /* Use the virtual method subclasses define to create the path. */
   class->simple_create_path (simple, cr);
 
-  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events,
+					    simple->canvas->scale))
     return TRUE;
 
   return FALSE;
@@ -857,7 +858,7 @@ goo_canvas_item_simple_default_update (GooCanvasItemSimple   *simple,
   cairo_identity_matrix (cr);
 
   class->simple_create_path (simple, cr);
-  goo_canvas_item_simple_get_path_bounds (simple, cr, &simple->bounds, TRUE);
+  goo_canvas_item_simple_get_path_bounds (simple, cr, &simple->bounds);
 }
 
 
@@ -1213,7 +1214,7 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
       cairo_clip (cr);
     }
 
-  class->simple_paint (simple, cr, bounds);
+  class->simple_paint (simple, cr, bounds, scale);
 
   cairo_restore (cr);
 
@@ -1238,12 +1239,13 @@ goo_canvas_item_simple_paint (GooCanvasItem         *item,
 static void
 goo_canvas_item_simple_default_paint (GooCanvasItemSimple   *simple,
 				      cairo_t               *cr,
-				      const GooCanvasBounds *bounds)
+				      const GooCanvasBounds *bounds,
+				      gdouble                scale)
 {
   GooCanvasItemSimpleClass *class = GOO_CANVAS_ITEM_SIMPLE_GET_CLASS (simple);
 
   class->simple_create_path (simple, cr);
-  goo_canvas_item_simple_paint_path (simple, cr);
+  goo_canvas_item_simple_paint_path (simple, cr, scale);
 }
 
 
@@ -1285,12 +1287,15 @@ goo_canvas_item_simple_query_tooltip (GooCanvasItem  *item,
  **/
 void
 goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
-				   cairo_t             *cr)
+				   cairo_t             *cr,
+				   gdouble              scale)
 {
   if (goo_canvas_item_simple_set_fill_options (simple, cr))
     cairo_fill_preserve (cr);
 
-  if (goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE))
+  if (goo_canvas_item_simple_set_stroke_options (simple, cr,
+						 GOO_CANVAS_OPERATION_PAINT,
+						 scale))
     cairo_stroke (cr);
 
   cairo_new_path (cr);
@@ -1306,8 +1311,6 @@ goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
  * @item: a #GooCanvasItemSimple.
  * @cr: a cairo context.
  * @bounds: the #GooCanvasBounds struct to store the resulting bounding box.
- * @add_tolerance: if the line width tolerance setting should be added to the
- *  line width when calculating the bounds.
  * 
  * This function is intended to be used by subclasses of #GooCanvasItemSimple,
  * typically in their update() or get_requested_area() methods.
@@ -1323,8 +1326,7 @@ goo_canvas_item_simple_paint_path (GooCanvasItemSimple *simple,
 void
 goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 					cairo_t             *cr,
-					GooCanvasBounds     *bounds,
-					gboolean             add_tolerance)
+					GooCanvasBounds     *bounds)
 {
   GooCanvasBounds fill_bounds, stroke_bounds;
 
@@ -1334,7 +1336,8 @@ goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
 		      &fill_bounds.x2, &fill_bounds.y2);
 
   /* Check the stroke. */
-  goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance);
+  goo_canvas_item_simple_set_stroke_options (simple, cr,
+					     GOO_CANVAS_OPERATION_UPDATE, 1.0);
   cairo_stroke_extents (cr, &stroke_bounds.x1, &stroke_bounds.y1,
 			&stroke_bounds.x2, &stroke_bounds.y2);
 
@@ -1501,8 +1504,6 @@ goo_canvas_item_simple_user_bounds_to_parent (GooCanvasItemSimple *simple,
  * @y: the y coordinate of the point.
  * @cr: a cairo context.
  * @pointer_events: specifies which parts of the path to check.
- * @add_tolerance: if the line width tolerance setting should be added to
- *  the line width for the check.
  * 
  * This function is intended to be used by subclasses of #GooCanvasItemSimple.
  *
@@ -1517,7 +1518,7 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
 				      gdouble                y,
 				      cairo_t               *cr,
 				      GooCanvasPointerEvents pointer_events,
-				      gboolean               add_tolerance)
+				      gdouble                scale)
 {
   gboolean do_fill, do_stroke;
 
@@ -1535,7 +1536,7 @@ goo_canvas_item_simple_check_in_path (GooCanvasItemSimple   *simple,
   /* Check the stroke, if required. */
   if (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK)
     {
-      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, add_tolerance);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_GET_ITEMS_AT, scale);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (cairo_in_stroke (cr, x, y))
@@ -1585,10 +1586,11 @@ goo_canvas_item_simple_set_style (GooCanvasItemSimple   *simple,
 gboolean
 goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
 					   cairo_t               *cr,
-					   gboolean		  add_tolerance)
+					   GooCanvasOperation	  op,
+					   gdouble                scale)
 {
   GooCanvasStyle *style = simple->style;
-  gdouble line_width, scale;
+  gdouble line_width;
 
   /* If no style is set, just reset the source to black and return TRUE so the
      default style will be used. */
@@ -1615,22 +1617,17 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
   else
     line_width = cairo_get_line_width (cr);
 
-  /* Add on the tolerance, if needed. */
-  if (add_tolerance)
+  /* Add on the tolerance, when calculating bounds and hit-testing. */
+  if (op == GOO_CANVAS_OPERATION_UPDATE
+      || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
     line_width += style->line_width_tolerance;
 
   /* If the line width is supposed to be unscaled, try to reverse the effects
-     of the canvas scale. We use the maximum canvas scale, since being too
-     thin is better than being too fat. */
-  if (style->line_width_is_unscaled && simple->canvas)
-    {
-      scale = MAX (simple->canvas->scale_x, simple->canvas->scale_y);
-
-      /* We only want to shrink the lines as the canvas is scaled up.
-	 We don't want to affect the line width when the scales are < 1. */
-      if (scale > 1.0)
-	line_width /= scale;
-    }
+     of the canvas scale. But only when painting and hit-testing. */
+  if ((op == GOO_CANVAS_OPERATION_PAINT
+       || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
+      && style->line_width_is_unscaled && scale > 1.0)
+    line_width /= scale;
 
   /* Set the line width. */
   cairo_set_line_width (cr, line_width);

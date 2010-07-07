@@ -348,26 +348,20 @@ reconfigure_arrow (GooCanvasPolyline *polyline,
 
 /* Recalculates the arrow polygons for the line */
 static void
-goo_canvas_polyline_reconfigure_arrows (GooCanvasPolyline *polyline)
+goo_canvas_polyline_reconfigure_arrows (GooCanvasPolyline *polyline,
+					gdouble            scale)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) polyline;
   GooCanvasStyle *style = simple->style;
-  double line_width, scale;
+  double line_width;
 
   if (polyline->num_points < 2
       || (!polyline->start_arrow && !polyline->end_arrow))
     return;
 
   line_width = goo_canvas_item_simple_get_line_width (simple);
-  if (style && style->line_width_is_unscaled && simple->canvas)
-    {
-      scale = MAX (simple->canvas->scale_x, simple->canvas->scale_y);
-
-      /* We only want to shrink the lines as the canvas is scaled up.
-	 We don't want to affect the line width when the scales are < 1. */
-      if (scale > 1.0)
-	line_width /= scale;
-    }
+  if (style && style->line_width_is_unscaled && scale > 1.0)
+    line_width /= scale;
 
   ensure_arrow_data (polyline);
 
@@ -780,9 +774,10 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
     pointer_events &= ~GOO_CANVAS_EVENTS_FILL_MASK;
 
   if (style && style->line_width_is_unscaled)
-    goo_canvas_polyline_reconfigure_arrows (polyline);
+    goo_canvas_polyline_reconfigure_arrows (polyline, simple->canvas->scale);
   goo_canvas_polyline_create_path (polyline, cr);
-  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events, TRUE))
+  if (goo_canvas_item_simple_check_in_path (simple, x, y, cr, pointer_events,
+					    simple->canvas->scale))
     return TRUE;
 
   /* Check the arrows, if the polyline has them. */
@@ -791,7 +786,7 @@ goo_canvas_polyline_is_item_at (GooCanvasItemSimple *simple,
       && (pointer_events & GOO_CANVAS_EVENTS_STROKE_MASK))
     {
       /* We use the stroke pattern to match the style of the line. */
-      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, TRUE);
+      do_stroke = goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_GET_ITEMS_AT, simple->canvas->scale);
       if (!(pointer_events & GOO_CANVAS_EVENTS_PAINTED_MASK) || do_stroke)
 	{
 	  if (polyline->start_arrow)
@@ -834,14 +829,14 @@ goo_canvas_polyline_compute_bounds (GooCanvasPolyline     *polyline,
   cairo_identity_matrix (cr);
 
   goo_canvas_polyline_create_path (polyline, cr);
-  goo_canvas_item_simple_get_path_bounds (simple, cr, bounds, TRUE);
+  goo_canvas_item_simple_get_path_bounds (simple, cr, bounds);
 
   /* Add on the arrows, if required. */
   if ((polyline->start_arrow || polyline->end_arrow)
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_item_simple_set_stroke_options (simple, cr, TRUE);
+      goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_UPDATE, 1.0);
 
       if (polyline->start_arrow)
 	{
@@ -876,7 +871,7 @@ goo_canvas_polyline_update  (GooCanvasItemSimple *simple,
 {
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
 
-  goo_canvas_polyline_reconfigure_arrows (polyline);
+  goo_canvas_polyline_reconfigure_arrows (polyline, 1.0);
 
   /* Compute the new bounds. */
   goo_canvas_polyline_compute_bounds (polyline, cr, &simple->bounds);
@@ -886,7 +881,8 @@ goo_canvas_polyline_update  (GooCanvasItemSimple *simple,
 static void
 goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
 			   cairo_t               *cr,
-			   const GooCanvasBounds *bounds)
+			   const GooCanvasBounds *bounds,
+			   gdouble                scale)
 {
   GooCanvasPolyline *polyline = (GooCanvasPolyline*) simple;
   GooCanvasStyle *style = simple->style;
@@ -895,16 +891,16 @@ goo_canvas_polyline_paint (GooCanvasItemSimple   *simple,
     return;
 
   if (style && style->line_width_is_unscaled)
-    goo_canvas_polyline_reconfigure_arrows (polyline);
+    goo_canvas_polyline_reconfigure_arrows (polyline, scale);
   goo_canvas_polyline_create_path (polyline, cr);
-  goo_canvas_item_simple_paint_path (simple, cr);
+  goo_canvas_item_simple_paint_path (simple, cr, scale);
 
   /* Paint the arrows, if required. */
   if ((polyline->start_arrow || polyline->end_arrow)
       && polyline->num_points >= 2)
     {
       /* We use the stroke pattern to match the style of the line. */
-      goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+      goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_PAINT, scale);
 
       if (polyline->start_arrow)
 	{

@@ -117,7 +117,8 @@ struct _GooCanvasItemSimpleClass
 					 cairo_t               *cr);
   void           (* simple_paint)	(GooCanvasItemSimple   *simple,
 					 cairo_t               *cr,
-					 const GooCanvasBounds *bounds);
+					 const GooCanvasBounds *bounds,
+					 gdouble                scale);
   gboolean       (* simple_is_item_at)  (GooCanvasItemSimple   *simple,
 					 gdouble                x,
 					 gdouble                y,
@@ -141,8 +142,7 @@ void     goo_canvas_item_simple_set_style		(GooCanvasItemSimple   *simple,
 
 void     goo_canvas_item_simple_get_path_bounds		(GooCanvasItemSimple	*item,
 							 cairo_t		*cr,
-							 GooCanvasBounds	*bounds,
-							 gboolean                add_tolerance);
+							 GooCanvasBounds	*bounds);
 void     goo_canvas_item_simple_user_bounds_to_device	(GooCanvasItemSimple	*item,
 							 cairo_t		*cr,
 							 GooCanvasBounds	*bounds);
@@ -154,9 +154,10 @@ gboolean goo_canvas_item_simple_check_in_path		(GooCanvasItemSimple	*item,
 							 gdouble		 y,
 							 cairo_t		*cr,
 							 GooCanvasPointerEvents  pointer_events,
-							 gboolean                add_tolerance);
+							 gdouble                 scale);
 void     goo_canvas_item_simple_paint_path		(GooCanvasItemSimple	*item,
-							 cairo_t		*cr);
+							 cairo_t		*cr,
+							 gdouble                 scale);
 
 void     goo_canvas_item_simple_changed			(GooCanvasItemSimple	*item,
 							 gboolean		 recompute_bounds);
@@ -164,7 +165,8 @@ gdouble  goo_canvas_item_simple_get_line_width		(GooCanvasItemSimple    *item);
 
 gboolean goo_canvas_item_simple_set_stroke_options	(GooCanvasItemSimple    *simple,
 							 cairo_t                *cr,
-							 gboolean		 add_tolerance);
+							 GooCanvasOperation	 op,
+							 gdouble                 scale);
 gboolean goo_canvas_item_simple_set_fill_options	(GooCanvasItemSimple    *simple,
 							 cairo_t                *cr);
 

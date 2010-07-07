@@ -2185,7 +2185,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
 
   /* We use the style for the stroke color, but the line cap style and line
      width are overridden here. */
-  goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+  goo_canvas_item_simple_set_stroke_options (simple, cr, GOO_CANVAS_OPERATION_PAINT, scale);
 
   cairo_set_line_cap (cr, CAIRO_LINE_CAP_BUTT);
 

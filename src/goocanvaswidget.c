@@ -475,7 +475,8 @@ goo_canvas_widget_allocate_area      (GooCanvasItem         *item,
 static void
 goo_canvas_widget_paint (GooCanvasItemSimple   *simple,
 			 cairo_t               *cr,
-			 const GooCanvasBounds *bounds)
+			 const GooCanvasBounds *bounds,
+			 gdouble                scale)
 {
   /* Do nothing for now. Maybe render for printing in future. */
 }

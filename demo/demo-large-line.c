@@ -205,12 +205,14 @@ paint_large_line (GooDemoLargeLine      *line,
 static void
 goo_demo_large_line_paint (GooCanvasItemSimple   *simple,
 			   cairo_t               *cr,
-			   const GooCanvasBounds *bounds)
+			   const GooCanvasBounds *bounds,
+			   gdouble                scale)
 {
   GooDemoLargeLine *item = (GooDemoLargeLine*) simple;
   gdouble line_width;
 
-  goo_canvas_item_simple_set_stroke_options (simple, cr, FALSE);
+  goo_canvas_item_simple_set_stroke_options (simple, cr,
+					     GOO_CANVAS_OPERATION_PAINT, scale);
   line_width = goo_canvas_item_simple_get_line_width (simple);
   paint_large_line (item, cr, bounds, line_width,
 		    item->x1, item->y1, item->x2, item->y2);

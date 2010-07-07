@@ -572,7 +572,8 @@ goo_canvas_text_is_item_at (GooCanvasItemSimple *simple,
 static void
 goo_canvas_text_paint (GooCanvasItemSimple   *simple,
 		       cairo_t               *cr,
-		       const GooCanvasBounds *bounds)
+		       const GooCanvasBounds *bounds,
+		       gdouble                scale)
 {
   GooCanvasText *text = (GooCanvasText*) simple;
   PangoLayout *layout;

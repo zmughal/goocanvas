@@ -1,3 +1,20 @@
+2010-07-07  Damon Chaplin  <damon@gnome.org>
+
+	* Finished support for unscaled line widths, which was quite tricky as
+	goo_canvas_item_simple_set_stroke_options() needs to change behavior
+	based on where it is called - from update, paint or get_items_at().
+	Added a GooCanvasOperation type to use for this.
+	Also added a scale argument to the simple_paint() function and
+	set_stroke_options as we need that for unscaled lines too.
+
+	* src/goocanvasitem.h: moved GooCanvasAnimateType and GooCanvasBounds
+	to goocanvasutils.h to tidy it up a bit.
+
+	* src/goocanvas.c (goo_canvas_set_scale_internal): canvas->scale is
+	now set to MAX (scale_x, scale_y) rather than MIN, since we use it
+	for unscaled line widths and MAX works better (it is better to
+	paint unscaled lines too thin rather than too fat).
+
 2010-07-01  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_items_at):

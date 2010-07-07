@@ -1997,7 +1997,7 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
 
   canvas->scale_x = scale_x;
   canvas->scale_y = scale_y;
-  canvas->scale = MIN (scale_x, scale_y);
+  canvas->scale = MAX (scale_x, scale_y);
   reconfigure_canvas (canvas, FALSE);
 
   /* Convert from the center point to the new desired top-left posision. */

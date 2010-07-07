@@ -252,7 +252,8 @@ goo_canvas_image_update  (GooCanvasItemSimple  *simple,
 static void
 goo_canvas_image_paint (GooCanvasItemSimple   *simple,
 			cairo_t               *cr,
-			const GooCanvasBounds *bounds)
+			const GooCanvasBounds *bounds,
+			gdouble                scale)
 {
   GooCanvasImage *image = (GooCanvasImage*) simple;
   cairo_matrix_t matrix = { 1, 0, 0, 1, 0, 0 };

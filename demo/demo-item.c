@@ -89,7 +89,8 @@ goo_demo_item_update  (GooCanvasItemSimple *simple,
 static void
 goo_demo_item_paint (GooCanvasItemSimple   *simple,
 		     cairo_t               *cr,
-		     const GooCanvasBounds *bounds)
+		     const GooCanvasBounds *bounds,
+		     gdouble                scale)
 {
   GooDemoItem *demo_item = (GooDemoItem*) simple;
 

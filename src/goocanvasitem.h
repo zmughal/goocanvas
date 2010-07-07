@@ -8,48 +8,9 @@
 #define __GOO_CANVAS_ITEM_H__
 
 #include <gtk/gtk.h>
+#include <goocanvasutils.h>
 
 G_BEGIN_DECLS
-
-
-/**
- * GooCanvasAnimateType
- * @GOO_CANVAS_ANIMATE_FREEZE: the item remains in the final position.
- * @GOO_CANVAS_ANIMATE_RESET: the item is moved back to the initial position.
- * @GOO_CANVAS_ANIMATE_RESTART: the animation is restarted from the initial
- *  position.
- * @GOO_CANVAS_ANIMATE_BOUNCE: the animation bounces back and forth between the
- *  start and end positions.
- *
- * #GooCanvasAnimateType is used to specify what happens when the end of an
- * animation is reached.
- */
-typedef enum
-{
-  GOO_CANVAS_ANIMATE_FREEZE,
-  GOO_CANVAS_ANIMATE_RESET,
-  GOO_CANVAS_ANIMATE_RESTART,
-  GOO_CANVAS_ANIMATE_BOUNCE
-} GooCanvasAnimateType;
-
-
-/**
- * GooCanvasBounds
- * @x1: the left edge.
- * @y1: the top edge.
- * @x2: the right edge.
- * @y2: the bottom edge.
- *
- * #GooCanvasBounds represents the bounding box of an item in the canvas.
- */
-typedef struct _GooCanvasBounds GooCanvasBounds;
-struct _GooCanvasBounds
-{
-  gdouble x1, y1, x2, y2;
-};
-
-GType goo_canvas_bounds_get_type (void) G_GNUC_CONST;
-#define GOO_TYPE_CANVAS_BOUNDS (goo_canvas_bounds_get_type ())
 
 
 #define GOO_TYPE_CANVAS_ITEM            (goo_canvas_item_get_type ())
