@@ -1341,17 +1341,6 @@ goo_canvas_item_simple_get_path_bounds (GooCanvasItemSimple *simple,
   cairo_stroke_extents (cr, &stroke_bounds.x1, &stroke_bounds.y1,
 			&stroke_bounds.x2, &stroke_bounds.y2);
 
-  /* Workaround for cairo < 1.4.0. It used to just return odd values
-     if the path had empty bounds. This fix will work, but only if there is
-     no transform currently set, since cairo will convert to user space. */
-  if (cairo_version () < CAIRO_VERSION_ENCODE (1, 4, 0))
-    {
-      if (fill_bounds.x1 == 32767.0 && fill_bounds.x2 == -32768.0)
-	fill_bounds.x1 = fill_bounds.x2 = 0.0;
-      if (stroke_bounds.x1 == 32767.0 && stroke_bounds.x2 == -32768.0)
-	stroke_bounds.x1 = stroke_bounds.x2 = 0.0;
-    }
-
   if (fill_bounds.x1 == 0.0 && fill_bounds.x2 == 0.0)
     {
       /* The fill bounds are empty so just use the stroke bounds.

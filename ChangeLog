@@ -1,5 +1,10 @@
 2010-07-07  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds):
+	removed code to support cairo pre-1.4 since we depend on >1.4 now.
+
+2010-07-07  Damon Chaplin  <damon@gnome.org>
+
 	* Finished support for unscaled line widths, which was quite tricky as
 	goo_canvas_item_simple_set_stroke_options() needs to change behavior
 	based on where it is called - from update, paint or get_items_at().
