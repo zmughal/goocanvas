@@ -1398,35 +1398,50 @@ goo_canvas_item_simple_user_bounds_to_device (GooCanvasItemSimple *item,
 					      cairo_t             *cr,
 					      GooCanvasBounds     *bounds)
 {
-  GooCanvasBounds tmp_bounds = *bounds, tmp_bounds2 = *bounds;
+  cairo_matrix_t matrix;
 
-  /* Convert the top-left and bottom-right corners to device coords. */
-  cairo_user_to_device (cr, &tmp_bounds.x1, &tmp_bounds.y1);
-  cairo_user_to_device (cr, &tmp_bounds.x2, &tmp_bounds.y2);
+  /* If the transform is a translation we can simply add it to the bounds. */
+  cairo_get_matrix (cr, &matrix);
+  if (matrix.xx == 1.0 && matrix.yx == 0.0
+      && matrix.xy == 0.0 && matrix.yy == 1.0)
+    {
+      bounds->x1 += matrix.x0;
+      bounds->x2 += matrix.x0;
+      bounds->y1 += matrix.y0;
+      bounds->y2 += matrix.y0;
+    }
+  else
+    {
+      GooCanvasBounds tmp_bounds = *bounds, tmp_bounds2 = *bounds;
 
-  /* Now convert the top-right and bottom-left corners. */
-  cairo_user_to_device (cr, &tmp_bounds2.x1, &tmp_bounds2.y2);
-  cairo_user_to_device (cr, &tmp_bounds2.x2, &tmp_bounds2.y1);
+      /* Convert the top-left and bottom-right corners to device coords. */
+      cairo_user_to_device (cr, &tmp_bounds.x1, &tmp_bounds.y1);
+      cairo_user_to_device (cr, &tmp_bounds.x2, &tmp_bounds.y2);
 
-  /* Calculate the minimum x coordinate seen and put in x1. */
-  bounds->x1 = MIN (tmp_bounds.x1, tmp_bounds.x2);
-  bounds->x1 = MIN (bounds->x1, tmp_bounds2.x1);
-  bounds->x1 = MIN (bounds->x1, tmp_bounds2.x2);
+      /* Now convert the top-right and bottom-left corners. */
+      cairo_user_to_device (cr, &tmp_bounds2.x1, &tmp_bounds2.y2);
+      cairo_user_to_device (cr, &tmp_bounds2.x2, &tmp_bounds2.y1);
 
-  /* Calculate the maximum x coordinate seen and put in x2. */
-  bounds->x2 = MAX (tmp_bounds.x1, tmp_bounds.x2);
-  bounds->x2 = MAX (bounds->x2, tmp_bounds2.x1);
-  bounds->x2 = MAX (bounds->x2, tmp_bounds2.x2);
+      /* Calculate the minimum x coordinate seen and put in x1. */
+      bounds->x1 = MIN (tmp_bounds.x1, tmp_bounds.x2);
+      bounds->x1 = MIN (bounds->x1, tmp_bounds2.x1);
+      bounds->x1 = MIN (bounds->x1, tmp_bounds2.x2);
 
-  /* Calculate the minimum y coordinate seen and put in y1. */
-  bounds->y1 = MIN (tmp_bounds.y1, tmp_bounds.y2);
-  bounds->y1 = MIN (bounds->y1, tmp_bounds2.y1);
-  bounds->y1 = MIN (bounds->y1, tmp_bounds2.y2);
+      /* Calculate the maximum x coordinate seen and put in x2. */
+      bounds->x2 = MAX (tmp_bounds.x1, tmp_bounds.x2);
+      bounds->x2 = MAX (bounds->x2, tmp_bounds2.x1);
+      bounds->x2 = MAX (bounds->x2, tmp_bounds2.x2);
 
-  /* Calculate the maximum y coordinate seen and put in y2. */
-  bounds->y2 = MAX (tmp_bounds.y1, tmp_bounds.y2);
-  bounds->y2 = MAX (bounds->y2, tmp_bounds2.y1);
-  bounds->y2 = MAX (bounds->y2, tmp_bounds2.y2);
+      /* Calculate the minimum y coordinate seen and put in y1. */
+      bounds->y1 = MIN (tmp_bounds.y1, tmp_bounds.y2);
+      bounds->y1 = MIN (bounds->y1, tmp_bounds2.y1);
+      bounds->y1 = MIN (bounds->y1, tmp_bounds2.y2);
+
+      /* Calculate the maximum y coordinate seen and put in y2. */
+      bounds->y2 = MAX (tmp_bounds.y1, tmp_bounds.y2);
+      bounds->y2 = MAX (bounds->y2, tmp_bounds2.y1);
+      bounds->y2 = MAX (bounds->y2, tmp_bounds2.y2);
+    }
 }
 
 

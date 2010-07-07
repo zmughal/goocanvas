@@ -1,5 +1,11 @@
 2010-07-07  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitemsimple.c
+	(goo_canvas_item_simple_user_bounds_to_device): if the transform is
+	a translation just add it to the bounds to save time.
+
+2010-07-07  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds):
 	removed code to support cairo pre-1.4 since we depend on >1.4 now.
 
