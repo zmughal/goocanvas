@@ -4063,3 +4063,38 @@ goo_canvas_update_items_using_style (GooCanvas      *canvas,
     goo_canvas_update_items_using_style_recurse (canvas->static_root_item,
 						 style, recompute_bounds);
 }
+
+
+/* If the canvas is using resolution-dependent units like points or mm then
+   we need to convert the font sizes from points to the units being used,
+   and set it as an absolute font size. */
+void
+goo_canvas_check_font_size (GooCanvas            *canvas,
+			    PangoFontDescription *font_desc)
+{
+  gdouble size;
+
+  if (canvas->units == GTK_UNIT_PIXEL
+      || pango_font_description_get_size_is_absolute (font_desc))
+    return;
+
+  /* Note that size will be scaled by PANGO_SCALE but it doesn't matter. */
+  size = pango_font_description_get_size (font_desc);
+
+  switch (canvas->units)
+    {
+    case GTK_UNIT_POINTS:
+      /* Do nothing. The size is in points already. Just make it absolute. */
+      break;
+    case GTK_UNIT_INCH:
+      size = size / 72.0;
+      break;
+    case GTK_UNIT_MM:
+      size = (size / 72.0) * 25.4;
+      break;
+    default:
+      break;
+    }
+
+  pango_font_description_set_absolute_size (font_desc, size);
+}

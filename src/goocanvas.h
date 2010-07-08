@@ -263,6 +263,9 @@ void		goo_canvas_convert_bounds_to_item_space (GooCanvas           *canvas,
 							 GooCanvasItem       *item,
 							 GooCanvasBounds     *bounds);
 
+void            goo_canvas_check_font_size  (GooCanvas            *canvas,
+					     PangoFontDescription *font_desc);
+
 
 /*
  * Pointer/keyboard grabbing & ungrabbing.

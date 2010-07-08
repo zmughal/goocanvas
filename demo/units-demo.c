@@ -36,13 +36,13 @@ setup_canvas (GtkWidget *canvas,
 
     /* Points */
     { 100, 100, 200, 20, 10,
-      200, 310, 24,
+      200, 250, 24,
       310, 100, 20, 20
     },
 
     /* Inches */
     { 1, 1, 3, 0.5, 0.16,
-      3, 4, 0.3,
+      3, 3, 0.3,
       4.2, 1, 0.5, 0.5
     },
 
@@ -75,6 +75,12 @@ setup_canvas (GtkWidget *canvas,
   item = goo_canvas_text_new (root, buffer, d[5], d[6], -1,
 			      GTK_ANCHOR_CENTER,
 			      "font", font_desc,
+			      NULL);
+
+  sprintf (buffer, "This font is 12 points high");
+  item = goo_canvas_text_new (root, buffer, d[5], d[6] * 1.5, -1,
+			      GTK_ANCHOR_CENTER,
+			      "font", "Sans 12",
 			      NULL);
 
   item = goo_canvas_image_new (root, NULL, d[8], d[9],

@@ -287,7 +287,11 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
     pango_layout_set_text (layout, string, -1);
 
   if (simple->style && simple->style->font_desc)
-    pango_layout_set_font_description (layout, simple->style->font_desc);
+    {
+      /* Convert sizes in points to the appropriate absolute size. */
+      goo_canvas_check_font_size (simple->canvas, simple->style->font_desc);
+      pango_layout_set_font_description (layout, simple->style->font_desc);
+    }
 
   font_options = cairo_font_options_create ();
   if (simple->style)

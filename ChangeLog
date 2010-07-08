@@ -1,3 +1,12 @@
+2010-07-08  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_check_font_size): new function to
+	convert font sizes in points to the appropriate canvas units.
+
+	* src/goocanvastext.c (goo_canvas_text_create_layout): use the above.
+
+	* demo/units-demo.c (setup_canvas): test the above.
+
 2010-07-07  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemsimple.c
