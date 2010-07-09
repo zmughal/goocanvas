@@ -2343,7 +2343,7 @@ goo_canvas_expose_event (GtkWidget      *widget,
 	  && canvas->bounds.y2 < bounds.y2))
     {
       /* Clip to the intersection of the canvas bounds and the expose
-	 bounds, to avoid cairo's 16-bit limits. */
+	 bounds, to avoid cairo's coordinate limits. */
       x1 = MAX (canvas->bounds.x1, bounds.x1);
       y1 = MAX (canvas->bounds.y1, bounds.y1);
       x2 = MIN (canvas->bounds.x2, bounds.x2);

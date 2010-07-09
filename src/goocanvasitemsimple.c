@@ -668,7 +668,7 @@ goo_canvas_item_simple_get_items_at (GooCanvasItem  *item,
 
   cairo_device_to_user (cr, &user_x, &user_y);
 
-  /* Remove any current translation, to avoid the 16-bit cairo limit. */
+  /* Remove any current translation, to avoid cairo's coordinate limits. */
   cairo_get_matrix (cr, &matrix);
   old_x0 = matrix.x0;
   old_y0 = matrix.y0;
@@ -887,7 +887,7 @@ goo_canvas_item_simple_update  (GooCanvasItem   *item,
       if (simple->transform)
 	cairo_transform (cr, simple->transform);
 
-      /* Remove any current translation, to avoid the 16-bit cairo limit. */
+      /* Remove any current translation, to avoid cairo's coordinate limits. */
       cairo_get_matrix (cr, &matrix);
       x_offset = matrix.x0;
       y_offset = matrix.y0;
@@ -984,7 +984,7 @@ goo_canvas_item_simple_get_requested_area (GooCanvasItem    *item,
   if (simple->transform)
     cairo_transform (cr, simple->transform);
 
-  /* Remove any current translation, to avoid the 16-bit cairo limit. */
+  /* Remove any current translation, to avoid cairo's coordinate limits. */
   cairo_get_matrix (cr, &matrix);
   x_offset = matrix.x0;
   y_offset = matrix.y0;
@@ -1593,21 +1593,25 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
 					   GooCanvasOperation	  op,
 					   gdouble                scale)
 {
+  static cairo_pattern_t *black_pattern = NULL;
   GooCanvasStyle *style = simple->style;
   gdouble line_width;
+
+  if (!black_pattern)
+    black_pattern = cairo_pattern_create_rgb (0.0, 0.0, 0.0);
 
   /* If no style is set, just reset the source to black and return TRUE so the
      default style will be used. */
   if (!style)
     {
-      cairo_set_source_rgb (cr, 0, 0, 0);
+      cairo_set_source (cr, black_pattern);
       return TRUE;
     }
 
   if (style->stroke_pattern)
     cairo_set_source (cr, style->stroke_pattern);
   else
-    cairo_set_source_rgb (cr, 0, 0, 0);
+    cairo_set_source (cr, black_pattern);
 
   if (style->op != CAIRO_OPERATOR_OVER)
     cairo_set_operator (cr, style->op);
