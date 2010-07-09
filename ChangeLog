@@ -1,5 +1,16 @@
 2010-07-09  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (goo_canvas_set_default_style): new function to set
+	a default style for the canvas, so you can turn antialiasing off
+	for all items, for example. Or set the default line width/cap/join.
+	(reconfigure_canvas): update window_x/y to fix a redrawing problem
+	of the static items when the bounds are changed. This code is a bit
+	complex so I'm not 100% sure I've fixed it.
+
+	* demo/demo.c: test changing the default style.
+
+2010-07-09  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_stroke_options):
 	keep a single black pattern rather than recreating one when needed.
 

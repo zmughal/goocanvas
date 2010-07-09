@@ -155,6 +155,9 @@ struct _GooCanvas
 
   /* The last window position, used for static items. */
   gint window_x, window_y;
+
+  /* The default style for all canvas items. */
+  GooCanvasStyle *style;
 };
 
 /**
@@ -235,6 +238,9 @@ void            goo_canvas_render	    (GooCanvas		   *canvas,
 					     cairo_t               *cr,
 					     const GooCanvasBounds *bounds,
 					     gdouble                scale);
+
+void            goo_canvas_set_default_style	    (GooCanvas      *canvas,
+						     GooCanvasStyle *style);
 
 void            goo_canvas_update_items_using_style (GooCanvas      *canvas,
 						     GooCanvasStyle *style,

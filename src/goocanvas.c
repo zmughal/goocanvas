@@ -539,6 +539,12 @@ goo_canvas_dispose (GObject *object)
       canvas->vadjustment = NULL;
     }
 
+  if (canvas->style)
+    {
+      g_object_unref (canvas->style);
+      canvas->style = NULL;
+    }
+
   G_OBJECT_CLASS (goo_canvas_parent_class)->dispose (object);
 }
 
@@ -568,6 +574,9 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
   if (!canvas)
     return 2.0;
 
+  if (canvas->style && canvas->style->line_width >= 0.0)
+    return canvas->style->line_width;
+
   /* We use the same default as cairo when using pixels, i.e. 2 pixels.
      For other units we use 2 points, or thereabouts. */
   switch (canvas->units)
@@ -587,6 +596,33 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
     }
 
   return line_width;
+}
+
+
+static void
+goo_canvas_apply_style (GooCanvas *canvas,
+			cairo_t   *cr)
+{
+  GooCanvasStyle *style = canvas->style;
+
+  /* Set the default line width based on the current units setting. */
+  cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas));
+
+  if (!style)
+    return;
+
+  if (style->stroke_pattern)
+    cairo_set_source (cr, style->stroke_pattern);
+
+  cairo_set_operator (cr, style->op);
+  cairo_set_antialias (cr, style->antialias);
+  cairo_set_line_cap (cr, style->line_cap);
+  cairo_set_line_join (cr, style->line_join);
+  cairo_set_miter_limit (cr, style->line_join_miter_limit);
+
+  if (style->dash)
+    cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
+		    style->dash->dash_offset);
 }
 
 
@@ -624,8 +660,7 @@ goo_canvas_create_cairo_context (GooCanvas *canvas)
      what is recommended when using unhinted text. */
   cairo_set_antialias (cr, CAIRO_ANTIALIAS_GRAY);
 
-  /* Set the default line width based on the current units setting. */
-  cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas));
+  goo_canvas_apply_style (canvas, cr);
 
   return cr;
 }
@@ -1571,6 +1606,10 @@ reconfigure_canvas (GooCanvas *canvas,
       if (redraw_if_needed)
 	gtk_widget_queue_draw (GTK_WIDGET (canvas));
     }
+
+  /* Update the stored window position. FIXME: Check over this. */
+  canvas->window_x = window_x;
+  canvas->window_y = window_y;
 }
 
 
@@ -2394,8 +2433,7 @@ goo_canvas_render (GooCanvas             *canvas,
   if (canvas->need_update)
     goo_canvas_update (canvas);
 
-  /* Set the default line width based on the current units setting. */
-  cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas));
+  goo_canvas_apply_style (canvas, cr);
 
   if (bounds)
     {
@@ -4098,3 +4136,25 @@ goo_canvas_check_font_size (GooCanvas            *canvas,
 
   pango_font_description_set_absolute_size (font_desc, size);
 }
+
+
+void
+goo_canvas_set_default_style	    (GooCanvas      *canvas,
+				     GooCanvasStyle *style)
+{
+  if (canvas->style)
+    g_object_unref (canvas->style);
+
+  canvas->style = style;
+  if (style)
+    g_object_ref (style);
+
+  if (GOO_IS_CANVAS_ITEM_SIMPLE (canvas->root_item))
+    goo_canvas_item_simple_changed (GOO_CANVAS_ITEM_SIMPLE (canvas->root_item),
+				    TRUE);
+  if (GOO_IS_CANVAS_ITEM_SIMPLE (canvas->static_root_item))
+    goo_canvas_item_simple_changed (GOO_CANVAS_ITEM_SIMPLE (canvas->static_root_item),
+				    TRUE);
+}
+
+

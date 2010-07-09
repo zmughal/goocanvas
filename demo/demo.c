@@ -17,11 +17,13 @@
 #include <goocanvas.h>
 #include "demo-item.h"
 
+static GtkWidget *canvas;
 static GooCanvasItem *ellipse2, *textitem;
 
 static gboolean dragging = FALSE;
 static double drag_x, drag_y;
 
+static GooCanvasStyle *canvas_style;
 static GooCanvasStyle *diamond_style = NULL;
 
 static void setup_canvas (GooCanvas *canvas);
@@ -204,6 +206,12 @@ change_style_clicked (GtkWidget *button, GooCanvas *canvas)
 
   if (last_state == 0)
     {
+      g_object_set (canvas_style,
+		    "line-width", 5.0,
+		    "stroke-color", "red",
+		    NULL);
+      goo_canvas_set_default_style (canvas, canvas_style);
+
       g_object_set (diamond_style,
 		    "line-width", 3.0,
 		    "stroke-color", "orange",
@@ -213,6 +221,12 @@ change_style_clicked (GtkWidget *button, GooCanvas *canvas)
     }
   else if (last_state == 1)
     {
+      g_object_set (canvas_style,
+		    "line-width", 1.0,
+		    "stroke-color", "blue",
+		    NULL);
+      goo_canvas_set_default_style (canvas, canvas_style);
+
       g_object_set (diamond_style,
 		    "line-width", 1.0,
 		    "stroke-color", "red",
@@ -222,6 +236,12 @@ change_style_clicked (GtkWidget *button, GooCanvas *canvas)
     }
   else
     {
+      g_object_set (canvas_style,
+		    "line-width", 2.0,
+		    "stroke-pattern", NULL,
+		    NULL);
+      goo_canvas_set_default_style (canvas, canvas_style);
+
       g_object_set (diamond_style,
 		    "stroke-color", "black",
 		    "line-width", 1.0,
@@ -512,7 +532,7 @@ create_canvas_primitives ()
 	GtkWidget *vbox;
 	GtkWidget *hbox;
 	GtkWidget *w;
-	GtkWidget *scrolled_win, *canvas;
+	GtkWidget *scrolled_win;
 	GtkAdjustment *adj;
 	GSList *group = NULL;
 
@@ -542,6 +562,8 @@ create_canvas_primitives ()
 #endif
 		      NULL);
 	goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 604, 454);
+
+	canvas_style = g_object_new (GOO_TYPE_CANVAS_STYLE, NULL);
 
 	/* Scale */
 
@@ -646,7 +668,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
-	w = gtk_button_new_with_label("Change Style");
+	w = gtk_button_new_with_label("Change Styles");
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
