@@ -238,7 +238,7 @@ change_style_clicked (GtkWidget *button, GooCanvas *canvas)
     {
       g_object_set (canvas_style,
 		    "line-width", 2.0,
-		    "stroke-pattern", NULL,
+		    "mask", GOO_CANVAS_STYLE_LINE_WIDTH,
 		    NULL);
       goo_canvas_set_default_style (canvas, canvas_style);
 

@@ -574,7 +574,7 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
   if (!canvas)
     return 2.0;
 
-  if (canvas->style && canvas->style->line_width >= 0.0)
+  if (canvas->style && (canvas->style->mask & GOO_CANVAS_STYLE_LINE_WIDTH))
     return canvas->style->line_width;
 
   /* We use the same default as cairo when using pixels, i.e. 2 pixels.
@@ -611,18 +611,32 @@ goo_canvas_apply_style (GooCanvas *canvas,
   if (!style)
     return;
 
-  if (style->stroke_pattern)
+  if ((style->mask & GOO_CANVAS_STYLE_STROKE_PATTERN) && style->stroke_pattern)
     cairo_set_source (cr, style->stroke_pattern);
 
-  cairo_set_operator (cr, style->op);
-  cairo_set_antialias (cr, style->antialias);
-  cairo_set_line_cap (cr, style->line_cap);
-  cairo_set_line_join (cr, style->line_join);
-  cairo_set_miter_limit (cr, style->line_join_miter_limit);
+  if (style->mask & GOO_CANVAS_STYLE_OPERATOR)
+    cairo_set_operator (cr, style->op);
 
-  if (style->dash)
-    cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
-		    style->dash->dash_offset);
+  if (style->mask & GOO_CANVAS_STYLE_ANTIALIAS)
+    cairo_set_antialias (cr, style->antialias);
+
+  if (style->mask & GOO_CANVAS_STYLE_LINE_CAP)
+    cairo_set_line_cap (cr, style->line_cap);
+
+  if (style->mask & GOO_CANVAS_STYLE_LINE_JOIN)
+    cairo_set_line_join (cr, style->line_join);
+
+  if (style->mask & GOO_CANVAS_STYLE_LINE_JOIN_MITER_LIMIT)
+    cairo_set_miter_limit (cr, style->line_join_miter_limit);
+
+  if (style->mask & GOO_CANVAS_STYLE_LINE_DASH)
+    {
+      if (style->dash)
+	cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
+			style->dash->dash_offset);
+      else
+	cairo_set_dash (cr, NULL, 0, 0.0);
+    }
 }
 
 

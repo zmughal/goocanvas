@@ -9,6 +9,7 @@
 #include <gtk/gtk.h>
 #include "goocanvasstyle.h"
 #include "goocanvasprivate.h"
+#include "goocanvasenumtypes.h"
 
 
 G_DEFINE_TYPE (GooCanvasStyle, goo_canvas_style, G_TYPE_OBJECT)
@@ -44,7 +45,10 @@ enum {
   PROP_STROKE_PIXBUF,
   PROP_FILL_COLOR,
   PROP_FILL_COLOR_RGBA,
-  PROP_FILL_PIXBUF
+  PROP_FILL_PIXBUF,
+
+  /* The mask of style properties that have been set. */
+  PROP_MASK
 };
 
 
@@ -57,19 +61,19 @@ goo_canvas_style_init (GooCanvasStyle *style)
   style->dash = NULL;
   style->font_desc = NULL;
 
-  style->line_width = -1.0;
+  style->line_width = 2.0;
   style->line_width_tolerance = 0.0;
   style->line_join_miter_limit = 10.0;
-  style->line_width_is_unscaled = FALSE;
 
-  style->stroke_pattern_set = FALSE;
-  style->fill_pattern_set = FALSE;
+  style->mask = 0;
+
   style->op = CAIRO_OPERATOR_OVER;
   style->antialias = CAIRO_ANTIALIAS_GRAY;
   style->fill_rule = CAIRO_FILL_RULE_WINDING;
   style->line_cap = CAIRO_LINE_CAP_BUTT;
   style->line_join = CAIRO_LINE_JOIN_MITER;
   style->hint_metrics = CAIRO_HINT_METRICS_OFF;
+  style->line_width_is_unscaled = FALSE;
 }
 
 
@@ -102,8 +106,9 @@ goo_canvas_style_copy (GooCanvasStyle* style)
   copy->line_width = style->line_width;
   copy->line_width_tolerance = style->line_width_tolerance;
   copy->line_join_miter_limit = style->line_join_miter_limit;
-  copy->stroke_pattern_set = style->stroke_pattern_set;
-  copy->fill_pattern_set = style->fill_pattern_set;
+
+  copy->mask = style->mask;
+
   copy->op = style->op;
   copy->antialias = style->antialias;
   copy->fill_rule = style->fill_rule;
@@ -213,6 +218,10 @@ goo_canvas_style_get_property (GObject              *object,
       goo_canvas_get_rgba_value_from_pattern (style->fill_pattern, value);
       break;
 
+    case PROP_MASK:
+      g_value_set_flags (value, style->mask);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -227,7 +236,7 @@ goo_canvas_style_set_stroke_pattern (GooCanvasStyle    *style,
   cairo_pattern_destroy (style->stroke_pattern);
   style->stroke_pattern = pattern;
   cairo_pattern_reference (style->stroke_pattern);
-  style->stroke_pattern_set = TRUE;
+  style->mask |= GOO_CANVAS_STYLE_STROKE_PATTERN;
 }
 
 
@@ -238,7 +247,7 @@ goo_canvas_style_set_fill_pattern (GooCanvasStyle    *style,
   cairo_pattern_destroy (style->fill_pattern);
   style->fill_pattern = pattern;
   cairo_pattern_reference (style->fill_pattern);
-  style->fill_pattern_set = TRUE;
+  style->mask |= GOO_CANVAS_STYLE_FILL_PATTERN;
 }
 
 
@@ -264,37 +273,47 @@ goo_canvas_style_set_property (GObject              *object,
       break;
     case PROP_FILL_RULE:
       style->fill_rule = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_FILL_RULE;
       break;
     case PROP_OPERATOR:
       style->op = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_OPERATOR;
       break;
     case PROP_ANTIALIAS:
       style->antialias = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_ANTIALIAS;
       break;
 
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
       style->line_width = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH;
       break;
     case PROP_LINE_WIDTH_TOLERANCE:
       style->line_width_tolerance = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH_TOLERANCE;
       break;
     case PROP_LINE_WIDTH_IS_UNSCALED:
       style->line_width_is_unscaled = g_value_get_boolean (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH_IS_UNSCALED;
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_CAP;
       break;
     case PROP_LINE_JOIN:
       style->line_join = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_JOIN;
       break;
     case PROP_LINE_JOIN_MITER_LIMIT:
       style->line_join_miter_limit = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_JOIN_MITER_LIMIT;
       break;
     case PROP_LINE_DASH:
       goo_canvas_line_dash_unref (style->dash);
       style->dash = g_value_get_boxed (value);
       goo_canvas_line_dash_ref (style->dash);
+      style->mask |= GOO_CANVAS_STYLE_LINE_DASH;
       break;
 
       /* Font properties. */
@@ -306,6 +325,7 @@ goo_canvas_style_set_property (GObject              *object,
 	style->font_desc = pango_font_description_from_string (font_name);
       else
 	style->font_desc = NULL;
+      style->mask |= GOO_CANVAS_STYLE_FONT_DESCRIPTION;
       break;
     case PROP_FONT_DESC:
       if (style->font_desc)
@@ -315,9 +335,11 @@ goo_canvas_style_set_property (GObject              *object,
 	style->font_desc = pango_font_description_copy (font_desc);
       else
 	style->font_desc = NULL;
+      style->mask |= GOO_CANVAS_STYLE_FONT_DESCRIPTION;
       break;
     case PROP_HINT_METRICS:
       style->hint_metrics = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_HINT_METRICS;
       break;
 
       /* Convenience properties. */
@@ -351,6 +373,10 @@ goo_canvas_style_set_property (GObject              *object,
       pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
       goo_canvas_style_set_fill_pattern (style, pattern);
       cairo_pattern_destroy (pattern);
+      break;
+
+    case PROP_MASK:
+      style->mask = g_value_get_flags (value);
       break;
 
     default:
@@ -413,9 +439,8 @@ goo_canvas_style_class_init (GooCanvasStyleClass *klass)
   g_object_class_install_property (gobject_class, PROP_LINE_WIDTH,
 				   g_param_spec_double ("line-width",
 							_("Line Width"),
-							_("The line width to use for the item's perimeter, or -1 to use the default line width"),
-							-G_MAXDOUBLE,
-							G_MAXDOUBLE, -1.0,
+							_("The line width to use for the item's perimeter"),
+							0.0, G_MAXDOUBLE, 2.0,
 							G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_LINE_WIDTH_TOLERANCE,
@@ -527,6 +552,14 @@ goo_canvas_style_class_init (GooCanvasStyleClass *klass)
 							_("The pixbuf to use to paint the interior of the item. To disable painting set the 'fill-pattern' property to NULL"),
                                                         GDK_TYPE_PIXBUF,
                                                         G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_MASK,
+				   g_param_spec_flags ("mask",
+						       _("Mask"),
+						       _("The mask of style properties that are currently set"),
+						       GOO_TYPE_CANVAS_STYLE_VALUES_MASK,
+						       0,
+						       G_PARAM_READWRITE));
 }
 
 

@@ -492,7 +492,8 @@ goo_canvas_text_is_unpainted (GooCanvasText *text)
   GooCanvasStyle *style = simple->style;
 
   /* We only return TRUE if the fill pattern is explicitly set to NULL. */
-  if (style && style->fill_pattern_set && !style->fill_pattern)
+  if (style && style->mask & GOO_CANVAS_STYLE_FILL_PATTERN
+      && !style->fill_pattern)
     return TRUE;
   return FALSE;
 }

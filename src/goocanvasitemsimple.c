@@ -342,42 +342,52 @@ goo_canvas_item_simple_set_property (GObject              *object,
       break;
     case PROP_FILL_RULE:
       style->fill_rule = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_FILL_RULE;
       break;
     case PROP_OPERATOR:
       style->op = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_OPERATOR;
       break;
     case PROP_ANTIALIAS:
       style->antialias = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_ANTIALIAS;
       break;
 
       /* Line style & width properties. */
     case PROP_LINE_WIDTH:
       style->line_width = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH;
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_WIDTH_TOLERANCE:
       style->line_width_tolerance = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH_TOLERANCE;
       need_update = FALSE;
       break;
     case PROP_LINE_WIDTH_IS_UNSCALED:
       style->line_width_is_unscaled = g_value_get_boolean (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_WIDTH_IS_UNSCALED;
       break;
     case PROP_LINE_CAP:
       style->line_cap = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_CAP;
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_JOIN:
       style->line_join = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_JOIN;
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_JOIN_MITER_LIMIT:
       style->line_join_miter_limit = g_value_get_double (value);
+      style->mask |= GOO_CANVAS_STYLE_LINE_JOIN_MITER_LIMIT;
       recompute_bounds = TRUE;
       break;
     case PROP_LINE_DASH:
       goo_canvas_line_dash_unref (style->dash);
       style->dash = g_value_get_boxed (value);
       goo_canvas_line_dash_ref (style->dash);
+      style->mask |= GOO_CANVAS_STYLE_LINE_DASH;
       recompute_bounds = TRUE;
       break;
 
@@ -390,6 +400,7 @@ goo_canvas_item_simple_set_property (GObject              *object,
 	style->font_desc = pango_font_description_from_string (font_name);
       else
 	style->font_desc = NULL;
+      style->mask |= GOO_CANVAS_STYLE_FONT_DESCRIPTION;
       recompute_bounds = TRUE;
       break;
     case PROP_FONT_DESC:
@@ -400,10 +411,12 @@ goo_canvas_item_simple_set_property (GObject              *object,
 	style->font_desc = pango_font_description_copy (font_desc);
       else
 	style->font_desc = NULL;
+      style->mask |= GOO_CANVAS_STYLE_FONT_DESCRIPTION;
       recompute_bounds = TRUE;
       break;
     case PROP_HINT_METRICS:
       style->hint_metrics = g_value_get_enum (value);
+      style->mask |= GOO_CANVAS_STYLE_HINT_METRICS;
       recompute_bounds = TRUE;
       break;
 
@@ -1595,70 +1608,83 @@ goo_canvas_item_simple_set_stroke_options (GooCanvasItemSimple   *simple,
 {
   static cairo_pattern_t *black_pattern = NULL;
   GooCanvasStyle *style = simple->style;
+  cairo_pattern_t *pattern;
   gdouble line_width;
 
+  /* Create the static black pattern if we haven't already created it. */
   if (!black_pattern)
     black_pattern = cairo_pattern_create_rgb (0.0, 0.0, 0.0);
 
-  /* If no style is set, just reset the source to black and return TRUE so the
-     default style will be used. */
-  if (!style)
+  /* The stroke pattern defaults to solid black. */
+  pattern = black_pattern;
+
+  /* Check if the canvas has a default stroke pattern set. */
+  if (simple->canvas && simple->canvas->style
+      && (simple->canvas->style->mask & GOO_CANVAS_STYLE_STROKE_PATTERN))
+    pattern = simple->canvas->style->stroke_pattern;
+
+  /* Check if the item has its own pattern set, which overrides the default. */
+  if (style && (style->mask & GOO_CANVAS_STYLE_STROKE_PATTERN))
+    pattern = style->stroke_pattern;
+
+  /* Set the pattern. */
+  if (pattern)
+    cairo_set_source (cr, pattern);
+
+  /* If the items has a style, use the settings. Note that the default canvas
+     style settings will have already been applied, so we don't need to worry
+     about them here. */
+  if (style)
     {
-      cairo_set_source (cr, black_pattern);
-      return TRUE;
+      if (style->mask & GOO_CANVAS_STYLE_OPERATOR)
+	cairo_set_operator (cr, style->op);
+
+      if (style->mask & GOO_CANVAS_STYLE_ANTIALIAS)
+	cairo_set_antialias (cr, style->antialias);
+
+      /* Determine the basic line width. */
+      if (style->mask & GOO_CANVAS_STYLE_LINE_WIDTH)
+	line_width = style->line_width;
+      else
+	line_width = cairo_get_line_width (cr);
+
+      /* Add on the tolerance, when calculating bounds and hit-testing. */
+      if ((op == GOO_CANVAS_OPERATION_UPDATE
+	   || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
+	  && (style->mask & GOO_CANVAS_STYLE_LINE_WIDTH_TOLERANCE))
+	line_width += style->line_width_tolerance;
+
+      /* If the line width is supposed to be unscaled, try to reverse the
+	 effects of the canvas scale. But only when painting and hit-testing. */
+      if ((op == GOO_CANVAS_OPERATION_PAINT
+	   || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
+	  && (style->mask & GOO_CANVAS_STYLE_LINE_WIDTH_IS_UNSCALED)
+	  && style->line_width_is_unscaled && scale > 1.0)
+	line_width /= scale;
+
+      /* Set the line width. */
+      cairo_set_line_width (cr, line_width);
+
+      if (style->mask & GOO_CANVAS_STYLE_LINE_CAP)
+	cairo_set_line_cap (cr, style->line_cap);
+
+      if (style->mask & GOO_CANVAS_STYLE_LINE_JOIN)
+	cairo_set_line_join (cr, style->line_join);
+
+      if (style->mask & GOO_CANVAS_STYLE_LINE_JOIN_MITER_LIMIT)
+	cairo_set_miter_limit (cr, style->line_join_miter_limit);
+
+      if (style->mask & GOO_CANVAS_STYLE_LINE_DASH)
+	{
+	  if (style->dash)
+	    cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
+			    style->dash->dash_offset);
+	  else
+	    cairo_set_dash (cr, NULL, 0, 0.0);
+	}
     }
 
-  if (style->stroke_pattern)
-    cairo_set_source (cr, style->stroke_pattern);
-  else
-    cairo_set_source (cr, black_pattern);
-
-  if (style->op != CAIRO_OPERATOR_OVER)
-    cairo_set_operator (cr, style->op);
-
-  if (style->antialias != CAIRO_ANTIALIAS_GRAY)
-    cairo_set_antialias (cr, style->antialias);
-
-  /* Determine the basic line width. */
-  if (style->line_width >= 0.0)
-    line_width = style->line_width;
-  else
-    line_width = cairo_get_line_width (cr);
-
-  /* Add on the tolerance, when calculating bounds and hit-testing. */
-  if (op == GOO_CANVAS_OPERATION_UPDATE
-      || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
-    line_width += style->line_width_tolerance;
-
-  /* If the line width is supposed to be unscaled, try to reverse the effects
-     of the canvas scale. But only when painting and hit-testing. */
-  if ((op == GOO_CANVAS_OPERATION_PAINT
-       || op == GOO_CANVAS_OPERATION_GET_ITEMS_AT)
-      && style->line_width_is_unscaled && scale > 1.0)
-    line_width /= scale;
-
-  /* Set the line width. */
-  cairo_set_line_width (cr, line_width);
-
-  if (style->line_cap != CAIRO_LINE_CAP_BUTT)
-    cairo_set_line_cap (cr, style->line_cap);
-
-  if (style->line_join != CAIRO_LINE_JOIN_MITER)
-    cairo_set_line_join (cr, style->line_join);
-
-  if (style->line_join_miter_limit != 10.0)
-    cairo_set_miter_limit (cr, style->line_join_miter_limit);
-
-  if (style->dash)
-    cairo_set_dash (cr, style->dash->dashes, style->dash->num_dashes,
-		    style->dash->dash_offset);
-
-  /* If the style pattern has been explicitly set to NULL return FALSE, as no
-     stroke is wanted. */
-  if (style->stroke_pattern_set && !style->stroke_pattern)
-    return FALSE;
-
-  return TRUE;
+  return pattern ? TRUE : FALSE;
 }
 
 
@@ -1667,24 +1693,37 @@ goo_canvas_item_simple_set_fill_options (GooCanvasItemSimple   *simple,
 					 cairo_t               *cr)
 {
   GooCanvasStyle *style = simple->style;
+  cairo_pattern_t *pattern = NULL;
 
-  /* If no style is set, just return FALSE as no fill is needed. */
-  if (!style)
-    return FALSE;
+  /* Check if the canvas has a default fill pattern set. */
+  if (simple->canvas && simple->canvas->style
+      && (simple->canvas->style->mask & GOO_CANVAS_STYLE_FILL_PATTERN))
+    pattern = simple->canvas->style->fill_pattern;
 
-  if (style->fill_pattern)
-    cairo_set_source (cr, style->fill_pattern);
+  /* Check if the item has its own pattern set, which overrides the default. */
+  if (style && (style->mask & GOO_CANVAS_STYLE_FILL_PATTERN))
+    pattern = style->fill_pattern;
 
-  if (style->op != CAIRO_OPERATOR_OVER)
-    cairo_set_operator (cr, style->op);
+  /* Set the pattern. */
+  if (pattern)
+    cairo_set_source (cr, pattern);
 
-  if (style->antialias != CAIRO_ANTIALIAS_GRAY)
-    cairo_set_antialias (cr, style->antialias);
+  /* If the items has a style, use the settings. Note that the default canvas
+     style settings will have already been applied, so we don't need to worry
+     about them here. */
+  if (style)
+    {
+      if (style->mask & GOO_CANVAS_STYLE_OPERATOR)
+	cairo_set_operator (cr, style->op);
 
-  if (style->fill_rule != CAIRO_FILL_RULE_WINDING)
-    cairo_set_fill_rule (cr, style->fill_rule);
+      if (style->mask & GOO_CANVAS_STYLE_ANTIALIAS)
+	cairo_set_antialias (cr, style->antialias);
 
-  return style->fill_pattern ? TRUE : FALSE;
+      if (style->mask & GOO_CANVAS_STYLE_FILL_RULE)
+	cairo_set_fill_rule (cr, style->fill_rule);
+    }
+
+  return pattern ? TRUE : FALSE;
 }
 
 
