@@ -9,11 +9,14 @@ on_widget_expose (GtkWidget *widget,
 		  GdkEventExpose *event,
 		  char *item_id)
 {
+  GtkAllocation allocation;
+  
   g_print ("%s received 'expose' signal\n", item_id);
 
-  gtk_paint_box (widget->style, widget->window, GTK_STATE_NORMAL,
+  gtk_widget_get_allocation (widget, &allocation);
+  gtk_paint_box (gtk_widget_get_style (widget), gtk_widget_get_window (widget), GTK_STATE_NORMAL,
 		 GTK_SHADOW_IN, &event->area, widget, NULL, 0, 0,
-		 widget->allocation.width, widget->allocation.height);
+		 allocation.width, allocation.height);
 
   return FALSE;
 }
@@ -71,7 +74,7 @@ on_widget_button_press (GtkWidget *widget,
 	| GDK_ENTER_NOTIFY_MASK
 	| GDK_LEAVE_NOTIFY_MASK;
 
-      status = gdk_pointer_grab (widget->window, FALSE, mask, FALSE, NULL,
+      status = gdk_pointer_grab (gtk_widget_get_window (widget), FALSE, mask, FALSE, NULL,
 				 event->time);
       if (status == GDK_GRAB_SUCCESS)
 	g_print ("grabbed pointer\n");

@@ -1,3 +1,38 @@
+2010-07-25  Murray Cumming  <murrayc@murrayc.com>
+
+	Fix the build with the latest GTK+ 3.0 API.
+
+	* demo/demo-focus.c (create_focus_page):
+	* demo/demo-grabs.c (on_widget_expose), (on_widget_button_press):
+	* demo/demo-large-items.c (zoom_changed):
+	* demo/demo.c (zoom_changed), (zoom_x_changed), (zoom_y_changed),
+	(anchor_toggled):
+	* demo/mv-demo-focus.c (create_focus_page):
+	* demo/mv-demo-grabs.c (on_widget_expose),
+	(on_widget_button_press):
+	* demo/mv-demo.c (zoom_changed), (anchor_toggled):
+	* demo/units-demo.c (zoom_changed):
+	* demo/widgets-demo.c (main):
+	* src/goocanvas.c (goo_canvas_init), (goo_canvas_realize),
+	(goo_canvas_map), (goo_canvas_style_set),
+	(goo_canvas_configure_hadjustment),
+	(goo_canvas_configure_vadjustment), (reconfigure_canvas),
+	(goo_canvas_size_allocate), (goo_canvas_adjustment_value_changed),
+	(goo_canvas_scroll_to), (goo_canvas_scroll_to_item),
+	(goo_canvas_set_scale_internal), (paint_static_items),
+	(goo_canvas_expose_event), (goo_canvas_scroll),
+	(goo_canvas_focus_in), (goo_canvas_focus_out),
+	(goo_canvas_convert_from_window_pixels),
+	(goo_canvas_convert_to_static_item_space),
+	(goo_canvas_get_start_bounds), (goo_canvas_focus):
+	* src/goocanvasatk.c (goo_canvas_item_accessible_get_item_extents),
+	(goo_canvas_item_accessible_is_item_in_window),
+	(goo_canvas_item_accessible_get_extents),
+	(goo_canvas_accessible_get_n_children),
+	(goo_canvas_accessible_ref_child): Replace use of direct struct field access 
+	in GtkWidget, GtkWindow, and GtkAdjustment, with use of the new get/set 
+	functions, to fix the build with the latest GTK+ 3.0 API.
+
 2010-06-30  Damon Chaplin  <damon@gnome.org>
 
 	* docs: added empty internal subset "[]" to the DOCTYPEs to keep

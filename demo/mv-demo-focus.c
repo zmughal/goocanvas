@@ -168,7 +168,7 @@ create_focus_page (void)
   gtk_container_add (GTK_CONTAINER (vbox), scrolled_win);
 
   canvas = goo_canvas_new ();
-  GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (canvas, TRUE);
   gtk_widget_set_size_request (canvas, 600, 450);
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 1000, 1000);
   gtk_widget_show (canvas);

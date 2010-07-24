@@ -73,7 +73,7 @@ write_pdf_clicked (GtkWidget *button, GooCanvas *canvas)
 static void
 zoom_changed (GtkAdjustment *adj, GooCanvas *canvas)
 {
-  goo_canvas_set_scale (canvas, adj->value);
+  goo_canvas_set_scale (canvas, gtk_adjustment_get_value (adj));
 }
 
 
@@ -81,7 +81,7 @@ static void
 zoom_x_changed (GtkAdjustment *adj, GooCanvas *canvas)
 {
   g_object_set (G_OBJECT (canvas),
-		"scale-x", adj->value,
+		"scale-x", gtk_adjustment_get_value (adj),
 		NULL);
 }
 
@@ -90,7 +90,7 @@ static void
 zoom_y_changed (GtkAdjustment *adj, GooCanvas *canvas)
 {
   g_object_set (G_OBJECT (canvas),
-		"scale-y", adj->value,
+		"scale-y", gtk_adjustment_get_value (adj),
 		NULL);
 }
 
@@ -110,7 +110,7 @@ anchor_toggled (GtkWidget *button, GooCanvas *canvas)
 
   anchor = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "anchor"));
 
-  if (GTK_TOGGLE_BUTTON (button)->active)
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)))
     g_object_set (canvas, "anchor", anchor, NULL);
 }
 

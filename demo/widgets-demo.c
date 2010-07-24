@@ -352,7 +352,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
   canvas = goo_canvas_new ();
-  GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (canvas, TRUE);
   gtk_widget_set_size_request (canvas, 600, 450);
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 1000, 1000);
   gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);

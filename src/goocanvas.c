@@ -478,7 +478,7 @@ goo_canvas_init (GooCanvas *canvas)
 
   /* We set GTK_CAN_FOCUS by default, so it works as people expect.
      Though developers can turn this off if not needed for efficiency. */
-  GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (GTK_WIDGET (canvas), TRUE);
 
   canvas->scale_x = 1.0;
   canvas->scale_y = 1.0;
@@ -1434,18 +1434,21 @@ goo_canvas_realize (GtkWidget *widget)
   gint attributes_mask;
   gint width_pixels, height_pixels;
   GList *tmp_list;
+  GtkAllocation allocation;
+  GdkWindow* window;
 
   g_return_if_fail (GOO_IS_CANVAS (widget));
 
   canvas = GOO_CANVAS (widget);
   priv = GOO_CANVAS_GET_PRIVATE (canvas);
-  GTK_WIDGET_SET_FLAGS (canvas, GTK_REALIZED);
+  gtk_widget_set_realized (GTK_WIDGET (canvas), TRUE);
 
+  gtk_widget_get_allocation (widget, &allocation);
   attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.x = widget->allocation.x;
-  attributes.y = widget->allocation.y;
-  attributes.width = widget->allocation.width;
-  attributes.height = widget->allocation.height;
+  attributes.x = allocation.x;
+  attributes.y = allocation.y;
+  attributes.width = allocation.width;
+  attributes.height = allocation.height;
   attributes.wclass = GDK_INPUT_OUTPUT;
   attributes.visual = gtk_widget_get_visual (widget);
   attributes.colormap = gtk_widget_get_colormap (widget);
@@ -1453,18 +1456,19 @@ goo_canvas_realize (GtkWidget *widget)
 
   attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 
-  widget->window = gdk_window_new (gtk_widget_get_parent_window (widget),
+  window = gdk_window_new (gtk_widget_get_parent_window (widget),
 				   &attributes, attributes_mask);
-  gdk_window_set_user_data (widget->window, widget);
+  gtk_widget_set_window (widget, window);
+  gdk_window_set_user_data (window, widget);
 
   /* We want to round the sizes up to the next pixel. */
   width_pixels = ((canvas->bounds.x2 - canvas->bounds.x1) * canvas->device_to_pixels_x) + 1;
   height_pixels = ((canvas->bounds.y2 - canvas->bounds.y1) * canvas->device_to_pixels_y) + 1;
 
-  attributes.x = canvas->hadjustment ? - canvas->hadjustment->value : 0,
-  attributes.y = canvas->vadjustment ? - canvas->vadjustment->value : 0;
-  attributes.width = MAX (width_pixels, widget->allocation.width);
-  attributes.height = MAX (height_pixels, widget->allocation.height);
+  attributes.x = canvas->hadjustment ? - gtk_adjustment_get_value (canvas->hadjustment) : 0,
+  attributes.y = canvas->vadjustment ? - gtk_adjustment_get_value (canvas->vadjustment) : 0;
+  attributes.width = MAX (width_pixels, allocation.width);
+  attributes.height = MAX (height_pixels, allocation.height);
   attributes.event_mask = GDK_EXPOSURE_MASK
 			 | GDK_SCROLL_MASK
 			 | GDK_BUTTON_PRESS_MASK
@@ -1481,26 +1485,26 @@ goo_canvas_realize (GtkWidget *widget)
   priv->window_x = attributes.x;
   priv->window_y = attributes.y;
 
-  canvas->canvas_window = gdk_window_new (widget->window,
+  canvas->canvas_window = gdk_window_new (window,
 					  &attributes, attributes_mask);
   gdk_window_set_user_data (canvas->canvas_window, widget);
 
-  attributes.x = widget->allocation.x;
-  attributes.y = widget->allocation.y;
-  attributes.width = widget->allocation.width;
-  attributes.height = widget->allocation.height;
+  attributes.x = allocation.x;
+  attributes.y = allocation.y;
+  attributes.width = allocation.width;
+  attributes.height = allocation.height;
   attributes.event_mask = 0;
 
   canvas->tmp_window = gdk_window_new (gtk_widget_get_parent_window (widget),
 				       &attributes, attributes_mask);
   gdk_window_set_user_data (canvas->tmp_window, widget);
 
-  widget->style = gtk_style_attach (widget->style, widget->window);
+  gtk_widget_set_style(widget, gtk_style_attach (gtk_widget_get_style (widget), window));
 
   /* Make sure the window backgrounds aren't set, to avoid flicker when
      scrolling (due to the delay between X clearing the background and
      GooCanvas painting it). */
-  gdk_window_set_back_pixmap (widget->window, NULL, FALSE);
+  gdk_window_set_back_pixmap (window, NULL, FALSE);
   gdk_window_set_back_pixmap (canvas->canvas_window, NULL, FALSE);
   gdk_window_set_back_pixmap (canvas->tmp_window, NULL, FALSE);
 
@@ -1551,7 +1555,7 @@ goo_canvas_map (GtkWidget *widget)
 
   canvas = GOO_CANVAS (widget);
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_MAPPED);
+  gtk_widget_set_mapped (widget, TRUE);
 
   tmp_list = canvas->widget_items;
   while (tmp_list)
@@ -1567,7 +1571,7 @@ goo_canvas_map (GtkWidget *widget)
     }
 
   gdk_window_show (canvas->canvas_window);
-  gdk_window_show (widget->window);
+  gdk_window_show (gtk_widget_get_window (widget));
 }
 
 
@@ -1583,7 +1587,7 @@ goo_canvas_style_set (GtkWidget *widget,
       /* Make sure the window backgrounds aren't set, to avoid flicker when
 	 scrolling (due to the delay between X clearing the background and
 	 GooCanvas painting it). */
-      gdk_window_set_back_pixmap (widget->window, NULL, FALSE);
+      gdk_window_set_back_pixmap (gtk_widget_get_window (widget), NULL, FALSE);
       gdk_window_set_back_pixmap (GOO_CANVAS (widget)->canvas_window, NULL, FALSE);
     }
 }
@@ -1598,25 +1602,29 @@ goo_canvas_configure_hadjustment (GooCanvas *canvas,
   gboolean changed = FALSE;
   gboolean value_changed = FALSE;
   gdouble max_value;
+  gdouble page_size;
+  GtkAllocation allocation;
 
-  if (adj->upper != window_width)
+  if (gtk_adjustment_get_upper (adj) != window_width)
     {
-      adj->upper = window_width;
+      gtk_adjustment_set_upper (adj, window_width);
       changed = TRUE;
     }
 
-  if (adj->page_size != widget->allocation.width)
+  gtk_widget_get_allocation (widget, &allocation);
+  page_size = gtk_adjustment_get_page_size (adj);
+  if (page_size != allocation.width)
     {
-      adj->page_size = widget->allocation.width;
-      adj->page_increment = adj->page_size * 0.9;
-      adj->step_increment = adj->page_size * 0.1;
+      page_size = allocation.width;
+      gtk_adjustment_set_page_increment (adj, page_size * 0.9);
+      gtk_adjustment_set_step_increment (adj, page_size * 0.1);
       changed = TRUE;
     }
       
-  max_value = MAX (0.0, adj->upper - adj->page_size);
-  if (adj->value > max_value)
+  max_value = MAX (0.0, gtk_adjustment_get_upper (adj) - page_size);
+  if (gtk_adjustment_get_value (adj) > max_value)
     {
-      adj->value = max_value;
+      gtk_adjustment_set_value (adj, max_value);
       value_changed = TRUE;
     }
   
@@ -1637,25 +1645,30 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
   gboolean changed = FALSE;
   gboolean value_changed = FALSE;
   gdouble max_value;
+  GtkAllocation allocation;
+  gdouble page_size;
 
-  if (adj->upper != window_height)
+  if (gtk_adjustment_get_upper (adj) != window_height)
     {
-      adj->upper = window_height;
+      gtk_adjustment_set_upper (adj, window_height);
       changed = TRUE;
     }
 
-  if (adj->page_size != widget->allocation.height)
+  gtk_widget_get_allocation (widget, &allocation);
+  page_size = gtk_adjustment_get_page_size (adj);
+  if (page_size != allocation.height)
     {
-      adj->page_size = widget->allocation.height;
-      adj->page_increment = adj->page_size * 0.9;
-      adj->step_increment = adj->page_size * 0.1;
+      gtk_adjustment_set_page_size (adj, allocation.height);
+      page_size = gtk_adjustment_get_page_size (adj);
+      gtk_adjustment_set_page_increment (adj, page_size * 0.9);
+      gtk_adjustment_set_step_increment (adj, page_size * 0.1);
       changed = TRUE;
     }
       
-  max_value = MAX (0.0, adj->upper - adj->page_size);
-  if (adj->value > max_value)
+  max_value = MAX (0.0, gtk_adjustment_get_upper (adj) - page_size);
+  if (gtk_adjustment_get_value (adj) > max_value)
     {
-      adj->value = max_value;
+      gtk_adjustment_set_value (adj, max_value);
       value_changed = TRUE;
     }
   
@@ -1772,6 +1785,7 @@ reconfigure_canvas (GooCanvas *canvas,
   gint window_x = 0, window_y = 0, window_width, window_height;
   gint new_x_offset = 0, new_y_offset = 0;
   GtkWidget *widget;
+  GtkAllocation allocation;
 
   widget = GTK_WIDGET (canvas);
 
@@ -1790,12 +1804,13 @@ reconfigure_canvas (GooCanvas *canvas,
   height_pixels = ((canvas->bounds.y2 - canvas->bounds.y1) * canvas->device_to_pixels_y) + 1;
 
   /* The actual window size is always at least as big as the widget's window.*/
-  window_width = MAX (width_pixels, widget->allocation.width);
-  window_height = MAX (height_pixels, widget->allocation.height);
+  gtk_widget_get_allocation (widget, &allocation);
+  window_width = MAX (width_pixels, allocation.width);
+  window_height = MAX (height_pixels, allocation.height);
 
   /* If the width or height is smaller than the window, we need to calculate
      the canvas x & y offsets according to the anchor. */
-  if (width_pixels < widget->allocation.width)
+  if (width_pixels < allocation.width)
     {
       switch (canvas->anchor)
 	{
@@ -1807,17 +1822,17 @@ reconfigure_canvas (GooCanvas *canvas,
 	case GTK_ANCHOR_NORTH:
 	case GTK_ANCHOR_CENTER:
 	case GTK_ANCHOR_SOUTH:
-	  new_x_offset = (widget->allocation.width - width_pixels) / 2;
+	  new_x_offset = (allocation.width - width_pixels) / 2;
 	  break;
 	case GTK_ANCHOR_NORTH_EAST:
 	case GTK_ANCHOR_EAST:
 	case GTK_ANCHOR_SOUTH_EAST:
-	  new_x_offset = widget->allocation.width - width_pixels;
+	  new_x_offset = allocation.width - width_pixels;
 	  break;
 	}
     }
 
-  if (height_pixels < widget->allocation.height)
+  if (height_pixels < allocation.height)
     {
       switch (canvas->anchor)
 	{
@@ -1829,12 +1844,12 @@ reconfigure_canvas (GooCanvas *canvas,
 	case GTK_ANCHOR_WEST:
 	case GTK_ANCHOR_CENTER:
 	case GTK_ANCHOR_EAST:
-	  new_y_offset = (widget->allocation.height - height_pixels) / 2;
+	  new_y_offset = (allocation.height - height_pixels) / 2;
 	  break;
 	case GTK_ANCHOR_SOUTH_WEST:
 	case GTK_ANCHOR_SOUTH:
 	case GTK_ANCHOR_SOUTH_EAST:
-	  new_y_offset = widget->allocation.height - height_pixels;
+	  new_y_offset = allocation.height - height_pixels;
 	  break;
 	}
     }
@@ -1844,13 +1859,13 @@ reconfigure_canvas (GooCanvas *canvas,
   if (canvas->hadjustment)
     {
       goo_canvas_configure_hadjustment (canvas, window_width);
-      window_x = - canvas->hadjustment->value;
+      window_x = - gtk_adjustment_get_value (canvas->hadjustment);
     }
 
   if (canvas->vadjustment)
     {
       goo_canvas_configure_vadjustment (canvas, window_height);
-      window_y = - canvas->vadjustment->value;
+      window_y = - gtk_adjustment_get_value (canvas->vadjustment);
     }
 
   canvas->freeze_count--;
@@ -1937,7 +1952,7 @@ goo_canvas_size_allocate (GtkWidget     *widget,
 
   canvas = GOO_CANVAS (widget);
 
-  widget->allocation = *allocation;
+  gtk_widget_set_allocation (widget, allocation);
 
   if (gtk_widget_get_realized (widget))
     {
@@ -1953,7 +1968,7 @@ goo_canvas_size_allocate (GtkWidget     *widget,
 	    goo_canvas_allocate_child_widget (canvas, witem);
 	}
 
-      gdk_window_move_resize (widget->window,
+      gdk_window_move_resize (gtk_widget_get_window (widget),
 			      allocation->x, allocation->y,
 			      allocation->width, allocation->height);
       gdk_window_move_resize (canvas->tmp_window,
@@ -1987,17 +2002,17 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	     draw the static items in their new position. This stops them
 	     from being "dragged" when the window is scrolled. */
 	  redraw_static_items_at_position (canvas,
-					   -canvas->hadjustment->value,
-					   -canvas->hadjustment->value);
+					   -gtk_adjustment_get_value (canvas->hadjustment),
+					   -gtk_adjustment_get_value (canvas->hadjustment));
 
 	  /* Move the static items to the new position. */
-	  priv->window_x = -canvas->hadjustment->value;
-	  priv->window_y = -canvas->vadjustment->value;
+	  priv->window_x = -gtk_adjustment_get_value (canvas->hadjustment);
+	  priv->window_y = -gtk_adjustment_get_value (canvas->vadjustment);
 	}
 
       gdk_window_move (canvas->canvas_window,
-		       - canvas->hadjustment->value,
-		       - canvas->vadjustment->value);
+		       - gtk_adjustment_get_value (canvas->hadjustment),
+		       - gtk_adjustment_get_value (canvas->vadjustment));
 
       if (canvas->redraw_when_scrolled)
 	{
@@ -2197,10 +2212,10 @@ goo_canvas_scroll_to	     (GooCanvas     *canvas,
   goo_canvas_convert_to_pixels (canvas, &x, &y);
 
   /* Make sure we stay within the bounds. */
-  x = CLAMP (x, canvas->hadjustment->lower,
-	     canvas->hadjustment->upper - canvas->hadjustment->page_size);
-  y = CLAMP (y, canvas->vadjustment->lower,
-	     canvas->vadjustment->upper - canvas->vadjustment->page_size);
+  x = CLAMP (x, gtk_adjustment_get_lower (canvas->hadjustment),
+	     gtk_adjustment_get_upper (canvas->hadjustment) - gtk_adjustment_get_page_size (canvas->hadjustment));
+  y = CLAMP (y, gtk_adjustment_get_lower (canvas->vadjustment),
+	     gtk_adjustment_get_upper (canvas->vadjustment) - gtk_adjustment_get_page_size (canvas->vadjustment));
 
   canvas->freeze_count++;
 
@@ -2232,8 +2247,8 @@ goo_canvas_scroll_to_item (GooCanvas     *canvas,
   canvas->freeze_count++;
 
   /* Remember the current adjustment values. */
-  hvalue = canvas->hadjustment->value;
-  vvalue = canvas->vadjustment->value;
+  hvalue = gtk_adjustment_get_value (canvas->hadjustment);
+  vvalue = gtk_adjustment_get_value (canvas->vadjustment);
 
   /* Update the adjustments so the item is displayed. */
   gtk_adjustment_clamp_page (canvas->hadjustment, bounds.x1, bounds.x2);
@@ -2242,8 +2257,8 @@ goo_canvas_scroll_to_item (GooCanvas     *canvas,
   canvas->freeze_count--;
 
   /* If the adjustments have changed we need to scroll. */
-  if (hvalue != canvas->hadjustment->value
-      || vvalue != canvas->vadjustment->value)
+  if (hvalue != gtk_adjustment_get_value (canvas->hadjustment)
+      || vvalue != gtk_adjustment_get_value (canvas->vadjustment))
     goo_canvas_adjustment_value_changed (NULL, canvas);
 }
 
@@ -2279,8 +2294,8 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
   g_return_if_fail (GOO_IS_CANVAS (canvas));
 
   /* Calculate the coords of the current center point in pixels. */
-  x = canvas->hadjustment->value + canvas->hadjustment->page_size / 2;
-  y = canvas->vadjustment->value + canvas->vadjustment->page_size / 2;
+  x = gtk_adjustment_get_value (canvas->hadjustment) + gtk_adjustment_get_page_size (canvas->hadjustment)/ 2;
+  y = gtk_adjustment_get_value (canvas->vadjustment) + gtk_adjustment_get_page_size (canvas->vadjustment)/ 2;
 
   /* Convert from pixel units to device units. */
   goo_canvas_convert_from_pixels (canvas, &x, &y);
@@ -2302,8 +2317,8 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
   reconfigure_canvas (canvas, FALSE);
 
   /* Convert from the center point to the new desired top-left posision. */
-  x -= canvas->hadjustment->page_size / canvas->device_to_pixels_x / 2;
-  y -= canvas->vadjustment->page_size / canvas->device_to_pixels_y / 2;
+  x -= gtk_adjustment_get_page_size (canvas->hadjustment)/ canvas->device_to_pixels_x / 2;
+  y -= gtk_adjustment_get_page_size (canvas->vadjustment)/ canvas->device_to_pixels_y / 2;
 
   /* Now try to scroll to it. */
   goo_canvas_scroll_to (canvas, x, y);
@@ -2633,8 +2648,8 @@ paint_static_items (GooCanvas      *canvas,
 
   cairo_save (cr);
   cairo_identity_matrix (cr);
-  static_x_offset = floor (canvas->hadjustment->value);
-  static_y_offset = floor (canvas->vadjustment->value);
+  static_x_offset = floor (gtk_adjustment_get_value (canvas->hadjustment));
+  static_y_offset = floor (gtk_adjustment_get_value (canvas->vadjustment));
   cairo_translate (cr, static_x_offset, static_y_offset);
   /* FIXME: Uses pixels at present - use canvas units instead? */
   static_bounds.x1 = event->area.x - static_x_offset;
@@ -2668,7 +2683,7 @@ goo_canvas_expose_event (GtkWidget      *widget,
   if (canvas->clear_background)
     {
       gdk_draw_rectangle (canvas->canvas_window,
-			  widget->style->base_gc[widget->state], TRUE,
+			  gtk_widget_get_style (widget)->base_gc[gtk_widget_get_state (widget)], TRUE,
 			  event->area.x, event->area.y,
 			  event->area.width, event->area.height);
     }
@@ -3181,13 +3196,13 @@ goo_canvas_scroll	(GtkWidget      *widget,
   else
     adj = canvas->hadjustment;
 
-  delta = pow (adj->page_size, 2.0 / 3.0);
+  delta = pow (gtk_adjustment_get_page_size (adj), 2.0 / 3.0);
 
   if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_LEFT)
     delta = - delta;
 
-  new_value = CLAMP (adj->value + delta, adj->lower,
-		     adj->upper - adj->page_size);
+  new_value = CLAMP (gtk_adjustment_get_value (adj) + delta, gtk_adjustment_get_lower (adj),
+		     gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj));
       
   gtk_adjustment_set_value (adj, new_value);
 
@@ -3201,7 +3216,7 @@ goo_canvas_focus_in        (GtkWidget      *widget,
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
 
-  GTK_WIDGET_SET_FLAGS (widget, GTK_HAS_FOCUS);
+  gtk_widget_grab_focus (widget);
 
   if (canvas->focused_item)
     return propagate_event (canvas, canvas->focused_item,
@@ -3217,7 +3232,7 @@ goo_canvas_focus_out       (GtkWidget      *widget,
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
 
-  GTK_WIDGET_UNSET_FLAGS (widget, GTK_HAS_FOCUS);
+  gtk_widget_grab_focus (widget);
 
   if (canvas->focused_item)
     return propagate_event (canvas, canvas->focused_item,
@@ -3593,8 +3608,8 @@ goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
 				       gdouble       *x,
 				       gdouble       *y)
 {
-  *x += canvas->hadjustment->value;
-  *y += canvas->vadjustment->value;
+  *x += gtk_adjustment_get_value (canvas->hadjustment);
+  *y += gtk_adjustment_get_value (canvas->vadjustment);
   goo_canvas_convert_from_pixels (canvas, x, y);
 }
 
@@ -3607,9 +3622,9 @@ goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 					 gdouble       *y)
 {
   *x = ((*x - canvas->bounds.x1) * canvas->device_to_pixels_x)
-    + canvas->canvas_x_offset - canvas->hadjustment->value;
+    + canvas->canvas_x_offset - gtk_adjustment_get_value (canvas->hadjustment);
   *y = ((*y - canvas->bounds.y1) * canvas->device_to_pixels_y)
-    + canvas->canvas_y_offset - canvas->vadjustment->value;
+    + canvas->canvas_y_offset - gtk_adjustment_get_value (canvas->vadjustment);
 }
 
 
@@ -3808,7 +3823,8 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
 {
   GooCanvasBounds *bounds;
   GtkWidget *toplevel, *focus_widget;
-  GtkAllocation *allocation;
+  GtkAllocation allocation;
+  GtkAllocation focus_widget_allocation;
   gint focus_widget_x, focus_widget_y;
 
   /* If an item is currently focused, we just need its bounds. */
@@ -3822,9 +3838,9 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
   toplevel = gtk_widget_get_toplevel (GTK_WIDGET (canvas));
   bounds = &data->start_bounds;
   if (toplevel && GTK_IS_WINDOW (toplevel)
-      && GTK_WINDOW (toplevel)->focus_widget)
+      && gtk_window_get_focus (GTK_WINDOW (toplevel)))
     {
-      focus_widget = GTK_WINDOW (toplevel)->focus_widget;
+      focus_widget = gtk_window_get_focus (GTK_WINDOW (toplevel));
 
       /* Translate the allocation to be relative to the GooCanvas.
 	 Skip ancestor widgets as the coords won't help. */
@@ -3836,10 +3852,11 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
 					       &focus_widget_y))
 	{
 	  /* Translate into device units. */
+    gtk_widget_get_allocation (focus_widget, &focus_widget_allocation);
 	  bounds->x1 = focus_widget_x;
 	  bounds->y1 = focus_widget_y;
-	  bounds->x2 = focus_widget_x + focus_widget->allocation.width;
-	  bounds->y2 = focus_widget_y + focus_widget->allocation.height;
+	  bounds->x2 = focus_widget_x + focus_widget_allocation.width;
+	  bounds->y2 = focus_widget_y + focus_widget_allocation.height;
 
 	  goo_canvas_convert_from_window_pixels (canvas, &bounds->x1,
 						 &bounds->y1);
@@ -3850,7 +3867,7 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
     }
 
   /* As a last resort, we guess a starting position based on the direction. */
-  allocation = &GTK_WIDGET (canvas)->allocation;
+  gtk_widget_get_allocation (GTK_WIDGET (canvas), &allocation);
   switch (data->direction)
     {
     case GTK_DIR_DOWN:
@@ -3863,12 +3880,12 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
     case GTK_DIR_UP:
       /* Start from bottom-left. */
       bounds->x1 = 0.0;
-      bounds->y1 = allocation->height;
+      bounds->y1 = allocation.height;
       break;
 
     case GTK_DIR_LEFT:
       /* Start from top-right. */
-      bounds->x1 = allocation->width;
+      bounds->x1 = allocation.width;
       bounds->y1 = 0.0;
       break;
 
@@ -3876,20 +3893,20 @@ goo_canvas_get_start_bounds (GooCanvas          *canvas,
       bounds->y1 = 0.0;
       if (data->text_direction == GTK_TEXT_DIR_RTL)
 	/* Start from top-right. */
-	bounds->x1 = allocation->width;
+	bounds->x1 = allocation.width;
       else
 	/* Start from top-left. */
 	bounds->x1 = 0.0;
       break;
 
     case GTK_DIR_TAB_BACKWARD:
-      bounds->y1 = allocation->height;
+      bounds->y1 = allocation.height;
       if (data->text_direction == GTK_TEXT_DIR_RTL)
 	/* Start from bottom-left. */
 	bounds->x1 = 0.0;
       else
 	/* Start from bottom-right. */
-	bounds->x1 = allocation->width;
+	bounds->x1 = allocation.width;
       break;
     }
 
@@ -4163,7 +4180,7 @@ goo_canvas_focus (GtkWidget        *widget,
     return FALSE;
 
   /* If a child widget has the focus, try moving the focus within that. */
-  old_focus_child = GTK_CONTAINER (canvas)->focus_child;
+  old_focus_child = gtk_container_get_focus_child (GTK_CONTAINER (canvas));
   if (old_focus_child && gtk_widget_child_focus (old_focus_child, direction))
     return TRUE;
 
