@@ -1605,6 +1605,8 @@ goo_canvas_configure_hadjustment (GooCanvas *canvas,
   gdouble page_size;
   GtkAllocation allocation;
 
+  canvas->freeze_count++;
+
   if (gtk_adjustment_get_upper (adj) != window_width)
     {
       gtk_adjustment_set_upper (adj, window_width);
@@ -1616,6 +1618,7 @@ goo_canvas_configure_hadjustment (GooCanvas *canvas,
   if (page_size != allocation.width)
     {
       page_size = allocation.width;
+      gtk_adjustment_set_page_size (adj, page_size);
       gtk_adjustment_set_page_increment (adj, page_size * 0.9);
       gtk_adjustment_set_step_increment (adj, page_size * 0.1);
       changed = TRUE;
@@ -1628,6 +1631,8 @@ goo_canvas_configure_hadjustment (GooCanvas *canvas,
       value_changed = TRUE;
     }
   
+  canvas->freeze_count--;
+
   if (changed)
     gtk_adjustment_changed (adj);
 
@@ -1648,6 +1653,8 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
   GtkAllocation allocation;
   gdouble page_size;
 
+  canvas->freeze_count++;
+
   if (gtk_adjustment_get_upper (adj) != window_height)
     {
       gtk_adjustment_set_upper (adj, window_height);
@@ -1658,8 +1665,8 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
   page_size = gtk_adjustment_get_page_size (adj);
   if (page_size != allocation.height)
     {
-      gtk_adjustment_set_page_size (adj, allocation.height);
-      page_size = gtk_adjustment_get_page_size (adj);
+      page_size = allocation.height;
+      gtk_adjustment_set_page_size (adj, page_size);
       gtk_adjustment_set_page_increment (adj, page_size * 0.9);
       gtk_adjustment_set_step_increment (adj, page_size * 0.1);
       changed = TRUE;
@@ -1672,6 +1679,8 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
       value_changed = TRUE;
     }
   
+  canvas->freeze_count--;
+
   if (changed)
     gtk_adjustment_changed (adj);
 
@@ -3216,8 +3225,6 @@ goo_canvas_focus_in        (GtkWidget      *widget,
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
 
-  gtk_widget_grab_focus (widget);
-
   if (canvas->focused_item)
     return propagate_event (canvas, canvas->focused_item,
 			    "focus_in_event", (GdkEvent*) event);
@@ -3231,8 +3238,6 @@ goo_canvas_focus_out       (GtkWidget      *widget,
 			    GdkEventFocus  *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
-
-  gtk_widget_grab_focus (widget);
 
   if (canvas->focused_item)
     return propagate_event (canvas, canvas->focused_item,

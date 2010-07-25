@@ -1,3 +1,15 @@
+2010-07-25  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_configure_hadjustment)
+	(goo_canvas_configure_vadjustment): freeze updates until finished,
+	and fixed bug setting hadjustment page size.
+	(goo_canvas_focus_in, goo_canvas_focus_out): removed grab_focus()
+	calls that replaced "GTK_WIDGET_SET/UNSET_FLAGS (widget, GTK_HAS_FOCUS)"
+	I don't think the macros should have been there anyway.
+
+	* src/goocanvasatk.c (goo_canvas_item_accessible_get_extents): tidied
+	up a little - get canvas window once and reuse.
+
 2010-07-25  Murray Cumming  <murrayc@murrayc.com>
 
 	Fix the build with the latest GTK+ 3.0 API.

@@ -121,7 +121,7 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
   gint window_x, window_y;
   gint toplevel_x, toplevel_y;
   GdkRectangle rect;
-  GdkWindow *window;
+  GdkWindow *canvas_window, *window;
 
   g_return_if_fail (GOO_IS_CANVAS_ITEM_ACCESSIBLE (component));
 
@@ -133,9 +133,12 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
 
   item = GOO_CANVAS_ITEM (object);
 
-
   canvas = goo_canvas_item_get_canvas (item);
-  if (!canvas || !gtk_widget_get_window (GTK_WIDGET (canvas)))
+  if (!canvas)
+    return;
+
+  canvas_window = gtk_widget_get_window (GTK_WIDGET (canvas));
+  if (!canvas_window)
     return;
 
   goo_canvas_item_accessible_get_item_extents (item, &rect);
@@ -145,14 +148,13 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
   if (!goo_canvas_item_accessible_is_item_in_window (item, &rect))
     return;
 
-  gdk_window_get_origin (gtk_widget_get_window (GTK_WIDGET (canvas)),
-			 &window_x, &window_y);
+  gdk_window_get_origin (canvas_window, &window_x, &window_y);
   *x = rect.x + window_x;
   *y = rect.y + window_y;
 
   if (coord_type == ATK_XY_WINDOW)
     {
-      window = gdk_window_get_toplevel (gtk_widget_get_window (GTK_WIDGET (canvas)));
+      window = gdk_window_get_toplevel (canvas_window);
       gdk_window_get_origin (window, &toplevel_x, &toplevel_y);
       *x -= toplevel_x;
       *y -= toplevel_y;
