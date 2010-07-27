@@ -1,3 +1,8 @@
+2010-07-27  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_adjustment_value_changed): fixed call
+	to redraw_static_items_at_position() - was using hadjustment twice.
+
 2010-07-25  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_configure_hadjustment)
