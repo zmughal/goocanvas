@@ -2036,7 +2036,7 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	     from being "dragged" when the window is scrolled. */
 	  redraw_static_items_at_position (canvas,
 					   -canvas->hadjustment->value,
-					   -canvas->hadjustment->value);
+					   -canvas->vadjustment->value);
 
 	  /* Move the static items to the new position. */
 	  priv->window_x = -canvas->hadjustment->value;
