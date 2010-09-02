@@ -1,3 +1,12 @@
+2010-09-02  Murray Cumming  <murrayc@murrayc.com>
+
+	Fix build with latest GTK+, which has no GdkGC.
+
+	* src/goocanvas.c (goo_canvas_expose_event): When clearing the background,
+  use gdk_cairo_set_source_color() and GtkWidget::base instead of
+  gdk_draw_rectangle() and GtkWidget::base_gc. Thanks to Benjamin Otte for
+  this code.
+
 2010-07-27  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_adjustment_value_changed): fixed call
@@ -46,8 +55,8 @@
 	(goo_canvas_item_accessible_is_item_in_window),
 	(goo_canvas_item_accessible_get_extents),
 	(goo_canvas_accessible_get_n_children),
-	(goo_canvas_accessible_ref_child): Replace use of direct struct field access 
-	in GtkWidget, GtkWindow, and GtkAdjustment, with use of the new get/set 
+	(goo_canvas_accessible_ref_child): Replace use of direct struct field access
+	in GtkWidget, GtkWindow, and GtkAdjustment, with use of the new get/set
 	functions, to fix the build with the latest GTK+ 3.0 API.
 
 2010-06-30  Damon Chaplin  <damon@gnome.org>
@@ -109,7 +118,7 @@
 	* Makefile.am
 	* demo/Makefile.am:  Depend on GTK+ 3 instead of GTK+ 2.
 	Change the library name from libgoocanvas to libgoocanvas-2.0.
-	Install the headers in <prefix>/include/goocanvas-2.0 instead of 
+	Install the headers in <prefix>/include/goocanvas-2.0 instead of
 	<prefix>/include/goocanvas-1.0.
 
 This is the master branch for goocanvas-2.0, using GTK+ 3
@@ -139,7 +148,7 @@ See also the goocanvas-1.0 branch.
 
 2009-08-20  Murray Cumming  <murrayc@murrayc.com>
 
-	* docs/architecture.xml: Fixed documenation typo. Bug #591983. 
+	* docs/architecture.xml: Fixed documenation typo. Bug #591983.
 	(Martin Olsson)
 
 2009-06-29  Damon Chaplin  <damon@gnome.org>
@@ -151,8 +160,8 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasimage.c: added "scale-to-fit" property, which scales
 	the image to fit the "width" and "height" settings.
 
-	* demo/units-demo.c: 
-	* demo/mv-demo.c (plant_flower): 
+	* demo/units-demo.c:
+	* demo/mv-demo.c (plant_flower):
 	* demo/demo.c (plant_flower): test "scale-to-fit" property.
 
 2009-05-07  Damon Chaplin  <damon@gnome.org>
@@ -164,7 +173,7 @@ See also the goocanvas-1.0 branch.
 
 2009-03-16  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitem.c: changed docs referring to "root_x" and "root_y" 
+	* src/goocanvasitem.c: changed docs referring to "root_x" and "root_y"
 	fields of event structs to "x_root" and "y_root".
 
 2009-03-15  Damon Chaplin  <damon@gnome.org>
@@ -183,7 +192,7 @@ See also the goocanvas-1.0 branch.
 
 	* configure.in: added dependancy on GTK+ 2.12 for tooltips.
 
-	* demo/mv-demo.c: 
+	* demo/mv-demo.c:
 	* demo/demo.c: added tests for tooltips.
 
 2009-03-15  Damon Chaplin  <damon@gnome.org>
@@ -194,9 +203,9 @@ See also the goocanvas-1.0 branch.
 
 2009-03-15  Damon Chaplin  <damon@gnome.org>
 
-	* docs/coordinates.xml: 
-	* docs/architecture.xml: 
-	* docs/creating-items.xml: 
+	* docs/coordinates.xml:
+	* docs/architecture.xml:
+	* docs/creating-items.xml:
 	* src/goocanvasitemsimple.c: use the terms "canvas coordinate space" or
 	"canvas space" rather than "device space" which is a bit misleading.
 
@@ -210,7 +219,7 @@ See also the goocanvas-1.0 branch.
 	scroll_event() signals on items.
 
 	* src/goocanvasitem.c: implemented "scroll_event" signals on items.
-	
+
 	* src/goocanvas.c: implemented "scroll_event" signals on items.
 
 	* demo/demo.c: added test for above. #566110
@@ -261,7 +270,7 @@ See also the goocanvas-1.0 branch.
 
 2008-11-19  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_stop_animation): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_stop_animation):
 	* src/goocanvasitem.c (goo_canvas_item_animate_cb)
 	(goo_canvas_item_stop_animation): remove the current animation data
 	before emitting "animation-finished", so signal handlers can start a
@@ -278,7 +287,7 @@ See also the goocanvas-1.0 branch.
 	group of static items separately, to stop GTK+ merging the redraw
 	rect into one massive one.
 
-	* demo/mv-demo.c (create_static_model): 
+	* demo/mv-demo.c (create_static_model):
 	* demo/demo.c (setup_static_items): use a group for all the static
 	items.
 
@@ -306,7 +315,7 @@ See also the goocanvas-1.0 branch.
 
 	* src/goocanvaswidget.c: note that widgets can't be static.
 
-	* README: 
+	* README:
 	* docs/overview.xml: mention static items and the grid item.
 
 2008-11-03  Damon Chaplin  <damon@gnome.org>
@@ -316,7 +325,7 @@ See also the goocanvas-1.0 branch.
 	(emit_pointer_event): convert the pointer position to static item space
 	for static items.
 
-	* src/goocanvasatk.c (goo_canvas_item_accessible_get_item_extents): 
+	* src/goocanvasatk.c (goo_canvas_item_accessible_get_item_extents):
 	handle static items - don't need to convert to pixels within the
 	window as they are already like that.
 
@@ -324,7 +333,7 @@ See also the goocanvas-1.0 branch.
 
 	* src/goocanvasgrid.[hc]: new grid item.
 
-	* demo/mv-demo.c (setup_grids): 
+	* demo/mv-demo.c (setup_grids):
 	* demo/demo.c (setup_grids): added a grid.
 
 	* src/Makefile.am: added grid.
@@ -345,27 +354,27 @@ See also the goocanvas-1.0 branch.
 
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.h (struct _GooCanvasItemModelIface): 
+	* src/goocanvasitemmodel.h (struct _GooCanvasItemModelIface):
 	* src/goocanvasitem.h (struct _GooCanvasItemIface): added
 	animation_finished() signals.
 
-	* src/goocanvasitemmodel.c: 
+	* src/goocanvasitemmodel.c:
 	* src/goocanvasitem.c: implemented "animation-finished" signals.
 
-	* demo/mv-demo-animation.c: 
+	* demo/mv-demo-animation.c:
 	* demo/demo-animation.c: added test for above.
 
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
-	* demo/mv-demo-arrowhead.c (on_button_press): 
-	* demo/demo-arrowhead.c (on_button_press): 
-	* demo/mv-demo.c (on_button_press): 
+	* demo/mv-demo-arrowhead.c (on_button_press):
+	* demo/demo-arrowhead.c (on_button_press):
+	* demo/mv-demo.c (on_button_press):
 	* demo/demo.c (on_button_press): use GDK_POINTER_MOTION_HINT_MASK for
 	the pointer grab, so we don't get too many events.
 
 2008-10-31  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvas.h: 
+	* src/goocanvas.h:
 	(goo_canvas_get_static_root_item): new function to get static root item.
 	(goo_canvas_set_static_root_item): new function to set static root item.
 	(goo_canvas_get_static_root_item_model): new function to get static
@@ -424,7 +433,7 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvastable.c: use new goo_canvas_request_item_redraw()
 	function so static items are redrawn correctly.
 
-	* demo/mv-demo.c (create_static_model): 
+	* demo/mv-demo.c (create_static_model):
 	* demo/demo.c (setup_static_items): added some static items to test.
 	Note that dragging around when scale != 1.0 is weird as the coord
 	spaces are different, but is expected.
@@ -503,7 +512,7 @@ See also the goocanvas-1.0 branch.
 
 2008-08-17  Damon Chaplin  <damon@gnome.org>
 
-	* src/Makefile.am (INCLUDES): 
+	* src/Makefile.am (INCLUDES):
 	* demo/Makefile.am (INCLUDES): get rid of the XXX_DISABLE_DEPRECATED
 	flags so we don't break compilation when GTK+ deprecates stuff. #548086
 
@@ -513,7 +522,7 @@ See also the goocanvas-1.0 branch.
 	(goo_canvas_group_model_get_child): return NULL if child_num is out
 	of range. #535150
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_child): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_child):
 	* src/goocanvasitem.c (goo_canvas_item_get_child): updated docs.
 
 2008-06-24  Damon Chaplin  <damon@gnome.org>
@@ -580,7 +589,7 @@ See also the goocanvas-1.0 branch.
 
 2008-05-09  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.h: 
+	* src/goocanvasitemmodel.h:
 	* src/goocanvasitem.h: removed _CLASS macros since they are interfaces.
 	(From Masatake YAMATO).
 
@@ -600,17 +609,17 @@ See also the goocanvas-1.0 branch.
 	"x-border-spacing" and "y-border-spacing" properties.
 	(Patch applied by Damon with a few changes.)
 
-	* demo/mv-table-demo.c: 
+	* demo/mv-table-demo.c:
 	* demo/table-demo.c: added tests for the gridlines.
 
 2008-04-04  Damon Chaplin  <damon@gnome.org>
 
-	* docs/coordinates.xml: 
+	* docs/coordinates.xml:
 	* docs/architecture.xml: new sections.
 
 	* docs/creating-items.xml: rewritten.
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_set_parent): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_set_parent):
 	* src/goocanvasitem.c (goo_canvas_item_set_parent): note in the docs
 	that the "parent" property can be used to set the parent, but that
 	these functions are only for implementing new items (a bit confusing).
@@ -625,11 +634,11 @@ See also the goocanvas-1.0 branch.
 
 2008-03-27  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitem.c (goo_canvas_item_get_simple_transform): 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_simple_transform): 
+	* src/goocanvasitem.c (goo_canvas_item_get_simple_transform):
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_simple_transform):
 	new functions to do opposite of set_simple_transform().
 
-	* demo/mv-demo.c (test_simple_transforms): 
+	* demo/mv-demo.c (test_simple_transforms):
 	* demo/demo.c (test_simple_transforms): added some test code for above.
 
 2008-03-27  Damon Chaplin  <damon@gnome.org>
@@ -652,7 +661,7 @@ See also the goocanvas-1.0 branch.
 	simple_update/paint/get_item_at() virtual functions that call
 	simple_create_path(). These make it easier for language bindings.
 	Based on patch from Jonathon Jongsma.
-	
+
 2008-02-25  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastext.c (goo_canvas_text_get_natural_extents): added
@@ -671,13 +680,13 @@ See also the goocanvas-1.0 branch.
 
 2007-11-18  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitem.c (goo_canvas_item_get_child_property) 
-	(goo_canvas_item_set_child_property): 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_child_property) 
+	* src/goocanvasitem.c (goo_canvas_item_get_child_property)
+	(goo_canvas_item_set_child_property):
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_get_child_property)
 	(goo_canvas_item_model_set_child_property): new functions to get/set
 	individual child properties (to help language bindings).
 
-	* demo/demo-table.c (create_demo_item): 
+	* demo/demo-table.c (create_demo_item):
 	* demo/mv-demo-table.c (create_demo_item): test the above.
 
 	* src/goocanvasitem.c:
@@ -687,19 +696,19 @@ See also the goocanvas-1.0 branch.
 2007-11-13  Murray Cumming  <murrayc@murrayc.com>
 
 	* src/goocanvasitem.c: goo_canvas_item_add_child():
-	* src/goocanvasitemmodel.c: goo_canvas_item_model_add_child(): 
+	* src/goocanvasitemmodel.c: goo_canvas_item_model_add_child():
 	Add a debugging check to make sure the child is not the same as the
 	parent, preventing an endless loop.
 
 2007-11-13  Murray Cumming  <murrayc@murrayc.com>
 
-	* src/goocanvasimage.c: goo_canvas_image_set_common_property(): 
-	Support setting the pixbuf property to NULL. 
+	* src/goocanvasimage.c: goo_canvas_image_set_common_property():
+	Support setting the pixbuf property to NULL.
 
 2007-11-13  Murray Cumming  <murrayc@murrayc.com>
 
-	* src/goocanvas.c: goo_canvas_render(): Call goo_canvas_update() 
-	if necessary, as suggested by Damon, to fix a crash when rendering 
+	* src/goocanvas.c: goo_canvas_render(): Call goo_canvas_update()
+	if necessary, as suggested by Damon, to fix a crash when rendering
 	a GooCanvasTable that has never been shown on screen.
 
 2007-08-13  Damon Chaplin  <damon@gnome.org>
@@ -723,7 +732,7 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasitem.c (goo_canvas_item_request_update): don't use
 	return here as it is a void function.
 
-	* src/goocanvastable.c (goo_canvas_table_remove_child): 
+	* src/goocanvastable.c (goo_canvas_table_remove_child):
 	* src/goocanvasgroup.c (goo_canvas_group_remove_child): check the
 	child_num arg is valid.
 
@@ -733,7 +742,7 @@ See also the goocanvas-1.0 branch.
 	"bounds-padding" properties, used to calculate the canvas bounds
 	automatically.
 
-	* demo/demo.c (change_bounds_clicked): 
+	* demo/demo.c (change_bounds_clicked):
 	* demo/mv-demo.c (change_bounds_clicked): test the above.
 
 2007-06-19  Damon Chaplin  <damon@gnome.org>
@@ -744,7 +753,7 @@ See also the goocanvas-1.0 branch.
 
 	* src/goocanvastable.c: implement integer layout.
 
-	* demo/table-demo.c: 
+	* demo/table-demo.c:
 	* demo/mv-table-demo.c: tests for integer layout.
 
 2007-05-15  Damon Chaplin  <damon@gnome.org>
@@ -766,11 +775,11 @@ See also the goocanvas-1.0 branch.
 
 2007-05-14  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvas.c (goo_canvas_set_property) 
+	* src/goocanvas.c (goo_canvas_set_property)
 	(goo_canvas_set_bounds): queue a redraw of the widget.
 	(goo_canvas_expose_event): clip to the canvas bounds if necessary.
 
-	* demo/mv-demo.c (change_bounds_clicked): 
+	* demo/mv-demo.c (change_bounds_clicked):
 	* demo/demo.c (change_bounds_clicked): test changing the bounds
 	dynamically.
 
@@ -781,23 +790,23 @@ See also the goocanvas-1.0 branch.
 	GArray was updated but the view still pointed to the old GArray
 	which had been freed.
 
-	* demo/mv-demo-paths.c: 
+	* demo/mv-demo-paths.c:
 	* demo/demo-paths.c: added a button to test changing the path data
 	dynamically.
 
 2007-05-11  Damon Chaplin  <damon@gnome.org>
 
-	* demo/demo-large-rect.c: 
-	* demo/demo-large-line.c: 
+	* demo/demo-large-rect.c:
+	* demo/demo-large-line.c:
 	* demo/demo-large-items.c: new demo and items to show how to create a
 	very large canvas and very large items.
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_line_width): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_line_width):
 	added utility function to get an item's line width.
 	Also changed default line width property value to 2.0, and returned
 	canvas line width setting if item's line width isn't set.
 
-	* src/goocanvasrect.c (goo_canvas_rect_update): 
+	* src/goocanvasrect.c (goo_canvas_rect_update):
 	* src/goocanvaspolyline.c (goo_canvas_polyline_reconfigure_arrows): use
 	the above function to get the line width.
 
@@ -810,26 +819,26 @@ See also the goocanvas-1.0 branch.
 
 2007-04-27  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitem.h: 
+	* src/goocanvasitem.h:
 	* src/goocanvasutils.c (goo_canvas_bounds_get_type): added type stuff
 	for language bindings (patch from Murray Cumming).
 
 2007-04-25  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.c (_goo_canvas_item_model_emit_child_added) 
+	* src/goocanvasitemmodel.c (_goo_canvas_item_model_emit_child_added)
 	(_goo_canvas_item_model_emit_changed): new simple functions to emit
 	signals faster (avoids signal name lookups).
 
 	* src/goocanvasitemsimple.c
-	(goo_canvas_item_model_simple_set_property) 
-	(goo_canvas_item_model_simple_set_transform) 
-	(goo_canvas_item_model_simple_set_style): 
+	(goo_canvas_item_model_simple_set_property)
+	(goo_canvas_item_model_simple_set_transform)
+	(goo_canvas_item_model_simple_set_style):
 	* src/goocanvasgroup.c (goo_canvas_group_model_add_child): use the
 	above functions for a little speedup.
 
 2007-04-25  Damon Chaplin  <damon@gnome.org>
 
-	* demo/mv-scalability-demo.c: 
+	* demo/mv-scalability-demo.c:
 	* demo/scalability-demo.c: instead of connecting signals to all items
 	we just use a handler on the root item. Also added a switch to turn
 	off the text items, to see the difference in performance (a lot).
@@ -853,7 +862,7 @@ See also the goocanvas-1.0 branch.
 
 2007-04-16  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds):
 	handle empty bounds for an item's fill or stroke. cairo 1.4.x returns
 	0.0 for x1/y1/x2/y2 in that case, though older versions of cairo
 	returned odd values. So I've added a workaround for that as well.
@@ -871,14 +880,14 @@ See also the goocanvas-1.0 branch.
 
 2007-04-03  Damon Chaplin  <damon@gnome.org>
 
-	* demo/mv-demo.c (create_canvas_primitives): 
+	* demo/mv-demo.c (create_canvas_primitives):
 	* demo/demo.c (create_canvas_primitives): set the maximum scale to 50,
 	since if we go above that we hit the cairo 16-bit limit and the large
 	rectangle isn't painted correctly.
 
 	* src/goocanvasitemsimple.c (goo_canvas_item_simple_install_common_properties): improved docs for fill/stroke properties.
 
-	* src/goocanvaswidget.c (goo_canvas_widget_new) 
+	* src/goocanvaswidget.c (goo_canvas_widget_new)
 	(goo_canvas_widget_set_widget): keep our own reference to the widget,
 	rather than just relying on the canvas widget's reference. Otherwise
 	once the widget is removed from the canvas we have an invalid pointer.
@@ -892,7 +901,7 @@ See also the goocanvas-1.0 branch.
 	accumulator for the event signals, so returning TRUE from a handler
 	stops the signal.
 
-	* src/goocanvasitemsimple.h (struct _GooCanvasItemSimpleData): 
+	* src/goocanvasitemsimple.h (struct _GooCanvasItemSimpleData):
 	* src/goocanvasitem.h (struct _GooCanvasItemIface): added a few bits
 	that will be needed to support tooltips with GTK+ 2.12. I have a patch
 	to support tooltips but I don't want to depend on GTK+ 2.12 yet.
@@ -913,12 +922,12 @@ See also the goocanvas-1.0 branch.
 	properties to set the background color of the canvas, based on a patch
 	from Gian Mario Tagliaretti.
 
-	* demo/demo.c (create_canvas_primitives): 
+	* demo/demo.c (create_canvas_primitives):
 	* demo/mv-demo.c (create_canvas_primitives): use above properties.
 
 2007-03-16  Murray Cumming  <murrayc@murrayc.com>
 
-	* src/goocanvasitemsimple.h: Change the struct field name from 
+	* src/goocanvasitemsimple.h: Change the struct field name from
 	private to priv, to avoid problems when using this from C++.
 
 2007-03-08  Damon Chaplin  <damon@gnome.org>
@@ -938,14 +947,14 @@ See also the goocanvas-1.0 branch.
 
 2007-03-08  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_remove): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_remove):
 	* src/goocanvasitem.c (goo_canvas_item_remove): new convenience
 	functions to easily remove items & models from the canvas.
 
-	* demo/mv-demo-features.c (on_button_press): 
-	* demo/demo-features.c (on_button_press): 
-	* demo/demo.c (on_button_press): 
-	* demo/mv-demo.c (on_button_press): 
+	* demo/mv-demo-features.c (on_button_press):
+	* demo/demo-features.c (on_button_press):
+	* demo/demo.c (on_button_press):
+	* demo/mv-demo.c (on_button_press):
 	* demo/widgets-demo.c (remove_widget_clicked): use new remove()
 	functions to test them.
 
@@ -959,8 +968,8 @@ See also the goocanvas-1.0 branch.
 
 	* demo/demo.c (setup_texts): added test for ellipsized text.
 
-	* demo/mv-demo.c: 
-	* demo/mv-demo-table.c: 
+	* demo/mv-demo.c:
+	* demo/mv-demo-table.c:
 	* demo/mv-demo-clipping.c: updated model-view demos, adding new stuff
 	from simple demo.
 
@@ -1004,7 +1013,7 @@ See also the goocanvas-1.0 branch.
 	calculates the requested height for the given width, or just returns
 	-1 if the text item is rotated or has a clip path, in which case the
 	original height is used.
-	(goo_canvas_text_init, goo_canvas_text_create_layout) 
+	(goo_canvas_text_init, goo_canvas_text_create_layout)
 	(goo_canvas_text_update): use layout_width.
 
 	* demo/demo-table.c (create_width_for_height_table): added tests for
@@ -1027,13 +1036,13 @@ See also the goocanvas-1.0 branch.
 
 2007-02-27  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.[hc]: 
+	* src/goocanvasitemmodel.[hc]:
 	* src/goocanvasitem.[hc]: used name "transform" for all arguments
 	to get/set_transform functions.
 
 2007-02-27  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.[hc]: 
+	* src/goocanvasitemmodel.[hc]:
 	* src/goocanvasitem.[hc]: changed get_transform() method to take a
 	cairo_matrix_t* to fill in, and return a boolean if a transform is set.
 	This is better for bindings.
@@ -1051,13 +1060,13 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvas.c (goo_canvas_get_item_at): updated to use new API.
 	(goo_canvas_get_items_at): new function to return list of found items.
 
-	* src/goocanvastable.c (goo_canvas_table_get_items_at): 
+	* src/goocanvastable.c (goo_canvas_table_get_items_at):
 	* src/goocanvasgroup.c (goo_canvas_group_get_items_at):
-	* src/goocanvasimage.c (goo_canvas_image_is_item_at): 
-	* src/goocanvaspolyline.c (goo_canvas_polyline_is_item_at): 
-	* src/goocanvastext.c (goo_canvas_text_is_item_at): 
-	* src/goocanvaswidget.c (goo_canvas_widget_is_item_at): 
-	* docs/creating-items.xml: 
+	* src/goocanvasimage.c (goo_canvas_image_is_item_at):
+	* src/goocanvaspolyline.c (goo_canvas_polyline_is_item_at):
+	* src/goocanvastext.c (goo_canvas_text_is_item_at):
+	* src/goocanvaswidget.c (goo_canvas_widget_is_item_at):
+	* docs/creating-items.xml:
 	* demo/demo-item.c (goo_demo_item_is_item_at): updated for new API.
 
 2007-02-25  Damon Chaplin  <damon@gnome.org>
@@ -1065,7 +1074,7 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasitemsimple.c: added "hint-metrics" property so people
 	can use hinted metrics for prettier text if they aren't scaling the
 	canvas at all.
-	
+
 	* src/goocanvasstyle.c: added goo_canvas_style_hint_metrics_id quark.
 
 	* src/goocanvasutils.c (goo_cairo_hint_metrics_get_type): added enum
@@ -1087,7 +1096,7 @@ See also the goocanvas-1.0 branch.
 	any other objects.) This was done to help the Ruby bindings.
 	It was a bit fiddly so it might cause a few bugs.
 
-	* src/goocanvasutils.c (goo_cairo_matrix_copy) 
+	* src/goocanvasutils.c (goo_cairo_matrix_copy)
 	(goo_cairo_matrix_free): allocate and free with g_slice_new/free() as
 	that is what was being used in GooCanvasItemSimple.
 
@@ -1096,11 +1105,11 @@ See also the goocanvas-1.0 branch.
 
 2007-02-24  Damon Chaplin  <damon@gnome.org>
 
-	* demo/widgets-demo.c (on_delete_event): 
-	* demo/units-demo.c (on_delete_event): 
-	* demo/mv-scalability-demo.c (on_delete_event): 
-	* demo/scalability-demo.c (on_delete_event): 
-	* demo/mv-demo.c (on_delete_event): 
+	* demo/widgets-demo.c (on_delete_event):
+	* demo/units-demo.c (on_delete_event):
+	* demo/mv-scalability-demo.c (on_delete_event):
+	* demo/scalability-demo.c (on_delete_event):
+	* demo/mv-demo.c (on_delete_event):
 	* demo/demo.c (on_delete_event): use gtk_main_quit() rather than exit()
 	here, so GTK+ destroys the window and the finalization code gets
 	tested.
@@ -1110,19 +1119,19 @@ See also the goocanvas-1.0 branch.
 
 2007-02-20  Damon Chaplin  <damon@gnome.org>
 
-	* demo/demo-table.c: 
+	* demo/demo-table.c:
 	* demo/mv-demo-table.c: moved table-demo.c into main demo app, and
 	made a model-view version.
 
 2007-02-20  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvastable.c (goo_canvas_table_get_item_at) 
+	* src/goocanvastable.c (goo_canvas_table_get_item_at)
 	(goo_canvas_table_paint): if the table was shrunk below its requested
 	size, clip the children if appropriate.
 
-	* src/goocanvastable.c (goo_canvas_table_get_item_at) 
-	(goo_canvas_table_paint): 
-	* src/goocanvasgroup.c (goo_canvas_group_get_item_at) 
+	* src/goocanvastable.c (goo_canvas_table_get_item_at)
+	(goo_canvas_table_paint):
+	* src/goocanvasgroup.c (goo_canvas_group_get_item_at)
 	(goo_canvas_group_paint): check the bounds and handle the clip path.
 
 	* demo/table-demo.c (create_demo_table): added parameters and created
@@ -1130,7 +1139,7 @@ See also the goocanvas-1.0 branch.
 
 2007-02-20  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvastext.c (goo_canvas_text_create_layout): 
+	* src/goocanvastext.c (goo_canvas_text_create_layout):
 	(goo_canvas_text_get_item_at): use the ink rect as well as the logical
 	rect when calculating the bounds or doing hit-testing.
 
@@ -1155,15 +1164,15 @@ See also the goocanvas-1.0 branch.
 
 2007-02-19  Damon Chaplin  <damon@gnome.org>
 
-	* demo/demo.c: 
-	* demo/mv-demo.c: 
-	* demo/demo-animation.c: 
+	* demo/demo.c:
+	* demo/mv-demo.c:
+	* demo/demo-animation.c:
 	* demo/mv-demo-animation.c: made the file-global variables static so
 	they don't clash, and updated the demos a bit.
 
 2007-02-19  Damon Chaplin  <damon@gnome.org>
 
-	* configure.in: 
+	* configure.in:
 	* src/Makefile.am: rewrote the stuff that handles the autogeneration
 	of goocanvasmarshal.[hc] and goocanvasenumtypes.[hc], copying what
 	GTK+ does. It now has a --disable-rebuilds option to disable the
@@ -1182,32 +1191,32 @@ See also the goocanvas-1.0 branch.
 	This avoids confusion with the GooCanvasItem interface methods with the
 	same name (and may avoid problems with language bindings etc.)
 
-	* src/goocanvasellipse.c (goo_canvas_ellipse_class_init): 
-	* src/goocanvasimage.c (goo_canvas_image_class_init): 
-	* src/goocanvaspath.c (goo_canvas_path_class_init): 
-	* src/goocanvaspolyline.c (goo_canvas_polyline_class_init): 
-	* src/goocanvasrect.c (goo_canvas_rect_class_init): 
-	* src/goocanvastext.c (goo_canvas_text_class_init): 
-	* src/goocanvaswidget.c (goo_canvas_widget_class_init): 
-	* demo/demo-item.c (goo_demo_item_class_init): 
+	* src/goocanvasellipse.c (goo_canvas_ellipse_class_init):
+	* src/goocanvasimage.c (goo_canvas_image_class_init):
+	* src/goocanvaspath.c (goo_canvas_path_class_init):
+	* src/goocanvaspolyline.c (goo_canvas_polyline_class_init):
+	* src/goocanvasrect.c (goo_canvas_rect_class_init):
+	* src/goocanvastext.c (goo_canvas_text_class_init):
+	* src/goocanvaswidget.c (goo_canvas_widget_class_init):
+	* demo/demo-item.c (goo_demo_item_class_init):
 	* src/goocanvasitemsimple.c: updated use of above class methods.
 
 	* src/goocanvasgroup.c (goo_canvas_group_update): handle children with
 	empty bounds (i.e. ignore their bounds when computing the group's
 	bounds).
 
-	* src/goocanvastable.c (goo_canvas_table_paint) 
-	(goo_canvas_table_get_item_at): 
+	* src/goocanvastable.c (goo_canvas_table_paint)
+	(goo_canvas_table_get_item_at):
 	* src/goocanvasgroup.c (goo_canvas_group_get_item_at)
 	(goo_canvas_group_paint): don't check the
 	child bounds here. Leave it up to the children to do that.
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_item_at) 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_item_at)
 	(goo_canvas_item_simple_paint): check the item's bounds here.
 
 2007-02-15  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasutils.c: 
+	* src/goocanvasutils.c:
 	* src/goocanvaspath.c: moved data structures and code for parsing and
 	creating SVG paths from goocanvaspath.[hc] to goocanvasutils.[hc].
 	Added goo_canvas_parse_path_data() and goo_canvas_create_path() public
@@ -1220,23 +1229,23 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasitemsimple.h (struct _GooCanvasItemSimpleData): added
 	clip_path_commands and clip_fill_rule.
 
-	* src/goocanvastext.c (goo_canvas_text_set_model): 
-	* src/goocanvasrect.c (goo_canvas_rect_set_model): 
-	* src/goocanvaspolyline.c (goo_canvas_polyline_set_model): 
-	* src/goocanvaspath.c (goo_canvas_path_set_model): 
-	* src/goocanvasimage.c (goo_canvas_image_set_model): 
-	* src/goocanvasgroup.c (goo_canvas_group_set_model): 
+	* src/goocanvastext.c (goo_canvas_text_set_model):
+	* src/goocanvasrect.c (goo_canvas_rect_set_model):
+	* src/goocanvaspolyline.c (goo_canvas_polyline_set_model):
+	* src/goocanvaspath.c (goo_canvas_path_set_model):
+	* src/goocanvasimage.c (goo_canvas_image_set_model):
+	* src/goocanvasgroup.c (goo_canvas_group_set_model):
 	* src/goocanvasellipse.c (goo_canvas_ellipse_set_model): use
 	goo_canvas_item_simple_set_model() rather than getting parent iface.
 	(For GooCanvasTable this actually caused a crash as when it called
 	the GooCanvasGroup function that got the parent iface which pointed to
 	itself so it got into an infinite loop.)
 
-	* demo/mv-demo-clipping.c: 
+	* demo/mv-demo-clipping.c:
 	* demo/demo-clipping.c: new files for clipping demo pages.
 
-	* demo/Makefile.am: 
-	* demo/mv-demo.c: 
+	* demo/Makefile.am:
+	* demo/mv-demo.c:
 	* demo/demo.c: added clipping pages.
 
 2007-02-13  Damon Chaplin  <damon@gnome.org>
@@ -1246,20 +1255,20 @@ See also the goocanvas-1.0 branch.
 
 2007-02-13  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_animate): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_animate):
 	* src/goocanvasitem.c (goo_canvas_item_animate): added "absolute"
 	parameter, and rewrote the animation code, using the same code for
 	GooCanvasItem and GooCanvasItemModel.
 
-	* demo/demo-animation.c: 
+	* demo/demo-animation.c:
 	* demo/mv-demo-animation.c: new files for animation demo pages.
 
-	* demo/mv-demo.c: 
+	* demo/mv-demo.c:
 	* demo/demo.c: added new animation pages and updated animation calls.
 
 2007-02-12  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemmodel.c (goo_canvas_item_model_set_simple_transform): 
+	* src/goocanvasitemmodel.c (goo_canvas_item_model_set_simple_transform):
 	* src/goocanvasitem.c (goo_canvas_item_set_simple_transform): convert
 	rotation to radians.
 
@@ -1274,13 +1283,13 @@ See also the goocanvas-1.0 branch.
 	* docs/*.xml: added example code to the introductory sections.
 	Needs more explanation at some point.
 
-	* configure.in: 
+	* configure.in:
 	* src/Makefile.am: added libtool version numbers.
 
 2007-02-08  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitemmodel.c
-	(goo_canvas_item_model_set_simple_transform): 
+	(goo_canvas_item_model_set_simple_transform):
 	* src/goocanvasitem.c (goo_canvas_item_set_simple_transform): new
 	convenience functions to set the position, scale and rotation easily.
 
@@ -1341,7 +1350,7 @@ See also the goocanvas-1.0 branch.
 	* demo/table-demo.c: added more test tables with various transforms
 	and settings.
 
-	* src/goocanvasitem.c (goo_canvas_item_get_requested_area) 
+	* src/goocanvasitem.c (goo_canvas_item_get_requested_area)
 	(goo_canvas_item_allocate_area)
 	(goo_canvas_item_get_transform_for_child) : new functions and interface
 	methods to support GooCanvasTable and other layout containers.
@@ -1350,13 +1359,13 @@ See also the goocanvas-1.0 branch.
 	initialized the model's visibility setting to GOO_CANVAS_ITEM_VISIBLE.
 	(goo_canvas_item_simple_update): split part of it out into
 	goo_canvas_item_simple_update_internal and updated slightly.
-	(goo_canvas_item_simple_get_requested_area) 
+	(goo_canvas_item_simple_get_requested_area)
 	(goo_canvas_item_simple_allocate_area): new functions to support
 	GooCanvasTable and other layout containers.
 	(goo_canvas_item_simple_get_path_bounds): don't convert to device space
 	as some code needs the bounds in user space.
 
-	* src/goocanvas.c (goo_canvas_convert_to_item_space) 
+	* src/goocanvas.c (goo_canvas_convert_to_item_space)
 	(goo_canvas_convert_from_item_space): used the new
 	goo_canvas_item_get_transform_for_child() function to get the transform
 	for each item.
@@ -1365,7 +1374,7 @@ See also the goocanvas-1.0 branch.
 	which is used for items which are invisible and not allocated any space
 	in containter items like GooCanvasTable.
 
-	* src/goocanvasgroup.c (goo_canvas_group_get_item_at) 
+	* src/goocanvasgroup.c (goo_canvas_group_get_item_at)
 	(goo_canvas_group_paint): support GOO_CANVAS_ITEM_HIDDEN.
 
 	* src/goocanvaspolyline.c (goo_canvas_polyline_compute_bounds):
@@ -1382,7 +1391,7 @@ See also the goocanvas-1.0 branch.
 
 2006-12-09  Damon Chaplin  <damon@gnome.org>
 
-	* docs/goocanvas-sections.txt: 
+	* docs/goocanvas-sections.txt:
 	* docs/goocanvas-docs.sgml: use separate sections for model objects,
 	as gtk-doc doesn't support multiple objects per section.
 
@@ -1392,7 +1401,7 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasutils.c (goo_canvas_query_child_properties): new
 	function to allow documentation of child properties with gtk-doc.
 
-	* src/goocanvasitemmodel.c: 
+	* src/goocanvasitemmodel.c:
 	* src/goocanvasitem.c: added support for child properties of item
 	models.
 
@@ -1415,9 +1424,9 @@ See also the goocanvas-1.0 branch.
 	standard stuff before passing control to them. This makes it much
 	easier to create simple canvas items.
 
-	* demo/demo-item.c: 
-	* src/goocanvaspolyline.c: 
-	* src/goocanvastext.c: 
+	* demo/demo-item.c:
+	* src/goocanvaspolyline.c:
+	* src/goocanvastext.c:
 	* src/goocanvasimage.c: use the above methods, so we can get rid of
 	all the boilerplate code.
 
@@ -1437,11 +1446,11 @@ See also the goocanvas-1.0 branch.
 	Also added support for cascading styles, with arbitrary properties,
 	and embedded widget items. I'm in the middle of adding support for
 	layout items as well (e.g. something like a GtkTable for items).
-	
+
 2006-10-12  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvastextview.c (goo_canvas_text_view_create_layout) 
-	(goo_canvas_text_view_get_item_view_at) 
+	* src/goocanvastextview.c (goo_canvas_text_view_create_layout)
+	(goo_canvas_text_view_get_item_view_at)
 	(goo_canvas_text_view_paint): patch from Martin Soto to fix a text
 	positioning bug. The position was wrong when the text width was set
 	and the alignment wasn't PANGO_ALIGN_LEFT. (Pango uses the set width
@@ -1449,7 +1458,7 @@ See also the goocanvas-1.0 branch.
 
 2006-10-12  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasutils.h: 
+	* src/goocanvasutils.h:
 	* src/goocanvasprivate.h: make get_type() declarations public as
 	they are useful for bindings.
 
@@ -1469,7 +1478,7 @@ See also the goocanvas-1.0 branch.
 	in goocanvasenums.h, and modifed GooCanvasPointerEvents so glib_mkenums
 	could parse it.
 
-	* src/goocanvas.h: 
+	* src/goocanvas.h:
 	* src/goocanvasitem.c: include goocanvasenums.h.
 
 2006-10-12  Damon Chaplin  <damon@gnome.org>
@@ -1510,8 +1519,8 @@ See also the goocanvas-1.0 branch.
 
 2006-08-30  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_update) 
-	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_update): 
+	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_update)
+	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_update):
 	added a workaround for cairo limits. Cairo uses fixed point integer
 	maths and is currently limited to 16-bits for the integer component.
 	So we remove any current translation before calculating the bounds
@@ -1519,7 +1528,7 @@ See also the goocanvas-1.0 branch.
 	limit only applies to items' user space rather than the entire canvas.
 
 	* src/goocanvasitemviewsimple.c
-	(goo_canvas_item_view_simple_get_item_view_at): 
+	(goo_canvas_item_view_simple_get_item_view_at):
 	* src/goocanvaspolylineview.c
 	(goo_canvas_polyline_view_get_item_view_at): as above, remove any
 	current translation before checking if the point is in the item.
@@ -1533,13 +1542,13 @@ See also the goocanvas-1.0 branch.
 
 2006-08-27  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasview.c (goo_canvas_view_class_init): 
-	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_class_init) 
+	* src/goocanvasview.c (goo_canvas_view_class_init):
+	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_class_init)
 	* src/goocanvasgroupview.c (goo_canvas_group_view_class_init): only
 	register the accessible factories if accessibility is enabled (i.e.
 	GtkWidget has registered a factory).
 
-	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_setup_accessibility): 
+	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_setup_accessibility):
 	* src/goocanvasgroupview.c (goo_canvas_group_view_set_group): only
 	set the accessible title & description and connect the signal handlers
 	if accessibility is enabled. (It would be better to not call
@@ -1610,10 +1619,10 @@ See also the goocanvas-1.0 branch.
 
 2006-08-08  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvastextview.c (goo_canvas_text_view_update): 
-	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_update): 
-	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_update): 
-	* src/goocanvasimageview.c (goo_canvas_image_view_update): 
+	* src/goocanvastextview.c (goo_canvas_text_view_update):
+	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_update):
+	* src/goocanvasitemviewsimple.c (goo_canvas_item_view_simple_update):
+	* src/goocanvasimageview.c (goo_canvas_image_view_update):
 	* src/goocanvasgroupview.c (goo_canvas_group_view_update): rewrote the
 	update methods to make sure the bounds is always set and returned
 	correctly.
@@ -1676,8 +1685,8 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasutils.c (goo_canvas_pointer_events_get_type): use a
 	flags type rather than an enum type (from Gustavo J. A. M. Carneiro).
 
-	* src/goocanvasitem.c (goo_canvas_item_base_init): 
-	* src/goocanvasitemsimple.c: 
+	* src/goocanvasitem.c (goo_canvas_item_base_init):
+	* src/goocanvasitemsimple.c:
 	* src/goocanvasgroup.c: updated to use the flags type for
 	"pointer-events" instead of enum.
 
@@ -1688,7 +1697,7 @@ See also the goocanvas-1.0 branch.
 
 2006-06-08  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_set_property):
 	only create the item's style when needed.
 	(goo_canvas_style_get_type): register boxed type (from Gustavo J. A. M.
 	Carneiro).
@@ -1708,8 +1717,8 @@ See also the goocanvas-1.0 branch.
 
 2006-05-16  Damon Chaplin  <damon@gnome.org>
 
-	* goocanvas.pc.in: 
-	* Makefile.am: 
+	* goocanvas.pc.in:
+	* Makefile.am:
 	* configure.in: added .pc file (patch from Gian Mario Tagliaretti).
 
 2006-05-12  Damon Chaplin  <damon@gnome.org>
@@ -1733,11 +1742,11 @@ See also the goocanvas-1.0 branch.
 	Removed goo_canvas_view_set_anchor() as the property should be enough.
 	(I think we should only have accessor functions for major properties.)
 
-	* src/goocanvasitemview.c (goo_canvas_item_view_is_visible) 
+	* src/goocanvasitemview.c (goo_canvas_item_view_is_visible)
 	(goo_canvas_item_view_get_item_at): removed scale argument. We get it
 	from the canvas view now, to make the API a little simpler.
 
-	* src/goocanvasitemviewsimple.h (struct _GooCanvasItemViewSimple): 
+	* src/goocanvasitemviewsimple.h (struct _GooCanvasItemViewSimple):
 	added pointer to the canvas view.
 
 	* src/*view.[hc]: added canvas view argument to all view creation
@@ -1761,7 +1770,7 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasitemview.c: added "focus-in-event" & "focus-out-event"
 	signals.
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds):
 	make sure we do min/max over all points of bounds.
 
 	* src/goocanvasview.c (goo_canvas_view_focus_out): emit
@@ -1774,14 +1783,14 @@ See also the goocanvas-1.0 branch.
 	per-item settings for the standard canvas items, though more complex
 	items may want to support per-view settings.
 
-	* src/goocanvasitemsimple.c: 
+	* src/goocanvasitemsimple.c:
 	* src/goocanvasgroup.c: implemented "title" and "description"
 	properties.
 
 	* src/goocanvas*view.c: set the accessible name & description based
 	on the item's settings, and update them if changed.
 
-	* src/goocanvasatk.c (goo_canvas_item_view_accessible_ref_child): 
+	* src/goocanvasatk.c (goo_canvas_item_view_accessible_ref_child):
 	return the accessible rather than the item view.
 
 2006-04-18  Damon Chaplin  <damon@gnome.org>
@@ -1828,8 +1837,8 @@ See also the goocanvas-1.0 branch.
 
 	* src/*.c: removed lots of unused debugging code.
 
-	* src/goocanvasitem.c: 
-	* src/goocanvasitemsimple.c: 
+	* src/goocanvasitem.c:
+	* src/goocanvasitemsimple.c:
 	* src/goocanvasgroup.c: moved "pointer-events" and "transform"
 	properties, and the "changed" signal to the GooCanvasItem interface.
 
@@ -1869,15 +1878,15 @@ See also the goocanvas-1.0 branch.
 
 	* src/goocanvas.h: new main header to include all the public headers.
 
-	* autogen.sh: 
-	* configure.in: 
+	* autogen.sh:
+	* configure.in:
 	* Makefile.am: setup to use gtk-doc.
 
 	* src/Makefile.am: build libgoocanvas as a library now, so we can
 	document it with gtk-doc. The demo will be moved to a separate
 	directory.
 
-	* src/goocanvastext.h: 
+	* src/goocanvastext.h:
 	* src/goocanvasitem.h: rename a few parameters to match the sources,
 	since gtk-doc complains if they are different.
 
@@ -1890,7 +1899,7 @@ See also the goocanvas-1.0 branch.
 
 2006-04-10  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvaspathview.[hc]: 
+	* src/goocanvaspathview.[hc]:
 	* src/goocanvaspath.[hc]: new path item and view, that uses the same
 	path spec strings as SVG. I think everything works, except the
 	elliptical arc, which I haven't finished yet.
@@ -1899,14 +1908,14 @@ See also the goocanvas-1.0 branch.
 
 2006-04-08  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasitemsimple.[hc]: 
+	* src/goocanvasitemsimple.[hc]:
 	* src/goocanvasgroup.[hc]: added "pointer-events" property, like SVG.
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_get_path_bounds):
 	changed to include both the stroke and fill extents, even if they will
 	not be painted. This is needed to handle the "pointer-events" property.
 
-	* src/goocanvasitemsimple.c (goo_canvas_item_simple_check_in_path): 
+	* src/goocanvasitemsimple.c (goo_canvas_item_simple_check_in_path):
 	added "pointer_events" argument, to specify which parts of the path
 	to check.
 
@@ -1914,11 +1923,11 @@ See also the goocanvas-1.0 branch.
 	"is_pointer_event", "parent_visible", and "scale" properties, so we
 	can handle the "pointer-events" property.
 
-	* src/goocanvasgroupview.c (goo_canvas_group_view_get_item_at): 
-	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_get_item_at): 
-	* src/goocanvasimageview.c (goo_canvas_image_view_get_item_at): 
-	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_get_item_at): 
-	* src/goocanvasrectview.c (goo_canvas_rect_view_get_item_at): 
+	* src/goocanvasgroupview.c (goo_canvas_group_view_get_item_at):
+	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_get_item_at):
+	* src/goocanvasimageview.c (goo_canvas_image_view_get_item_at):
+	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_get_item_at):
+	* src/goocanvasrectview.c (goo_canvas_rect_view_get_item_at):
 	* src/goocanvastextview.c (goo_canvas_text_view_get_item_at): updated
 	to support "pointer-events".
 
@@ -1932,7 +1941,7 @@ See also the goocanvas-1.0 branch.
 
 2006-04-03  Damon Chaplin  <damon@gnome.org>
 
-	* src/goocanvasview.c (goo_canvas_view_style_set) 
+	* src/goocanvasview.c (goo_canvas_view_style_set)
 	(goo_canvas_view_realize): use the base color for the background.
 
 	* src/demo.c (create_canvas_primitives): use gtk_widget_modify_base()
@@ -1946,17 +1955,17 @@ See also the goocanvas-1.0 branch.
 	* src/goocanvasview.c (goo_canvas_view_update): turned this into a
 	public function for use by the above.
 
-	* src/goocanvastextview.c (goo_canvas_text_view_get_bounds) 
-	(goo_canvas_text_view_get_item_at): 
-	* src/goocanvasrectview.c (goo_canvas_rect_view_get_bounds) 
-	(goo_canvas_rect_view_get_item_at): 
-	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_get_bounds) 
-	(goo_canvas_polyline_view_get_item_at): 
-	* src/goocanvasgroupview.c (goo_canvas_group_view_get_bounds) 
-	(goo_canvas_group_view_get_item_at): 
-	* src/goocanvasimageview.c (goo_canvas_image_view_get_bounds) 
-	(goo_canvas_image_view_get_item_at): 
-	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_get_bounds) 
+	* src/goocanvastextview.c (goo_canvas_text_view_get_bounds)
+	(goo_canvas_text_view_get_item_at):
+	* src/goocanvasrectview.c (goo_canvas_rect_view_get_bounds)
+	(goo_canvas_rect_view_get_item_at):
+	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_get_bounds)
+	(goo_canvas_polyline_view_get_item_at):
+	* src/goocanvasgroupview.c (goo_canvas_group_view_get_bounds)
+	(goo_canvas_group_view_get_item_at):
+	* src/goocanvasimageview.c (goo_canvas_image_view_get_bounds)
+	(goo_canvas_image_view_get_item_at):
+	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_get_bounds)
 	(goo_canvas_ellipse_view_get_item_at): make sure the canvas is updated
 	first, if needed.
 
@@ -1972,11 +1981,11 @@ See also the goocanvas-1.0 branch.
 	right, top, bottom for the bounds. Also renamed "pixels_per_unit"
 	to "scale".
 
-	* src/goocanvasitemview.[hc]: 
-	* src/goocanvastextview.c (goo_canvas_text_view_paint): 
-	* src/goocanvasgroupview.c (goo_canvas_group_view_paint): 
-	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_paint): 
-	* src/goocanvasimageview.c (goo_canvas_image_view_paint): 
+	* src/goocanvasitemview.[hc]:
+	* src/goocanvastextview.c (goo_canvas_text_view_paint):
+	* src/goocanvasgroupview.c (goo_canvas_group_view_paint):
+	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_paint):
+	* src/goocanvasimageview.c (goo_canvas_image_view_paint):
 	* src/goocanvaspolylineview.c (goo_canvas_polyline_view_paint): we
 	now just pass the effective scale to the paint function rather than the
 	GooCanvasView*, since when rendering to an arbitrary cairo_t we may not
@@ -1991,13 +2000,13 @@ See also the goocanvas-1.0 branch.
 
 	* src/goocanvasutils.[hc]: added GooCanvasItemVisibility enum stuff.
 
-	* src/goocanvasitemsimple.[hc]: 
+	* src/goocanvasitemsimple.[hc]:
 	* src/goocanvasgroup.[hc]: implemented new properties.
 
-	* src/goocanvasgroupview.c (goo_canvas_group_view_paint): 
-	* src/goocanvastextview.c (goo_canvas_text_view_paint): 
-	* src/goocanvasrectview.c (goo_canvas_rect_view_paint): 
-	* src/goocanvasimageview.c (goo_canvas_image_view_paint): 
+	* src/goocanvasgroupview.c (goo_canvas_group_view_paint):
+	* src/goocanvastextview.c (goo_canvas_text_view_paint):
+	* src/goocanvasrectview.c (goo_canvas_rect_view_paint):
+	* src/goocanvasimageview.c (goo_canvas_image_view_paint):
 	* src/goocanvasellipseview.c (goo_canvas_ellipse_view_paint): check
 	the visibility settings to see if the items should be painted.
 
@@ -2022,7 +2031,7 @@ See also the goocanvas-1.0 branch.
 
 	Added a goo_canvas_view_scroll_to() function to scroll to a desired
 	position.
-	
+
 	Added an anchor setting to specify where to place the contents of the
 	canvas if it is smaller than the allocated widget area. (Like the
 	"center_scroll_region" setting in GnomeCanvas but a bit more general.)
@@ -2048,4 +2057,3 @@ See also the goocanvas-1.0 branch.
 	cairo_set_font_options(cr) before, but that isn't picked up by Pango
 	so didn't work. (Font options seem to be associated with surfaces and
 	also with the graphics state which is confusing.)
-
