@@ -116,7 +116,7 @@ create_events_area (GooCanvasItemModel     *root,
   g_object_set_data_full (G_OBJECT (rect), "id", view_id, g_free);
 
   goo_canvas_text_model_new (root, label, x + 100, y + 130, -1,
-			     GTK_ANCHOR_CENTER,
+			     GOO_CANVAS_ANCHOR_CENTER,
 			     "font", "Sans 12",
 			     "fill-color", "blue",
 			     NULL);

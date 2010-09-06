@@ -35,7 +35,7 @@ struct _GooCanvasWidget
 
   GtkWidget *widget;
   gdouble x, y, width, height;
-  GtkAnchorType anchor;
+  GooCanvasAnchorType anchor;
 };
 
 struct _GooCanvasWidgetClass

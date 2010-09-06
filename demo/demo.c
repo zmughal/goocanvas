@@ -106,7 +106,7 @@ center_toggled (GtkToggleButton *button, gpointer data)
 static void
 anchor_toggled (GtkWidget *button, GooCanvas *canvas)
 {
-  GtkAnchorType anchor;
+  GooCanvasAnchorType anchor;
 
   anchor = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "anchor"));
 
@@ -646,7 +646,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_NW));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_NW));
 
 	w = gtk_radio_button_new_with_label (group, "N");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -656,7 +656,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_N));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_N));
 
 	w = gtk_radio_button_new_with_label (group, "NE");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -666,7 +666,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_NE));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_NE));
 
 	w = gtk_radio_button_new_with_label (group, "W");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -676,7 +676,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_W));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_W));
 
 	w = gtk_radio_button_new_with_label (group, "C");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -686,7 +686,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_CENTER));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_CENTER));
 
 	w = gtk_radio_button_new_with_label (group, "E");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -696,7 +696,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_E));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_E));
 
 	w = gtk_radio_button_new_with_label (group, "SW");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -706,7 +706,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_SW));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_SW));
 
 	w = gtk_radio_button_new_with_label (group, "S");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -716,7 +716,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_S));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_S));
 
 	w = gtk_radio_button_new_with_label (group, "SE");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
@@ -726,7 +726,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (anchor_toggled),
 			  canvas);
 	g_object_set_data (G_OBJECT (w), "anchor",
-			   GINT_TO_POINTER (GTK_ANCHOR_SE));
+			   GINT_TO_POINTER (GOO_CANVAS_ANCHOR_SE));
 
 	
 	/* Layout the stuff */
@@ -762,7 +762,7 @@ setup_heading (GooCanvasItem *root, char *text, int pos)
   GooCanvasItem *item;
   PangoRectangle ink_rect, logical_rect;
 
-  item = goo_canvas_text_new (root, text, x, y, -1, GTK_ANCHOR_N,
+  item = goo_canvas_text_new (root, text, x, y, -1, GOO_CANVAS_ANCHOR_N,
 			      "font", "Sans 12",
 			      NULL);
   goo_canvas_item_skew_y (item, 30, x, y);
@@ -1202,7 +1202,7 @@ setup_texts (GooCanvasItem *root)
 #if 1
   pattern = create_stipple ("blue", stipple_data);
   item = goo_canvas_text_new (make_anchor (root, 420, 20),
-			      "Anchor NW", 0, 0, -1, GTK_ANCHOR_NW,
+			      "Anchor NW", 0, 0, -1, GOO_CANVAS_ANCHOR_NW,
 			      "font", "Sans Bold 24",
 			      "fill_pattern", pattern,
 			      NULL);
@@ -1211,7 +1211,7 @@ setup_texts (GooCanvasItem *root)
 
   item = goo_canvas_text_new (make_anchor (root, 470, 75),
 			      "Anchor center\nJustify center\nMultiline text\nb8bit text ÅÄÖåäö",
-			      0, 0, -1, GTK_ANCHOR_CENTER,
+			      0, 0, -1, GOO_CANVAS_ANCHOR_CENTER,
 			      "font", "monospace bold 14",
 			      "alignment", PANGO_ALIGN_CENTER,
 			      "fill_color", "firebrick",
@@ -1222,7 +1222,7 @@ setup_texts (GooCanvasItem *root)
 #if 0
   item = goo_canvas_text_new (make_anchor (root, 590, 140),
 			      "Clipped text\nClipped text\nClipped text\nClipped text\nClipped text\nClipped text",
-			      0, 0, -1, GTK_ANCHOR_SE,
+			      0, 0, -1, GOO_CANVAS_ANCHOR_SE,
 			      "font", "Sans 12",
 			      /*"clip", TRUE,*/
 			      /*"clip_width", 50.0,*/
@@ -1236,7 +1236,7 @@ setup_texts (GooCanvasItem *root)
 #if 1
   textitem = goo_canvas_text_new (make_anchor (root, 420, 240),
 				  "This is a very long paragraph that will need to be wrapped over several lines so we can see what happens to line-breaking as the view is zoomed in and out.",
-				  0, 0, 180, GTK_ANCHOR_W,
+				  0, 0, 180, GOO_CANVAS_ANCHOR_W,
 				  "font", "Sans 12",
 				  "fill_color", "goldenrod",
 				  NULL);
@@ -1246,7 +1246,7 @@ setup_texts (GooCanvasItem *root)
 #if 1
   textitem = goo_canvas_text_new (root,
 				  "Ellipsized text.",
-				  20, 420, 115, GTK_ANCHOR_W,
+				  20, 420, 115, GOO_CANVAS_ANCHOR_W,
 				  "font", "Sans 12",
 				  "fill_color", "blue",
 				  "ellipsize", PANGO_ELLIPSIZE_END,
@@ -1260,7 +1260,7 @@ static void
 setup_invisible_texts (GooCanvasItem *root)
 {
   goo_canvas_text_new (root, "Visible above 0.8x", 500, 330, -1,
-		       GTK_ANCHOR_CENTER,
+		       GOO_CANVAS_ANCHOR_CENTER,
 		       "visibility", GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD,
 		       "visibility-threshold", 0.8,
 		       NULL);
@@ -1271,7 +1271,7 @@ setup_invisible_texts (GooCanvasItem *root)
 		       NULL);
 
   goo_canvas_text_new (root, "Visible above 1.5x", 500, 350, -1,
-		       GTK_ANCHOR_CENTER,
+		       GOO_CANVAS_ANCHOR_CENTER,
 		       "visibility", GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD,
 		       "visibility-threshold", 1.5,
 		       NULL);
@@ -1282,7 +1282,7 @@ setup_invisible_texts (GooCanvasItem *root)
 		       NULL);
 
   goo_canvas_text_new (root, "Visible above 3.0x", 500, 370, -1,
-		       GTK_ANCHOR_CENTER,
+		       GOO_CANVAS_ANCHOR_CENTER,
 		       "visibility", GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD,
 		       "visibility-threshold", 3.0,
 		       NULL);
@@ -1294,7 +1294,7 @@ setup_invisible_texts (GooCanvasItem *root)
 
   /* This should never be seen. */
   goo_canvas_text_new (root, "Always Invisible", 500, 390, -1,
-		       GTK_ANCHOR_CENTER,
+		       GOO_CANVAS_ANCHOR_CENTER,
 		       "visibility", GOO_CANVAS_ITEM_INVISIBLE,
 		       NULL);
   goo_canvas_rect_new (root, 410.5, 350.5, 180, 15,
@@ -1305,7 +1305,7 @@ setup_invisible_texts (GooCanvasItem *root)
 
 
 static void
-plant_flower (GooCanvasItem *root, double x, double y, GtkAnchorType anchor)
+plant_flower (GooCanvasItem *root, double x, double y, GooCanvasAnchorType anchor)
 {
   cairo_pattern_t *pattern;
   cairo_surface_t *surface;
@@ -1344,7 +1344,7 @@ setup_images (GooCanvasItem *root)
       image = goo_canvas_image_new (root, im, 100.0 - w / 2, 225.0 - h / 2,
 				   "width", w,
 				   "height", h,
-				   /* "anchor", GTK_ANCHOR_CENTER, */
+				   /* "anchor", GOO_CANVAS_ANCHOR_CENTER, */
 				   NULL);
       g_object_unref(im);
       setup_item_signals (image);
@@ -1352,10 +1352,10 @@ setup_images (GooCanvasItem *root)
   else
     g_warning ("Could not find the toroid.png sample file");
 
-  plant_flower (root,  20.0, 170.0, GTK_ANCHOR_NW);
-  plant_flower (root, 180.0, 170.0, GTK_ANCHOR_NE);
-  plant_flower (root,  20.0, 280.0, GTK_ANCHOR_SW);
-  plant_flower (root, 180.0, 280.0, GTK_ANCHOR_SE);
+  plant_flower (root,  20.0, 170.0, GOO_CANVAS_ANCHOR_NW);
+  plant_flower (root, 180.0, 170.0, GOO_CANVAS_ANCHOR_NE);
+  plant_flower (root,  20.0, 280.0, GOO_CANVAS_ANCHOR_SW);
+  plant_flower (root, 180.0, 280.0, GOO_CANVAS_ANCHOR_SE);
 }
 
 
@@ -1390,7 +1390,7 @@ setup_static_items (GooCanvas *canvas)
 				       NULL);
   setup_item_signals (item);
 
-  item = goo_canvas_text_new (group, "N", 40, 320, -1, GTK_ANCHOR_S,
+  item = goo_canvas_text_new (group, "N", 40, 320, -1, GOO_CANVAS_ANCHOR_S,
 			      "font", "Sans 12",
 			      NULL);
   setup_item_signals (item);

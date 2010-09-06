@@ -300,7 +300,7 @@ create_canvas_fifteen (void)
 
 		text = goo_canvas_text_new (board[i], buf,
 					    PIECE_SIZE / 2.0, PIECE_SIZE / 2.0,
-					    -1, GTK_ANCHOR_CENTER,
+					    -1, GOO_CANVAS_ANCHOR_CENTER,
 					    "font", "Sans bold 24",
 					    "fill_color", "black",
 					    NULL);

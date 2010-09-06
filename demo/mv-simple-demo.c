@@ -54,7 +54,7 @@ main (int argc, char *argv[])
 					  NULL);
 
   text_model = goo_canvas_text_model_new (root, "Hello World", 300, 300, -1,
-					  GTK_ANCHOR_CENTER,
+					  GOO_CANVAS_ANCHOR_CENTER,
 					  "font", "Sans 24",
 					  NULL);
   goo_canvas_item_model_rotate (text_model, 45, 300, 300);

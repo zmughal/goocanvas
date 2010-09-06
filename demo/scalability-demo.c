@@ -212,7 +212,7 @@ setup_canvas (GtkWidget *canvas)
 		  item = goo_canvas_text_new (group, ids[id_item_num],
 					      item_x + item_width / 2,
 					      item_y + item_height / 2,
-					      item_width, GTK_ANCHOR_CENTER,
+					      item_width, GOO_CANVAS_ANCHOR_CENTER,
 					      "height", item_height,
 					      /*"alignment", PANGO_ALIGN_CENTER,*/
 					      NULL);

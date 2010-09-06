@@ -65,7 +65,7 @@ setup_canvas (GtkWidget *canvas,
   sprintf (buffer, "This box is %gx%g %s", d[2], d[3], units_name);
   sprintf (font_desc, "Sans %gpx", d[4]);
   item = goo_canvas_text_new (root, buffer, d[0] + d[2] / 2, d[1] + d[3] / 2,
-			      -1, GTK_ANCHOR_CENTER,
+			      -1, GOO_CANVAS_ANCHOR_CENTER,
 			      "font", font_desc,
 			      NULL);
 
@@ -73,7 +73,7 @@ setup_canvas (GtkWidget *canvas,
   sprintf (buffer, "This font is %g %s high", d[7], units_name);
   sprintf (font_desc, "Sans %gpx", d[7]);
   item = goo_canvas_text_new (root, buffer, d[5], d[6], -1,
-			      GTK_ANCHOR_CENTER,
+			      GOO_CANVAS_ANCHOR_CENTER,
 			      "font", font_desc,
 			      NULL);
 
@@ -134,7 +134,7 @@ create_canvas (GtkUnit         units,
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 1000, 1000);
   g_object_set (canvas,
 		"units", units,
-		"anchor", GTK_ANCHOR_CENTER,
+		"anchor", GOO_CANVAS_ANCHOR_CENTER,
 		NULL);
 
   gtk_widget_show (canvas);

@@ -52,7 +52,7 @@ setup_canvas (GooCanvas *canvas)
   g_signal_connect (item, "button_press_event",
 		    G_CALLBACK (on_button_press), "Yellow rectangle (unclipped)");
 
-  model = goo_canvas_text_model_new (root, "Sample Text", 520, 100, -1, GTK_ANCHOR_NW,
+  model = goo_canvas_text_model_new (root, "Sample Text", 520, 100, -1, GOO_CANVAS_ANCHOR_NW,
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
   g_signal_connect (item, "button_press_event",
@@ -87,7 +87,7 @@ setup_canvas (GooCanvas *canvas)
   g_signal_connect (item, "button_press_event",
 		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
-  model = goo_canvas_text_model_new (root, "Sample Text", 520, 300, -1, GTK_ANCHOR_NW,
+  model = goo_canvas_text_model_new (root, "Sample Text", 520, 300, -1, GOO_CANVAS_ANCHOR_NW,
 				     "clip-path", "M535,300 h75 v40 h-75 z",
 				     NULL);
   item = goo_canvas_get_item (canvas, model);
@@ -134,7 +134,7 @@ setup_canvas (GooCanvas *canvas)
   g_signal_connect (item, "button_press_event",
 		    G_CALLBACK (on_button_press), "Yellow rectangle");
 
-  model = goo_canvas_text_model_new (table, "Sample Text", 520, 300, -1, GTK_ANCHOR_NW,
+  model = goo_canvas_text_model_new (table, "Sample Text", 520, 300, -1, GOO_CANVAS_ANCHOR_NW,
 				     "clip-path", "M535,300 h75 v40 h-75 z",
 				     NULL);
   goo_canvas_item_model_set_child_properties (table, model,

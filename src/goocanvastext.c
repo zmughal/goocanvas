@@ -157,8 +157,8 @@ goo_canvas_text_install_common_properties (GObjectClass *gobject_class)
 				   g_param_spec_enum ("anchor",
 						      _("Anchor"),
 						      _("How to position the text relative to the given x and y coordinates"),
-						      GTK_TYPE_ANCHOR_TYPE,
-						      GTK_ANCHOR_NW,
+						      GOO_TYPE_CANVAS_ANCHOR_TYPE,
+						      GOO_CANVAS_ANCHOR_NW,
 						      G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_ALIGN,
@@ -178,7 +178,7 @@ goo_canvas_text_init (GooCanvasText *text)
 
   text->text_data = g_slice_new0 (GooCanvasTextData);
   text->text_data->width = -1.0;
-  text->text_data->anchor = GTK_ANCHOR_NW;
+  text->text_data->anchor = GOO_CANVAS_ANCHOR_NW;
   text->text_data->ellipsize = PANGO_ELLIPSIZE_NONE;
   text->text_data->wrap = PANGO_WRAP_WORD;
 
@@ -212,7 +212,7 @@ goo_canvas_text_init (GooCanvasText *text)
  * of the text box placed at (500,500):
  *
  * <informalexample><programlisting>
- *  GooCanvasItem *text = goo_canvas_text_new (mygroup, "Hello World", 500.0, 500.0, 200.0, GTK_ANCHOR_SE,
+ *  GooCanvasItem *text = goo_canvas_text_new (mygroup, "Hello World", 500.0, 500.0, 200.0, GOO_CANVAS_ANCHOR_SE,
  *                                             "fill-color", "blue",
  *                                             NULL);
  * </programlisting></informalexample>
@@ -225,7 +225,7 @@ goo_canvas_text_new (GooCanvasItem *parent,
 		     gdouble        x,
 		     gdouble        y,
 		     gdouble        width,
-		     GtkAnchorType  anchor,
+		     GooCanvasAnchorType  anchor,
 		     ...)
 {
   GooCanvasItem *item;
@@ -500,14 +500,14 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
 
       switch (text_data->anchor)
 	{
-	case GTK_ANCHOR_N:
-	case GTK_ANCHOR_CENTER:
-	case GTK_ANCHOR_S:
+	case GOO_CANVAS_ANCHOR_N:
+	case GOO_CANVAS_ANCHOR_CENTER:
+	case GOO_CANVAS_ANCHOR_S:
 	  origin_x -= align_width / 2.0;
 	break;
-	case GTK_ANCHOR_NE:
-	case GTK_ANCHOR_E:
-	case GTK_ANCHOR_SE:
+	case GOO_CANVAS_ANCHOR_NE:
+	case GOO_CANVAS_ANCHOR_E:
+	case GOO_CANVAS_ANCHOR_SE:
 	  origin_x -= align_width;
 	  break;
 	default:
@@ -516,14 +516,14 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
 
       switch (text_data->anchor)
 	{
-	case GTK_ANCHOR_W:
-	case GTK_ANCHOR_CENTER:
-	case GTK_ANCHOR_E:
+	case GOO_CANVAS_ANCHOR_W:
+	case GOO_CANVAS_ANCHOR_CENTER:
+	case GOO_CANVAS_ANCHOR_E:
 	  origin_y -= logical_height / 2.0;
 	  break;
-	case GTK_ANCHOR_SW:
-	case GTK_ANCHOR_S:
-	case GTK_ANCHOR_SE:
+	case GOO_CANVAS_ANCHOR_SW:
+	case GOO_CANVAS_ANCHOR_S:
+	case GOO_CANVAS_ANCHOR_SE:
 	  origin_y -= logical_height;
 	  break;
 	default:
@@ -950,7 +950,7 @@ goo_canvas_text_model_init (GooCanvasTextModel *tmodel)
   GooCanvasTextPrivate *priv = GOO_CANVAS_TEXT_MODEL_GET_PRIVATE (tmodel);
 
   tmodel->text_data.width = -1.0;
-  tmodel->text_data.anchor = GTK_ANCHOR_NW;
+  tmodel->text_data.anchor = GOO_CANVAS_ANCHOR_NW;
   tmodel->text_data.ellipsize = PANGO_ELLIPSIZE_NONE;
   tmodel->text_data.wrap = PANGO_WRAP_WORD;
 
@@ -982,7 +982,7 @@ goo_canvas_text_model_init (GooCanvasTextModel *tmodel)
  * of the text box placed at (500,500):
  *
  * <informalexample><programlisting>
- *  GooCanvasItemModel *text = goo_canvas_text_model_new (mygroup, "Hello World", 500.0, 500.0, 200.0, GTK_ANCHOR_SE,
+ *  GooCanvasItemModel *text = goo_canvas_text_model_new (mygroup, "Hello World", 500.0, 500.0, 200.0, GOO_CANVAS_ANCHOR_SE,
  *                                                        "fill-color", "blue",
  *                                                        NULL);
  * </programlisting></informalexample>
@@ -995,7 +995,7 @@ goo_canvas_text_model_new (GooCanvasItemModel *parent,
 			   gdouble             x,
 			   gdouble             y,
 			   gdouble             width,
-			   GtkAnchorType       anchor,
+			   GooCanvasAnchorType       anchor,
 			   ...)
 {
   GooCanvasItemModel *model;

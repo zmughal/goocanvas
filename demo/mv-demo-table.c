@@ -46,7 +46,7 @@ create_demo_item (GooCanvasItemModel *table,
 					 NULL);
       break;
     case DEMO_TEXT_ITEM:
-      model = goo_canvas_text_model_new (table, text, 0, 0, -1, GTK_ANCHOR_NW,
+      model = goo_canvas_text_model_new (table, text, 0, 0, -1, GOO_CANVAS_ANCHOR_NW,
 					 NULL);
       break;
     }
@@ -244,7 +244,7 @@ create_width_for_height_table (GooCanvasItemModel *root,
 					      NULL);
 
 #if 1
-  model = goo_canvas_text_model_new (table, text, 0, 0, -1, GTK_ANCHOR_NW, NULL);
+  model = goo_canvas_text_model_new (table, text, 0, 0, -1, GOO_CANVAS_ANCHOR_NW, NULL);
   goo_canvas_item_model_set_child_properties (table, model,
 					      "row", 1,
 					      "column", 0,

@@ -63,7 +63,7 @@
  *                                     NULL);
  *
  *    text_item = goo_canvas_text_new (root, "Hello World", 300, 300, -1,
- *                                     GTK_ANCHOR_CENTER,
+ *                                     GOO_CANVAS_ANCHOR_CENTER,
  *                                     "font", "Sans 24",
  *                                     NULL);
  *    goo_canvas_item_rotate (text_item, 45, 300, 300);
@@ -304,8 +304,8 @@ goo_canvas_class_init (GooCanvasClass *klass)
 				   g_param_spec_enum ("anchor",
 						      _("Anchor"),
 						      _("Where to place the canvas when it is smaller than the widget's allocated area"),
-						      GTK_TYPE_ANCHOR_TYPE,
-						      GTK_ANCHOR_NW,
+						      GOO_TYPE_CANVAS_ANCHOR_TYPE,
+						      GOO_CANVAS_ANCHOR_NW,
 						      G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_X1,
@@ -486,7 +486,7 @@ goo_canvas_init (GooCanvas *canvas)
   canvas->need_update = TRUE;
   canvas->need_entire_subtree_update = TRUE;
   canvas->crossing_event.type = GDK_LEAVE_NOTIFY;
-  canvas->anchor = GTK_ANCHOR_NORTH_WEST;
+  canvas->anchor = GOO_CANVAS_ANCHOR_NORTH_WEST;
   canvas->clear_background = TRUE;
   canvas->redraw_when_scrolled = FALSE;
   canvas->before_initial_expose = TRUE;
@@ -1823,19 +1823,19 @@ reconfigure_canvas (GooCanvas *canvas,
     {
       switch (canvas->anchor)
 	{
-	case GTK_ANCHOR_NORTH_WEST:
-	case GTK_ANCHOR_WEST:
-	case GTK_ANCHOR_SOUTH_WEST:
+	case GOO_CANVAS_ANCHOR_NORTH_WEST:
+	case GOO_CANVAS_ANCHOR_WEST:
+	case GOO_CANVAS_ANCHOR_SOUTH_WEST:
 	  new_x_offset = 0;
 	  break;
-	case GTK_ANCHOR_NORTH:
-	case GTK_ANCHOR_CENTER:
-	case GTK_ANCHOR_SOUTH:
+	case GOO_CANVAS_ANCHOR_NORTH:
+	case GOO_CANVAS_ANCHOR_CENTER:
+	case GOO_CANVAS_ANCHOR_SOUTH:
 	  new_x_offset = (allocation.width - width_pixels) / 2;
 	  break;
-	case GTK_ANCHOR_NORTH_EAST:
-	case GTK_ANCHOR_EAST:
-	case GTK_ANCHOR_SOUTH_EAST:
+	case GOO_CANVAS_ANCHOR_NORTH_EAST:
+	case GOO_CANVAS_ANCHOR_EAST:
+	case GOO_CANVAS_ANCHOR_SOUTH_EAST:
 	  new_x_offset = allocation.width - width_pixels;
 	  break;
 	}
@@ -1845,19 +1845,19 @@ reconfigure_canvas (GooCanvas *canvas,
     {
       switch (canvas->anchor)
 	{
-	case GTK_ANCHOR_NORTH_WEST:
-	case GTK_ANCHOR_NORTH:
-	case GTK_ANCHOR_NORTH_EAST:
+	case GOO_CANVAS_ANCHOR_NORTH_WEST:
+	case GOO_CANVAS_ANCHOR_NORTH:
+	case GOO_CANVAS_ANCHOR_NORTH_EAST:
 	  new_y_offset = 0;
 	  break;
-	case GTK_ANCHOR_WEST:
-	case GTK_ANCHOR_CENTER:
-	case GTK_ANCHOR_EAST:
+	case GOO_CANVAS_ANCHOR_WEST:
+	case GOO_CANVAS_ANCHOR_CENTER:
+	case GOO_CANVAS_ANCHOR_EAST:
 	  new_y_offset = (allocation.height - height_pixels) / 2;
 	  break;
-	case GTK_ANCHOR_SOUTH_WEST:
-	case GTK_ANCHOR_SOUTH:
-	case GTK_ANCHOR_SOUTH_EAST:
+	case GOO_CANVAS_ANCHOR_SOUTH_WEST:
+	case GOO_CANVAS_ANCHOR_SOUTH:
+	case GOO_CANVAS_ANCHOR_SOUTH_EAST:
 	  new_y_offset = allocation.height - height_pixels;
 	  break;
 	}

@@ -79,7 +79,7 @@ goo_canvas_widget_init (GooCanvasWidget *witem)
   witem->y = 0.0;
   witem->width = -1.0;
   witem->height = -1.0;
-  witem->anchor = GTK_ANCHOR_NW;
+  witem->anchor = GOO_CANVAS_ANCHOR_NW;
 }
 
 
@@ -106,7 +106,7 @@ goo_canvas_widget_init (GooCanvasWidget *witem)
  *  GtkWidget *entry = gtk_entry_new ();
  *  GooCanvasItem *witem = goo_canvas_widget_new (mygroup, entry,
  *                                                100, 100, -1, -1,
- *                                                "anchor", GTK_ANCHOR_CENTER,
+ *                                                "anchor", GOO_CANVAS_ANCHOR_CENTER,
  *                                                NULL);
  * </programlisting></informalexample>
  * 
@@ -161,18 +161,18 @@ goo_canvas_widget_new               (GooCanvasItem    *parent,
 
 /* Returns the anchor position, within the given width. */
 static gdouble
-goo_canvas_widget_anchor_horizontal_pos (GtkAnchorType anchor,
+goo_canvas_widget_anchor_horizontal_pos (GooCanvasAnchorType anchor,
 					 gdouble       width)
 {
   switch(anchor)
     {
-    case GTK_ANCHOR_N:
-    case GTK_ANCHOR_CENTER:
-    case GTK_ANCHOR_S:
+    case GOO_CANVAS_ANCHOR_N:
+    case GOO_CANVAS_ANCHOR_CENTER:
+    case GOO_CANVAS_ANCHOR_S:
       return width / 2.0;
-    case GTK_ANCHOR_NE:
-    case GTK_ANCHOR_E:
-    case GTK_ANCHOR_SE:
+    case GOO_CANVAS_ANCHOR_NE:
+    case GOO_CANVAS_ANCHOR_E:
+    case GOO_CANVAS_ANCHOR_SE:
       return width;
     default:
       return 0.0;
@@ -182,18 +182,18 @@ goo_canvas_widget_anchor_horizontal_pos (GtkAnchorType anchor,
 
 /* Returns the anchor position, within the given height. */
 static gdouble
-goo_canvas_widget_anchor_vertical_pos (GtkAnchorType anchor,
+goo_canvas_widget_anchor_vertical_pos (GooCanvasAnchorType anchor,
 				       gdouble       height)
 {
   switch (anchor)
     {
-    case GTK_ANCHOR_W:
-    case GTK_ANCHOR_CENTER:
-    case GTK_ANCHOR_E:
+    case GOO_CANVAS_ANCHOR_W:
+    case GOO_CANVAS_ANCHOR_CENTER:
+    case GOO_CANVAS_ANCHOR_E:
       return height / 2.0;
-    case GTK_ANCHOR_SW:
-    case GTK_ANCHOR_S:
-    case GTK_ANCHOR_SE:
+    case GOO_CANVAS_ANCHOR_SW:
+    case GOO_CANVAS_ANCHOR_S:
+    case GOO_CANVAS_ANCHOR_SE:
       return height;
     default:
       return 0.0;
@@ -588,8 +588,8 @@ goo_canvas_widget_class_init (GooCanvasWidgetClass *klass)
 				   g_param_spec_enum ("anchor",
 						      _("Anchor"),
 						      _("How to position the widget relative to the item's x and y coordinate settings"),
-						      GTK_TYPE_ANCHOR_TYPE,
-						      GTK_ANCHOR_NW,
+						      GOO_TYPE_CANVAS_ANCHOR_TYPE,
+						      GOO_CANVAS_ANCHOR_NW,
 						      G_PARAM_READWRITE));
 
   g_object_class_override_property (gobject_class, PROP_VISIBILITY,

@@ -60,7 +60,7 @@ struct _GooCanvas
 
   /* Where the canvas is anchored (where it is displayed when it is smaller
      than the entire window). */
-  GtkAnchorType anchor;
+  GooCanvasAnchorType anchor;
 
   /* Idle handler ID, for processing updates. */
   guint idle_id;

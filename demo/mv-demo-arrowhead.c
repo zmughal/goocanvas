@@ -207,7 +207,7 @@ create_dimension (GtkWidget *canvas,
 		  GooCanvasItemModel *root,
 		  char *arrow_name,
 		  char *text_name,
-		  GtkAnchorType anchor)
+		  GooCanvasAnchorType anchor)
 {
 	GooCanvasItemModel *item;
 
@@ -234,7 +234,7 @@ create_info (GtkWidget *canvas,
 {
 	GooCanvasItemModel *item;
 
-	item = goo_canvas_text_model_new (root, NULL, x, y, -1, GTK_ANCHOR_NW,
+	item = goo_canvas_text_model_new (root, NULL, x, y, -1, GOO_CANVAS_ANCHOR_NW,
 					  "fill_color", "black",
 					  "font", "Sans 14",
 					  NULL);
@@ -496,10 +496,10 @@ create_canvas_arrowhead (void)
 
 	/* Dimensions */
 
-	create_dimension (canvas, root, "width_arrow", "width_text", GTK_ANCHOR_E);
-	create_dimension (canvas, root, "shape_a_arrow", "shape_a_text", GTK_ANCHOR_N);
-	create_dimension (canvas, root, "shape_b_arrow", "shape_b_text", GTK_ANCHOR_N);
-	create_dimension (canvas, root, "shape_c_arrow", "shape_c_text", GTK_ANCHOR_W);
+	create_dimension (canvas, root, "width_arrow", "width_text", GOO_CANVAS_ANCHOR_E);
+	create_dimension (canvas, root, "shape_a_arrow", "shape_a_text", GOO_CANVAS_ANCHOR_N);
+	create_dimension (canvas, root, "shape_b_arrow", "shape_b_text", GOO_CANVAS_ANCHOR_N);
+	create_dimension (canvas, root, "shape_c_arrow", "shape_c_text", GOO_CANVAS_ANCHOR_W);
 
 	/* Info */
 

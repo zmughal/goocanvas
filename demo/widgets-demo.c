@@ -72,15 +72,15 @@ move_widget_clicked (GtkWidget *button, gpointer data)
 static void
 change_anchor_clicked (GtkWidget *button, gpointer data)
 {
-  static GtkAnchorType anchor = GTK_ANCHOR_CENTER;
+  static GooCanvasAnchorType anchor = GOO_CANVAS_ANCHOR_CENTER;
 
   g_print ("Setting anchor to: %i\n", anchor);
   g_object_set (move_item,
 		"anchor", anchor,
 		NULL);
   anchor++;
-  if (anchor > GTK_ANCHOR_EAST)
-    anchor = GTK_ANCHOR_CENTER;
+  if (anchor > GOO_CANVAS_ANCHOR_EAST)
+    anchor = GOO_CANVAS_ANCHOR_CENTER;
 }
 
 

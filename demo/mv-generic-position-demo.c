@@ -147,7 +147,7 @@ create_model (GdkPixbuf *pixbuf)
   g_object_unref (pixbuf);
   g_object_set_data (G_OBJECT (item), "setup-dnd-signals", "TRUE");
 
-  item = goo_canvas_text_model_new (root, "Hello, World!", 250, 450, -1, GTK_ANCHOR_NW, "fill-color", "magenta", "wrap", PANGO_WRAP_WORD_CHAR, NULL);
+  item = goo_canvas_text_model_new (root, "Hello, World!", 250, 450, -1, GOO_CANVAS_ANCHOR_NW, "fill-color", "magenta", "wrap", PANGO_WRAP_WORD_CHAR, NULL);
   g_object_set_data (G_OBJECT (item), "setup-dnd-signals", "TRUE");
 
   item = goo_canvas_table_model_new (root, "horz-grid-line-width", 2.0, "vert-grid-line-width", 2.0, "row-spacing", 2.0, "column-spacing", 2.0, NULL);
