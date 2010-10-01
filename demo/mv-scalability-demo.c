@@ -41,7 +41,7 @@
 #endif
 
 #if 0
-#define USE_PIXMAP 
+#define USE_PIXMAP
 #endif
 
 #if 0
@@ -90,7 +90,7 @@ init_ids (void)
 {
   int group_i, group_j, i, j;
   int id_item_num = 0;;
-	
+
   for (group_i = 0; group_i < N_GROUP_COLS; group_i++)
     {
       for (group_j = 0; group_j < N_GROUP_ROWS; group_j++)
@@ -263,8 +263,8 @@ setup_canvas (GtkWidget *canvas)
 
 
 static gboolean
-on_expose_event (GtkWidget *canvas,
-		 GdkEvent  *event,
+on_draw (GtkWidget *canvas,
+		 cairo_t  *cr,
 		 gpointer   unused_data)
 {
   static gboolean first_time = TRUE;
@@ -295,7 +295,7 @@ create_canvas (void)
   item_width = ITEM_WIDTH;
   item_height = 19;
 #endif
-	
+
   cell_width = item_width + PADDING * 2;
   cell_height = item_height + PADDING * 2;
 
@@ -327,8 +327,8 @@ create_canvas (void)
 			 left_offset + total_width, top_offset + total_height);
   gtk_widget_show (canvas);
 
-  g_signal_connect (canvas, "expose_event",
-		    G_CALLBACK (on_expose_event), NULL);
+  g_signal_connect (canvas, "draw",
+		    G_CALLBACK (on_draw), NULL);
 
   return canvas;
 }
@@ -374,5 +374,3 @@ main (int argc, char *argv[])
 
   return 0;
 }
-
-

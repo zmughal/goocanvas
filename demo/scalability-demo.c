@@ -256,8 +256,8 @@ setup_canvas (GtkWidget *canvas)
 
 
 static gboolean
-on_expose_event (GtkWidget *canvas,
-		 GdkEvent  *event,
+on_draw (GtkWidget *canvas,
+		 cairo_t  *cr,
 		 gpointer   unused_data)
 {
   static gboolean first_time = TRUE;
@@ -320,8 +320,8 @@ create_canvas (void)
 			 left_offset + total_width, top_offset + total_height);
   gtk_widget_show (canvas);
 
-  g_signal_connect (canvas, "expose_event",
-		    G_CALLBACK (on_expose_event), NULL);
+  g_signal_connect (canvas, "draw",
+		    G_CALLBACK (on_draw), NULL);
 
   return canvas;
 }

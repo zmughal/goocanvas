@@ -1,3 +1,10 @@
+2010-10-01  Damon Chaplin  <damon@gnome.org>
+
+	* demo/*.c
+	* src/goocanvas.c (goo_canvas_draw): applied patch from Murray to
+	compile with latest GTK+, with minor changes.
+	Note that drawing doesn't work properly at present.
+
 2010-09-02  Murray Cumming  <murrayc@murrayc.com>
 
 	Fix build with latest GTK+, which has no GdkGC.

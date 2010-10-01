@@ -163,8 +163,8 @@ static void     goo_canvas_size_allocate   (GtkWidget        *widget,
 static void     goo_canvas_set_adjustments (GooCanvas        *canvas,
 					    GtkAdjustment    *hadj,
 					    GtkAdjustment    *vadj);
-static gboolean goo_canvas_expose_event	   (GtkWidget        *widget,
-					    GdkEventExpose   *event);
+static gboolean goo_canvas_draw	   (GtkWidget        *widget,
+					    cairo_t          *cr);
 static gboolean goo_canvas_button_press    (GtkWidget        *widget,
 					    GdkEventButton   *event);
 static gboolean goo_canvas_button_release  (GtkWidget        *widget,
@@ -251,7 +251,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
   widget_class->size_request         = goo_canvas_size_request;
   widget_class->size_allocate        = goo_canvas_size_allocate;
   widget_class->style_set            = goo_canvas_style_set;
-  widget_class->expose_event         = goo_canvas_expose_event;
+  widget_class->draw                 = goo_canvas_draw;
   widget_class->button_press_event   = goo_canvas_button_press;
   widget_class->button_release_event = goo_canvas_button_release;
   widget_class->motion_notify_event  = goo_canvas_motion;
@@ -489,7 +489,7 @@ goo_canvas_init (GooCanvas *canvas)
   canvas->anchor = GOO_CANVAS_ANCHOR_NORTH_WEST;
   canvas->clear_background = TRUE;
   canvas->redraw_when_scrolled = FALSE;
-  canvas->before_initial_expose = TRUE;
+  canvas->before_initial_draw = TRUE;
 
   /* Set the default bounds to a reasonable size. */
   canvas->bounds.x1 = 0.0;
@@ -660,6 +660,18 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
 }
 
 
+static void
+goo_canvas_setup_cairo_context (GooCanvas *canvas,
+				cairo_t   *cr)
+{
+  /* We use CAIRO_ANTIALIAS_GRAY as the default antialiasing mode, as that is
+     what is recommended when using unhinted text. */
+  cairo_set_antialias (cr, CAIRO_ANTIALIAS_GRAY);
+
+  /* Set the default line width based on the current units setting. */
+  cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas));
+}
+
 /**
  * goo_canvas_create_cairo_context:
  * @canvas: a #GooCanvas.
@@ -690,12 +702,7 @@ goo_canvas_create_cairo_context (GooCanvas *canvas)
       cairo_surface_destroy (surface);
     }
 
-  /* We use CAIRO_ANTIALIAS_GRAY as the default antialiasing mode, as that is
-     what is recommended when using unhinted text. */
-  cairo_set_antialias (cr, CAIRO_ANTIALIAS_GRAY);
-
-  /* Set the default line width based on the current units setting. */
-  cairo_set_line_width (cr, goo_canvas_get_default_line_width (canvas));
+  goo_canvas_setup_cairo_context (canvas, cr);
 
   return cr;
 }
@@ -1451,10 +1458,9 @@ goo_canvas_realize (GtkWidget *widget)
   attributes.height = allocation.height;
   attributes.wclass = GDK_INPUT_OUTPUT;
   attributes.visual = gtk_widget_get_visual (widget);
-  attributes.colormap = gtk_widget_get_colormap (widget);
   attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK;
 
-  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 
   window = gdk_window_new (gtk_widget_get_parent_window (widget),
 				   &attributes, attributes_mask);
@@ -1504,9 +1510,11 @@ goo_canvas_realize (GtkWidget *widget)
   /* Make sure the window backgrounds aren't set, to avoid flicker when
      scrolling (due to the delay between X clearing the background and
      GooCanvas painting it). */
+  /* TODO: Do this with GTK+ 3 too?
   gdk_window_set_back_pixmap (window, NULL, FALSE);
   gdk_window_set_back_pixmap (canvas->canvas_window, NULL, FALSE);
   gdk_window_set_back_pixmap (canvas->tmp_window, NULL, FALSE);
+  */
 
   /* Set the parent window of all the child widget items. */
   tmp_list = canvas->widget_items;
@@ -1587,8 +1595,10 @@ goo_canvas_style_set (GtkWidget *widget,
       /* Make sure the window backgrounds aren't set, to avoid flicker when
 	 scrolling (due to the delay between X clearing the background and
 	 GooCanvas painting it). */
+      /* TODO: Do this with GTK+ 3 too?
       gdk_window_set_back_pixmap (gtk_widget_get_window (widget), NULL, FALSE);
       gdk_window_set_back_pixmap (GOO_CANVAS (widget)->canvas_window, NULL, FALSE);
+      */
     }
 }
 
@@ -2335,8 +2345,8 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
   canvas->freeze_count--;
   goo_canvas_adjustment_value_changed (NULL, canvas);
 
-  /* Now hide the temporary window, so the canvas window will get an expose
-     event. */
+  /* Now hide the temporary window, so the canvas window will get a draw
+     signal. */
   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
     gdk_window_hide (canvas->tmp_window);
 }
@@ -2636,7 +2646,7 @@ goo_canvas_request_item_redraw (GooCanvas             *canvas,
 {
   /* If the canvas hasn't been painted yet, we can just return as it all needs
      a redraw. This can save a lot of time if there are lots of items. */
-  if (canvas->before_initial_expose)
+  if (canvas->before_initial_draw)
     return;
 
   if (is_static)
@@ -2648,12 +2658,17 @@ goo_canvas_request_item_redraw (GooCanvas             *canvas,
 
 static void
 paint_static_items (GooCanvas      *canvas,
-		    GdkEventExpose *event,
 		    cairo_t        *cr)
 {
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GooCanvasBounds static_bounds;
   double static_x_offset, static_y_offset;
+  GtkWidget* widget = GTK_WIDGET (canvas);
+  /* TODO: Try to use cairo's clip rect? */
+  const int area_x = 0;
+  const int area_y = 0;
+  const int area_width = gtk_widget_get_allocated_width (widget);
+  const int area_height = gtk_widget_get_allocated_height (widget);
 
   cairo_save (cr);
   cairo_identity_matrix (cr);
@@ -2661,34 +2676,38 @@ paint_static_items (GooCanvas      *canvas,
   static_y_offset = floor (gtk_adjustment_get_value (canvas->vadjustment));
   cairo_translate (cr, static_x_offset, static_y_offset);
   /* FIXME: Uses pixels at present - use canvas units instead? */
-  static_bounds.x1 = event->area.x - static_x_offset;
-  static_bounds.y1 = event->area.y - static_y_offset;
-  static_bounds.x2 = event->area.width + static_bounds.x1;
-  static_bounds.y2 = event->area.height + static_bounds.y1;
+  static_bounds.x1 = area_x - static_x_offset;
+  static_bounds.y1 = area_y - static_y_offset;
+  static_bounds.x2 = area_width + static_bounds.x1;
+  static_bounds.y2 = area_height + static_bounds.y1;
   goo_canvas_item_paint (priv->static_root_item, cr, &static_bounds, 1.0);
   cairo_restore (cr);
 }
 
 
 static gboolean
-goo_canvas_expose_event (GtkWidget      *widget,
-			 GdkEventExpose *event)
+goo_canvas_draw (GtkWidget      *widget,
+			 cairo_t *cr)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  /* TODO: Try to use cairo's clip rect? */
+  const int area_x = 0;
+  const int area_y = 0;
+  const int area_width = gtk_widget_get_allocated_width (widget);
+  const int area_height = gtk_widget_get_allocated_height (widget);
   GooCanvasBounds bounds, root_item_bounds;
-  cairo_t *cr;
   double x1, y1, x2, y2;
 
   if (!canvas->root_item)
     {
-      canvas->before_initial_expose = FALSE;
+      canvas->before_initial_draw = FALSE;
       return FALSE;
     }
 
-  if (event->window != canvas->canvas_window)
-    return FALSE;
+  /* TODO: Need to worry about child widgets? */
 
-  cr = goo_canvas_create_cairo_context (canvas);
+  /* Set our default drawing settins - antialias, line width. */
+  goo_canvas_setup_cairo_context (canvas, cr);
 
   /* Clear the background. */
   if (canvas->clear_background)
@@ -2697,6 +2716,7 @@ goo_canvas_expose_event (GtkWidget      *widget,
       const GtkStateType state = gtk_widget_get_state (widget);
       gdk_cairo_set_source_color (cr, &(style->base[state]));
       cairo_paint (cr);
+      cairo_set_source_rgb (cr, 0, 0, 0);
    }
 
   cairo_save (cr);
@@ -2704,12 +2724,12 @@ goo_canvas_expose_event (GtkWidget      *widget,
   if (canvas->need_update)
     goo_canvas_update_internal (canvas, cr);
 
-  bounds.x1 = ((event->area.x - canvas->canvas_x_offset) / canvas->device_to_pixels_x)
+  bounds.x1 = ((area_x - canvas->canvas_x_offset) / canvas->device_to_pixels_x)
     + canvas->bounds.x1;
-  bounds.y1 = ((event->area.y - canvas->canvas_y_offset) / canvas->device_to_pixels_y)
+  bounds.y1 = ((area_y - canvas->canvas_y_offset) / canvas->device_to_pixels_y)
     + canvas->bounds.y1;
-  bounds.x2 = (event->area.width / canvas->device_to_pixels_x) + bounds.x1;
-  bounds.y2 = (event->area.height / canvas->device_to_pixels_y) + bounds.y1;
+  bounds.x2 = (area_width / canvas->device_to_pixels_x) + bounds.x1;
+  bounds.y2 = (area_height / canvas->device_to_pixels_y) + bounds.y1;
 
   /* Translate it to use the canvas pixel offsets (used when the canvas is
      smaller than the window and the anchor isn't set to NORTH_WEST). */
@@ -2721,6 +2741,7 @@ goo_canvas_expose_event (GtkWidget      *widget,
   /* Translate it so the top-left of the canvas becomes (0,0). */
   cairo_translate (cr, -canvas->bounds.x1, -canvas->bounds.y1);
 
+  /* TODO: check this works OK with the clipping from GTK+ 3. */
   /* Clip to the canvas bounds, if necessary. We only need to clip if the
      items in the canvas extend outside the canvas bounds and the canvas
      bounds is less than the area being painted. */
@@ -2754,13 +2775,11 @@ goo_canvas_expose_event (GtkWidget      *widget,
 
   cairo_restore (cr);
 
-  paint_static_items (canvas, event, cr);
+  paint_static_items (canvas, cr);
 
-  cairo_destroy (cr);
+  GTK_WIDGET_CLASS (goo_canvas_parent_class)->draw (widget, cr);
 
-  GTK_WIDGET_CLASS (goo_canvas_parent_class)->expose_event (widget, event);
-
-  canvas->before_initial_expose = FALSE;
+  canvas->before_initial_draw = FALSE;
 
   return FALSE;
 }

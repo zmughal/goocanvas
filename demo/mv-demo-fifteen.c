@@ -12,7 +12,7 @@
 
 
 static void
-free_stuff (GtkObject *obj, gpointer data)
+free_stuff (GObject *obj, gpointer data)
 {
 	g_free (data);
 }
@@ -190,7 +190,7 @@ on_item_created (GooCanvas          *canvas,
 #define SCRAMBLE_MOVES 256
 
 static void
-scramble (GtkObject *object, gpointer data)
+scramble (GObject *object, gpointer data)
 {
 	GooCanvas *canvas;
 	GooCanvasItemModel **board;
