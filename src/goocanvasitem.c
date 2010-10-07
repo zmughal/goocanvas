@@ -516,6 +516,15 @@ goo_canvas_item_base_init (gpointer g_iface)
 								 FALSE,
 								 G_PARAM_READWRITE));
 
+      /**
+       * GooCanvasItem:tooltip:
+       *
+       * The tooltip to display for the item, or %NULL to display no tooltip.
+       *
+       * Note that this property has no effect unless the
+       * #GtkWidget:has-tooltip property is set to %TRUE on the #GooCanvas
+       * containing this item.
+       */
       g_object_interface_install_property (g_iface,
 					   g_param_spec_string ("tooltip",
 								_("Tooltip"),
