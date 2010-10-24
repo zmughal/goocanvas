@@ -113,6 +113,7 @@ struct _GooCanvasPrivate {
   GooCanvasItem *static_root_item;
   GooCanvasItemModel *static_root_item_model;
   gint window_x, window_y;
+  gint static_window_x, static_window_y;
 };
 
 
@@ -219,6 +220,9 @@ static void     reconfigure_canvas	   (GooCanvas        *canvas,
 					    gboolean          redraw_if_needed);
 static void	goo_canvas_update_automatic_bounds (GooCanvas       *canvas);
 
+static void	goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
+						       gdouble       *x,
+						       gdouble       *y);
 static void     goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 							 gdouble       *x,
 							 gdouble       *y);
@@ -526,8 +530,8 @@ goo_canvas_init (GooCanvas *canvas)
   goo_canvas_item_set_is_static (priv->static_root_item, TRUE);
   priv->static_root_item_model = NULL;
 
-  priv->window_x = 0;
-  priv->window_y = 0;
+  priv->window_x = priv->static_window_x = 0;
+  priv->window_y = priv->static_window_y = 0;
 }
 
 
@@ -1488,8 +1492,8 @@ goo_canvas_realize (GtkWidget *widget)
 			 | GDK_FOCUS_CHANGE_MASK
                          | gtk_widget_get_events (widget);
 
-  priv->window_x = attributes.x;
-  priv->window_y = attributes.y;
+  priv->window_x = priv->static_window_x = attributes.x;
+  priv->window_y = priv->static_window_y = attributes.y;
 
   canvas->canvas_window = gdk_window_new (window,
 					  &attributes, attributes_mask);
@@ -1510,11 +1514,12 @@ goo_canvas_realize (GtkWidget *widget)
   /* Make sure the window backgrounds aren't set, to avoid flicker when
      scrolling (due to the delay between X clearing the background and
      GooCanvas painting it). */
-  /* TODO: Do this with GTK+ 3 too?
-  gdk_window_set_back_pixmap (window, NULL, FALSE);
-  gdk_window_set_back_pixmap (canvas->canvas_window, NULL, FALSE);
-  gdk_window_set_back_pixmap (canvas->tmp_window, NULL, FALSE);
-  */
+  /* TODO: Do this with GTK+ 3 too? */
+#if 0
+  gdk_window_set_background_pattern (window, NULL);
+  gdk_window_set_background_pattern (canvas->canvas_window, NULL);
+  gdk_window_set_background_pattern (canvas->tmp_window, NULL);
+#endif
 
   /* Set the parent window of all the child widget items. */
   tmp_list = canvas->widget_items;
@@ -1595,10 +1600,11 @@ goo_canvas_style_set (GtkWidget *widget,
       /* Make sure the window backgrounds aren't set, to avoid flicker when
 	 scrolling (due to the delay between X clearing the background and
 	 GooCanvas painting it). */
-      /* TODO: Do this with GTK+ 3 too?
-      gdk_window_set_back_pixmap (gtk_widget_get_window (widget), NULL, FALSE);
-      gdk_window_set_back_pixmap (GOO_CANVAS (widget)->canvas_window, NULL, FALSE);
-      */
+      /* TODO: Do this with GTK+ 3 too? */
+#if 0
+      gdk_window_set_background_pattern (gtk_widget_get_window (widget), NULL);
+      gdk_window_set_background_pattern (GOO_CANVAS (widget)->canvas_window, NULL);
+#endif
     }
 }
 
@@ -1745,6 +1751,10 @@ request_static_redraw (GooCanvas             *canvas,
   rect.width = (double) bounds->x2 - priv->window_x - rect.x + 2 + 1;
   rect.height = (double) bounds->y2 - priv->window_y - rect.y + 2 + 1;
 
+#if 0
+  g_print ("Invalidating rect: %i,%i %ix%i\n",
+	   rect.x, rect.y, rect.width, rect.height);
+#endif
   gdk_window_invalidate_rect (canvas->canvas_window, &rect, FALSE);
 }
 
@@ -1766,8 +1776,8 @@ redraw_static_items_at_position (GooCanvas *canvas,
   if (!priv->static_root_item)
     return;
 
-  window_x_copy = priv->window_x;
-  window_y_copy = priv->window_y;
+  window_x_copy = priv->static_window_x;
+  window_y_copy = priv->static_window_y;
 
   n_children = goo_canvas_item_get_n_children (priv->static_root_item);
   for (i = 0; i < n_children; i++)
@@ -1781,14 +1791,14 @@ redraw_static_items_at_position (GooCanvas *canvas,
       request_static_redraw (canvas, &bounds);
 
       /* Redraw the item in its new position. */
-      priv->window_x = x;
-      priv->window_y = y;
+      priv->static_window_x = x;
+      priv->static_window_y = y;
 
       gdk_window_process_updates (canvas->canvas_window, TRUE);
 
       /* Now reset the window position. */
-      priv->window_x = window_x_copy;
-      priv->window_y = window_y_copy;
+      priv->static_window_x = window_x_copy;
+      priv->static_window_y = window_y_copy;
     }
 }
 
@@ -2005,9 +2015,14 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 {
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   AtkObject *accessible;
+  int new_window_x, new_window_y;
 
   if (!canvas->freeze_count && gtk_widget_get_realized (GTK_WIDGET(canvas)))
     {
+      /* These get truncated to ints. */
+      new_window_x = -gtk_adjustment_get_value (canvas->hadjustment);
+      new_window_y = -gtk_adjustment_get_value (canvas->vadjustment);
+
       if (canvas->redraw_when_scrolled)
 	{
 	  /* Map the temporary window to stop the canvas window being scrolled.
@@ -2020,18 +2035,14 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	  /* Redraw the area currently occupied by the static items. But
 	     draw the static items in their new position. This stops them
 	     from being "dragged" when the window is scrolled. */
-	  redraw_static_items_at_position (canvas,
-					   -gtk_adjustment_get_value (canvas->hadjustment),
-					   -gtk_adjustment_get_value (canvas->vadjustment));
-
-	  /* Move the static items to the new position. */
-	  priv->window_x = -gtk_adjustment_get_value (canvas->hadjustment);
-	  priv->window_y = -gtk_adjustment_get_value (canvas->vadjustment);
+	  redraw_static_items_at_position (canvas, new_window_x, new_window_y);
 	}
 
-      gdk_window_move (canvas->canvas_window,
-		       - gtk_adjustment_get_value (canvas->hadjustment),
-		       - gtk_adjustment_get_value (canvas->vadjustment));
+      /* Move the window to the new position. */
+      priv->window_x = priv->static_window_x = new_window_x;
+      priv->window_y = priv->static_window_y = new_window_y;
+
+      gdk_window_move (canvas->canvas_window, new_window_x, new_window_y);
 
       if (canvas->redraw_when_scrolled)
 	{
@@ -2325,8 +2336,10 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
      scrolling is unnecessary and really ugly.
      FIXME: There is a possible issue with keyboard focus/input methods here,
      since hidden windows can't have the keyboard focus. */
+#if 0
   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
     gdk_window_show (canvas->tmp_window);
+#endif
 
   canvas->freeze_count++;
 
@@ -2347,8 +2360,11 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
 
   /* Now hide the temporary window, so the canvas window will get a draw
      signal. */
+#if 0
   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
     gdk_window_hide (canvas->tmp_window);
+#endif
+  gtk_widget_queue_draw (GTK_WIDGET (canvas));
 }
 
 
@@ -2657,46 +2673,31 @@ goo_canvas_request_item_redraw (GooCanvas             *canvas,
 
 
 static void
-paint_static_items (GooCanvas      *canvas,
-		    cairo_t        *cr)
+paint_static_items (GooCanvas       *canvas,
+		    cairo_t         *cr,
+		    GooCanvasBounds *clip_bounds)
 {
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
-  GooCanvasBounds static_bounds;
-  double static_x_offset, static_y_offset;
-  GtkWidget* widget = GTK_WIDGET (canvas);
-  /* TODO: Try to use cairo's clip rect? */
-  const int area_x = 0;
-  const int area_y = 0;
-  const int area_width = gtk_widget_get_allocated_width (widget);
-  const int area_height = gtk_widget_get_allocated_height (widget);
 
   cairo_save (cr);
   cairo_identity_matrix (cr);
-  static_x_offset = floor (gtk_adjustment_get_value (canvas->hadjustment));
-  static_y_offset = floor (gtk_adjustment_get_value (canvas->vadjustment));
-  cairo_translate (cr, static_x_offset, static_y_offset);
+  cairo_translate (cr, -priv->static_window_x, -priv->static_window_y);
   /* FIXME: Uses pixels at present - use canvas units instead? */
-  static_bounds.x1 = area_x - static_x_offset;
-  static_bounds.y1 = area_y - static_y_offset;
-  static_bounds.x2 = area_width + static_bounds.x1;
-  static_bounds.y2 = area_height + static_bounds.y1;
-  goo_canvas_item_paint (priv->static_root_item, cr, &static_bounds, 1.0);
+  goo_canvas_item_paint (priv->static_root_item, cr, clip_bounds, 1.0);
   cairo_restore (cr);
 }
 
 
 static gboolean
 goo_canvas_draw (GtkWidget      *widget,
-			 cairo_t *cr)
+		 cairo_t        *cr)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
-  /* TODO: Try to use cairo's clip rect? */
-  const int area_x = 0;
-  const int area_y = 0;
-  const int area_width = gtk_widget_get_allocated_width (widget);
-  const int area_height = gtk_widget_get_allocated_height (widget);
-  GooCanvasBounds bounds, root_item_bounds;
+  GooCanvasBounds clip_bounds, bounds, root_item_bounds;
   double x1, y1, x2, y2;
+
+  if (!gtk_cairo_should_draw_window (cr, canvas->canvas_window))
+    return FALSE;
 
   if (!canvas->root_item)
     {
@@ -2705,6 +2706,17 @@ goo_canvas_draw (GtkWidget      *widget,
     }
 
   /* TODO: Need to worry about child widgets? */
+
+  /* The clip extents tell us which parts of the window need to be drawn,
+     in pixels, where (0,0) is the top-left of the widget window (not the
+     entire canvas window as was the case with the expose_event signal). */
+  cairo_clip_extents (cr, &clip_bounds.x1, &clip_bounds.y1,
+		      &clip_bounds.x2, &clip_bounds.y2);
+
+  cairo_save (cr);
+
+  /* Get rid of the translation passed in by GTK+. We use our own. */
+  cairo_identity_matrix (cr);
 
   /* Set our default drawing settins - antialias, line width. */
   goo_canvas_setup_cairo_context (canvas, cr);
@@ -2719,17 +2731,16 @@ goo_canvas_draw (GtkWidget      *widget,
       cairo_set_source_rgb (cr, 0, 0, 0);
    }
 
-  cairo_save (cr);
-
   if (canvas->need_update)
     goo_canvas_update_internal (canvas, cr);
 
-  bounds.x1 = ((area_x - canvas->canvas_x_offset) / canvas->device_to_pixels_x)
-    + canvas->bounds.x1;
-  bounds.y1 = ((area_y - canvas->canvas_y_offset) / canvas->device_to_pixels_y)
-    + canvas->bounds.y1;
-  bounds.x2 = (area_width / canvas->device_to_pixels_x) + bounds.x1;
-  bounds.y2 = (area_height / canvas->device_to_pixels_y) + bounds.y1;
+  bounds = clip_bounds;
+  goo_canvas_convert_from_window_pixels (canvas, &bounds.x1, &bounds.y1);
+  goo_canvas_convert_from_window_pixels (canvas, &bounds.x2, &bounds.y2);
+
+  /* Get rid of the current clip, as it uses the wrong coordinate space.
+     FIXME: Maybe we should always set a clip with the new GTK+ drawing code. */
+  cairo_reset_clip (cr);
 
   /* Translate it to use the canvas pixel offsets (used when the canvas is
      smaller than the window and the anchor isn't set to NORTH_WEST). */
@@ -2771,11 +2782,15 @@ goo_canvas_draw (GtkWidget      *widget,
       cairo_clip (cr);
     }
 
+#if 0
+  g_print ("Painting bounds: %g, %g - %g, %g\n", bounds.x1, bounds.y1,
+	   bounds.x2, bounds.y2);
+#endif
   goo_canvas_item_paint (canvas->root_item, cr, &bounds, canvas->scale);
 
   cairo_restore (cr);
 
-  paint_static_items (canvas, cr);
+  paint_static_items (canvas, cr, &clip_bounds);
 
   GTK_WIDGET_CLASS (goo_canvas_parent_class)->draw (widget, cr);
 
@@ -3632,8 +3647,9 @@ goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
 				       gdouble       *x,
 				       gdouble       *y)
 {
-  *x += gtk_adjustment_get_value (canvas->hadjustment);
-  *y += gtk_adjustment_get_value (canvas->vadjustment);
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
+  *x -= priv->window_x;
+  *y -= priv->window_y;
   goo_canvas_convert_from_pixels (canvas, x, y);
 }
 
@@ -3645,10 +3661,11 @@ goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 					 gdouble       *x,
 					 gdouble       *y)
 {
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   *x = ((*x - canvas->bounds.x1) * canvas->device_to_pixels_x)
-    + canvas->canvas_x_offset - gtk_adjustment_get_value (canvas->hadjustment);
+    + canvas->canvas_x_offset + priv->window_x;
   *y = ((*y - canvas->bounds.y1) * canvas->device_to_pixels_y)
-    + canvas->canvas_y_offset - gtk_adjustment_get_value (canvas->vadjustment);
+    + canvas->canvas_y_offset + priv->window_y;
 }
 
 
