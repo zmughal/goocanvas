@@ -1,5 +1,12 @@
 2010-10-24  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (redraw_static_items_at_position)
+	(goo_canvas_adjustment_value_changed): comment out the calls to
+	gdk_window_process_updates() as they cause flickering when zooming.
+	I'm not sure if we should use something else instead.
+
+2010-10-24  Damon Chaplin  <damon@gnome.org>
+
 	* Released GooCanvas 1.90.1
 
 2010-10-24  Damon Chaplin  <damon@gnome.org>

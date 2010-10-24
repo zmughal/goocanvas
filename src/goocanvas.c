@@ -1794,7 +1794,8 @@ redraw_static_items_at_position (GooCanvas *canvas,
       priv->static_window_x = x;
       priv->static_window_y = y;
 
-      gdk_window_process_updates (canvas->canvas_window, TRUE);
+      /* FIXME: This causes flicker. Do we need it? */
+      /*gdk_window_process_updates (canvas->canvas_window, TRUE);*/
 
       /* Now reset the window position. */
       priv->static_window_x = window_x_copy;
@@ -2054,7 +2055,8 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
       else
 	{
 	  /* Process updates here for smoother scrolling. */
-	  gdk_window_process_updates (canvas->canvas_window, TRUE);
+	  /* FIXME: This causes flicker. Do we need it? */
+	  /*gdk_window_process_updates (canvas->canvas_window, TRUE);*/
 
 	  /* Now ensure the static items are redrawn in their new position. */
 	  redraw_static_items_at_position (canvas, priv->window_x,
