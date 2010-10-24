@@ -1,5 +1,9 @@
 2010-10-24  Damon Chaplin  <damon@gnome.org>
 
+	* Released GooCanvas 1.90.1
+
+2010-10-24  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c: updated the drawing code to work with GTK+ 3.
 	It seems to work now, but it still flickers when zooming in & out,
 	since we can't use our old trick of mapping a temporary window with
