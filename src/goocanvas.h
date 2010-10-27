@@ -91,6 +91,10 @@ struct _GooCanvas
   /* If the canvas hasn't received the initial draw signal yet. */
   guint before_initial_draw : 1;
 
+  /* GtkScrollablePolicy for each adjustment. */
+  guint hscroll_policy : 1;
+  guint vscroll_policy : 1;
+
   /* This is the padding around the automatic bounds. */
   gdouble bounds_padding;
 
@@ -171,10 +175,6 @@ struct _GooCanvasClass
 {
   /*< private >*/
   GtkContainerClass parent_class;
-
-  void		 (* set_scroll_adjustments) (GooCanvas          *canvas,
-					     GtkAdjustment      *hadjustment,
-					     GtkAdjustment      *vadjustment);
 
   /* Virtual methods. */
   /*< public >*/

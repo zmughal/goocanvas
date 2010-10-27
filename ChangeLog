@@ -1,3 +1,24 @@
+2010-10-27  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c: switched the get_property/set_property code and
+	added "hscroll-policy" and "vscroll-policy".
+
+2010-10-27  Murray Cumming  <murrayc@murrayc.com>
+
+	Fix the build with GTK+ 2.91.2, using GtkScrollable.
+
+	* src/goocanvas.[h|c] (goo_canvas_class_init): Implemeent the GtkScrollable
+	interface, overriding the hadjustment and vadjustment properties, instead
+	of implementing the set_scroll_adjustments vfunc, which was removed from
+	GtkWidget. Likewise remove the set_scroll_adjustments_signal because it
+	is no longer needed.
+	(goo_canvas_get_property), (goo_canvas_set_property): Handle the new
+	properties.
+	(goo_canvas_set_hadjustment), (goo_canvas_set_vadjustment): Replace
+	the old goo_canvas_set_adjustments() function with individual functions
+	because they can be set separately, and to have code that is as similar as
+	possible to, for instance, GtkTextView.
+
 2010-10-24  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (redraw_static_items_at_position)

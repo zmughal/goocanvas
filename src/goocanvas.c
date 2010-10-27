@@ -138,7 +138,11 @@ enum {
   PROP_BACKGROUND_COLOR_RGB,
   PROP_INTEGER_LAYOUT,
   PROP_CLEAR_BACKGROUND,
-  PROP_REDRAW_WHEN_SCROLLED
+  PROP_REDRAW_WHEN_SCROLLED,
+  PROP_HADJUSTMENT,
+  PROP_VADJUSTMENT,
+  PROP_HSCROLL_POLICY,
+  PROP_VSCROLL_POLICY
 };
 
 enum {
@@ -161,9 +165,10 @@ static void     goo_canvas_size_request    (GtkWidget        *widget,
 					    GtkRequisition   *requisition);
 static void     goo_canvas_size_allocate   (GtkWidget        *widget,
 					    GtkAllocation    *allocation);
-static void     goo_canvas_set_adjustments (GooCanvas        *canvas,
-					    GtkAdjustment    *hadj,
-					    GtkAdjustment    *vadj);
+static void     goo_canvas_set_hadjustment (GooCanvas        *canvas,
+					    GtkAdjustment    *adjustment);
+static void     goo_canvas_set_vadjustment (GooCanvas        *canvas,
+					    GtkAdjustment    *adjustment);
 static gboolean goo_canvas_draw	   (GtkWidget        *widget,
 					    cairo_t          *cr);
 static gboolean goo_canvas_button_press    (GtkWidget        *widget,
@@ -227,7 +232,8 @@ static void     goo_canvas_convert_to_static_item_space (GooCanvas     *canvas,
 							 gdouble       *x,
 							 gdouble       *y);
 
-G_DEFINE_TYPE (GooCanvas, goo_canvas, GTK_TYPE_CONTAINER)
+G_DEFINE_TYPE_WITH_CODE (GooCanvas, goo_canvas, GTK_TYPE_CONTAINER,
+  G_IMPLEMENT_INTERFACE (GTK_TYPE_SCROLLABLE, NULL))
 
 /* This evaluates to TRUE if an item is still in the canvas. */
 #define ITEM_IS_VALID(item) (goo_canvas_item_get_canvas (item))
@@ -272,8 +278,6 @@ goo_canvas_class_init (GooCanvasClass *klass)
 
   container_class->remove	     = goo_canvas_remove;
   container_class->forall            = goo_canvas_forall;
-
-  klass->set_scroll_adjustments      = goo_canvas_set_adjustments;
 
   /* Register our accessible factory, but only if accessibility is enabled. */
   if (!ATK_IS_NO_OP_OBJECT_FACTORY (atk_registry_get_factory (atk_get_default_registry (), GTK_TYPE_WIDGET)))
@@ -428,27 +432,11 @@ goo_canvas_class_init (GooCanvasClass *klass)
 							 FALSE,
 							 G_PARAM_READWRITE));
 
-  /**
-   * GooCanvas::set-scroll-adjustments
-   * @canvas: the canvas.
-   * @hadjustment: the horizontal adjustment.
-   * @vadjustment: the vertical adjustment.
-   *
-   * This is used when the #GooCanvas is placed inside a #GtkScrolledWindow,
-   * to connect up the adjustments so scrolling works properly.
-   *
-   * It isn't useful for applications.
-   */
-  widget_class->set_scroll_adjustments_signal =
-    g_signal_new ("set_scroll_adjustments",
-		  G_OBJECT_CLASS_TYPE (gobject_class),
-		  G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		  G_STRUCT_OFFSET (GooCanvasClass, set_scroll_adjustments),
-		  NULL, NULL,
-		  goo_canvas_marshal_VOID__OBJECT_OBJECT,
-		  G_TYPE_NONE, 2,
-		  GTK_TYPE_ADJUSTMENT,
-		  GTK_TYPE_ADJUSTMENT);
+  /* GtkScrollable interface */
+  g_object_class_override_property (gobject_class, PROP_HADJUSTMENT, "hadjustment");
+  g_object_class_override_property (gobject_class, PROP_VADJUSTMENT, "vadjustment");
+  g_object_class_override_property (gobject_class, PROP_HSCROLL_POLICY, "hscroll-policy");
+  g_object_class_override_property (gobject_class, PROP_VSCROLL_POLICY, "vscroll-policy");
 
   /* Signals. */
 
@@ -773,6 +761,18 @@ goo_canvas_get_property    (GObject            *object,
     case PROP_REDRAW_WHEN_SCROLLED:
       g_value_set_boolean (value, canvas->redraw_when_scrolled);
       break;
+    case PROP_HADJUSTMENT:
+      g_value_set_object (value, canvas->hadjustment);
+      break;
+    case PROP_VADJUSTMENT:
+      g_value_set_object (value, canvas->vadjustment);
+      break;
+    case PROP_HSCROLL_POLICY:
+      g_value_set_enum (value, canvas->hscroll_policy);
+      break;
+    case PROP_VSCROLL_POLICY:
+      g_value_set_enum (value, canvas->vscroll_policy);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -878,6 +878,20 @@ goo_canvas_set_property    (GObject            *object,
       break;
     case PROP_REDRAW_WHEN_SCROLLED:
       canvas->redraw_when_scrolled = g_value_get_boolean (value);
+      break;
+    case PROP_HADJUSTMENT:
+      goo_canvas_set_hadjustment (canvas, g_value_get_object (value));
+      break;
+    case PROP_VADJUSTMENT:
+      goo_canvas_set_vadjustment (canvas, g_value_get_object (value));
+      break;
+    case PROP_HSCROLL_POLICY:
+      canvas->hscroll_policy = g_value_get_enum (value);
+      gtk_widget_queue_resize (GTK_WIDGET (canvas));
+      break;
+    case PROP_VSCROLL_POLICY:
+      canvas->vscroll_policy = g_value_get_enum (value);
+      gtk_widget_queue_resize (GTK_WIDGET (canvas));
       break;
 
     default:
@@ -2069,70 +2083,61 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
     }
 }
 
-
-/* Sets either or both adjustments, If hadj or vadj is NULL a new adjustment
-   is created. */
 static void
-goo_canvas_set_adjustments (GooCanvas     *canvas,
-			    GtkAdjustment *hadj,
-			    GtkAdjustment *vadj)
+goo_canvas_set_hadjustment (GooCanvas *canvas,
+			    GtkAdjustment *adjustment)
 {
-  gboolean need_reconfigure = FALSE;
-
   g_return_if_fail (GOO_IS_CANVAS (canvas));
 
-  if (hadj)
-    g_return_if_fail (GTK_IS_ADJUSTMENT (hadj));
-  else if (canvas->hadjustment)
-    hadj = GTK_ADJUSTMENT (gtk_adjustment_new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
+  if (adjustment && canvas->hadjustment == adjustment)
+    return;
 
-  if (vadj)
-    g_return_if_fail (GTK_IS_ADJUSTMENT (vadj));
-  else if (canvas->vadjustment)
-    vadj = GTK_ADJUSTMENT (gtk_adjustment_new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0));
-
-  if (canvas->hadjustment && (canvas->hadjustment != hadj))
+  if (canvas->hadjustment)
     {
       g_signal_handlers_disconnect_by_func (canvas->hadjustment,
-					    goo_canvas_adjustment_value_changed,
-					    canvas);
+                                            goo_canvas_adjustment_value_changed,
+                                            canvas);
       g_object_unref (canvas->hadjustment);
     }
 
-  if (canvas->vadjustment && (canvas->vadjustment != vadj))
+  if (adjustment == NULL)
+    adjustment = gtk_adjustment_new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+  g_signal_connect (adjustment, "value-changed",
+                    G_CALLBACK (goo_canvas_adjustment_value_changed), canvas);
+  canvas->hadjustment = g_object_ref_sink (adjustment);
+  reconfigure_canvas (canvas, TRUE);
+
+  g_object_notify (G_OBJECT (canvas), "hadjustment");
+}
+
+static void
+goo_canvas_set_vadjustment (GooCanvas   *canvas,
+			    GtkAdjustment *adjustment)
+{
+  g_return_if_fail (GOO_IS_CANVAS (canvas));
+
+  if (adjustment && canvas->vadjustment == adjustment)
+    return;
+
+  if (canvas->vadjustment)
     {
       g_signal_handlers_disconnect_by_func (canvas->vadjustment,
-					    goo_canvas_adjustment_value_changed,
-					    canvas);
+                                            goo_canvas_adjustment_value_changed,
+                                            canvas);
       g_object_unref (canvas->vadjustment);
     }
 
-  if (canvas->hadjustment != hadj)
-    {
-      canvas->hadjustment = hadj;
-      g_object_ref_sink (canvas->hadjustment);
+  if (adjustment == NULL)
+    adjustment = gtk_adjustment_new (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-      g_signal_connect (canvas->hadjustment, "value_changed",
-			G_CALLBACK (goo_canvas_adjustment_value_changed),
-			canvas);
-      need_reconfigure = TRUE;
-    }
+  g_signal_connect (adjustment, "value-changed",
+                    G_CALLBACK (goo_canvas_adjustment_value_changed), canvas);
+  canvas->vadjustment = g_object_ref_sink (adjustment);
+  reconfigure_canvas (canvas, TRUE);
 
-  if (canvas->vadjustment != vadj)
-    {
-      canvas->vadjustment = vadj;
-      g_object_ref_sink (canvas->vadjustment);
-
-      g_signal_connect (canvas->vadjustment, "value_changed",
-			G_CALLBACK (goo_canvas_adjustment_value_changed),
-			canvas);
-      need_reconfigure = TRUE;
-    }
-
-  if (need_reconfigure)
-    reconfigure_canvas (canvas, TRUE);
+  g_object_notify (G_OBJECT (canvas), "vadjustment");
 }
-
 
 /* Sets one of our pointers to an item, adding a reference to it and
    releasing any reference to the current item. */
