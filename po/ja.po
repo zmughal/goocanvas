@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-24 15:02+0100\n"
+"POT-Creation-Date: 2010-11-03 10:57+0000\n"
 "PO-Revision-Date: 2008-04-28 20:42+0900\n"
 "Last-Translator: kou@cozmixng.org <kou@cozmixng.org>\n"
 "Language-Team:\n"
@@ -16,163 +16,163 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/goocanvas.c:288
+#: src/goocanvas.c:297
 msgid "Scale"
 msgstr "スケール"
 
-#: src/goocanvas.c:289
+#: src/goocanvas.c:298
 msgid "The magnification factor of the canvas"
 msgstr "キャンバスの拡大率"
 
-#: src/goocanvas.c:295
+#: src/goocanvas.c:304
 msgid "Scale X"
 msgstr "X方向のスケール"
 
-#: src/goocanvas.c:296
+#: src/goocanvas.c:305
 msgid "The horizontal magnification factor of the canvas"
 msgstr "キャンバスの水平方向の拡大率"
 
-#: src/goocanvas.c:302
+#: src/goocanvas.c:311
 msgid "Scale Y"
 msgstr "Y方向のスケール"
 
-#: src/goocanvas.c:303
+#: src/goocanvas.c:312
 msgid "The vertical magnification factor of the canvas"
 msgstr "キャンバスの垂直方向の拡大率"
 
-#: src/goocanvas.c:309 src/goocanvastext.c:158 src/goocanvaswidget.c:589
+#: src/goocanvas.c:318 src/goocanvastext.c:158 src/goocanvaswidget.c:589
 msgid "Anchor"
 msgstr "アンカー"
 
-#: src/goocanvas.c:310
+#: src/goocanvas.c:319
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr "ウィジェットの領域よりも小さくなったときにキャンバスをどこにおくか"
 
-#: src/goocanvas.c:317
+#: src/goocanvas.c:326
 msgid "X1"
 msgstr "X1"
 
-#: src/goocanvas.c:318
+#: src/goocanvas.c:327
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr "キャンバス左端の X 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:325
+#: src/goocanvas.c:334
 msgid "Y1"
 msgstr "Y1"
 
-#: src/goocanvas.c:326
+#: src/goocanvas.c:335
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr "キャンバス上端の Y 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:333
+#: src/goocanvas.c:342
 msgid "X2"
 msgstr "X2"
 
-#: src/goocanvas.c:334
+#: src/goocanvas.c:343
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
 msgstr "キャンバス右端の X 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:342
+#: src/goocanvas.c:351
 msgid "Y2"
 msgstr "Y2"
 
-#: src/goocanvas.c:343
+#: src/goocanvas.c:352
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr "キャンバス下端の Y 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:352
+#: src/goocanvas.c:361
 msgid "Automatic Bounds"
 msgstr "自動境界計算"
 
-#: src/goocanvas.c:353
+#: src/goocanvas.c:362
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
 msgstr ""
 "キャンバスのすべてのアイテムの境界を元にして自動的に境界を計算するかどうか"
 
-#: src/goocanvas.c:359
+#: src/goocanvas.c:368
 msgid "Bounds From Origin"
 msgstr "原点からの境界計算"
 
-#: src/goocanvas.c:360
+#: src/goocanvas.c:369
 msgid "If the automatic bounds are calculated from the origin"
 msgstr "自動境界計算を原点から行うかどうか"
 
-#: src/goocanvas.c:366
+#: src/goocanvas.c:375
 msgid "Bounds Padding"
 msgstr "境界部のパディング"
 
-#: src/goocanvas.c:367
+#: src/goocanvas.c:376
 msgid "The padding added to the automatic bounds"
 msgstr "自動境界計算で追加されたパディング"
 
-#: src/goocanvas.c:373
+#: src/goocanvas.c:382
 msgid "Units"
 msgstr "単位"
 
-#: src/goocanvas.c:374
+#: src/goocanvas.c:383
 msgid "The units to use for the canvas"
 msgstr "キャンバスで使う単位"
 
-#: src/goocanvas.c:381
+#: src/goocanvas.c:390
 msgid "Resolution X"
 msgstr "X 方向の解像度"
 
-#: src/goocanvas.c:382
+#: src/goocanvas.c:391
 msgid "The horizontal resolution of the display, in dots per inch"
 msgstr "画面の水平解像度 (ドット/インチ、DPI)"
 
-#: src/goocanvas.c:389
+#: src/goocanvas.c:398
 msgid "Resolution Y"
 msgstr "Y 方向の解像度"
 
-#: src/goocanvas.c:390
+#: src/goocanvas.c:399
 msgid "The vertical resolution of the display, in dots per inch"
 msgstr "画面の垂直解像度 (ドット/インチ、DPI)"
 
-#: src/goocanvas.c:398
+#: src/goocanvas.c:407
 msgid "Background Color"
 msgstr "背景色"
 
-#: src/goocanvas.c:399
+#: src/goocanvas.c:408
 msgid "The color to use for the canvas background"
 msgstr "キャンバスの背景色"
 
-#: src/goocanvas.c:405
+#: src/goocanvas.c:414
 msgid "Background Color RGB"
 msgstr "背景色のRGB表現"
 
-#: src/goocanvas.c:406
+#: src/goocanvas.c:415
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
 msgstr "24ビットの整数値(0xRRGGBB)で指定するキャンバスの背景色"
 
-#: src/goocanvas.c:412
+#: src/goocanvas.c:421
 msgid "Integer Layout"
 msgstr "整数配置"
 
-#: src/goocanvas.c:413
+#: src/goocanvas.c:422
 msgid "If all item layout is done to the nearest integer"
 msgstr "すべてのアイテムを近似整数で配置するかどうか"
 
-#: src/goocanvas.c:419
+#: src/goocanvas.c:428
 msgid "Clear Background"
 msgstr "背景消去"
 
-#: src/goocanvas.c:420
+#: src/goocanvas.c:429
 msgid "If the background is cleared before the canvas is painted"
 msgstr "キャンバスを描画する前に背景を消去するかどうか"
 
-#: src/goocanvas.c:426
+#: src/goocanvas.c:435
 msgid "Redraw When Scrolled"
 msgstr ""
 
-#: src/goocanvas.c:427
+#: src/goocanvas.c:436
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
 "static items"

@@ -1,3 +1,14 @@
+2010-11-03  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 1.90.2
+
+2010-11-03  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c: added goo_canvas_get_preferred_width() and
+	goo_canvas_get_preferred_height() and removed goo_canvas_size_request().
+
+	* configure.in: depend on GTK+ 2.91.3 for the above.
+
 2010-10-27  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c: switched the get_property/set_property code and

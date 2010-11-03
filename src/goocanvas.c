@@ -161,8 +161,12 @@ static void     goo_canvas_unrealize	   (GtkWidget	     *widget);
 static void     goo_canvas_map		   (GtkWidget	     *widget);
 static void     goo_canvas_style_set	   (GtkWidget	     *widget,
 					    GtkStyle	     *old_style);
-static void     goo_canvas_size_request    (GtkWidget        *widget,
-					    GtkRequisition   *requisition);
+static void     goo_canvas_get_preferred_width (GtkWidget     *widget,
+						gint          *minimum,
+						gint          *natural);
+static void     goo_canvas_get_preferred_height (GtkWidget     *widget,
+						 gint          *minimum,
+						 gint          *natural);
 static void     goo_canvas_size_allocate   (GtkWidget        *widget,
 					    GtkAllocation    *allocation);
 static void     goo_canvas_set_hadjustment (GooCanvas        *canvas,
@@ -258,7 +262,8 @@ goo_canvas_class_init (GooCanvasClass *klass)
   widget_class->realize              = goo_canvas_realize;
   widget_class->unrealize            = goo_canvas_unrealize;
   widget_class->map                  = goo_canvas_map;
-  widget_class->size_request         = goo_canvas_size_request;
+  widget_class->get_preferred_width  = goo_canvas_get_preferred_width;
+  widget_class->get_preferred_height = goo_canvas_get_preferred_height;
   widget_class->size_allocate        = goo_canvas_size_allocate;
   widget_class->style_set            = goo_canvas_style_set;
   widget_class->draw                 = goo_canvas_draw;
@@ -1934,31 +1939,20 @@ reconfigure_canvas (GooCanvas *canvas,
 
 
 static void
-goo_canvas_size_request (GtkWidget      *widget,
-			 GtkRequisition *requisition)
+goo_canvas_get_preferred_width (GtkWidget *widget,
+				gint      *minimal_width,
+				gint      *natural_width)
 {
-  GList *tmp_list;
-  GooCanvas *canvas;
+  *minimal_width = *natural_width = 0;
+}
 
-  g_return_if_fail (GOO_IS_CANVAS (widget));
 
-  canvas = GOO_CANVAS (widget);
-
-  requisition->width = 0;
-  requisition->height = 0;
-
-  tmp_list = canvas->widget_items;
-
-  while (tmp_list)
-    {
-      GooCanvasWidget *witem = tmp_list->data;
-      GtkRequisition child_requisition;
-
-      tmp_list = tmp_list->next;
-
-      if (witem->widget)
-	gtk_widget_size_request (witem->widget, &child_requisition);
-    }
+static void
+goo_canvas_get_preferred_height (GtkWidget *widget,
+				 gint      *minimal_height,
+				 gint      *natural_height)
+{
+  *minimal_height = *natural_height = 0;
 }
 
 
