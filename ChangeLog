@@ -1,3 +1,11 @@
+2011-01-10  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasimage.c: added "alpha" property. Patch from xapantu
+	plus a few changes.
+
+	* demo/mv-demo.c:
+	* demo/demo.c: added test for the above for the flowers.
+
 2010-11-03  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 1.90.2
