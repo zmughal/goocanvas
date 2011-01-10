@@ -714,6 +714,9 @@ GooCanvasPointerEvents
 GooCanvasAnimateType
 
 <SUBSECTION>
+GooCanvasAnchorType
+
+<SUBSECTION>
 GooCanvasPoints
 goo_canvas_points_new
 goo_canvas_points_ref
@@ -757,6 +760,9 @@ GOO_TYPE_CAIRO_PATTERN
 goo_cairo_pattern_get_type
 GOO_TYPE_CANVAS_LINE_DASH
 goo_canvas_line_dash_get_type
+
+GOO_TYPE_CANVAS_ANCHOR_TYPE
+goo_canvas_anchor_type_get_type
 
 GOO_TYPE_CAIRO_ANTIALIAS
 GOO_TYPE_CAIRO_FILL_RULE

@@ -1,5 +1,9 @@
 2011-01-10  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasutils.h (enum): added docs for GooCanvasAnchorType.
+
+2011-01-10  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasimage.c: added "alpha" property. Patch from xapantu
 	plus a few changes.
 
