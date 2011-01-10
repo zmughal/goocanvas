@@ -114,7 +114,7 @@ create_canvas (GtkUnit         units,
   gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
   gtk_widget_show (w);
 
-  adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 100.00, 0.05, 0.50, 0.50));
+  adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 100.00, 0.05, 0.50, 0.0));
   w = gtk_spin_button_new (adj, 0.0, 2);
   g_signal_connect (adj, "value_changed",
 		    G_CALLBACK (zoom_changed),

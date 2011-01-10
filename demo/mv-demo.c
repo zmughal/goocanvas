@@ -431,7 +431,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 
-	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.50));
+	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.0));
 	w = gtk_spin_button_new (adj, 0.0, 2);
 	g_signal_connect (adj, "value_changed",
 			  G_CALLBACK (zoom_changed),
@@ -1173,7 +1173,8 @@ setup_invisible_texts (GooCanvasItemModel *root)
 static void
 plant_flower (GooCanvasItemModel *root,
 	      double x, double y,
-	      GtkAnchorType anchor)
+	      GtkAnchorType anchor,
+	      double opacity)
 {
   cairo_pattern_t *pattern;
   cairo_surface_t *surface;
@@ -1192,6 +1193,7 @@ plant_flower (GooCanvasItemModel *root,
 				      "width", w * 1.5,
 				      "height", h * 2,
 				      "scale-to-fit", TRUE,
+				      "alpha", opacity,
 				      NULL);
   cairo_pattern_destroy (pattern);
 }
@@ -1218,10 +1220,10 @@ setup_images (GooCanvasItemModel *root)
   else
     g_warning ("Could not find the toroid.png sample file");
 
-  plant_flower (root,  20.0, 170.0, GTK_ANCHOR_NW);
-  plant_flower (root, 180.0, 170.0, GTK_ANCHOR_NE);
-  plant_flower (root,  20.0, 280.0, GTK_ANCHOR_SW);
-  plant_flower (root, 180.0, 280.0, GTK_ANCHOR_SE);
+  plant_flower (root,  20.0, 170.0, GTK_ANCHOR_NW, 0.3);
+  plant_flower (root, 180.0, 170.0, GTK_ANCHOR_NE, 0.5);
+  plant_flower (root,  20.0, 280.0, GTK_ANCHOR_SW, 0.7);
+  plant_flower (root, 180.0, 280.0, GTK_ANCHOR_SE, 1.0);
 }
 
 

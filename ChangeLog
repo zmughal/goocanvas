@@ -1,3 +1,14 @@
+2011-01-10  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasimage.c: added "alpha" property. Patch from xapantu
+	plus a few changes.
+
+	* demo/mv-demo.c:
+	* demo/demo.c: added test for the above for the flowers.
+
+	* demo/*: don't set page size for spin button adjustments since that
+	seems to be deprecated and outputs warnings.
+
 2010-07-27  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_adjustment_value_changed): fixed call

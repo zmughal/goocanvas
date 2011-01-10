@@ -36,6 +36,7 @@
 typedef struct _GooCanvasImagePrivate GooCanvasImagePrivate;
 struct _GooCanvasImagePrivate {
   gboolean scale_to_fit;
+  gdouble alpha;
 };
 
 #define GOO_CANVAS_IMAGE_GET_PRIVATE(image)  \
@@ -53,6 +54,7 @@ enum {
   PROP_WIDTH,
   PROP_HEIGHT,
   PROP_SCALE_TO_FIT,
+  PROP_ALPHA,
 
   /* Convenience properties. */
   PROP_PIXBUF
@@ -123,6 +125,13 @@ goo_canvas_image_install_common_properties (GObjectClass *gobject_class)
 							 FALSE,
 							 G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_ALPHA,
+				   g_param_spec_double ("alpha",
+							_("Alpha"),
+							_("The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."),
+							0.0, 1.0, 1.0,
+							G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_PIXBUF,
 				   g_param_spec_object ("pixbuf",
 							_("Pixbuf"),
@@ -156,7 +165,11 @@ goo_canvas_image_get_private (gpointer object)
 static void
 goo_canvas_image_init (GooCanvasImage *image)
 {
+  GooCanvasImagePrivate *priv = GOO_CANVAS_IMAGE_GET_PRIVATE (image);
+
   image->image_data = g_slice_new0 (GooCanvasImageData);
+
+  priv->alpha = 1.0;
 }
 
 
@@ -288,6 +301,9 @@ goo_canvas_image_get_common_property (GObject              *object,
     case PROP_SCALE_TO_FIT:
       g_value_set_boolean (value, priv->scale_to_fit);
       break;
+    case PROP_ALPHA:
+      g_value_set_double (value, priv->alpha);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -309,7 +325,7 @@ goo_canvas_image_get_property (GObject              *object,
 }
 
 
-static void
+static gboolean
 goo_canvas_image_set_common_property (GObject              *object,
 				      GooCanvasImageData   *image_data,
 				      guint                 prop_id,
@@ -318,6 +334,7 @@ goo_canvas_image_set_common_property (GObject              *object,
 {
   GooCanvasImagePrivate *priv = goo_canvas_image_get_private (object);
   GdkPixbuf *pixbuf;
+  gboolean recompute_bounds = TRUE;
 
   switch (prop_id)
     {
@@ -348,10 +365,16 @@ goo_canvas_image_set_common_property (GObject              *object,
       image_data->width = pixbuf ? gdk_pixbuf_get_width (pixbuf) : 0;
       image_data->height = pixbuf ? gdk_pixbuf_get_height (pixbuf) : 0;
       break;
+    case PROP_ALPHA:
+      priv->alpha = g_value_get_double (value);
+      recompute_bounds = FALSE;
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
+
+  return recompute_bounds;
 }
 
 
@@ -363,6 +386,7 @@ goo_canvas_image_set_property (GObject              *object,
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
   GooCanvasImage *image = (GooCanvasImage*) object;
+  gboolean recompute_bounds;
 
   if (simple->model)
     {
@@ -370,9 +394,11 @@ goo_canvas_image_set_property (GObject              *object,
       return;
     }
 
-  goo_canvas_image_set_common_property (object, image->image_data, prop_id,
-					value, pspec);
-  goo_canvas_item_simple_changed (simple, TRUE);
+  recompute_bounds = goo_canvas_image_set_common_property (object,
+							   image->image_data,
+							   prop_id,
+							   value, pspec);
+  goo_canvas_item_simple_changed (simple, recompute_bounds);
 }
 
 
@@ -445,7 +471,12 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
   cairo_set_source (cr, image_data->pattern);
   cairo_rectangle (cr, image_data->x, image_data->y,
 		   image_data->width, image_data->height);
-  cairo_fill (cr);
+  /* To have better performance, we don't use cairo_paint_with_alpha if
+   * the image is not transparent at all. */
+  if (priv->alpha != 1.0)
+    cairo_paint_with_alpha (cr, priv->alpha);
+  else
+    cairo_fill (cr);
 #else
   /* Using cairo_paint() used to be much slower than cairo_fill(), though
      they seem similar now. I'm not sure if it matters which we use. */
@@ -571,7 +602,9 @@ goo_canvas_image_model_class_init (GooCanvasImageModelClass *klass)
 static void
 goo_canvas_image_model_init (GooCanvasImageModel *emodel)
 {
+  GooCanvasImagePrivate *priv = GOO_CANVAS_IMAGE_MODEL_GET_PRIVATE (emodel);
 
+  priv->alpha = 1.0;
 }
 
 
@@ -674,10 +707,13 @@ goo_canvas_image_model_set_property (GObject              *object,
 				     GParamSpec           *pspec)
 {
   GooCanvasImageModel *imodel = (GooCanvasImageModel*) object;
+  gboolean recompute_bounds;
 
-  goo_canvas_image_set_common_property (object, &imodel->image_data, prop_id,
-					value, pspec);
-  g_signal_emit_by_name (imodel, "changed", TRUE);
+  recompute_bounds = goo_canvas_image_set_common_property (object,
+							   &imodel->image_data,
+							   prop_id,
+							   value, pspec);
+  g_signal_emit_by_name (imodel, "changed", recompute_bounds);
 }
 
 
