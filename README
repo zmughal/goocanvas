@@ -8,10 +8,8 @@
          GooCanvas Home Page : http://live.gnome.org/GooCanvas
 
 
-GooCanvas is similar in many ways to GnomeCanvas and FooCanvas.
-But it uses cairo for rendering, has an optional model/view split,
-and uses interfaces for items & models (so you can easily turn any
-application object into a canvas item or model).
+GooCanvas is similar in many ways to GnomeCanvas and FooCanvas, but it uses
+cairo for rendering.
 
 NOTE: I am no longer actively developing GooCanvas, so no major new
 features will be added (unless a new maintainer takes over). I'll still
@@ -23,8 +21,6 @@ for the model-view demo.)
 
 Features:
 
- o Optional model/view split.
- o Uses interfaces for items & views.
  o Basic items - rect/ellipse/polyline/text/image/grid/group.
  o Path item, using SVG path specification strings.
  o Table item for layout of other items (similar to the GtkTable widget).
@@ -32,7 +28,6 @@ Features:
    their allocated width, such as text items.)
  o Embedded GTK+ widgets.
  o Layers/stacking order with raise/lower functions.
- o Cascading styles - line width/style/dashes, colors, fill patterns.
  o Affine transformations for all items - rotations/scales/skews.
  o Clip paths to support clipping items.
  o Event handling - button/motion events, "pointer-events" property like SVG.
@@ -49,6 +44,13 @@ Features:
  o Scalable - support for thousands of items over a large canvas area.
  o Support for different units - pixels/points/inches/millimeters.
  o API docs.
+
+Features that may be removed in future to simplify the code:
+
+ o Optional model/view split.
+ o Uses interfaces for items & views.
+ o Cascading styles - line width/style/dashes, colors, fill patterns.
+   (The style properties will remain, but will not cascade.)
 
 
 Damon Chaplin (damon@gnome.org)

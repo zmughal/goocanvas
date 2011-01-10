@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-29 16:23+0100\n"
+"POT-Creation-Date: 2011-01-10 14:15+0000\n"
 "PO-Revision-Date: 2006-04-24 16:26+0100\n"
 "Last-Translator: Rafael Villar Burke <pachi@rvburke.com>\n"
 "Language-Team: \n"
@@ -41,7 +41,7 @@ msgstr "Escala"
 msgid "The vertical magnification factor of the canvas"
 msgstr "Factor de ampliación del lienzo"
 
-#: src/goocanvas.c:305 src/goocanvastext.c:158 src/goocanvaswidget.c:589
+#: src/goocanvas.c:305 src/goocanvastext.c:158 src/goocanvaswidget.c:597
 msgid "Anchor"
 msgstr "Ancla"
 
@@ -235,8 +235,8 @@ msgid "The y coordinate of the top of the ellipse"
 msgstr "Coordenada y del centro de la elipse"
 
 #: src/goocanvasellipse.c:123 src/goocanvasgrid.c:124 src/goocanvasgroup.c:106
-#: src/goocanvasimage.c:107 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
-#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:572
+#: src/goocanvasimage.c:109 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
+#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:580
 msgid "Width"
 msgstr "Ancho"
 
@@ -246,9 +246,9 @@ msgid "The width of the ellipse"
 msgstr "Ancho de la imagen"
 
 #: src/goocanvasellipse.c:130 src/goocanvasgrid.c:131 src/goocanvasgroup.c:114
-#: src/goocanvasimage.c:114 src/goocanvaspath.c:100
+#: src/goocanvasimage.c:116 src/goocanvaspath.c:100
 #: src/goocanvaspolyline.c:214 src/goocanvasrect.c:83 src/goocanvastext.c:149
-#: src/goocanvaswidget.c:580
+#: src/goocanvaswidget.c:588
 msgid "Height"
 msgstr "Alto"
 
@@ -488,44 +488,52 @@ msgstr "Ancho solicitado de la tabla, o -1 para usar el ancho predeterminado"
 msgid "The height of the group, or -1 to use the default height"
 msgstr "Altura solicitada de la tabla, o -1 para usar la altura predefinida"
 
-#: src/goocanvasimage.c:84
+#: src/goocanvasimage.c:86
 msgid "Pattern"
 msgstr "Patrón"
 
-#: src/goocanvasimage.c:85
+#: src/goocanvasimage.c:87
 msgid "The cairo pattern to paint"
 msgstr "Patrón cairo para dibujar"
 
-#: src/goocanvasimage.c:92
+#: src/goocanvasimage.c:94
 msgid "The x coordinate of the image"
 msgstr "Coordenada x de la imagen"
 
-#: src/goocanvasimage.c:100
+#: src/goocanvasimage.c:102
 msgid "The y coordinate of the image"
 msgstr "Coordenada y de la imagen"
 
-#: src/goocanvasimage.c:108
+#: src/goocanvasimage.c:110
 msgid "The width of the image"
 msgstr "Ancho de la imagen"
 
-#: src/goocanvasimage.c:115
+#: src/goocanvasimage.c:117
 msgid "The height of the image"
 msgstr "Altura de la la imagen"
 
-#: src/goocanvasimage.c:121
+#: src/goocanvasimage.c:123
 #, fuzzy
 msgid "Scale To Fit"
 msgstr "Escala"
 
-#: src/goocanvasimage.c:122
+#: src/goocanvasimage.c:124
 msgid "If the image is scaled to fit the width and height settings"
 msgstr ""
 
-#: src/goocanvasimage.c:128
+#: src/goocanvasimage.c:130
+msgid "Alpha"
+msgstr ""
+
+#: src/goocanvasimage.c:131
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr ""
+
+#: src/goocanvasimage.c:137
 msgid "Pixbuf"
 msgstr "Pixbuf"
 
-#: src/goocanvasimage.c:129
+#: src/goocanvasimage.c:138
 msgid "The GdkPixbuf to display"
 msgstr "GdkPixbuf para mostrar"
 
@@ -1190,12 +1198,17 @@ msgid "The y coordinate of the text"
 msgstr "Coordenada y del texto"
 
 #: src/goocanvastext.c:142
-msgid "The width to use to layout the text"
-msgstr "Ancho para disponer el texto"
+#, fuzzy
+msgid ""
+"The width to use to layout the text, or -1 to let the text use as much "
+"horizontal space as needed"
+msgstr "Altura solicitada de la tabla, o -1 para usar la altura predefinida"
 
 #: src/goocanvastext.c:150
 #, fuzzy
-msgid "The height to use to layout the text, or -1 to use the natural height"
+msgid ""
+"The height to use to layout the text, or -1 to let the text use as much "
+"vertical space as needed"
 msgstr "Altura solicitada de la tabla, o -1 para usar la altura predefinida"
 
 #: src/goocanvastext.c:159
@@ -1210,35 +1223,38 @@ msgstr "Alineación"
 msgid "How to align the text"
 msgstr "Cómo alinear el texto"
 
-#: src/goocanvaswidget.c:549
+#: src/goocanvaswidget.c:557
 msgid "Widget"
 msgstr "Control"
 
-#: src/goocanvaswidget.c:550
+#: src/goocanvaswidget.c:558
 msgid "The widget to place in the canvas"
 msgstr "Control que se ha de colocar en el lienzo"
 
-#: src/goocanvaswidget.c:557
+#: src/goocanvaswidget.c:565
 msgid "The x coordinate of the widget"
 msgstr "Coordenada x del control"
 
-#: src/goocanvaswidget.c:565
+#: src/goocanvaswidget.c:573
 msgid "The y coordinate of the widget"
 msgstr "Coordenada y del control"
 
-#: src/goocanvaswidget.c:573
+#: src/goocanvaswidget.c:581
 msgid "The width of the widget, or -1 to use its requested width"
 msgstr "Ancho del control, o -1 para usar el tamaño que solicite"
 
-#: src/goocanvaswidget.c:581
+#: src/goocanvaswidget.c:589
 msgid "The height of the widget, or -1 to use its requested height"
 msgstr "Altura del control, o -1 para usar el tamaño que solicite"
 
-#: src/goocanvaswidget.c:590
+#: src/goocanvaswidget.c:598
 msgid ""
 "How to position the widget relative to the item's x and y coordinate settings"
 msgstr ""
 "Cómo situar el control en relación a las coordenadas x e y del elemento"
+
+#~ msgid "The width to use to layout the text"
+#~ msgstr "Ancho para disponer el texto"
 
 #~ msgid "The color to use to paint the interior of the item"
 #~ msgstr "Color usado para pintar el interior del elemento"

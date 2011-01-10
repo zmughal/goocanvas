@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(goocanvas, 0.15)
+AC_INIT(goocanvas, 1.0.0)
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(src/goocanvas.c)
 AC_CONFIG_HEADERS(config.h)
@@ -12,8 +12,8 @@ AM_INIT_AUTOMAKE
 # If interfaces changed but it is backwards compatible: AGE++, else AGE=0.
 #  i.e. the library supports interfaces CURRENT - AGE up to CURRENT.
 #  if two libraries have identical CURRENT and AGE, then newest REVISION used.
-CURRENT=7
-AGE=4
+CURRENT=8
+AGE=5
 REVISION=0
 
 LT_VERSION_INFO="$CURRENT:$REVISION:$AGE"
@@ -35,8 +35,8 @@ GETTEXT_PACKAGE=goocanvas
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Gettext package.])
 
-dnl Add the languages which your application supports here.
-ALL_LINGUAS="en_GB es ja"
+dnl i18n
+ALL_LINGUAS="`grep -v '^#' "$srcdir/po/LINGUAS" | tr '\n' ' '`"
 AM_GLIB_GNU_GETTEXT
 
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`
