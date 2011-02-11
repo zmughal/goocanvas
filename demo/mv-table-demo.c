@@ -220,7 +220,6 @@ main (int argc, char *argv[])
   GtkWidget *window, *vbox, *label, *scrolled_win, *canvas;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /* Create the window and widgets. */

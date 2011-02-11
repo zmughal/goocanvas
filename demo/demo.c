@@ -1623,7 +1623,6 @@ main (int argc, char *argv[])
 {
   GtkWidget *window;
 
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   window = create_window ();

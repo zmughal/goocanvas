@@ -19,7 +19,6 @@ main (int argc, char *argv[])
   GooCanvasItem *root, *rect_item, *text_item;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /* Create the window and widgets. */

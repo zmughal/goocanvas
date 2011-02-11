@@ -227,7 +227,6 @@ main (int argc, char *argv[])
   GdkPixbuf *pixbuf;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

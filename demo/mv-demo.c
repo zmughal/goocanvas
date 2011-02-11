@@ -1449,7 +1449,6 @@ main (int argc, char *argv[])
   GooCanvasItemModel *model, *static_model;
   GtkWidget *window;
 
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   model = create_model ();

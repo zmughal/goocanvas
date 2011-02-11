@@ -29,7 +29,6 @@
  *    GooCanvasItem *root, *rect_item, *text_item;
  *
  *    /&ast; Initialize GTK+. &ast;/
- *    gtk_set_locale&nbsp;();
  *    gtk_init (&amp;argc, &amp;argv);
  *
  *    /&ast; Create the window and widgets. &ast;/
