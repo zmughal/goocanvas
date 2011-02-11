@@ -1,3 +1,9 @@
+2011-02-11  Damon Chaplin  <damon@gnome.org>
+
+	* docs/Makefile.am: set DOC_MODULE to goocanvas2 to make it parallel
+	installable with 1.x. Also renamed several of the files from
+	goocanvasXXX to goocanvas2XXX.
+
 2011-01-10  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasutils.h (enum): added docs for GooCanvasAnchorType.

@@ -1,3 +1,8 @@
+2011-02-11  Damon Chaplin  <damon@gnome.org>
+
+	* goocanvas.pot: removed file, as we use goocanvas2.pot now, and it
+	probably shouldn't be in git anyway.
+
 2010-06-21  Damon Chaplin  <damon@gnome.org>
 
 	* LINGUAS: created.

@@ -43,6 +43,7 @@ Makefile.in
 /mkinstalldirs
 /po/POTFILES
 /po/Makefile.in.in
+/po/goocanvas2.pot
 /src/goocanvasenumtypes.c
 /src/goocanvasenumtypes.h
 /src/goocanvasmarshal.c
@@ -60,6 +61,16 @@ Makefile.in
 /docs/goocanvas.interfaces
 /docs/goocanvas.prerequisites
 /docs/goocanvas.signals
+/docs/goocanvas2-decl-list.txt
+/docs/goocanvas2-decl.txt
+/docs/goocanvas2-undeclared.txt
+/docs/goocanvas2-undocumented.txt
+/docs/goocanvas2-unused.txt
+/docs/goocanvas2.args
+/docs/goocanvas2.hierarchy
+/docs/goocanvas2.interfaces
+/docs/goocanvas2.prerequisites
+/docs/goocanvas2.signals
 /docs/*.stamp
 /docs/*.bak
 /docs/html
