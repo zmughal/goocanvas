@@ -17,10 +17,6 @@
     <title>Features</title>
     <itemizedlist>
     <listitem><para>
-      Optional model/view split.
-    </para></listitem><listitem><para>
-      Uses interfaces for items and views.
-    </para></listitem><listitem><para>
       Basic items - rect/ellipse/polyline/text/image/grid/group.
     </para></listitem><listitem><para>
       Path item, using SVG path specification strings.
@@ -32,8 +28,6 @@
       Embedded GTK+ widgets.
     </para></listitem><listitem><para>
       Layers/stacking order with raise/lower functions.
-    </para></listitem><listitem><para>
-      Cascading styles - line width/style/dashes, colors, fill patterns.
     </para></listitem><listitem><para>
       Affine transformations for all items - rotations/scales/skews.
     </para></listitem><listitem><para>
@@ -62,6 +56,20 @@
       Support for different units - pixels/points/inches/millimeters.
     </para></listitem>
     </itemizedlist>
+
+  <refsect2 id="deprecated-features">
+    <title>Features that may be removed in future to simplify the code</title>
+    <itemizedlist>
+    <listitem><para>
+      Optional model/view split.
+    </para></listitem><listitem><para>
+      Uses interfaces for items and views.
+    </para></listitem><listitem><para>
+      Cascading styles - line width/style/dashes, colors, fill patterns.
+      (The style properties will remain, but will not cascade.)
+    </para></listitem>
+    </itemizedlist>
+  </refsect2>
 
   </refsect1>
 </refentry>

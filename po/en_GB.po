@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-03 10:57+0000\n"
+"POT-Creation-Date: 2011-02-14 14:50+0000\n"
 "PO-Revision-Date: 2006-04-24 16:26+0100\n"
 "Last-Translator: Damon Chaplin <damon@gnome.org>\n"
 "Language-Team: \n"
@@ -15,162 +15,162 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/goocanvas.c:297
+#: src/goocanvas.c:296
 msgid "Scale"
 msgstr ""
 
-#: src/goocanvas.c:298
+#: src/goocanvas.c:297
 msgid "The magnification factor of the canvas"
 msgstr ""
 
-#: src/goocanvas.c:304
+#: src/goocanvas.c:303
 msgid "Scale X"
 msgstr ""
 
-#: src/goocanvas.c:305
+#: src/goocanvas.c:304
 msgid "The horizontal magnification factor of the canvas"
 msgstr ""
 
-#: src/goocanvas.c:311
+#: src/goocanvas.c:310
 msgid "Scale Y"
 msgstr ""
 
-#: src/goocanvas.c:312
+#: src/goocanvas.c:311
 msgid "The vertical magnification factor of the canvas"
 msgstr ""
 
-#: src/goocanvas.c:318 src/goocanvastext.c:158 src/goocanvaswidget.c:589
+#: src/goocanvas.c:317 src/goocanvastext.c:158 src/goocanvaswidget.c:589
 msgid "Anchor"
 msgstr ""
 
-#: src/goocanvas.c:319
+#: src/goocanvas.c:318
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr ""
 
-#: src/goocanvas.c:326
+#: src/goocanvas.c:325
 msgid "X1"
 msgstr ""
 
-#: src/goocanvas.c:327
+#: src/goocanvas.c:326
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr ""
 
-#: src/goocanvas.c:334
+#: src/goocanvas.c:333
 msgid "Y1"
 msgstr ""
 
-#: src/goocanvas.c:335
+#: src/goocanvas.c:334
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr ""
 
-#: src/goocanvas.c:342
+#: src/goocanvas.c:341
 msgid "X2"
 msgstr ""
 
-#: src/goocanvas.c:343
+#: src/goocanvas.c:342
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
 msgstr ""
 
-#: src/goocanvas.c:351
+#: src/goocanvas.c:350
 msgid "Y2"
 msgstr ""
 
-#: src/goocanvas.c:352
+#: src/goocanvas.c:351
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr ""
 
-#: src/goocanvas.c:361
+#: src/goocanvas.c:360
 msgid "Automatic Bounds"
 msgstr ""
 
-#: src/goocanvas.c:362
+#: src/goocanvas.c:361
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
 msgstr ""
 
-#: src/goocanvas.c:368
+#: src/goocanvas.c:367
 msgid "Bounds From Origin"
 msgstr ""
 
-#: src/goocanvas.c:369
+#: src/goocanvas.c:368
 msgid "If the automatic bounds are calculated from the origin"
 msgstr ""
 
-#: src/goocanvas.c:375
+#: src/goocanvas.c:374
 msgid "Bounds Padding"
 msgstr ""
 
-#: src/goocanvas.c:376
+#: src/goocanvas.c:375
 msgid "The padding added to the automatic bounds"
 msgstr ""
 
-#: src/goocanvas.c:382
+#: src/goocanvas.c:381
 msgid "Units"
 msgstr ""
 
-#: src/goocanvas.c:383
+#: src/goocanvas.c:382
 msgid "The units to use for the canvas"
 msgstr ""
 
-#: src/goocanvas.c:390
+#: src/goocanvas.c:389
 msgid "Resolution X"
 msgstr ""
 
-#: src/goocanvas.c:391
+#: src/goocanvas.c:390
 msgid "The horizontal resolution of the display, in dots per inch"
 msgstr ""
 
-#: src/goocanvas.c:398
+#: src/goocanvas.c:397
 msgid "Resolution Y"
 msgstr ""
 
-#: src/goocanvas.c:399
+#: src/goocanvas.c:398
 msgid "The vertical resolution of the display, in dots per inch"
 msgstr ""
 
-#: src/goocanvas.c:407
+#: src/goocanvas.c:406
 msgid "Background Color"
 msgstr ""
 
-#: src/goocanvas.c:408
+#: src/goocanvas.c:407
 msgid "The color to use for the canvas background"
 msgstr ""
 
-#: src/goocanvas.c:414
+#: src/goocanvas.c:413
 msgid "Background Color RGB"
 msgstr ""
 
-#: src/goocanvas.c:415
+#: src/goocanvas.c:414
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
 msgstr ""
 
-#: src/goocanvas.c:421
+#: src/goocanvas.c:420
 msgid "Integer Layout"
 msgstr ""
 
-#: src/goocanvas.c:422
+#: src/goocanvas.c:421
 msgid "If all item layout is done to the nearest integer"
 msgstr ""
 
-#: src/goocanvas.c:428
+#: src/goocanvas.c:427
 msgid "Clear Background"
 msgstr ""
 
-#: src/goocanvas.c:429
+#: src/goocanvas.c:428
 msgid "If the background is cleared before the canvas is painted"
 msgstr ""
 
-#: src/goocanvas.c:435
+#: src/goocanvas.c:434
 msgid "Redraw When Scrolled"
 msgstr ""
 
-#: src/goocanvas.c:436
+#: src/goocanvas.c:435
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
 "static items"
@@ -217,7 +217,7 @@ msgid "The y coordinate of the top of the ellipse"
 msgstr ""
 
 #: src/goocanvasellipse.c:123 src/goocanvasgrid.c:124 src/goocanvasgroup.c:106
-#: src/goocanvasimage.c:107 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
+#: src/goocanvasimage.c:109 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
 #: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:572
 msgid "Width"
 msgstr ""
@@ -227,7 +227,7 @@ msgid "The width of the ellipse"
 msgstr ""
 
 #: src/goocanvasellipse.c:130 src/goocanvasgrid.c:131 src/goocanvasgroup.c:114
-#: src/goocanvasimage.c:114 src/goocanvaspath.c:100
+#: src/goocanvasimage.c:116 src/goocanvaspath.c:100
 #: src/goocanvaspolyline.c:214 src/goocanvasrect.c:83 src/goocanvastext.c:149
 #: src/goocanvaswidget.c:580
 msgid "Height"
@@ -433,47 +433,55 @@ msgstr ""
 msgid "The height of the group, or -1 to use the default height"
 msgstr ""
 
-#: src/goocanvasimage.c:84
+#: src/goocanvasimage.c:86
 msgid "Pattern"
 msgstr ""
 
-#: src/goocanvasimage.c:85
+#: src/goocanvasimage.c:87
 msgid "The cairo pattern to paint"
 msgstr ""
 
-#: src/goocanvasimage.c:92
+#: src/goocanvasimage.c:94
 msgid "The x coordinate of the image"
 msgstr ""
 
-#: src/goocanvasimage.c:100
+#: src/goocanvasimage.c:102
 msgid "The y coordinate of the image"
 msgstr ""
 
-#: src/goocanvasimage.c:108
+#: src/goocanvasimage.c:110
 msgid "The width of the image"
 msgstr ""
 
-#: src/goocanvasimage.c:115
+#: src/goocanvasimage.c:117
 msgid "The height of the image"
 msgstr ""
 
-#: src/goocanvasimage.c:121
+#: src/goocanvasimage.c:123
 msgid "Scale To Fit"
 msgstr ""
 
-#: src/goocanvasimage.c:122
+#: src/goocanvasimage.c:124
 msgid "If the image is scaled to fit the width and height settings"
 msgstr ""
 
-#: src/goocanvasimage.c:128
+#: src/goocanvasimage.c:130
+msgid "Alpha"
+msgstr ""
+
+#: src/goocanvasimage.c:131
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr ""
+
+#: src/goocanvasimage.c:137
 msgid "Pixbuf"
 msgstr ""
 
-#: src/goocanvasimage.c:129
+#: src/goocanvasimage.c:138
 msgid "The GdkPixbuf to display"
 msgstr ""
 
-#: src/goocanvasitem.c:461 src/goocanvasitemmodel.c:219
+#: src/goocanvasitem.c:461 src/goocanvasitemmodel.c:224
 msgid "Parent"
 msgstr ""
 
@@ -481,73 +489,73 @@ msgstr ""
 msgid "The parent item"
 msgstr ""
 
-#: src/goocanvasitem.c:468 src/goocanvasitemmodel.c:226
+#: src/goocanvasitem.c:468 src/goocanvasitemmodel.c:231
 msgid "Visibility"
 msgstr ""
 
-#: src/goocanvasitem.c:469 src/goocanvasitemmodel.c:227
+#: src/goocanvasitem.c:469 src/goocanvasitemmodel.c:232
 msgid "When the canvas item is visible"
 msgstr ""
 
-#: src/goocanvasitem.c:476 src/goocanvasitemmodel.c:234
+#: src/goocanvasitem.c:476 src/goocanvasitemmodel.c:239
 msgid "Visibility Threshold"
 msgstr ""
 
-#: src/goocanvasitem.c:477 src/goocanvasitemmodel.c:235
+#: src/goocanvasitem.c:477 src/goocanvasitemmodel.c:240
 msgid "The scale threshold at which the item becomes visible"
 msgstr ""
 
-#: src/goocanvasitem.c:485 src/goocanvasitemmodel.c:243
+#: src/goocanvasitem.c:485 src/goocanvasitemmodel.c:248
 msgid "Transform"
 msgstr ""
 
-#: src/goocanvasitem.c:486 src/goocanvasitemmodel.c:244
+#: src/goocanvasitem.c:486 src/goocanvasitemmodel.c:249
 msgid "The transformation matrix of the item"
 msgstr ""
 
-#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:250
+#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:255
 msgid "Pointer Events"
 msgstr ""
 
-#: src/goocanvasitem.c:493 src/goocanvasitemmodel.c:251
+#: src/goocanvasitem.c:493 src/goocanvasitemmodel.c:256
 msgid "Specifies when the item receives pointer events"
 msgstr ""
 
-#: src/goocanvasitem.c:500 src/goocanvasitemmodel.c:258
+#: src/goocanvasitem.c:500 src/goocanvasitemmodel.c:263
 msgid "Title"
 msgstr ""
 
-#: src/goocanvasitem.c:501 src/goocanvasitemmodel.c:259
+#: src/goocanvasitem.c:501 src/goocanvasitemmodel.c:264
 msgid ""
 "A short context-rich description of the item for use by assistive "
 "technologies"
 msgstr ""
 
-#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:265
+#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:270
 msgid "Description"
 msgstr ""
 
-#: src/goocanvasitem.c:508 src/goocanvasitemmodel.c:266
+#: src/goocanvasitem.c:508 src/goocanvasitemmodel.c:271
 msgid "A description of the item for use by assistive technologies"
 msgstr ""
 
-#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:272
+#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:277
 msgid "Can Focus"
 msgstr ""
 
-#: src/goocanvasitem.c:515 src/goocanvasitemmodel.c:273
+#: src/goocanvasitem.c:515 src/goocanvasitemmodel.c:278
 msgid "If the item can take the keyboard focus"
 msgstr ""
 
-#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:279
+#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:284
 msgid "Tooltip"
 msgstr ""
 
-#: src/goocanvasitem.c:522 src/goocanvasitemmodel.c:280
+#: src/goocanvasitem.c:522 src/goocanvasitemmodel.c:285
 msgid "The tooltip to display for the item"
 msgstr ""
 
-#: src/goocanvasitemmodel.c:220
+#: src/goocanvasitemmodel.c:225
 msgid "The parent item model"
 msgstr ""
 

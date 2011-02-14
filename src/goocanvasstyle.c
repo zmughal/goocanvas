@@ -13,6 +13,11 @@
  * #GooCanvasStyle provides support for cascading style properties for canvas
  * items. It is intended to be used when implementing new canvas items.
  *
+ * <note><para>
+ * 	The cascading styles canvas feature may be removed in a future version
+ *      of GooCanvas.
+ * </para></note>
+ *
  * Style properties are identified by a unique #GQuark, and contain
  * arbitrary data stored in a #GValue.
  *

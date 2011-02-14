@@ -1857,12 +1857,18 @@ goo_canvas_item_simple_get_line_width (GooCanvasItemSimple   *item)
  * item models. It can also be used as the base class for new custom canvas
  * item models.
  *
+ * <note><para>
+ * 	The Model/View canvas feature may be removed in a future version of
+ * 	GooCanvas.
+ * </para></note>
+ * 
  * It provides default implementations for many of the #GooCanvasItemModel
  * methods.
  *
  * Subclasses of #GooCanvasItemModelSimple only need to implement the
  * create_item() method of the #GooCanvasItemModel interface, to create
  * the default canvas item to view the item model.
+ *
  */
 
 

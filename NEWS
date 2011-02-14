@@ -1,4 +1,24 @@
 
+GooCanvas 2.0.0	(Feb ?? 2011)
+===============
+
+ o Ported to GTK+ 3.0.
+ o Can be installed with GooCanvas 1.0.x without conflicting.
+
+
+GooCanvas 1.0.0	(Jan 10 2011)
+===============
+
+ o Added "alpha" property to GooCanvasImage to set opacity.
+ o Allow setting clip path to NULL to reset it.
+ o Allow setting line dash to NULL to reset it.
+ o Handle RTL direction better in GooCanvasTable.
+ o Fixed GooCanvasGroup bug - use the correct scale argument in paint.
+ o Fixed GooCanvasPolyline bug - update arrows when line width changes.
+ o Fixed static items bug - don't clip incorrectly.
+ o Improved performance a bit when creating lots of items.
+
+
 GooCanvas 0.15	(Jun 29 2009)
 ==============
 

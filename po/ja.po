@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-03 10:57+0000\n"
+"POT-Creation-Date: 2011-02-14 14:50+0000\n"
 "PO-Revision-Date: 2008-04-28 20:42+0900\n"
 "Last-Translator: kou@cozmixng.org <kou@cozmixng.org>\n"
 "Language-Team:\n"
@@ -16,163 +16,163 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/goocanvas.c:297
+#: src/goocanvas.c:296
 msgid "Scale"
 msgstr "スケール"
 
-#: src/goocanvas.c:298
+#: src/goocanvas.c:297
 msgid "The magnification factor of the canvas"
 msgstr "キャンバスの拡大率"
 
-#: src/goocanvas.c:304
+#: src/goocanvas.c:303
 msgid "Scale X"
 msgstr "X方向のスケール"
 
-#: src/goocanvas.c:305
+#: src/goocanvas.c:304
 msgid "The horizontal magnification factor of the canvas"
 msgstr "キャンバスの水平方向の拡大率"
 
-#: src/goocanvas.c:311
+#: src/goocanvas.c:310
 msgid "Scale Y"
 msgstr "Y方向のスケール"
 
-#: src/goocanvas.c:312
+#: src/goocanvas.c:311
 msgid "The vertical magnification factor of the canvas"
 msgstr "キャンバスの垂直方向の拡大率"
 
-#: src/goocanvas.c:318 src/goocanvastext.c:158 src/goocanvaswidget.c:589
+#: src/goocanvas.c:317 src/goocanvastext.c:158 src/goocanvaswidget.c:589
 msgid "Anchor"
 msgstr "アンカー"
 
-#: src/goocanvas.c:319
+#: src/goocanvas.c:318
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr "ウィジェットの領域よりも小さくなったときにキャンバスをどこにおくか"
 
-#: src/goocanvas.c:326
+#: src/goocanvas.c:325
 msgid "X1"
 msgstr "X1"
 
-#: src/goocanvas.c:327
+#: src/goocanvas.c:326
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr "キャンバス左端の X 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:334
+#: src/goocanvas.c:333
 msgid "Y1"
 msgstr "Y1"
 
-#: src/goocanvas.c:335
+#: src/goocanvas.c:334
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr "キャンバス上端の Y 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:342
+#: src/goocanvas.c:341
 msgid "X2"
 msgstr "X2"
 
-#: src/goocanvas.c:343
+#: src/goocanvas.c:342
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
 msgstr "キャンバス右端の X 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:351
+#: src/goocanvas.c:350
 msgid "Y2"
 msgstr "Y2"
 
-#: src/goocanvas.c:352
+#: src/goocanvas.c:351
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr "キャンバス下端の Y 座標 (キャンバスの単位で指定)"
 
-#: src/goocanvas.c:361
+#: src/goocanvas.c:360
 msgid "Automatic Bounds"
 msgstr "自動境界計算"
 
-#: src/goocanvas.c:362
+#: src/goocanvas.c:361
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
 msgstr ""
 "キャンバスのすべてのアイテムの境界を元にして自動的に境界を計算するかどうか"
 
-#: src/goocanvas.c:368
+#: src/goocanvas.c:367
 msgid "Bounds From Origin"
 msgstr "原点からの境界計算"
 
-#: src/goocanvas.c:369
+#: src/goocanvas.c:368
 msgid "If the automatic bounds are calculated from the origin"
 msgstr "自動境界計算を原点から行うかどうか"
 
-#: src/goocanvas.c:375
+#: src/goocanvas.c:374
 msgid "Bounds Padding"
 msgstr "境界部のパディング"
 
-#: src/goocanvas.c:376
+#: src/goocanvas.c:375
 msgid "The padding added to the automatic bounds"
 msgstr "自動境界計算で追加されたパディング"
 
-#: src/goocanvas.c:382
+#: src/goocanvas.c:381
 msgid "Units"
 msgstr "単位"
 
-#: src/goocanvas.c:383
+#: src/goocanvas.c:382
 msgid "The units to use for the canvas"
 msgstr "キャンバスで使う単位"
 
-#: src/goocanvas.c:390
+#: src/goocanvas.c:389
 msgid "Resolution X"
 msgstr "X 方向の解像度"
 
-#: src/goocanvas.c:391
+#: src/goocanvas.c:390
 msgid "The horizontal resolution of the display, in dots per inch"
 msgstr "画面の水平解像度 (ドット/インチ、DPI)"
 
-#: src/goocanvas.c:398
+#: src/goocanvas.c:397
 msgid "Resolution Y"
 msgstr "Y 方向の解像度"
 
-#: src/goocanvas.c:399
+#: src/goocanvas.c:398
 msgid "The vertical resolution of the display, in dots per inch"
 msgstr "画面の垂直解像度 (ドット/インチ、DPI)"
 
-#: src/goocanvas.c:407
+#: src/goocanvas.c:406
 msgid "Background Color"
 msgstr "背景色"
 
-#: src/goocanvas.c:408
+#: src/goocanvas.c:407
 msgid "The color to use for the canvas background"
 msgstr "キャンバスの背景色"
 
-#: src/goocanvas.c:414
+#: src/goocanvas.c:413
 msgid "Background Color RGB"
 msgstr "背景色のRGB表現"
 
-#: src/goocanvas.c:415
+#: src/goocanvas.c:414
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
 msgstr "24ビットの整数値(0xRRGGBB)で指定するキャンバスの背景色"
 
-#: src/goocanvas.c:421
+#: src/goocanvas.c:420
 msgid "Integer Layout"
 msgstr "整数配置"
 
-#: src/goocanvas.c:422
+#: src/goocanvas.c:421
 msgid "If all item layout is done to the nearest integer"
 msgstr "すべてのアイテムを近似整数で配置するかどうか"
 
-#: src/goocanvas.c:428
+#: src/goocanvas.c:427
 msgid "Clear Background"
 msgstr "背景消去"
 
-#: src/goocanvas.c:429
+#: src/goocanvas.c:428
 msgid "If the background is cleared before the canvas is painted"
 msgstr "キャンバスを描画する前に背景を消去するかどうか"
 
-#: src/goocanvas.c:435
+#: src/goocanvas.c:434
 msgid "Redraw When Scrolled"
 msgstr ""
 
-#: src/goocanvas.c:436
+#: src/goocanvas.c:435
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
 "static items"
@@ -221,7 +221,7 @@ msgid "The y coordinate of the top of the ellipse"
 msgstr "楕円の中心の Y 座標"
 
 #: src/goocanvasellipse.c:123 src/goocanvasgrid.c:124 src/goocanvasgroup.c:106
-#: src/goocanvasimage.c:107 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
+#: src/goocanvasimage.c:109 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
 #: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:572
 msgid "Width"
 msgstr "幅"
@@ -232,7 +232,7 @@ msgid "The width of the ellipse"
 msgstr "画像の幅"
 
 #: src/goocanvasellipse.c:130 src/goocanvasgrid.c:131 src/goocanvasgroup.c:114
-#: src/goocanvasimage.c:114 src/goocanvaspath.c:100
+#: src/goocanvasimage.c:116 src/goocanvaspath.c:100
 #: src/goocanvaspolyline.c:214 src/goocanvasrect.c:83 src/goocanvastext.c:149
 #: src/goocanvaswidget.c:580
 msgid "Height"
@@ -477,48 +477,56 @@ msgstr "要求する表の幅。デフォルトの幅を使うなら -1 です"
 msgid "The height of the group, or -1 to use the default height"
 msgstr "要求する表の高さ。デフォルトの高さを使うなら -1 です"
 
-#: src/goocanvasimage.c:84
+#: src/goocanvasimage.c:86
 msgid "Pattern"
 msgstr "パターン"
 
-#: src/goocanvasimage.c:85
+#: src/goocanvasimage.c:87
 msgid "The cairo pattern to paint"
 msgstr "塗りつぶし用の cairo のパターン"
 
-#: src/goocanvasimage.c:92
+#: src/goocanvasimage.c:94
 msgid "The x coordinate of the image"
 msgstr "画像の X 座標"
 
-#: src/goocanvasimage.c:100
+#: src/goocanvasimage.c:102
 msgid "The y coordinate of the image"
 msgstr "画像の Y 座標"
 
-#: src/goocanvasimage.c:108
+#: src/goocanvasimage.c:110
 msgid "The width of the image"
 msgstr "画像の幅"
 
-#: src/goocanvasimage.c:115
+#: src/goocanvasimage.c:117
 msgid "The height of the image"
 msgstr "画像の高さ"
 
-#: src/goocanvasimage.c:121
+#: src/goocanvasimage.c:123
 #, fuzzy
 msgid "Scale To Fit"
 msgstr "X方向のスケール"
 
-#: src/goocanvasimage.c:122
+#: src/goocanvasimage.c:124
 msgid "If the image is scaled to fit the width and height settings"
 msgstr ""
 
-#: src/goocanvasimage.c:128
+#: src/goocanvasimage.c:130
+msgid "Alpha"
+msgstr ""
+
+#: src/goocanvasimage.c:131
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr ""
+
+#: src/goocanvasimage.c:137
 msgid "Pixbuf"
 msgstr "Pixbuf"
 
-#: src/goocanvasimage.c:129
+#: src/goocanvasimage.c:138
 msgid "The GdkPixbuf to display"
 msgstr "表示するGdkPixbuf"
 
-#: src/goocanvasitem.c:461 src/goocanvasitemmodel.c:219
+#: src/goocanvasitem.c:461 src/goocanvasitemmodel.c:224
 msgid "Parent"
 msgstr "親"
 
@@ -526,74 +534,74 @@ msgstr "親"
 msgid "The parent item"
 msgstr "親アイテム"
 
-#: src/goocanvasitem.c:468 src/goocanvasitemmodel.c:226
+#: src/goocanvasitem.c:468 src/goocanvasitemmodel.c:231
 msgid "Visibility"
 msgstr "可視性"
 
-#: src/goocanvasitem.c:469 src/goocanvasitemmodel.c:227
+#: src/goocanvasitem.c:469 src/goocanvasitemmodel.c:232
 msgid "When the canvas item is visible"
 msgstr "いつキャンバスアイテムが見えるか"
 
-#: src/goocanvasitem.c:476 src/goocanvasitemmodel.c:234
+#: src/goocanvasitem.c:476 src/goocanvasitemmodel.c:239
 msgid "Visibility Threshold"
 msgstr "可視性のしきい値"
 
-#: src/goocanvasitem.c:477 src/goocanvasitemmodel.c:235
+#: src/goocanvasitem.c:477 src/goocanvasitemmodel.c:240
 msgid "The scale threshold at which the item becomes visible"
 msgstr "アイテムが見えるようになる倍率のしきい値"
 
-#: src/goocanvasitem.c:485 src/goocanvasitemmodel.c:243
+#: src/goocanvasitem.c:485 src/goocanvasitemmodel.c:248
 msgid "Transform"
 msgstr "変換"
 
-#: src/goocanvasitem.c:486 src/goocanvasitemmodel.c:244
+#: src/goocanvasitem.c:486 src/goocanvasitemmodel.c:249
 msgid "The transformation matrix of the item"
 msgstr "アイテムの変換行列"
 
-#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:250
+#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:255
 msgid "Pointer Events"
 msgstr "ポインタイベント"
 
-#: src/goocanvasitem.c:493 src/goocanvasitemmodel.c:251
+#: src/goocanvasitem.c:493 src/goocanvasitemmodel.c:256
 msgid "Specifies when the item receives pointer events"
 msgstr "いつアイテムがポインタイベントを受け取るか指定します"
 
-#: src/goocanvasitem.c:500 src/goocanvasitemmodel.c:258
+#: src/goocanvasitem.c:500 src/goocanvasitemmodel.c:263
 msgid "Title"
 msgstr "タイトル"
 
-#: src/goocanvasitem.c:501 src/goocanvasitemmodel.c:259
+#: src/goocanvasitem.c:501 src/goocanvasitemmodel.c:264
 msgid ""
 "A short context-rich description of the item for use by assistive "
 "technologies"
 msgstr "支援技術用の短い文脈豊富な説明"
 
-#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:265
+#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:270
 msgid "Description"
 msgstr "説明"
 
-#: src/goocanvasitem.c:508 src/goocanvasitemmodel.c:266
+#: src/goocanvasitem.c:508 src/goocanvasitemmodel.c:271
 msgid "A description of the item for use by assistive technologies"
 msgstr "支援技術用の説明"
 
-#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:272
+#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:277
 msgid "Can Focus"
 msgstr "フォーカス可否"
 
-#: src/goocanvasitem.c:515 src/goocanvasitemmodel.c:273
+#: src/goocanvasitem.c:515 src/goocanvasitemmodel.c:278
 msgid "If the item can take the keyboard focus"
 msgstr "アイテムはキーボードフォーカスを受け付けるかどうか"
 
-#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:279
+#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:284
 msgid "Tooltip"
 msgstr ""
 
-#: src/goocanvasitem.c:522 src/goocanvasitemmodel.c:280
+#: src/goocanvasitem.c:522 src/goocanvasitemmodel.c:285
 #, fuzzy
 msgid "The tooltip to display for the item"
 msgstr "アイテムを置く行"
 
-#: src/goocanvasitemmodel.c:220
+#: src/goocanvasitemmodel.c:225
 msgid "The parent item model"
 msgstr "親アイテムモデル"
 

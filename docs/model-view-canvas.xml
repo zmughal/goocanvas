@@ -19,6 +19,10 @@
     Here's a complete example application that creates a model-view #GooCanvas
     with a rectangle and a text item in it.
     </para>
+    <note><para>
+	The Model/View canvas feature may be removed in a future version of
+	GooCanvas.
+    </para></note>
 
 <informalexample><programlisting>
   &num;include &lt;stdlib.h&gt;

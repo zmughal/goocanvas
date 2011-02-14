@@ -1,3 +1,7 @@
+2011-02-14  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 1.90.3
+
 2011-02-11  Damon Chaplin  <damon@gnome.org>
 
 	* docs/Makefile.am: set DOC_MODULE to goocanvas2 to make it parallel

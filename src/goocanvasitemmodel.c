@@ -12,6 +12,11 @@
  *
  * #GooCanvasItemModel defines the interface that models for canvas items must
  * implement, and contains methods for operating on canvas item models.
+ *
+ * <note><para>
+ * 	The Model/View canvas feature may be removed in a future version of
+ * 	GooCanvas.
+ * </para></note>
  */
 #include <config.h>
 #include <math.h>
