@@ -859,9 +859,9 @@ goo_canvas_set_property    (GObject            *object,
       break;
     case PROP_BACKGROUND_COLOR:
       if (!g_value_get_string (value))
-	gtk_widget_modify_base ((GtkWidget*) canvas, GTK_STATE_NORMAL, NULL);
+	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, NULL);
       else if (gdk_color_parse (g_value_get_string (value), &color))
-	gtk_widget_modify_base ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
       else
 	g_warning ("Unknown color: %s", g_value_get_string (value));
       break;
@@ -870,7 +870,7 @@ goo_canvas_set_property    (GObject            *object,
       color.red   = ((rgb >> 16) & 0xFF) * 257;
       color.green = ((rgb >> 8)  & 0xFF) * 257;
       color.blue  = ((rgb)       & 0xFF) * 257;
-      gtk_widget_modify_base ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      gtk_widget_modify_bg  ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
       break;
     case PROP_INTEGER_LAYOUT:
       canvas->integer_layout = g_value_get_boolean (value);

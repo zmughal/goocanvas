@@ -1,5 +1,10 @@
 2011-02-14  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c (goo_canvas_set_property): use gtk_widget_modify_bg()
+	instead of gtk_widget_modify_base() to change the background color.
+
+2011-02-14  Damon Chaplin  <damon@gnome.org>
+
 	* Released GooCanvas 1.90.3
 
 2011-02-11  Damon Chaplin  <damon@gnome.org>
