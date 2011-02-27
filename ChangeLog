@@ -1,3 +1,7 @@
+2011-02-27  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 2.0.0
+
 2011-02-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_set_property): use gtk_widget_modify_bg()
