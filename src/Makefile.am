@@ -145,3 +145,29 @@ CLEANFILES = $(gen_sources)
 BUILT_SOURCES = $(libgoocanvas_built_headers) $(libgoocanvas_built_sources)
 MAINTAINERCLEANFILES = $(BUILT_SOURCES) $(stamp_files)
 EXTRA_DIST = $(BUILT_SOURCES) $(libgoocanvas_extra_sources)
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
+
+if HAVE_INTROSPECTION
+introspection_sources = $(libgoocanvas_2_0_la_SOURCES) $(libgoocanvas_public_headers)
+
+GooCanvas-2.0.gir: libgoocanvas-2.0.la
+GooCanvas_2_0_gir_SCANNERFLAGS = --identifier-prefix=Goo --warn-all
+GooCanvas_2_0_gir_INCLUDES = Gtk-3.0
+GooCanvas_2_0_gir_CFLAGS = $(INCLUDES)
+GooCanvas_2_0_gir_LIBS = goocanvas-2.0
+GooCanvas_2_0_gir_FILES = $(introspection_sources)
+INTROSPECTION_GIRS += GooCanvas-2.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+endif
+
