@@ -921,8 +921,9 @@ goo_canvas_set_property    (GObject            *object,
  * @canvas: a #GooCanvas.
  *
  * Gets the root item model of the canvas.
- *
- * Returns: the root item model, or %NULL if there is no root item model.
+ * 
+ * Returns: (transfer none): the root item model, or %NULL if there is no root
+ * item model.
  **/
 GooCanvasItemModel*
 goo_canvas_get_root_item_model (GooCanvas	*canvas)
@@ -993,8 +994,8 @@ goo_canvas_set_root_item_model (GooCanvas          *canvas,
  * @canvas: a #GooCanvas.
  *
  * Gets the root item of the canvas, usually a #GooCanvasGroup.
- *
- * Returns: the root item, or %NULL if there is no root item.
+ * 
+ * Returns: (transfer none): the root item, or %NULL if there is no root item.
  **/
 GooCanvasItem*
 goo_canvas_get_root_item (GooCanvas     *canvas)
@@ -1057,7 +1058,7 @@ goo_canvas_set_root_item    (GooCanvas		*canvas,
  * Static items are added to the static root item in exactly the same way that
  * ordinary items are added to the root item.
  *
- * Returns: the static root item, or %NULL.
+ * Returns: (transfer none): the static root item, or %NULL.
  **/
 GooCanvasItem*
 goo_canvas_get_static_root_item    (GooCanvas		*canvas)
@@ -1132,7 +1133,7 @@ goo_canvas_set_static_root_item    (GooCanvas		*canvas,
  * Static items models are added to the static root item model in exactly the
  * same way that ordinary item models are added to the root item model.
  *
- * Returns: the static root item model, or %NULL.
+ * Returns: (transfer none): the static root item model, or %NULL.
  **/
 GooCanvasItemModel*
 goo_canvas_get_static_root_item_model (GooCanvas	  *canvas)
@@ -1156,7 +1157,7 @@ goo_canvas_get_static_root_item_model (GooCanvas	  *canvas)
  * scrolled or the scale changes.
  *
  * Static items models are added to the static root item model in exactly the
- * same way that ordinary item models are added to the root item model.
+ *  same way that ordinary item models are added to the root item model.
  **/
 void
 goo_canvas_set_static_root_item_model (GooCanvas	  *canvas,
@@ -1229,8 +1230,8 @@ goo_canvas_set_static_root_item_model (GooCanvas	  *canvas,
  * More complex applications may want to use the #GooCanvas::item-created
  * signal to hook up their signal handlers.
  *
- * Returns: the canvas item corresponding to the given #GooCanvasItemModel,
- *  or %NULL if no canvas item has been created for it yet.
+ * Returns: (transfer none): the canvas item corresponding to the given
+ *  #GooCanvasItemModel, or %NULL if no canvas item has been created for it yet.
  **/
 GooCanvasItem*
 goo_canvas_get_item (GooCanvas          *canvas,
@@ -1260,8 +1261,9 @@ goo_canvas_get_item (GooCanvas          *canvas,
  *  items should be used to determine which parts of the item are tested.
  *
  * Gets the item at the given point.
- *
- * Returns: the item found at the given point, or %NULL if no item was found.
+ * 
+ * Returns: (transfer none): the item found at the given point, or %NULL if no
+ *  item was found.
  **/
 GooCanvasItem*
 goo_canvas_get_item_at (GooCanvas     *canvas,
@@ -1314,10 +1316,10 @@ goo_canvas_get_item_at (GooCanvas     *canvas,
  *  items should be used to determine which parts of the item are tested.
  *
  * Gets all items at the given point.
- *
- * Returns: a list of items found at the given point, with the top item at
- *  the start of the list, or %NULL if no items were found. The list must be
- *  freed with g_list_free().
+ * 
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer container): a list of
+ *  items found at the given point, with the top item at the start of the list, 
+ *  or %NULL if no items were found. The list must be freed with g_list_free().
  **/
 GList*
 goo_canvas_get_items_at (GooCanvas     *canvas,
@@ -1430,8 +1432,9 @@ goo_canvas_get_items_in_area_recurse (GooCanvas		    *canvas,
  *  normal items.
  *
  * Gets a list of items inside or outside a given area.
- *
- * Returns: a list of items in the given area, or %NULL if no items are found.
+ * 
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer container): a list of
+ *  items in the given area, or %NULL if no items are found.
  *  The list should be freed with g_list_free().
  **/
 GList*
@@ -2426,8 +2429,8 @@ goo_canvas_unregister_item (GooCanvas          *canvas,
  *
  * It emits the #GooCanvas::item-created signal after creating the view, so
  * application code can connect signal handlers to the new view if desired.
- *
- * Returns: a new canvas item.
+ * 
+ * Returns: (transfer full): a new canvas item.
  **/
 GooCanvasItem*
 goo_canvas_create_item  (GooCanvas          *canvas,
