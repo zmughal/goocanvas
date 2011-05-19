@@ -1,4 +1,46 @@
-from gi.repository import Gtk, GooCanvas
+from gi.repository import Gtk, GdkPixbuf, GooCanvas
+
+def setup_polyline(c):
+    group = c.get_root_item()
+
+    GooCanvas.CanvasRect (group, 0, 0, 600, 450, line_width=4.0)
+
+    GooCanvas.CanvasPolyline.new_line(group, 0, 150, 600, 150, line_width=4.0)
+
+    GooCanvas.CanvasPolyline.new_line(group, 0, 300, 600, 300, line_width=4.0)
+
+    GooCanvas.CanvasPolyline.new_line(group, 200, 0, 200, 450, line_width=4.0)
+
+    GooCanvas.CanvasPolyline.new_line(group, 400, 0, 400, 450, line_width=4.0)
+
+    GooCanvas.CanvasPolyline (group, False,
+                       (340.0, 170.0),
+                       (340.0, 230.0),
+                       (390.0, 230.0),
+                       (390.0, 170.0),
+                       stroke_color="midnightblue",
+                       line_width=3.0,
+                       start_arrow=True,
+                       end_arrow=True,
+                       arrow_tip_length=3.0,
+                       arrow_length=4.0,
+                       arrow_width=3.5)
+
+    GooCanvas.CanvasPolyline (group, False,
+                       (356.0, 180.0),
+                       (374.0, 220.0),
+                       stroke_color="blue",
+                       line_width=1.0,
+                       start_arrow=True,
+                       end_arrow=True,
+                       arrow_tip_length=5.0,
+                       arrow_length=6.0,
+                       arrow_width=6.0)
+
+    GooCanvas.CanvasPolyline (group, False,
+                       (356.0, 220.0),
+                       start_arrow=True,
+                       end_arrow=True)
 
 def setup_canvas(c):
     root = c.get_root_item()
@@ -86,70 +128,95 @@ def setup_canvas(c):
                   line_width=5.0,
                   )
 
-def demo_polyline():
+def setup_scalability(c):
+    N_COLS = 5
+    N_ROWS = 20
+    PADDING = 10
+
+    vbox = Gtk.VBox (homogeneous=False, spacing=4)
+    vbox.set_border_width (4)
+    vbox.show()
+
+    table = Gtk.Table (2, 2, False)
+    table.set_row_spacings (4)
+    table.set_col_spacings (4)
+    vbox.pack_start (table, True, True, 0)
+    table.show ()
+
+    frame = Gtk.Frame ()
+    frame.set_shadow_type (Gtk.ShadowType.IN)
+    table.attach (frame,
+              0, 1, 0, 1,
+              Gtk.AttachOptions.EXPAND | Gtk.AttachOptions.FILL | Gtk.AttachOptions.SHRINK,
+              Gtk.AttachOptions.EXPAND | Gtk.AttachOptions.FILL | Gtk.AttachOptions.SHRINK,
+              0, 0);
+    frame.show()
+
+    if 1:
+        pb = GdkPixbuf.Pixbuf.new_from_file("../demo/toroid.png")
+        width = pb.get_width()
+        height = pb.get_height()
+    else:
+        pb = None
+        width = 37
+        height = 19
+
+    c.set_bounds (
+            0, 0,
+            N_COLS * (width + PADDING),
+            N_ROWS * (height + PADDING))
+    c.show ();
+
+    scrolled_win = Gtk.ScrolledWindow ()
+    scrolled_win.show()
+    frame.add(scrolled_win)
+    scrolled_win.add(c)
+
+    root = c.get_root_item()
+    for i in range(N_COLS):
+        for j in range(N_ROWS):
+            if pb:
+                GooCanvas.CanvasImage (root, pb,
+                           i * (width + PADDING),
+                           j * (height + PADDING))
+            else:
+                item = GooCanvas.CanvasRect (root,
+                          i * (width + PADDING),
+                          j * (height + PADDING),
+                          width, height)
+                item.props.fill_color = {True:"mediumseagreen",False:"steelblue"}[j % 2 == 0]
+
+    return vbox
+
+def setup_widget(c):
+    root = c.get_root_item()
+
+    #Add a few simple items. */
+    GooCanvas.CanvasWidget (root, Gtk.Label("Hello World"), 50, 50, 200, 100)
+    GooCanvas.CanvasWidget (root, Gtk.Entry(), 50, 250, 200, 50)
+
+    entry = Gtk.Entry ()
+    entry.set_text ("Size: -1 x -1")
+    GooCanvas.CanvasWidget (root, entry, 50, 300, -1, -1)
+
+    entry = Gtk.Entry ()
+    entry.set_text ("Size: 100 x -1")
+    GooCanvas.CanvasWidget (root, entry, 50, 350, 100, -1)
+
+def demo_window(setup_func):
     c = GooCanvas.Canvas()
     c.set_size_request(600, 450)
-
-    group = c.get_root_item()
-
-    GooCanvas.CanvasRect (group, 0, 0, 600, 450, line_width=4.0)
-
-    GooCanvas.CanvasPolyline.new_line(group, 0, 150, 600, 150, line_width=4.0)
-
-    GooCanvas.CanvasPolyline.new_line(group, 0, 300, 600, 300, line_width=4.0)
-
-    GooCanvas.CanvasPolyline.new_line(group, 200, 0, 200, 450, line_width=4.0)
-
-    GooCanvas.CanvasPolyline.new_line(group, 400, 0, 400, 450, line_width=4.0)
-
-    GooCanvas.CanvasPolyline (group, False,
-				       (340.0, 170.0),
-				       (340.0, 230.0),
-				       (390.0, 230.0),
-				       (390.0, 170.0),
-				       stroke_color="midnightblue",
-				       line_width=3.0,
-				       start_arrow=True,
-				       end_arrow=True,
-				       arrow_tip_length=3.0,
-				       arrow_length=4.0,
-				       arrow_width=3.5)
-
-    GooCanvas.CanvasPolyline (group, False,
-				       (356.0, 180.0),
-				       (374.0, 220.0),
-				       stroke_color="blue",
-				       line_width=1.0,
-				       start_arrow=True,
-				       end_arrow=True,
-				       arrow_tip_length=5.0,
-				       arrow_length=6.0,
-				       arrow_width=6.0)
-
-    GooCanvas.CanvasPolyline (group, False,
-				       (356.0, 220.0),
-				       start_arrow=True,
-				       end_arrow=True)
-				       
-#  setup_item_signals (polyline1);
-
+    widget = setup_func(c) or c
     w = Gtk.Window()
-    w.add(c)
+    w.set_size_request(600, 450)
+    w.add(widget)
     w.show_all()
     w.connect("destroy", Gtk.main_quit)
 
-def demo_canvas():
-    c = GooCanvas.Canvas()
-    c.set_size_request(600, 450)
+if __name__ == "__main__":
+    demo_window(setup_canvas)
+    demo_window(setup_polyline)
+    demo_window(setup_scalability)
+    demo_window(setup_widget)
 
-    setup_canvas(c)
-
-    w = Gtk.Window()
-    w.add(c)
-    w.show_all()
-    w.connect("destroy", Gtk.main_quit)
-
-demo_canvas()
-demo_polyline()
-
-Gtk.main()
+    Gtk.main()

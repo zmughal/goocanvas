@@ -5,37 +5,30 @@ GooCanvas = modules['GooCanvas']._introspection_module
 
 __all__ = []
 
-class CanvasPath(GooCanvas.CanvasPath):
+class _GooCanvasItem:
+    def __init__(self, parent, **props):
+        if parent:
+            parent.add_child(self, -1)
+        for k,v in props.iteritems():
+            self.set_property(k,v)
+
+class CanvasPath(GooCanvas.CanvasPath, _GooCanvasItem):
 
     def __init__(self, parent, path_data, **props):
         GooCanvas.CanvasPath.__init__(self)
-        if parent:
-            parent.add_child(self, -1)
+        _GooCanvasItem.__init__(self, parent, **props)
         if path_data:
             self.props.data = path_data
-        for k,v in props.iteritems():
-            self.set_property(k,v)
 
 CanvasPath = override(CanvasPath)
 __all__.append('CanvasPath')
 
-class CanvasRect(GooCanvas.CanvasRect):
+class CanvasRect(GooCanvas.CanvasRect, _GooCanvasItem):
 
     def __init__(self, parent, x, y, width, height, **props):
         GooCanvas.CanvasPath.__init__(self)
-        if parent:
-            parent.add_child(self, -1)
         props.update(x=x,y=y,width=width,height=height)
-        for k,v in props.iteritems():
-            self.set_property(k,v)
-
-    def __new__(cls, *args, **kwds):
-        arg_len = len(args)
-        kwd_len = len(kwds)
-        total_len = arg_len + kwd_len
-
-        def _new(cursor_type):
-            return cls.new(cursor_type)
+        _GooCanvasItem.__init__(self, parent, **props)
 
 CanvasRect = override(CanvasRect)
 __all__.append('CanvasRect')
@@ -45,8 +38,6 @@ __all__.append('CanvasRect')
 class CanvasPoints(GooCanvas.CanvasPoints):
 
     def __new__(cls, *points):
-
-        print points
 
         assert len(points)
         assert len(points[0])
@@ -61,17 +52,14 @@ class CanvasPoints(GooCanvas.CanvasPoints):
 CanvasPoints = override(CanvasPoints)
 __all__.append('CanvasPoints')
 
-class CanvasPolyline(GooCanvas.CanvasPolyline):
+class CanvasPolyline(GooCanvas.CanvasPolyline, _GooCanvasItem):
 
     def __init__(self, parent, close_path, *points, **props):
         GooCanvas.CanvasPolyline.__init__(self)
-        if parent:
-            parent.add_child(self, -1)
         props.update(close_path=close_path)
         if points:
             props.update(points=CanvasPoints(*points))
-        for k,v in props.iteritems():
-            self.set_property(k,v)
+        _GooCanvasItem.__init__(self, parent, **props)
 
     @classmethod
     def new_line(cls, parent, x1, y1, x2, y2, **props):
@@ -79,3 +67,26 @@ class CanvasPolyline(GooCanvas.CanvasPolyline):
 
 CanvasPolyline = override(CanvasPolyline)
 __all__.append('CanvasPolyline')
+
+class CanvasImage(GooCanvas.CanvasImage, _GooCanvasItem):
+
+    def __init__(self, parent, pixbuf, x, y, **props):
+        GooCanvas.CanvasImage.__init__(self)
+        props.update(pixbuf=pixbuf,x=x,y=y)
+        _GooCanvasItem.__init__(self, parent, **props)
+
+CanvasImage = override(CanvasImage)
+__all__.append('CanvasImage')
+
+class CanvasWidget(GooCanvas.CanvasWidget, _GooCanvasItem):
+
+    def __init__(self, parent, widget, x, y, width, height, **props):
+        GooCanvas.CanvasWidget.__init__(self)
+        #taken from the C constructor
+        #g_object_set_data (G_OBJECT (witem->widget), "goo-canvas-item", witem);
+        widget.show()
+        props.update(widget=widget,x=x,y=y,width=width,height=height)
+        _GooCanvasItem.__init__(self, parent, **props)
+
+CanvasWidget = override(CanvasWidget)
+__all__.append('CanvasWidget')

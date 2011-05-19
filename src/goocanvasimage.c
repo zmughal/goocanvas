@@ -175,10 +175,10 @@ goo_canvas_image_init (GooCanvasImage *image)
 
 /**
  * goo_canvas_image_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (allow-none): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
- * @pixbuf: the #GdkPixbuf containing the image data, or %NULL.
+ * @pixbuf: (allow-none): the #GdkPixbuf containing the image data, or %NULL.
  * @x: the x coordinate of the image.
  * @y: the y coordinate of the image.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -195,7 +195,7 @@ goo_canvas_image_init (GooCanvasImage *image)
  *                                               NULL);
  * </programlisting></informalexample>
  *
- * Returns: a new image item.
+ * Returns: (transfer full): a new image item.
  **/
 GooCanvasItem*
 goo_canvas_image_new (GooCanvasItem *parent,
@@ -610,10 +610,10 @@ goo_canvas_image_model_init (GooCanvasImageModel *emodel)
 
 /**
  * goo_canvas_image_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (allow-none): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
- * @pixbuf: the #GdkPixbuf containing the image data, or %NULL.
+ * @pixbuf: (allow-none): the #GdkPixbuf containing the image data, or %NULL.
  * @x: the x coordinate of the image.
  * @y: the y coordinate of the image.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -630,7 +630,7 @@ goo_canvas_image_model_init (GooCanvasImageModel *emodel)
  *                                                          NULL);
  * </programlisting></informalexample>
  *
- * Returns: a new image model.
+ * Returns: (transfer full): a new image model.
  **/
 GooCanvasItemModel*
 goo_canvas_image_model_new (GooCanvasItemModel *parent,

@@ -85,7 +85,7 @@ goo_canvas_widget_init (GooCanvasWidget *witem)
 
 /**
  * goo_canvas_widget_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (allow-none): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @widget: the widget.
@@ -110,7 +110,7 @@ goo_canvas_widget_init (GooCanvasWidget *witem)
  *                                                NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new widget item.
+ * Returns: (transfer full): a new widget item.
  **/
 GooCanvasItem*
 goo_canvas_widget_new               (GooCanvasItem    *parent,
