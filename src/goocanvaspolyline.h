@@ -34,7 +34,8 @@ GType            goo_canvas_points_get_type (void);
 GooCanvasPoints* goo_canvas_points_new      (int              num_points);
 GooCanvasPoints* goo_canvas_points_ref      (GooCanvasPoints *points);
 void             goo_canvas_points_unref    (GooCanvasPoints *points);
-
+void             goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y);
+void             goo_canvas_points_get_point(GooCanvasPoints *points, int idx, double *x, double *y);
 
 #define NUM_ARROW_POINTS     5		/* number of points in an arrowhead */
 
