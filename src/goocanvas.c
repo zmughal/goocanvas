@@ -3597,8 +3597,8 @@ goo_canvas_keyboard_ungrab (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_to_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from the canvas coordinate space to pixels.
  *
@@ -3622,8 +3622,8 @@ goo_canvas_convert_to_pixels (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_from_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from pixels to the canvas coordinate space.
  *
@@ -3711,8 +3711,8 @@ get_transform_to_item_space (GooCanvasItem  *item,
  * goo_canvas_convert_to_item_space:
  * @canvas: a #GooCanvas.
  * @item: a #GooCanvasItem.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from the canvas coordinate space to the given
  * item's coordinate space, applying all transformation matrices including the
@@ -3735,8 +3735,8 @@ goo_canvas_convert_to_item_space (GooCanvas     *canvas,
  * goo_canvas_convert_from_item_space:
  * @canvas: a #GooCanvas.
  * @item: a #GooCanvasItem.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from the given item's coordinate space to the canvas
  * coordinate space, applying all transformation matrices including the

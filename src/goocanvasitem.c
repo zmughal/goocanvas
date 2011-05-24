@@ -923,11 +923,11 @@ goo_canvas_item_lower          (GooCanvasItem *item,
 /**
  * goo_canvas_item_get_transform:
  * @item: an item.
- * @transform: the place to store the transform.
+ * @transform: (out callee-allocates) (transfer none) (allow-none): the place to store the transform.
  * 
  * Gets the transformation matrix of an item.
  * 
- * Returns: %TRUE if a transform is set.
+ * Returns: (skip): %TRUE if a transform is set.
  **/
 gboolean
 goo_canvas_item_get_transform  (GooCanvasItem   *item,
@@ -972,7 +972,7 @@ goo_canvas_item_get_transform_for_child  (GooCanvasItem  *item,
 /**
  * goo_canvas_item_set_transform:
  * @item: an item.
- * @transform: the new transformation matrix, or %NULL to reset the
+ * @transform: (allow-none): the new transformation matrix, or %NULL to reset the
  *  transformation to the identity matrix.
  * 
  * Sets the transformation matrix of an item.
@@ -1521,7 +1521,7 @@ goo_canvas_item_request_update  (GooCanvasItem *item)
 /**
  * goo_canvas_item_get_bounds:
  * @item: a #GooCanvasItem.
- * @bounds: a #GooCanvasBounds to return the bounds in.
+ * @bounds: (out): a #GooCanvasBounds to return the bounds in.
  * 
  * Gets the bounds of the item.
  *
