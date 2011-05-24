@@ -152,7 +152,7 @@ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 
 if HAVE_INTROSPECTION
-introspection_sources = $(libgoocanvas_2_0_la_SOURCES) $(libgoocanvas_public_headers)
+introspection_sources = $(libgoocanvas_2_0_la_SOURCES) $(libgoocanvasinclude_HEADERS)
 
 GooCanvas-2.0.gir: libgoocanvas-2.0.la
 GooCanvas_2_0_gir_SCANNERFLAGS = --identifier-prefix=Goo --symbol-prefix=goo --warn-all
