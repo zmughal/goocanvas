@@ -176,7 +176,7 @@ goo_canvas_style_init (GooCanvasStyle *style)
  * 
  * Creates a new #GooCanvasStyle.
  * 
- * Returns: a new #GooCanvasStyle.
+ * Returns: (transfer full): a new #GooCanvasStyle.
  **/
 GooCanvasStyle*
 goo_canvas_style_new (void)
@@ -228,7 +228,7 @@ goo_canvas_style_finalize (GObject *object)
  * Copies the given #GooCanvasStyle, by copying all of its properties.
  * Though the parent of the new style is left unset.
  * 
- * Returns: a copy of the given #GooCanvasStyle.
+ * Returns: (transfer full): a copy of the given #GooCanvasStyle.
  **/
 GooCanvasStyle*
 goo_canvas_style_copy               (GooCanvasStyle *style)
@@ -255,7 +255,7 @@ goo_canvas_style_copy               (GooCanvasStyle *style)
  * 
  * Gets the parent of the style.
  * 
- * Returns: the parent of the given style, or %NULL.
+ * Returns: (transfer none): the parent of the given style, or %NULL.
  **/
 GooCanvasStyle*
 goo_canvas_style_get_parent         (GooCanvasStyle *style)

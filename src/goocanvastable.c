@@ -469,7 +469,7 @@ goo_canvas_table_init (GooCanvasTable *table)
 
 /**
  * goo_canvas_table_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -516,7 +516,7 @@ goo_canvas_table_init (GooCanvasTable *table)
  *                                        NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new table item.
+ * Returns: (transfer full): a new table item.
  **/
 GooCanvasItem*
 goo_canvas_table_new (GooCanvasItem  *parent,
@@ -2776,7 +2776,7 @@ goo_canvas_table_model_init (GooCanvasTableModel *tmodel)
 
 /**
  * goo_canvas_table_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -2823,7 +2823,7 @@ goo_canvas_table_model_init (GooCanvasTableModel *tmodel)
  *                                              NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new table model.
+ * Returns: (transfer full): a new table model.
  **/
 GooCanvasItemModel*
 goo_canvas_table_model_new (GooCanvasItemModel *parent,

@@ -110,7 +110,7 @@ goo_canvas_rect_init (GooCanvasRect *rect)
 
 /**
  * goo_canvas_rect_new:
- * @parent: (allow-none): the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @x: the x coordinate of the left of the rectangle.
@@ -489,7 +489,7 @@ goo_canvas_rect_model_init (GooCanvasRectModel *rmodel)
 
 /**
  * goo_canvas_rect_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @x: the x coordinate of the left of the rectangle.
@@ -513,7 +513,7 @@ goo_canvas_rect_model_init (GooCanvasRectModel *rmodel)
  *                                                        NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new rectangle model.
+ * Returns: (transfer full): a new rectangle model.
  **/
 GooCanvasItemModel*
 goo_canvas_rect_model_new (GooCanvasItemModel *parent,

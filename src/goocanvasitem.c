@@ -397,7 +397,7 @@ goo_canvas_item_base_init (gpointer g_iface)
       /**
        * GooCanvasItem::child-notify
        * @item: the item that received the signal.
-       * @pspec: the #GParamSpec of the changed child property.
+       * @pspec: (type GLib.ParamSpec): the #GParamSpec of the changed child property.
        *
        * Emitted for each child property that has changed.
        * The signal's detail holds the property name. 
@@ -2318,14 +2318,14 @@ goo_canvas_item_class_find_child_property (GObjectClass *iclass,
 /**
  * goo_canvas_item_class_list_child_properties:
  * @iclass: a #GObjectClass
- * @n_properties: location to return the number of child properties found
+ * @n_properties: (out): location to return the number of child properties found
  *
  * This function is only intended to be used when implementing new canvas
  * items, specifically layout container items such as #GooCanvasTable.
  *
  * It returns all child properties of a canvas item class.
  *
- * @returns: (array length=n_properties) (transfer full): a newly allocated
+ * Returns: (array length=n_properties) (transfer full): a newly allocated
  *  array of #GParamSpec*. The array must be freed with g_free().
  */
 GParamSpec**

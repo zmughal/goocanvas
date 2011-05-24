@@ -175,7 +175,7 @@ goo_canvas_image_init (GooCanvasImage *image)
 
 /**
  * goo_canvas_image_new:
- * @parent: (allow-none): the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @pixbuf: (allow-none): the #GdkPixbuf containing the image data, or %NULL.
@@ -610,7 +610,7 @@ goo_canvas_image_model_init (GooCanvasImageModel *emodel)
 
 /**
  * goo_canvas_image_model_new:
- * @parent: (allow-none): the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @pixbuf: (allow-none): the #GdkPixbuf containing the image data, or %NULL.

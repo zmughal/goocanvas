@@ -160,7 +160,7 @@ goo_canvas_ellipse_init (GooCanvasEllipse *ellipse)
 
 /**
  * goo_canvas_ellipse_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @center_x: the x coordinate of the center of the ellipse.
@@ -185,7 +185,7 @@ goo_canvas_ellipse_init (GooCanvasEllipse *ellipse)
  *                                                   NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new ellipse item.
+ * Returns: (transfer full): a new ellipse item.
  **/
 GooCanvasItem*
 goo_canvas_ellipse_new (GooCanvasItem *parent,
@@ -492,7 +492,7 @@ goo_canvas_ellipse_model_init (GooCanvasEllipseModel *emodel)
 
 /**
  * goo_canvas_ellipse_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @center_x: the x coordinate of the center of the ellipse.
@@ -517,7 +517,7 @@ goo_canvas_ellipse_model_init (GooCanvasEllipseModel *emodel)
  *                                                              NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new ellipse model.
+ * Returns: (transfer full): a new ellipse model.
  **/
 GooCanvasItemModel*
 goo_canvas_ellipse_model_new (GooCanvasItemModel *parent,

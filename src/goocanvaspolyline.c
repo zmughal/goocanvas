@@ -680,7 +680,7 @@ goo_canvas_polyline_set_property (GObject              *object,
 
 /**
  * goo_canvas_polyline_new:
- * @parent: (allow-none): the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @close_path: if the last point should be connected to the first.
@@ -751,7 +751,7 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
 
 /**
  * goo_canvas_polyline_new_line:
- * @parent: (allow-none): the parent item, or %NULL.
+ * @parent: (skip): the parent item, or %NULL.
  * @x1: the x coordinate of the start of the line.
  * @y1: the y coordinate of the start of the line.
  * @x2: the x coordinate of the end of the line.
@@ -1188,7 +1188,7 @@ goo_canvas_polyline_model_init (GooCanvasPolylineModel *pmodel)
 
 /**
  * goo_canvas_polyline_model_new:
- * @parent: (allow-none): the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @close_path: if the last point should be connected to the first.
@@ -1259,7 +1259,7 @@ goo_canvas_polyline_model_new (GooCanvasItemModel *parent,
 
 /**
  * goo_canvas_polyline_model_new_line:
- * @parent: (allow-none): the parent model, or %NULL.
+ * @parent: (skip): the parent model, or %NULL.
  * @x1: the x coordinate of the start of the line.
  * @y1: the y coordinate of the start of the line.
  * @x2: the x coordinate of the end of the line.

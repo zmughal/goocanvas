@@ -336,7 +336,7 @@ goo_canvas_grid_init (GooCanvasGrid *grid)
 
 /**
  * goo_canvas_grid_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @x: the x coordinate of the left of the grid.
@@ -368,7 +368,7 @@ goo_canvas_grid_init (GooCanvasGrid *grid)
  *                                             NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new grid item.
+ * Returns: (transfer full): a new grid item.
  **/
 GooCanvasItem*
 goo_canvas_grid_new (GooCanvasItem      *parent,
@@ -1013,7 +1013,7 @@ goo_canvas_grid_model_init (GooCanvasGridModel *gmodel)
 
 /**
  * goo_canvas_grid_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @x: the x coordinate of the left of the grid.
@@ -1024,7 +1024,7 @@ goo_canvas_grid_model_init (GooCanvasGridModel *gmodel)
  * @y_step: the distance between the horizontal grid lines.
  * @x_offset: the distance before the first vertical grid line.
  * @y_offset: the distance before the first horizontal grid line.
- * @...: optional pairs of property names and values, and a terminating %NULL.
+ * @...: (skip): optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new grid model.
  *
@@ -1045,7 +1045,7 @@ goo_canvas_grid_model_init (GooCanvasGridModel *gmodel)
  *                                                        NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new grid model.
+ * Returns: (transfer full): a new grid model.
  **/
 GooCanvasItemModel*
 goo_canvas_grid_model_new (GooCanvasItemModel *parent,
