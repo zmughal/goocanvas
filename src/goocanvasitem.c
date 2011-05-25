@@ -923,7 +923,7 @@ goo_canvas_item_lower          (GooCanvasItem *item,
 /**
  * goo_canvas_item_get_transform:
  * @item: an item.
- * @transform: (out callee-allocates) (transfer none) (allow-none): the place to store the transform.
+ * @transform: (out callee-allocates) (transfer none): the place to store the transform.
  * 
  * Gets the transformation matrix of an item.
  * 
@@ -988,10 +988,10 @@ goo_canvas_item_set_transform  (GooCanvasItem        *item,
 /**
  * goo_canvas_item_get_simple_transform:
  * @item: an item.
- * @x: returns the x coordinate of the origin of the item's coordinate space.
- * @y: returns the y coordinate of the origin of the item's coordinate space.
- * @scale: returns the scale of the item.
- * @rotation: returns the clockwise rotation of the item, in degrees (0-360).
+ * @x: (out): returns the x coordinate of the origin of the item's coordinate space.
+ * @y: (out): returns the y coordinate of the origin of the item's coordinate space.
+ * @scale: (out): returns the scale of the item.
+ * @rotation: (out): returns the clockwise rotation of the item, in degrees (0-360).
  * 
  * This function can be used to get the position, scale and rotation of an
  * item, providing that the item has a simple transformation matrix
