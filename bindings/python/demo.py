@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from gi.repository import Gtk, GdkPixbuf, GooCanvas
 
 def setup_polyline(c):
@@ -161,7 +163,7 @@ def setup_scalability(c):
     frame.show()
 
     if 1:
-        pb = GdkPixbuf.Pixbuf.new_from_file("../demo/toroid.png")
+        pb = GdkPixbuf.Pixbuf.new_from_file("../../demo/toroid.png")
         width = pb.get_width()
         height = pb.get_height()
     else:

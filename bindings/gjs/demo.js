@@ -200,7 +200,7 @@ let setup_scalability = function(c) {
     let height;
     
     if (1) {
-        pb = GdkPixbuf.Pixbuf.new_from_file("../demo/toroid.png");
+        pb = GdkPixbuf.Pixbuf.new_from_file("../../demo/toroid.png");
         width = pb.get_width();
         height = pb.get_height();
     } else {
