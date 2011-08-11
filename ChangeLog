@@ -1,3 +1,11 @@
+2011-08-11  Murray Cumming  <murrayc.com>
+
+	GooCanvasTable: Warn if setting child properties on a non-child.
+
+	* src/goocanvastable.c (goo_canvas_table_set_child_property):
+	If the child wasn't added yet then issue a g_warning(). This gives 
+	the programmer a clue.
+
 2011-08-11  Murray Cumming  <murrayc@murrayc.com>
 
 	Table demo: Correct the box packing of the scrolled windows.

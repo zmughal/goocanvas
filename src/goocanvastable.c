@@ -1108,6 +1108,7 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableChild *table_child;
   gint child_num;
+  gboolean found = FALSE;
 
   for (child_num = 0; child_num < group->items->len; child_num++)
     {
@@ -1120,11 +1121,16 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
 						      table_child,
 						      property_id, value,
 						      pspec);
-	  break;
+          found = TRUE;
+          break;
 	}
     }
 
-  goo_canvas_item_simple_changed (simple, TRUE);
+  if (!found) {
+    g_warning ("%s: child not found.", G_STRFUNC);
+  }
+  else
+    goo_canvas_item_simple_changed (simple, TRUE);
 }
 
 
