@@ -238,7 +238,7 @@ main (int argc, char *argv[])
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
   canvas = goo_canvas_new ();
   gtk_widget_set_size_request (canvas, 600, 250);
@@ -258,7 +258,7 @@ main (int argc, char *argv[])
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
   canvas = goo_canvas_new ();
   g_object_set (canvas,

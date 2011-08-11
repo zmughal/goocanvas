@@ -1,3 +1,11 @@
+2011-08-11  Murray Cumming  <murrayc@murrayc.com>
+
+	Table demo: Correct the box packing of the scrolled windows.
+
+	* demo/mv-table-demo.c (main):
+	* demo/table-demo.c (main): Pack the scrolled windows with expand=true.
+	I wonder when this broke and why.
+
 2011-02-27  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 2.0.0
