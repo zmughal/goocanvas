@@ -1,3 +1,14 @@
+2011-08-17  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvastext.c (goo_canvas_text_get_requested_height): when
+	the height property is set make sure the bounds are still calculated.
+	Fixes redraw problems. (The way layout is done is too confusing.)
+	#656391
+
+2011-01-10  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 1.0.0
+
 2011-01-10  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasimage.c: added "alpha" property. Patch from xapantu
