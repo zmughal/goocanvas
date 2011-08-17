@@ -1,3 +1,10 @@
+2011-08-17  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvastext.c (goo_canvas_text_get_requested_height): when
+	the height property is set make sure the bounds are still calculated.
+	Fixes redraw problems. (The way layout is done is too confusing.)
+	#656391
+
 2011-08-11  Murray Cumming  <murrayc.com>
 
 	GooCanvasTable: Warn if setting child properties on a non-child.

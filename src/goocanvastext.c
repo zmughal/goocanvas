@@ -773,19 +773,20 @@ goo_canvas_text_get_requested_height (GooCanvasItem	*item,
   if (simple_data->transform)
     text->layout_width /= simple_data->transform->xx;
 
+  /* Create layout with given width. */
+  layout = goo_canvas_text_create_layout (simple_data, text->text_data,
+					  text->layout_width, cr,
+					  &simple->bounds, NULL, NULL);
+  g_object_unref (layout);
+
   if (priv->height < 0.0)
     {
-     /* Create layout with given width. */
-      layout = goo_canvas_text_create_layout (simple_data, text->text_data,
-					      text->layout_width, cr,
-					      &simple->bounds, NULL, NULL);
-      g_object_unref (layout);
-
       height = simple->bounds.y2 - simple->bounds.y1;
     }
   else
     {
       height = priv->height;
+      simple->bounds.y2 = simple->bounds.y1 + height;
     }
 
   /* Convert to the parent's coordinate space. As above, we only need to
