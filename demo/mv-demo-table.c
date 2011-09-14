@@ -5,6 +5,8 @@
 
 #define DEMO_RECT_ITEM 0
 #define DEMO_TEXT_ITEM 1
+#define DEMO_TEXT_ITEM_2 2
+#define DEMO_TEXT_ITEM_3 3
 
 static GooCanvas *canvas;
 
@@ -31,7 +33,11 @@ create_demo_item (GooCanvasItemModel *table,
 		  gint           column,
 		  gint           rows,
 		  gint           columns,
-		  gchar         *text)
+		  gchar         *text,
+		  gdouble	 width,
+		  gdouble        xalign,
+		  gdouble	 yalign,
+		  PangoAlignment text_alignment)
 {
   GooCanvasItemModel *model = NULL;
   GooCanvasItem *item;
@@ -46,7 +52,10 @@ create_demo_item (GooCanvasItemModel *table,
 					 NULL);
       break;
     case DEMO_TEXT_ITEM:
-      model = goo_canvas_text_model_new (table, text, 0, 0, -1, GTK_ANCHOR_NW,
+    case DEMO_TEXT_ITEM_2:
+    case DEMO_TEXT_ITEM_3:
+      model = goo_canvas_text_model_new (table, text, 0, 0, width, GTK_ANCHOR_NW,
+					 "alignment",  text_alignment,
 					 NULL);
       break;
     }
@@ -61,17 +70,23 @@ create_demo_item (GooCanvasItemModel *table,
   g_value_set_uint (&value, columns);
   goo_canvas_item_model_set_child_property (table, model, "columns", &value);
 
+  goo_canvas_item_model_set_child_properties (table, model,
+					      "x-expand", TRUE,
+					      "y-expand", TRUE,
+					      "x-align", xalign,
+					      "y-align", yalign,
+					      NULL);
+
   /* Test the get function. */
   goo_canvas_item_model_get_child_property (table, model, "row", &value);
   new_row = g_value_get_uint (&value);
   if (new_row != row)
     g_warning ("Got bad row setting: %i should be: %i\n", new_row, row);
 
-#if 1
+  /* If we make the item's fill the cells then alignment can't be used. */
+#if 0
   goo_canvas_item_model_set_child_properties (table, model,
-					      "x-expand", TRUE,
 					      "x-fill", TRUE,
-					      "y-expand", TRUE,
 					      "y-fill", TRUE,
 					      NULL);
 #endif
@@ -92,7 +107,8 @@ create_table (GooCanvasItemModel *parent,
 	      gdouble        y,
 	      gdouble        rotation,
 	      gdouble        scale,
-	      gint           demo_item_type)
+	      gint           demo_item_type,
+	      gboolean       show_grid_lines)
 {
   GooCanvasItemModel *table;
 
@@ -101,6 +117,13 @@ create_table (GooCanvasItemModel *parent,
 				      "row-spacing", 4.0,
 				      "column-spacing", 4.0,
 				      NULL);
+
+  if (show_grid_lines)
+    g_object_set (table,
+		  "horz-grid-line-width", 1.0f,
+		  "vert-grid-line-width", 1.0f,
+		  NULL);
+
   goo_canvas_item_model_translate (table, x, y);
 #if 1
   goo_canvas_item_model_rotate (table, rotation, 0, 0);
@@ -126,27 +149,110 @@ create_table (GooCanvasItemModel *parent,
   if (embedding_level)
     {
       gint level = embedding_level - 1;
-      create_table (table, 0, 0, level, 50, 50, 0, 0.7, demo_item_type);
-      create_table (table, 0, 1, level, 50, 50, 45, 1.0, demo_item_type);
-      create_table (table, 0, 2, level, 50, 50, 90, 1.0, demo_item_type);
-      create_table (table, 1, 0, level, 50, 50, 135, 1.0, demo_item_type);
-      create_table (table, 1, 1, level, 50, 50, 180, 1.5, demo_item_type);
-      create_table (table, 1, 2, level, 50, 50, 225, 1.0, demo_item_type);
-      create_table (table, 2, 0, level, 50, 50, 270, 1.0, demo_item_type);
-      create_table (table, 2, 1, level, 50, 50, 315, 1.0, demo_item_type);
-      create_table (table, 2, 2, level, 50, 50, 360, 2.0, demo_item_type);
+      create_table (table, 0, 0, level, 50, 50, 0, 0.7, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 0, 1, level, 50, 50, 45, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 0, 2, level, 50, 50, 90, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 1, 0, level, 50, 50, 135, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 1, 1, level, 50, 50, 180, 1.5, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 1, 2, level, 50, 50, 225, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 2, 0, level, 50, 50, 270, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 2, 1, level, 50, 50, 315, 1.0, demo_item_type,
+		    show_grid_lines);
+      create_table (table, 2, 2, level, 50, 50, 360, 2.0, demo_item_type,
+		    show_grid_lines);
+    }
+  else if (demo_item_type == DEMO_TEXT_ITEM_2)
+    {
+      create_demo_item (table, demo_item_type, 0, 0, 1, 1,
+			"(0.0,0.0)\nleft\naligned",
+			-1, 0, 0, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 0, 1, 1, 1,
+			"(0.5,0.0)\ncenter\naligned",
+			-1, 0.5, 0, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 0, 2, 1, 1,
+			"(1.0,0.0)\nright\naligned",
+			-1, 1, 0, PANGO_ALIGN_RIGHT);
+
+      /* The layout width shouldn't really make any difference in this test. */
+      create_demo_item (table, demo_item_type, 1, 0, 1, 1,
+			"(0.5,0.5)\ncenter\naligned",
+			50, 0.5, 0.5, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 1, 1, 1, 1,
+			"(0.0,1.0)\nright\naligned",
+			100, 0, 1.0, PANGO_ALIGN_RIGHT);
+      create_demo_item (table, demo_item_type, 1, 2, 1, 1,
+			"(0.0,0.5)\nleft\naligned",
+			200, 0, 0.5, PANGO_ALIGN_LEFT);
+
+      create_demo_item (table, demo_item_type, 2, 0, 1, 1,
+			"(1.0,1.0)\ncenter\naligned",
+			-1, 1, 1, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 2, 1, 1, 1,
+			"(1,0.5)\nright\naligned",
+			-1, 1.0, 0.5, PANGO_ALIGN_RIGHT);
+      create_demo_item (table, demo_item_type, 2, 2, 1, 1,
+			"(0.0,0.0)\nleft\naligned",
+			-1, 0, 0, PANGO_ALIGN_LEFT);
+    }
+  else if (demo_item_type == DEMO_TEXT_ITEM_3)
+    {
+      create_demo_item (table, demo_item_type, 0, 0, 1, 1,
+			"width 50 align 0.0, 0.0 text left aligned",
+			50, 0, 0, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 0, 1, 1, 1,
+			"width 100 align 0.5, 0.0 text center aligned",
+			100, 0.5, 0, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 0, 2, 1, 1,
+			"width 150 align 1.0, 0.0 text right aligned",
+			150, 1, 0, PANGO_ALIGN_RIGHT);
+
+      create_demo_item (table, demo_item_type, 1, 0, 1, 1,
+			"width 50 align 0.5, 0.5 text center aligned",
+			50, 0.5, 0.5, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 1, 1, 1, 1,
+			"width 100 align 0.0, 1.0 text right aligned",
+			100, 0, 1.0, PANGO_ALIGN_RIGHT);
+      create_demo_item (table, demo_item_type, 1, 2, 1, 1,
+			"width 200 align 0.0, 0.5 text left aligned",
+			200, 0, 0.5, PANGO_ALIGN_LEFT);
+
+      create_demo_item (table, demo_item_type, 2, 0, 1, 1,
+			"width 50 align 1.0, 1.0 text center aligned",
+			50, 1, 1, PANGO_ALIGN_CENTER);
+      create_demo_item (table, demo_item_type, 2, 1, 1, 1,
+			"width 100 align 1, 0.5 text right aligned",
+			100, 1.0, 0.5, PANGO_ALIGN_RIGHT);
+      create_demo_item (table, demo_item_type, 2, 2, 1, 1,
+			"width 50 align 0.0, 0.0 text left aligned",
+			50, 0, 0, PANGO_ALIGN_LEFT);
     }
   else
     {
-      create_demo_item (table, demo_item_type, 0, 0, 1, 1, "(0,0)");
-      create_demo_item (table, demo_item_type, 0, 1, 1, 1, "(1,0)");
-      create_demo_item (table, demo_item_type, 0, 2, 1, 1, "(2,0)");
-      create_demo_item (table, demo_item_type, 1, 0, 1, 1, "(0,1)");
-      create_demo_item (table, demo_item_type, 1, 1, 1, 1, "(1,1)");
-      create_demo_item (table, demo_item_type, 1, 2, 1, 1, "(2,1)");
-      create_demo_item (table, demo_item_type, 2, 0, 1, 1, "(0,2)");
-      create_demo_item (table, demo_item_type, 2, 1, 1, 1, "(1,2)");
-      create_demo_item (table, demo_item_type, 2, 2, 1, 1, "(2,2)");
+      create_demo_item (table, demo_item_type, 0, 0, 1, 1, "(0,0)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 0, 1, 1, 1, "(1,0)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 0, 2, 1, 1, "(2,0)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 1, 0, 1, 1, "(0,1)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 1, 1, 1, 1, "(1,1)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 1, 2, 1, 1, "(2,1)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 2, 0, 1, 1, "(0,2)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 2, 1, 1, 1, "(1,2)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
+      create_demo_item (table, demo_item_type, 2, 2, 1, 1, "(2,2)",
+			-1, 0, 0.5, PANGO_ALIGN_LEFT);
     }
 
   return table;
@@ -289,7 +395,7 @@ create_table_page (void)
 
   canvas = (GooCanvas*) goo_canvas_new ();
   gtk_widget_set_size_request ((GtkWidget*) canvas, 600, 450);
-  goo_canvas_set_bounds (canvas, 0, 0, 1000, 2000);
+  goo_canvas_set_bounds (canvas, 0, 0, 1000, 3000);
   gtk_container_add (GTK_CONTAINER (scrolled_win), (GtkWidget*) canvas);
 
   root = goo_canvas_group_model_new (NULL, NULL);
@@ -302,23 +408,34 @@ create_table_page (void)
 #endif
 
 #if 1
-  create_table (root, -1, -1, 0, 10, 10, 0, 1.0, DEMO_TEXT_ITEM);
-  create_table (root, -1, -1, 0, 180, 10, 30, 1.0, DEMO_TEXT_ITEM);
-  create_table (root, -1, -1, 0, 350, 10, 60, 1.0, DEMO_TEXT_ITEM);
-  create_table (root, -1, -1, 0, 500, 10, 90, 1.0, DEMO_TEXT_ITEM);
+  create_table (root, -1, -1, 0, 10, 10, 0, 1.0, DEMO_TEXT_ITEM, FALSE);
+  create_table (root, -1, -1, 0, 180, 10, 30, 1.0, DEMO_TEXT_ITEM, FALSE);
+  create_table (root, -1, -1, 0, 350, 10, 60, 1.0, DEMO_TEXT_ITEM, FALSE);
+  create_table (root, -1, -1, 0, 500, 10, 90, 1.0, DEMO_TEXT_ITEM, FALSE);
 #endif
 
 #if 1
-  table = create_table (root, -1, -1, 0, 30, 150, 0, 1.0, DEMO_TEXT_ITEM);
+  table = create_table (root, -1, -1, 0, 30, 150, 0, 1.0, DEMO_TEXT_ITEM, FALSE);
   g_object_set (table, "width", 300.0, "height", 100.0, NULL);
 #endif
 
 #if 1
-  create_table (root, -1, -1, 1, 200, 200, 30, 0.8, DEMO_TEXT_ITEM);
+  table = create_table (root, -1, -1, 0, 30, 1400, 0, 1.0, DEMO_TEXT_ITEM_2, TRUE);
+  g_object_set (table, "width", 300.0, "height", 300.0, NULL);
+
+  table = create_table (root, -1, -1, 0, 630, 1430, 30, 1.0, DEMO_TEXT_ITEM_2, TRUE);
+  g_object_set (table, "width", 300.0, "height", 300.0, NULL);
+
+  table = create_table (root, -1, -1, 0, 30, 1800, 0, 1.0, DEMO_TEXT_ITEM_3, TRUE);
+  table = create_table (root, -1, -1, 0, 630, 1830, 30, 1.0, DEMO_TEXT_ITEM_3, TRUE);
+#endif
+
+#if 1
+  create_table (root, -1, -1, 1, 200, 200, 30, 0.8, DEMO_TEXT_ITEM, FALSE);
 #endif
 
 #if 0
-  table = create_table (root, -1, -1, 0, 10, 700, 0, 1.0, DEMO_WIDGET_ITEM);
+  table = create_table (root, -1, -1, 0, 10, 700, 0, 1.0, DEMO_WIDGET_ITEM, FALSE);
   g_object_set (table, "width", 300.0, "height", 200.0, NULL);
 #endif
 

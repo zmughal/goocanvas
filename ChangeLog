@@ -1,3 +1,19 @@
+2011-09-14  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitem.h: added get_requested_area_for_width() method.
+	get_requested_height() didn't work for aligned text items as the
+	position of the item moves horizontally due to the allocated width,
+	and this wasn't being taken into account in the layout code.
+
+	* src/goocanvastable.c (goo_canvas_table_update_requested_heights): use
+	get_requested_area_for_width() if available.
+
+	* src/goocanvastext.c (goo_canvas_text_get_requested_area_for_width): 
+	use this instead of get_requested_height() so aligned text should work.
+
+	* demo/mv-demo-table.c: 
+	* demo/demo-table.c: added tests for the above.
+
 2011-08-17  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvastext.c (goo_canvas_text_get_requested_height): when

@@ -1871,6 +1871,8 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
   GooCanvasTableChildLayoutData *child_data;
   gint start_column, end_column, i, row, end;
   gdouble x, max_width, width, requested_width, requested_height, height = 0.0;
+  GooCanvasItemIface *iface;
+  GooCanvasBounds bounds;
 
   /* Just return if we've already calculated requested heights for this exact
      width. */
@@ -1906,10 +1908,42 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
       if (!(child->flags[HORZ] & GOO_CANVAS_TABLE_CHILD_FILL))
 	width = MIN (max_width, requested_width);
 
-      requested_height = goo_canvas_item_get_requested_height (child_item, cr,
-							       width);
-      if (requested_height >= 0.0)
-	child_data->requested_size[VERT] = requested_height;
+      iface = GOO_CANVAS_ITEM_GET_IFACE (child_item);
+
+      /* See if the child supports the new get_requested_area_for_width()
+	 method, which can handles the bounds being changed by the change
+	 in width & height. */
+      if (iface->get_requested_area_for_width)
+	{
+	  if (iface->get_requested_area_for_width (child_item, cr, width,
+						   &bounds))
+	    {
+	      /* Remember the requested position and size of the child. */
+	      child_data->requested_position[HORZ] = bounds.x1;
+	      child_data->requested_position[VERT] = bounds.y1;
+
+	      child_data->requested_size[HORZ] = bounds.x2 - bounds.x1;
+
+	      if (layout_data->integer_layout)
+		child_data->requested_size[VERT] = ceil (bounds.y2 - bounds.y1);
+	      else
+		child_data->requested_size[VERT] = bounds.y2 - bounds.y1;
+	    }
+	}
+      else if (iface->get_requested_height)
+	{
+	  requested_height = iface->get_requested_height (child_item, cr,
+							  width);
+	  if (requested_height >= 0.0)
+	    {
+	      child_data->requested_size[HORZ] = width;
+
+	      if (layout_data->integer_layout)
+		child_data->requested_size[VERT] = ceil (requested_height);
+	      else
+		child_data->requested_size[VERT] = requested_height;
+	    }
+	}
     }
 
   /* Now recalculate the requested heights of each row. */
@@ -2233,7 +2267,7 @@ goo_canvas_table_paint (GooCanvasItem         *item,
   gdouble frame_width, frame_height;
   gdouble line_start, line_end;
   gdouble spacing, half_spacing_before, half_spacing_after;
-  gboolean old_grid_line_visibility, cur_grid_line_visibility;
+  gboolean old_grid_line_visibility = 0, cur_grid_line_visibility;
   GtkTextDirection direction = GTK_TEXT_DIR_NONE;
 
   /* Skip the item if the bounds don't intersect the expose rectangle. */

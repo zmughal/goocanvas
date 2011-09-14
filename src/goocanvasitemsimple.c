@@ -1333,6 +1333,12 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
   simple->bounds.x2 += x_offset;
   simple->bounds.y2 += y_offset;
 
+#if 0
+  g_print ("Offsets: %g, %g Allocated bounds: %g,%g - %g,%g\n",
+	   x_offset, y_offset, simple->bounds.x1,
+	   simple->bounds.y1, simple->bounds.x2, simple->bounds.y2);
+#endif
+
   /* Request a redraw of the new bounds. */
   goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple_data->is_static);
 }
