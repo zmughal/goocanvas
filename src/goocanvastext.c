@@ -488,8 +488,8 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
 
       /* If the text width has been set, that width is used to do the alignment
 	 positioning. Otherwise the actual width is used. */
-      if (text_data->width > 0)
-	align_width = text_data->width;
+      if (layout_width > 0)
+	align_width = layout_width;
       else
 	align_width = logical_width;
 
@@ -540,7 +540,7 @@ goo_canvas_text_create_layout (GooCanvasItemSimpleData *simple_data,
       bounds->x1 = origin_x;
       bounds->y1 = origin_y;
 
-      if (text_data->width > 0)
+      if (layout_width > 0)
 	{
 	  /* If the text width has been set, and the alignment isn't
 	     PANGO_ALIGN_LEFT, we need to adjust for the difference between
@@ -744,28 +744,37 @@ goo_canvas_text_paint (GooCanvasItemSimple   *simple,
 }
 
 
-static gdouble
-goo_canvas_text_get_requested_height (GooCanvasItem	*item,
-				      cairo_t		*cr,
-				      gdouble            width)
+static gboolean
+goo_canvas_text_get_requested_area_for_width (GooCanvasItem	*item,
+					      cairo_t		*cr,
+					      gdouble            width,
+					      GooCanvasBounds	*requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
   GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasText *text = (GooCanvasText*) item;
   GooCanvasTextPrivate *priv = goo_canvas_text_get_private (text);
   PangoLayout *layout;
-  gdouble height;
+  cairo_matrix_t matrix;
+  double x_offset, y_offset;
 
   /* If we have a transformation besides a simple scale & translation, just
      return -1 as we can't adjust the height in that case. */
   if (simple_data->clip_path_commands
       || (simple_data->transform && (simple_data->transform->xy != 0.0
 				     || simple_data->transform->yx != 0.0)))
-    return -1;
+    return FALSE;
 
   cairo_save (cr);
   if (simple_data->transform)
     cairo_transform (cr, simple_data->transform);
+
+  /* Remove any current translation, to avoid the 16-bit cairo limit. */
+  cairo_get_matrix (cr, &matrix);
+  x_offset = matrix.x0;
+  y_offset = matrix.y0;
+  matrix.x0 = matrix.y0 = 0.0;
+  cairo_set_matrix (cr, &matrix);
 
   /* Convert the width from the parent's coordinate space. Note that we only
      need to support a simple scale operation here. */
@@ -779,28 +788,49 @@ goo_canvas_text_get_requested_height (GooCanvasItem	*item,
 					  &simple->bounds, NULL, NULL);
   g_object_unref (layout);
 
-  if (priv->height < 0.0)
-    {
-      height = simple->bounds.y2 - simple->bounds.y1;
-    }
-  else
-    {
-      height = priv->height;
-      simple->bounds.y2 = simple->bounds.y1 + height;
-    }
+  /* If the height is set, use that. */
+  if (priv->height > 0.0)
+    simple->bounds.y2 = simple->bounds.y1 + priv->height;
 
-  /* Convert to the parent's coordinate space. As above, we only need to
-     support a simple scale operation here. */
-  if (simple_data->transform)
-    height *= simple_data->transform->yy;
+
+  /* Convert to device space. */
+  cairo_user_to_device (cr, &simple->bounds.x1, &simple->bounds.y1);
+  cairo_user_to_device (cr, &simple->bounds.x2, &simple->bounds.y2);
+
+  /* Add the translation back to the bounds. */
+  simple->bounds.x1 += x_offset;
+  simple->bounds.y1 += y_offset;
+  simple->bounds.x2 += x_offset;
+  simple->bounds.y2 += y_offset;
+
+  /* Restore the item's proper transformation matrix. */
+  matrix.x0 = x_offset;
+  matrix.y0 = y_offset;
+  cairo_set_matrix (cr, &matrix);
+
+  /* Convert back to user space. */
+  cairo_device_to_user (cr, &simple->bounds.x1, &simple->bounds.y1);
+  cairo_device_to_user (cr, &simple->bounds.x2, &simple->bounds.y2);
+
+
+  /* Copy the user bounds to the requested area. */
+  *requested_area = simple->bounds;
+
+  /* Convert to the parent's coordinate space. */
+  goo_canvas_item_simple_user_bounds_to_parent (simple, cr, requested_area);
 
   /* Convert the item's bounds to device space. */
   goo_canvas_item_simple_user_bounds_to_device (simple, cr, &simple->bounds);
 
+#if 0
+  g_print ("Width: %g Requested bounds: %g,%g - %g,%g\n",
+	   width, simple->bounds.x1, simple->bounds.y1,
+	   simple->bounds.x2, simple->bounds.y2);
+#endif
+
   cairo_restore (cr);
 
-  /* Return the new requested height of the text. */
-  return height;
+  return TRUE;
 }
 
 
@@ -861,7 +891,7 @@ goo_canvas_text_set_model    (GooCanvasItem      *item,
 static void
 canvas_item_interface_init (GooCanvasItemIface *iface)
 {
-  iface->get_requested_height = goo_canvas_text_get_requested_height;
+  iface->get_requested_area_for_width = goo_canvas_text_get_requested_area_for_width;
   iface->set_model            = goo_canvas_text_set_model;
 }
 

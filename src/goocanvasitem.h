@@ -100,6 +100,13 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @get_requested_area: returns the requested area of the item, in its parent's
  *  coordinate space. This is only used for items in layout containers such as
  *  #GooCanvasTable.
+ * @get_requested_height: returns the requested height of the item,
+ *  given a particular allocated width, using the parent's coordinate space.
+ *  Note that this method should only be used if the position of the item
+ *  remains unchanged. If the position might change use
+ *  get_requested_area_for_width() instead.
+ * @get_requested_area_for_width: returns the requested bounds of the item,
+ *  given a particular allocated width, using the parent's coordinate space.
  * @allocate_area: allocates the item's area, in its parent's coordinate space.
  *  The item must recalculate its bounds and request redraws of parts of the
  *  canvas if necessary. This is only used for items in layout containers such
@@ -111,8 +118,6 @@ typedef struct _GooCanvasItem       GooCanvasItem;
  * @is_visible: returns %TRUE if the item is currently visible.
  * @get_is_static: returns %TRUE if the item is static.
  * @set_is_static: notifies the item whether it is static or not.
- * @get_requested_height: returns the requested height of the item,
- *  given a particular allocated width, using the parent's coordinate space.
  * @get_model: gets the model that the canvas item is viewing.
  * @set_model: sets the model that the canvas item will view.
  * @enter_notify_event: signal emitted when the mouse enters the item.
@@ -292,13 +297,17 @@ struct _GooCanvasItemIface
 							 GooCanvasItem		*target,
 							 GdkEventScroll		*event);
 
+  gboolean              (* get_requested_area_for_width)(GooCanvasItem		*item,
+							 cairo_t		*cr,
+							 gdouble		 width,
+							 GooCanvasBounds	*requested_area);
+
   /*< private >*/
 
   /* Padding for future expansion */
   void (*_goo_canvas_reserved1) (void);
   void (*_goo_canvas_reserved2) (void);
   void (*_goo_canvas_reserved3) (void);
-  void (*_goo_canvas_reserved4) (void);
 };
 
 
@@ -445,6 +454,10 @@ void               goo_canvas_item_paint          (GooCanvasItem         *item,
 gboolean	   goo_canvas_item_get_requested_area (GooCanvasItem	*item,
 						       cairo_t          *cr,
 						       GooCanvasBounds  *requested_area);
+gboolean	   goo_canvas_item_get_requested_area_for_width (GooCanvasItem	*item,
+								 cairo_t          *cr,
+								 gdouble           width,
+								 GooCanvasBounds  *requested_area);
 gdouble            goo_canvas_item_get_requested_height (GooCanvasItem  *item,
 							 cairo_t	*cr,
 							 gdouble         width);

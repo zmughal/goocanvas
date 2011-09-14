@@ -1753,6 +1753,40 @@ goo_canvas_item_get_requested_area (GooCanvasItem    *item,
 
 
 /**
+ * goo_canvas_item_get_requested_area_for_width:
+ * @item: a #GooCanvasItem.
+ * @cr: a cairo context.
+ * @width: the allocated width.
+ * @requested_area: a #GooCanvasBounds to return the requested area in, in the
+ *  parent's coordinate space. If %FALSE is returned, this is undefined.
+ * 
+ * This function is only intended to be used when implementing new canvas
+ * items, specifically layout items such as #GooCanvasTable.
+ *
+ * It gets the requested area of a child item, assuming it is allocated the
+ * given width. This is useful for text items whose requested height may change
+ * depending on the allocated width.
+ * 
+ * Returns: %TRUE if the item's requested area changes due to the new allocated
+ * width.
+ **/
+gboolean
+goo_canvas_item_get_requested_area_for_width (GooCanvasItem	*item,
+					      cairo_t          *cr,
+					      gdouble           width,
+					      GooCanvasBounds  *requested_area)
+{
+  GooCanvasItemIface *iface = GOO_CANVAS_ITEM_GET_IFACE (item);
+
+  if (iface->get_requested_area_for_width)
+    return iface->get_requested_area_for_width (item, cr, width, requested_area);
+  else
+    return FALSE;
+}
+
+
+
+/**
  * goo_canvas_item_get_requested_height:
  * @item: a #GooCanvasItem.
  * @cr: a cairo context.
