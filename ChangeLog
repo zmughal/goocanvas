@@ -1,3 +1,20 @@
+2011-09-07  Murray Cumming  <murrayc@murrayc.com>
+
+	GooCanvasImage: Correct the size when using units other than pixels.
+	#657592.
+
+	* src/goocanvas.[h|c]: Added goo_canvas_convert_units_to_pixels() and
+	goo_canvas_convert_units_from_pixels(), which ignore the scale and
+	ignore the bounds.
+	Added a static units_to_pixels_ratios() function shared by these new
+	functions and the existing recalculate_scales() function.
+	* src/goocanvasimage.c: Added static
+	goo_canvas_image_convert_pixbuf_sizes()	function, used by
+	goo_canvas_image_new() and goo_canvas_image_set_common_property() to
+	get the true size of the image in the units that are used.
+
+	(committed by Damon with a few minor changes)
+
 2011-09-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitem.h: added get_requested_area_for_width() method.

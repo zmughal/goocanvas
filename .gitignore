@@ -3,6 +3,8 @@
 *.loT
 *.la
 *.gmo
+*.orig
+*.rej
 *~
 
 Makefile
