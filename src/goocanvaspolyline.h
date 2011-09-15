@@ -24,6 +24,7 @@ G_BEGIN_DECLS
 typedef struct _GooCanvasPoints GooCanvasPoints;
 struct _GooCanvasPoints
 {
+  /*< public >*/
   double *coords;
   int num_points;
   int ref_count;

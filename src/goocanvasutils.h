@@ -245,6 +245,7 @@ typedef struct _GooCanvasLineDash GooCanvasLineDash;
  */
 struct _GooCanvasLineDash
 {
+  /*< public >*/
   int ref_count;
   int num_dashes;
   double *dashes;

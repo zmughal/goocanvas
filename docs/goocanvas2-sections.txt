@@ -140,6 +140,7 @@ goo_canvas_item_request_update
 goo_canvas_item_ensure_updated
 goo_canvas_item_update
 goo_canvas_item_get_requested_area
+goo_canvas_item_get_requested_area_for_width
 goo_canvas_item_get_requested_height
 goo_canvas_item_allocate_area
 goo_canvas_item_get_items_at
@@ -388,6 +389,8 @@ goo_canvas_convert_from_pixels
 goo_canvas_convert_to_item_space
 goo_canvas_convert_from_item_space
 goo_canvas_convert_bounds_to_item_space
+goo_canvas_convert_units_to_pixels
+goo_canvas_convert_units_from_pixels
 
 <SUBSECTION>
 goo_canvas_pointer_grab

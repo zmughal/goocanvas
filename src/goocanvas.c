@@ -153,6 +153,9 @@ enum {
 
 static guint canvas_signals[LAST_SIGNAL] = { 0 };
 
+static const double GOO_CANVAS_MM_PER_INCH =  25.4;
+static const double GOO_CANVAS_POINTS_PER_INCH = 72.0;
+
 static void     goo_canvas_dispose	   (GObject          *object);
 static void     goo_canvas_finalize	   (GObject          *object);
 static void     goo_canvas_realize         (GtkWidget        *widget);
@@ -645,7 +648,7 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
       line_width = 2.0;
       break;
     case GTK_UNIT_INCH:
-      line_width = 2.0 / 72.0;
+      line_width = 2.0 / GOO_CANVAS_POINTS_PER_INCH;
       break;
     case GTK_UNIT_MM:
       line_width = 0.7;
@@ -1724,28 +1727,41 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
 
 
 static void
-recalculate_scales (GooCanvas *canvas)
+units_to_pixels_ratios (GooCanvas *canvas,
+			gdouble   *x_ratio,
+			gdouble   *y_ratio)
 {
   switch (canvas->units)
     {
     case GTK_UNIT_PIXEL:
-      canvas->device_to_pixels_x = canvas->scale_x;
-      canvas->device_to_pixels_y = canvas->scale_y;
+      *x_ratio = 1.0;
+      *y_ratio = *x_ratio;
       break;
     case GTK_UNIT_POINTS:
-      canvas->device_to_pixels_x = canvas->scale_x * (canvas->resolution_x / 72.0);
-      canvas->device_to_pixels_y = canvas->scale_y * (canvas->resolution_y / 72.0);
+      *x_ratio = canvas->resolution_x / GOO_CANVAS_POINTS_PER_INCH;
+      *y_ratio = canvas->resolution_y / GOO_CANVAS_POINTS_PER_INCH;
       break;
     case GTK_UNIT_INCH:
-      canvas->device_to_pixels_x = canvas->scale_x * canvas->resolution_x;
-      canvas->device_to_pixels_y = canvas->scale_y * canvas->resolution_y;
+      *x_ratio = canvas->resolution_x;
+      *y_ratio = canvas->resolution_y;
       break;
     case GTK_UNIT_MM:
-      /* There are 25.4 mm to an inch. */
-      canvas->device_to_pixels_x = canvas->scale_x * (canvas->resolution_x / 25.4);
-      canvas->device_to_pixels_y = canvas->scale_y * (canvas->resolution_y / 25.4);
+      *x_ratio = canvas->resolution_x / GOO_CANVAS_MM_PER_INCH;
+      *y_ratio = canvas->resolution_y / GOO_CANVAS_MM_PER_INCH;
       break;
     }
+}
+
+
+static void
+recalculate_scales (GooCanvas *canvas)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  canvas->device_to_pixels_x = canvas->scale_x * x_ratio;
+  canvas->device_to_pixels_y = canvas->scale_y * y_ratio;
 }
 
 
@@ -3641,6 +3657,54 @@ goo_canvas_convert_from_pixels (GooCanvas     *canvas,
   *y = ((*y - canvas->canvas_y_offset) / canvas->device_to_pixels_y) + canvas->bounds.y1;
 }
 
+/**
+ * goo_canvas_convert_units_to_pixels:
+ * @canvas: a #GooCanvas.
+ * @x: a pointer to the x coordinate to convert.
+ * @y: a pointer to the y coordinate to convert.
+ *
+ * Converts a coordinate from the canvas's units to pixels,
+ * ignoring scaling and ignoring the coordinate space specified
+ * in the call to goo_canvas_set_bounds().
+ *
+ **/
+void
+goo_canvas_convert_units_to_pixels (GooCanvas     *canvas,
+			      gdouble       *x,
+			      gdouble       *y)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  *x = *x * x_ratio;
+  *y = *y * y_ratio;
+}
+
+
+/**
+ * goo_canvas_convert_units_from_pixels:
+ * @canvas: a #GooCanvas.
+ * @x: a pointer to the x coordinate to convert.
+ * @y: a pointer to the y coordinate to convert.
+ *
+ * Converts a coordinate from pixels to the canvas's units,
+ * ignoring scaling and ignoring the coordinate space specified
+ * in the call to goo_canvas_set_bounds().
+ *
+ **/
+void
+goo_canvas_convert_units_from_pixels (GooCanvas     *canvas,
+				gdouble       *x,
+				gdouble       *y)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  *x = *x / x_ratio;
+  *y = *y / y_ratio;
+}
 
 static void
 goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,

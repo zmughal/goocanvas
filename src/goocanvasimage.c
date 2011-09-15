@@ -12,6 +12,11 @@
  *
  * GooCanvasImage represents an image item.
  *
+ * <note><para>
+ * It is usually necessary to set the "scale-to-fit" property to %TRUE to
+ * scale the image to fit the given rectangle.
+ * </para></note>
+ *
  * It is a subclass of #GooCanvasItemSimple and so inherits all of the style
  * properties such as "operator" and "pointer-events".
  *
@@ -173,6 +178,24 @@ goo_canvas_image_init (GooCanvasImage *image)
 }
 
 
+/*
+ * Convert the width and height to the canvas's units, from the pixbuf's size 
+ * in pixels.
+ */
+static void
+goo_canvas_image_convert_pixbuf_sizes (GooCanvasItem *item,
+				       GooCanvasImageData *image_data)
+{
+  GooCanvas *canvas = goo_canvas_item_get_canvas (item);
+  if (canvas)
+    {
+      goo_canvas_convert_units_from_pixels (canvas, 
+					    &(image_data->width),
+					    &(image_data->height));
+    }
+}
+
+
 /**
  * goo_canvas_image_new:
  * @parent: the parent item, or %NULL. If a parent is specified, it will assume
@@ -192,6 +215,16 @@ goo_canvas_image_init (GooCanvasImage *image)
  *
  * <informalexample><programlisting>
  *  GooCanvasItem *image = goo_canvas_image_new (mygroup, pixbuf, 100.0, 100.0,
+ *                                               NULL);
+ * </programlisting></informalexample>
+ *
+ * This example creates an image scaled to a size of 200x200:
+ *
+ * <informalexample><programlisting>
+ *  GooCanvasItem *image = goo_canvas_image_new (mygroup, pixbuf, 100.0, 100.0,
+ *                                               "width", 200.0,
+ *                                               "height", 200.0,
+ *                                               "scale-to-fit", TRUE,
  *                                               NULL);
  * </programlisting></informalexample>
  *
@@ -222,6 +255,8 @@ goo_canvas_image_new (GooCanvasItem *parent,
       image_data->pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
       image_data->width = gdk_pixbuf_get_width (pixbuf);
       image_data->height = gdk_pixbuf_get_height (pixbuf);
+
+      goo_canvas_image_convert_pixbuf_sizes (parent, image_data);
     }
 
   va_start (var_args, y);
@@ -364,6 +399,11 @@ goo_canvas_image_set_common_property (GObject              *object,
       image_data->pattern = pixbuf ? goo_canvas_cairo_pattern_from_pixbuf (pixbuf) : NULL;
       image_data->width = pixbuf ? gdk_pixbuf_get_width (pixbuf) : 0;
       image_data->height = pixbuf ? gdk_pixbuf_get_height (pixbuf) : 0;
+
+      if (GOO_IS_CANVAS_ITEM (object))
+	goo_canvas_image_convert_pixbuf_sizes (GOO_CANVAS_ITEM (object),
+					       image_data);
+
       break;
     case PROP_ALPHA:
       priv->alpha = g_value_get_double (value);
@@ -549,6 +589,13 @@ goo_canvas_image_class_init (GooCanvasImageClass *klass)
  *
  * GooCanvasImageModel represent a model for image items.
  *
+ * <note><para>
+ * It is usually necessary to set the "scale-to-fit" property to %TRUE to
+ * scale the image to fit the given rectangle. When using units other than
+ * %GTK_UNIT_PIXEL it is also necessary to set the "width" and "height"
+ * properties to set the desired size.
+ * </para></note>
+ *
  * It is a subclass of #GooCanvasItemModelSimple and so inherits all of the
  * style properties such as "operator" and "pointer-events".
  *
@@ -630,6 +677,16 @@ goo_canvas_image_model_init (GooCanvasImageModel *emodel)
  *                                                          NULL);
  * </programlisting></informalexample>
  *
+ * This example creates an image scaled to a size of 200x200:
+ *
+ * <informalexample><programlisting>
+ *  GooCanvasItemModel *image = goo_canvas_image_model_new (mygroup, pixbuf, 100.0, 100.0,
+ *                                                          "width", 200.0,
+ *                                                          "height", 200.0,
+ *                                                          "scale-to-fit", TRUE,
+ *                                                          NULL);
+ * </programlisting></informalexample>
+ *
  * Returns: a new image model.
  **/
 GooCanvasItemModel*
@@ -657,6 +714,10 @@ goo_canvas_image_model_new (GooCanvasItemModel *parent,
       image_data->pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
       image_data->width = gdk_pixbuf_get_width (pixbuf);
       image_data->height = gdk_pixbuf_get_height (pixbuf);
+
+      /* This is not possible with a model, because we don't know the canvas
+	 units being used. */
+      /*goo_canvas_image_convert_pixbuf_sizes (item, image_data);*/
     }
 
   va_start (var_args, y);

@@ -271,6 +271,13 @@ void		goo_canvas_convert_to_pixels	   (GooCanvas       *canvas,
 void		goo_canvas_convert_from_pixels	   (GooCanvas       *canvas,
 						    gdouble         *x,
 						    gdouble         *y);
+						    
+void goo_canvas_convert_units_to_pixels (GooCanvas *canvas,
+						    gdouble         *x,
+						    gdouble         *y);
+void goo_canvas_convert_units_from_pixels (GooCanvas *canvas,
+						    gdouble         *x,
+						    gdouble         *y);
 
 void		goo_canvas_convert_to_item_space   (GooCanvas	    *canvas,
 						    GooCanvasItem   *item,
