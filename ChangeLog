@@ -1,3 +1,15 @@
+2011-09-24  Krzesimir Nowak  <qdlacz@gmail.com>
+
+	Add GdkRGBA properties. #651125.
+
+	* src/goocanvasutils.c: Added helper functions for GdkRGBA.
+	* src/goocanvasprivate: Ditto.
+	* src/goocanvas.c: Added GdkRGBA version color properties.
+	* src/goocanvasgrid.c: Ditto.
+	* src/goocanvasitemsimple.c: Ditto.
+
+	(committed by Damon with a few minor changes)
+
 2011-09-07  Murray Cumming  <murrayc@murrayc.com>
 
 	GooCanvasImage: Correct the size when using units other than pixels.

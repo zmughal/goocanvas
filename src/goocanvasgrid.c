@@ -80,12 +80,15 @@ enum {
   /* Convenience properties. */
   PROP_HORZ_GRID_LINE_COLOR,
   PROP_HORZ_GRID_LINE_COLOR_RGBA,
+  PROP_HORZ_GRID_LINE_COLOR_GDK_RGBA,
   PROP_HORZ_GRID_LINE_PIXBUF,
   PROP_VERT_GRID_LINE_COLOR,
   PROP_VERT_GRID_LINE_COLOR_RGBA,
+  PROP_VERT_GRID_LINE_COLOR_GDK_RGBA,
   PROP_VERT_GRID_LINE_PIXBUF,
   PROP_BORDER_COLOR,
   PROP_BORDER_COLOR_RGBA,
+  PROP_BORDER_COLOR_GDK_RGBA,
   PROP_BORDER_PIXBUF
 };
 
@@ -243,6 +246,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_HORZ_GRID_LINE_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("horz-grid-line-color-gdk-rgba",
+                                                       _("Horizontal Grid Line Color GdkRGBA"),
+                                                       _("The color to use for the horizontal grid lines, specified as a GdkRGBA"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_HORZ_GRID_LINE_PIXBUF,
                                    g_param_spec_object ("horz-grid-line-pixbuf",
 							_("Horizontal Grid Line Pixbuf"),
@@ -264,6 +274,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_VERT_GRID_LINE_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("vert-grid-line-color-gdk-rgba",
+                                                       _("Vertical Grid Line Color GdkRGBA"),
+                                                       _("The color to use for the vertical grid lines, specified as a GdkRGBA"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_VERT_GRID_LINE_PIXBUF,
                                    g_param_spec_object ("vert-grid-line-pixbuf",
 							_("Vertical Grid Line Pixbuf"),
@@ -284,6 +301,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      _("The color to use for the border, specified as a 32-bit integer value"),
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_BORDER_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("border-color-gdk-rgba",
+                                                       _("Border Color GdkRGBA"),
+                                                       _("The color to use for the border, specified as a GdkRGBA"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_BORDER_PIXBUF,
                                    g_param_spec_object ("border-pixbuf",
@@ -501,11 +525,20 @@ goo_canvas_grid_get_common_property (GObject              *object,
     case PROP_HORZ_GRID_LINE_COLOR_RGBA:
       goo_canvas_get_rgba_value_from_pattern (grid_data->horz_grid_line_pattern, value);
       break;
+    case PROP_HORZ_GRID_LINE_COLOR_GDK_RGBA:
+      goo_canvas_get_gdk_rgba_value_from_pattern (grid_data->horz_grid_line_pattern, value);
+      break;
     case PROP_VERT_GRID_LINE_COLOR_RGBA:
       goo_canvas_get_rgba_value_from_pattern (grid_data->vert_grid_line_pattern, value);
       break;
+    case PROP_VERT_GRID_LINE_COLOR_GDK_RGBA:
+      goo_canvas_get_gdk_rgba_value_from_pattern (grid_data->vert_grid_line_pattern, value);
+      break;
     case PROP_BORDER_COLOR_RGBA:
       goo_canvas_get_rgba_value_from_pattern (grid_data->border_pattern, value);
+      break;
+    case PROP_BORDER_COLOR_GDK_RGBA:
+      goo_canvas_get_gdk_rgba_value_from_pattern (grid_data->border_pattern, value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -603,6 +636,10 @@ goo_canvas_grid_set_common_property (GObject              *object,
       cairo_pattern_destroy (grid_data->horz_grid_line_pattern);
       grid_data->horz_grid_line_pattern = goo_canvas_create_pattern_from_rgba_value (value);
       break;
+    case PROP_HORZ_GRID_LINE_COLOR_GDK_RGBA:
+      cairo_pattern_destroy (grid_data->horz_grid_line_pattern);
+      grid_data->horz_grid_line_pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
+      break;
     case PROP_HORZ_GRID_LINE_PIXBUF:
       cairo_pattern_destroy (grid_data->horz_grid_line_pattern);
       grid_data->horz_grid_line_pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
@@ -616,6 +653,10 @@ goo_canvas_grid_set_common_property (GObject              *object,
       cairo_pattern_destroy (grid_data->vert_grid_line_pattern);
       grid_data->vert_grid_line_pattern = goo_canvas_create_pattern_from_rgba_value (value);
       break;
+    case PROP_VERT_GRID_LINE_COLOR_GDK_RGBA:
+      cairo_pattern_destroy (grid_data->vert_grid_line_pattern);
+      grid_data->vert_grid_line_pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
+      break;
     case PROP_VERT_GRID_LINE_PIXBUF:
       cairo_pattern_destroy (grid_data->vert_grid_line_pattern);
       grid_data->vert_grid_line_pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
@@ -628,6 +669,10 @@ goo_canvas_grid_set_common_property (GObject              *object,
     case PROP_BORDER_COLOR_RGBA:
       cairo_pattern_destroy (grid_data->border_pattern);
       grid_data->border_pattern = goo_canvas_create_pattern_from_rgba_value (value);
+      break;
+    case PROP_BORDER_COLOR_GDK_RGBA:
+      cairo_pattern_destroy (grid_data->border_pattern);
+      grid_data->border_pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
       break;
     case PROP_BORDER_PIXBUF:
       cairo_pattern_destroy (grid_data->border_pattern);

@@ -14,6 +14,7 @@
  */
 #include <config.h>
 #include <math.h>
+#include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include "goocanvas.h"
 
@@ -1233,6 +1234,20 @@ goo_canvas_get_rgba_value_from_pattern (cairo_pattern_t *pattern,
 }
 
 
+void
+goo_canvas_get_gdk_rgba_value_from_pattern (cairo_pattern_t *pattern,
+                                            GValue          *value)
+{
+  GdkRGBA rgba = {0, 0, 0, 0};
+
+  if (pattern && cairo_pattern_get_type (pattern) == CAIRO_PATTERN_TYPE_SOLID)
+    {
+      cairo_pattern_get_rgba (pattern, &rgba.red, &rgba.green, &rgba.blue, &rgba.alpha);
+    }
+  g_value_set_boxed (value, &rgba);
+}
+
+
 /* Sets a style property to the given pattern, taking ownership of it. */
 void
 goo_canvas_set_style_property_from_pattern (GooCanvasStyle  *style,
@@ -1251,16 +1266,20 @@ goo_canvas_set_style_property_from_pattern (GooCanvasStyle  *style,
 cairo_pattern_t*
 goo_canvas_create_pattern_from_color_value (const GValue *value)
 {
-  GdkColor color = { 0, 0, 0, 0, };
+  GdkRGBA rgba = { 0, 0, 0, 0 };
+  const char *color_string;
 
-  if (g_value_get_string (value))
-    gdk_color_parse (g_value_get_string (value), &color);
+  color_string = g_value_get_string (value);
 
-  return cairo_pattern_create_rgb (color.red / 65535.0,
-				   color.green / 65535.0,
-				   color.blue / 65535.0);
+  if (color_string)
+    {
+      gdk_rgba_parse (&rgba, color_string);
+    }
+
+  return cairo_pattern_create_rgba (rgba.red, rgba.green, rgba.blue,
+                                    rgba.alpha);
 }
-  
+
 
 cairo_pattern_t*
 goo_canvas_create_pattern_from_rgba_value (const GValue *value)
@@ -1275,6 +1294,21 @@ goo_canvas_create_pattern_from_rgba_value (const GValue *value)
 
   return cairo_pattern_create_rgba (red / 255.0, green / 255.0,
 				    blue / 255.0, alpha / 255.0);
+}
+
+
+cairo_pattern_t*
+goo_canvas_create_pattern_from_gdk_rgba_value (const GValue *value)
+{
+  GdkRGBA* rgba;
+
+  rgba = g_value_get_boxed (value);
+
+  if (rgba)
+    return cairo_pattern_create_rgba (rgba->red, rgba->green, rgba->blue,
+                                      rgba->alpha);
+  else
+    return cairo_pattern_create_rgba (0, 0, 0, 0);
 }
 
 

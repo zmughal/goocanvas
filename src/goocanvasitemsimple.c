@@ -63,9 +63,11 @@ enum {
   /* Convenience properties. */
   PROP_STROKE_COLOR,
   PROP_STROKE_COLOR_RGBA,
+  PROP_STROKE_COLOR_GDK_RGBA,
   PROP_STROKE_PIXBUF,
   PROP_FILL_COLOR,
   PROP_FILL_COLOR_RGBA,
+  PROP_FILL_COLOR_GDK_RGBA,
   PROP_FILL_PIXBUF,
 
   /* Other properties. Note that the order here is important PROP_TRANSFORM
@@ -235,6 +237,13 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("stroke-color-gdk-rgba",
+                                                       _("Stroke Color GdkRGBA"),
+                                                       _("The color to use for the item's perimeter, specified as a GdkRGBA. To disable painting set the 'stroke-pattern' property to NULL"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_STROKE_PIXBUF,
                                    g_param_spec_object ("stroke-pixbuf",
 							_("Stroke Pixbuf"),
@@ -255,6 +264,13 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 						      _("The color to use to paint the interior of the item, specified as a 32-bit integer value. To disable painting set the 'fill-pattern' property to NULL"),
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_FILL_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("fill-color-gdk-rgba",
+                                                       _("Fill Color GdkRGBA"),
+                                                       _("The color to use to paint the interior of the item, specified as a GdkRGBA. To disable painting set the 'fill-pattern' property to NULL"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_FILL_PIXBUF,
                                    g_param_spec_object ("fill-pixbuf",
@@ -523,11 +539,23 @@ goo_canvas_item_simple_get_common_property (GObject                 *object,
 	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
 						value);
       break;
+    case PROP_STROKE_COLOR_GDK_RGBA:
+      svalue = goo_canvas_style_get_property (style, goo_canvas_style_stroke_pattern_id);
+      if (svalue)
+        goo_canvas_get_gdk_rgba_value_from_pattern (svalue->data[0].v_pointer,
+                                                    value);
+      break;
     case PROP_FILL_COLOR_RGBA:
       svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_pattern_id);
       if (svalue)
 	goo_canvas_get_rgba_value_from_pattern (svalue->data[0].v_pointer,
 						value);
+      break;
+    case PROP_FILL_COLOR_GDK_RGBA:
+      svalue = goo_canvas_style_get_property (style, goo_canvas_style_fill_pattern_id);
+      if (svalue)
+        goo_canvas_get_gdk_rgba_value_from_pattern (svalue->data[0].v_pointer,
+                                                    value);
       break;
 
       /* Other properties. */
@@ -694,6 +722,10 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
       pattern = goo_canvas_create_pattern_from_rgba_value (value);
       goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
       break;
+    case PROP_STROKE_COLOR_GDK_RGBA:
+      pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
+      break;
     case PROP_STROKE_PIXBUF:
       pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
       goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_stroke_pattern_id, pattern);
@@ -705,6 +737,10 @@ goo_canvas_item_simple_set_common_property (GObject                 *object,
       break;
     case PROP_FILL_COLOR_RGBA:
       pattern = goo_canvas_create_pattern_from_rgba_value (value);
+      goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
+      break;
+    case PROP_FILL_COLOR_GDK_RGBA:
+      pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
       goo_canvas_set_style_property_from_pattern (style, goo_canvas_style_fill_pattern_id, pattern);
       break;
     case PROP_FILL_PIXBUF:

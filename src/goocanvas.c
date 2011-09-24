@@ -135,6 +135,7 @@ enum {
   PROP_RESOLUTION_Y,
   PROP_BACKGROUND_COLOR,
   PROP_BACKGROUND_COLOR_RGB,
+  PROP_BACKGROUND_COLOR_GDK_RGBA,
   PROP_INTEGER_LAYOUT,
   PROP_CLEAR_BACKGROUND,
   PROP_REDRAW_WHEN_SCROLLED,
@@ -417,6 +418,13 @@ goo_canvas_class_init (GooCanvasClass *klass)
 						      _("The color to use for the canvas background, specified as a 24-bit integer value, 0xRRGGBB"),
 						      0, G_MAXUINT, 0,
 						      G_PARAM_WRITABLE));
+
+  g_object_class_install_property (gobject_class, PROP_BACKGROUND_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("background-color-gdk-rgba",
+                                                       _("Background Color GdkRGBA"),
+                                                       _("The color to use for the canvas background, specified as a GdkRGBA"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_WRITABLE));
 
   g_object_class_install_property (gobject_class, PROP_INTEGER_LAYOUT,
                                    g_param_spec_boolean ("integer-layout",
@@ -799,6 +807,8 @@ goo_canvas_set_property    (GObject            *object,
   gboolean need_reconfigure = FALSE;
   gboolean need_update_automatic_bounds = FALSE;
   guint rgb;
+  GdkRGBA rgba = { 0, 0, 0, 0 };
+  const char *color_string;
 
   switch (prop_id)
     {
@@ -861,12 +871,13 @@ goo_canvas_set_property    (GObject            *object,
       need_reconfigure = TRUE;
       break;
     case PROP_BACKGROUND_COLOR:
-      if (!g_value_get_string (value))
-	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, NULL);
-      else if (gdk_color_parse (g_value_get_string (value), &color))
-	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      color_string = g_value_get_string (value);
+      if (!color_string)
+	gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, NULL);
+      else if (gdk_rgba_parse (&rgba, color_string))
+        gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, &rgba);
       else
-	g_warning ("Unknown color: %s", g_value_get_string (value));
+	g_warning ("Unknown color: %s", color_string);
       break;
     case PROP_BACKGROUND_COLOR_RGB:
       rgb = g_value_get_uint (value);
@@ -874,6 +885,9 @@ goo_canvas_set_property    (GObject            *object,
       color.green = ((rgb >> 8)  & 0xFF) * 257;
       color.blue  = ((rgb)       & 0xFF) * 257;
       gtk_widget_modify_bg  ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      break;
+    case PROP_BACKGROUND_COLOR_GDK_RGBA:
+      gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, g_value_get_boxed (value));
       break;
     case PROP_INTEGER_LAYOUT:
       canvas->integer_layout = g_value_get_boolean (value);
