@@ -42,6 +42,7 @@ typedef struct _GooCanvasImagePrivate GooCanvasImagePrivate;
 struct _GooCanvasImagePrivate {
   gboolean scale_to_fit;
   gdouble alpha;
+  gdouble scale_to_units; /* How much to scale the image when the units are not pixels. */
 };
 
 #define GOO_CANVAS_IMAGE_GET_PRIVATE(image)  \
@@ -186,6 +187,10 @@ static void
 goo_canvas_image_convert_pixbuf_sizes (GooCanvasItem *item,
 				       GooCanvasImageData *image_data)
 {
+  GooCanvasImagePrivate *priv = goo_canvas_image_get_private (item);
+
+  const double original_width = image_data->width;
+  
   GooCanvas *canvas = goo_canvas_item_get_canvas (item);
   if (canvas)
     {
@@ -193,6 +198,11 @@ goo_canvas_image_convert_pixbuf_sizes (GooCanvasItem *item,
 					    &(image_data->width),
 					    &(image_data->height));
     }
+    
+  if(image_data->width) /* Avoid division by zero. */
+    priv->scale_to_units = original_width / image_data->width;
+  else
+    priv->scale_to_units = 1.0f;
 }
 
 
@@ -244,19 +254,29 @@ goo_canvas_image_new (GooCanvasItem *parent,
   va_list var_args;
 
   item = g_object_new (GOO_TYPE_CANVAS_IMAGE, NULL);
+
+  /* Put it in the parent first because other property setters might need
+   * access to the parent.
+   */  
+  if (parent)
+    {
+      goo_canvas_item_add_child (parent, item, -1);
+      g_object_unref (item);
+    }
+    
   image = (GooCanvasImage*) item;
 
   image_data = image->image_data;
   image_data->x = x;
   image_data->y = y;
-
+  
   if (pixbuf)
     {
       image_data->pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
       image_data->width = gdk_pixbuf_get_width (pixbuf);
       image_data->height = gdk_pixbuf_get_height (pixbuf);
-
-      goo_canvas_image_convert_pixbuf_sizes (parent, image_data);
+      
+      goo_canvas_image_convert_pixbuf_sizes (item, image_data);
     }
 
   va_start (var_args, y);
@@ -264,12 +284,6 @@ goo_canvas_image_new (GooCanvasItem *parent,
   if (first_property)
     g_object_set_valist ((GObject*) item, first_property, var_args);
   va_end (var_args);
-
-  if (parent)
-    {
-      goo_canvas_item_add_child (parent, item, -1);
-      g_object_unref (item);
-    }
 
   return item;
 }
@@ -491,6 +505,9 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
     return;
 
 #if 1
+
+  /* scale-to-fit means a simple scale, not keeping the aspect ratio.
+     This does not need to consider the units used. */ 
   if (priv->scale_to_fit)
     {
       if (cairo_pattern_get_surface (image_data->pattern, &surface)
@@ -502,7 +519,19 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
 	  cairo_matrix_scale (&matrix, width / image_data->width,
 			      height / image_data->height);
 	}
+    } else if (priv->scale_to_units && (priv->scale_to_units != 1.0f))
+   {
+      /* Scale the image to fit the size in units.
+         We have already scaled the width and height numbers. */
+      if (cairo_pattern_get_surface (image_data->pattern, &surface)
+	  == CAIRO_STATUS_SUCCESS
+	  && cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE)
+	{
+	  cairo_matrix_scale (&matrix, priv->scale_to_units,
+			      priv->scale_to_units);
+	}
     }
+ 
 
   cairo_matrix_translate (&matrix, -image_data->x, -image_data->y);
 

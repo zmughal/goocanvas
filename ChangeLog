@@ -1,3 +1,17 @@
+2011-09-26  Murray Cumming  <murrayc@murrayc.com>
+
+  GooCanvasImage: Correct the image appearance when using non-pixel units.
+    
+	* src/goocanvasimage.c: (goo_canvas_image_convert_pixbuf_sizes):
+	Store the scale factor so we can use it later when drawing the image.
+	(goo_canvas_image_new): Move the call to
+	goo_canvas_image_convert_pixbuf_sizes() until after adding the item,
+	so that it can get the canvas, instead of passing the parent item
+	instead. We need to pass the actual item so we can store the
+	scale factor.
+	(goo_canvas_image_paint): Use the scale factor.
+	Bug #657592
+	
 2011-09-24  Krzesimir Nowak  <qdlacz@gmail.com>
 
 	Add GdkRGBA properties. #651125.
