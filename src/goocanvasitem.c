@@ -397,7 +397,7 @@ goo_canvas_item_base_init (gpointer g_iface)
       /**
        * GooCanvasItem::child-notify
        * @item: the item that received the signal.
-       * @pspec: the #GParamSpec of the changed child property.
+       * @pspec: (type GLib.ParamSpec): the #GParamSpec of the changed child property.
        *
        * Emitted for each child property that has changed.
        * The signal's detail holds the property name. 
@@ -545,7 +545,7 @@ goo_canvas_item_base_init (gpointer g_iface)
  * 
  * Returns the #GooCanvas containing the given #GooCanvasItem.
  * 
- * Returns: the #GooCanvas.
+ * Returns: (transfer none): the #GooCanvas.
  **/
 GooCanvas*
 goo_canvas_item_get_canvas (GooCanvasItem *item)
@@ -720,8 +720,8 @@ goo_canvas_item_get_n_children (GooCanvasItem       *item)
  * 
  * Gets the child item at the given stack position.
  * 
- * Returns: the child item at the given stack position, or %NULL if @child_num
- * is out of range.
+ * Returns: (transfer none): the child item at the given stack position, or
+ *  %NULL if @child_num is out of range.
  **/
 GooCanvasItem*
 goo_canvas_item_get_child (GooCanvasItem       *item,
@@ -739,7 +739,7 @@ goo_canvas_item_get_child (GooCanvasItem       *item,
  * 
  * Gets the parent of the given item.
  * 
- * Returns: the parent item, or %NULL if the item has no parent.
+ * Returns: (transfer none): the parent item, or %NULL if the item has no parent.
  **/
 GooCanvasItem*
 goo_canvas_item_get_parent  (GooCanvasItem *item)
@@ -932,11 +932,11 @@ goo_canvas_item_lower          (GooCanvasItem *item,
 /**
  * goo_canvas_item_get_transform:
  * @item: an item.
- * @transform: the place to store the transform.
+ * @transform: (out callee-allocates) (transfer none): the place to store the transform.
  * 
  * Gets the transformation matrix of an item.
  * 
- * Returns: %TRUE if a transform is set.
+ * Returns: (skip): %TRUE if a transform is set.
  **/
 gboolean
 goo_canvas_item_get_transform  (GooCanvasItem   *item,
@@ -981,7 +981,7 @@ goo_canvas_item_get_transform_for_child  (GooCanvasItem  *item,
 /**
  * goo_canvas_item_set_transform:
  * @item: an item.
- * @transform: the new transformation matrix, or %NULL to reset the
+ * @transform: (allow-none): the new transformation matrix, or %NULL to reset the
  *  transformation to the identity matrix.
  * 
  * Sets the transformation matrix of an item.
@@ -997,10 +997,10 @@ goo_canvas_item_set_transform  (GooCanvasItem        *item,
 /**
  * goo_canvas_item_get_simple_transform:
  * @item: an item.
- * @x: returns the x coordinate of the origin of the item's coordinate space.
- * @y: returns the y coordinate of the origin of the item's coordinate space.
- * @scale: returns the scale of the item.
- * @rotation: returns the clockwise rotation of the item, in degrees (0-360).
+ * @x: (out): returns the x coordinate of the origin of the item's coordinate space.
+ * @y: (out): returns the y coordinate of the origin of the item's coordinate space.
+ * @scale: (out): returns the scale of the item.
+ * @rotation: (out): returns the clockwise rotation of the item, in degrees (0-360).
  * 
  * This function can be used to get the position, scale and rotation of an
  * item, providing that the item has a simple transformation matrix
@@ -1213,7 +1213,7 @@ goo_canvas_item_skew_y         (GooCanvasItem *item,
  * Gets the item's style. If the item doesn't have its own style it will return
  * its parent's style.
  * 
- * Returns: the item's style.
+ * Returns: (transfer none): the item's style.
  **/
 GooCanvasStyle*
 goo_canvas_item_get_style      (GooCanvasItem   *item)
@@ -1530,7 +1530,7 @@ goo_canvas_item_request_update  (GooCanvasItem *item)
 /**
  * goo_canvas_item_get_bounds:
  * @item: a #GooCanvasItem.
- * @bounds: a #GooCanvasBounds to return the bounds in.
+ * @bounds: (out): a #GooCanvasBounds to return the bounds in.
  * 
  * Gets the bounds of the item.
  *
@@ -1564,8 +1564,8 @@ goo_canvas_item_get_bounds  (GooCanvasItem   *item,
  *
  * It gets the items at the given point.
  * 
- * Returns: the @found_items list, with any more found items added onto
- *  the start of the list, leaving the top item first.
+ * Returns: (transfer none): the @found_items list, with any more found items 
+ *  added onto the start of the list, leaving the top item first.
  **/
 GList*
 goo_canvas_item_get_items_at (GooCanvasItem  *item,
@@ -1625,7 +1625,7 @@ goo_canvas_item_is_visible  (GooCanvasItem   *item)
  * 
  * Gets the model of the given canvas item.
  * 
- * Returns: the item's model, or %NULL if it has no model.
+ * Returns: (transfer none): the item's model, or %NULL if it has no model.
  **/
 GooCanvasItemModel*
 goo_canvas_item_get_model	  (GooCanvasItem   *item)
@@ -2337,13 +2337,14 @@ goo_canvas_item_class_install_child_property (GObjectClass *iclass,
  * goo_canvas_item_class_find_child_property:
  * @iclass: a #GObjectClass
  * @property_name: the name of the child property to find
- * @returns: the #GParamSpec of the child property or %NULL if @class has no
- *   child property with that name.
  *
  * This function is only intended to be used when implementing new canvas
  * items, specifically layout container items such as #GooCanvasTable.
  *
  * It finds a child property of a canvas item class by name.
+ *
+ * Returns: (type GObject.ParamSpec) (transfer none): the #GParamSpec of the
+ *  child property or %NULL if @class has no child property with that name.
  */
 GParamSpec*
 goo_canvas_item_class_find_child_property (GObjectClass *iclass,
@@ -2360,14 +2361,15 @@ goo_canvas_item_class_find_child_property (GObjectClass *iclass,
 /**
  * goo_canvas_item_class_list_child_properties:
  * @iclass: a #GObjectClass
- * @n_properties: location to return the number of child properties found
- * @returns: a newly allocated array of #GParamSpec*. The array must be 
- *           freed with g_free().
+ * @n_properties: (out): location to return the number of child properties found
  *
  * This function is only intended to be used when implementing new canvas
  * items, specifically layout container items such as #GooCanvasTable.
  *
  * It returns all child properties of a canvas item class.
+ *
+ * Returns: (array length=n_properties) (transfer full): a newly allocated
+ *  array of #GParamSpec*. The array must be freed with g_free().
  */
 GParamSpec**
 goo_canvas_item_class_list_child_properties (GObjectClass *iclass,

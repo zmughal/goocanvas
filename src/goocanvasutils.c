@@ -560,7 +560,7 @@ parse_flag (gchar    **pos,
  * 
  * Parses the given SVG path specification string.
  * 
- * Returns: a #GArray of #GooCanvasPathCommand elements.
+ * Returns: (element-type GooCanvasPathCommand) (transfer full): a #GArray of #GooCanvasPathCommand elements.
  **/
 GArray*
 goo_canvas_parse_path_data (const gchar       *path_data)

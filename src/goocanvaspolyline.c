@@ -43,7 +43,7 @@
  * Creates a new #GooCanvasPoints struct with space for the given number of
  * points. It should be freed with goo_canvas_points_unref().
  * 
- * Returns: a new #GooCanvasPoints struct.
+ * Returns: (transfer full): a new #GooCanvasPoints struct.
  **/
 GooCanvasPoints*
 goo_canvas_points_new   (int    num_points)
@@ -90,6 +90,41 @@ goo_canvas_points_unref (GooCanvasPoints *points)
       g_slice_free1 (points->num_points * 2 * sizeof (double), points->coords);
       g_slice_free (GooCanvasPoints, points);
     }
+}
+
+/**
+ * goo_canvas_points_set_point:
+ * @points: a #GooCanvasPoints struct.
+ * @idx: index of point to set
+ * @x: x value to set point coordinate to
+ * @y: y value to set point coordinate to
+ * 
+ * Sets the coordinates of idx in the #GooCanvasPoints struct. For bindings
+ **/
+void
+goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y)
+{
+    g_return_if_fail(idx < points->num_points);
+    points->coords[2*idx] = x;
+    points->coords[2*idx + 1] = y;
+}
+
+/**
+ * goo_canvas_points_get_point:
+ * @points: a #GooCanvasPoints struct.
+ * @idx: index of point to get
+ * @x: (out): location to store x coordinate
+ * @y: (out): location to store y coordinate
+ * 
+ * Gets the coordinates of idx in the #GooCanvasPoints struct. For bindings
+ **/
+void
+goo_canvas_points_get_point(GooCanvasPoints *points, int idx, double *x, double *y)
+{
+    *x = 0; *y = 0;
+    g_return_if_fail(idx < points->num_points);
+    *x = points->coords[2*idx];
+    *y = points->coords[2*idx + 1];
 }
 
 
@@ -645,7 +680,7 @@ goo_canvas_polyline_set_property (GObject              *object,
 
 /**
  * goo_canvas_polyline_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @close_path: if the last point should be connected to the first.
@@ -671,7 +706,7 @@ goo_canvas_polyline_set_property (GObject              *object,
  *                                                     NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline item.
+ * Returns: (transfer full): a new polyline item.
  **/
 GooCanvasItem*
 goo_canvas_polyline_new               (GooCanvasItem *parent,
@@ -716,7 +751,7 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
 
 /**
  * goo_canvas_polyline_new_line:
- * @parent: the parent item, or %NULL.
+ * @parent: (skip): the parent item, or %NULL.
  * @x1: the x coordinate of the start of the line.
  * @y1: the y coordinate of the start of the line.
  * @x2: the x coordinate of the end of the line.
@@ -738,7 +773,7 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
  *                                                          NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline item.
+ * Returns: (transfer full): a new polyline item.
  **/
 GooCanvasItem*
 goo_canvas_polyline_new_line          (GooCanvasItem *parent,
@@ -1153,7 +1188,7 @@ goo_canvas_polyline_model_init (GooCanvasPolylineModel *pmodel)
 
 /**
  * goo_canvas_polyline_model_new:
- * @parent: the parent model, or %NULL. If a parent is specified, it will
+ * @parent: (skip): the parent model, or %NULL. If a parent is specified, it will
  *  assume ownership of the item, and the item will automatically be freed when
  *  it is removed from the parent. Otherwise call g_object_unref() to free it.
  * @close_path: if the last point should be connected to the first.
@@ -1179,7 +1214,7 @@ goo_canvas_polyline_model_init (GooCanvasPolylineModel *pmodel)
  *                                                                NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline model.
+ * Returns: (transfer full): a new polyline model.
  **/
 GooCanvasItemModel*
 goo_canvas_polyline_model_new (GooCanvasItemModel *parent,
@@ -1224,7 +1259,7 @@ goo_canvas_polyline_model_new (GooCanvasItemModel *parent,
 
 /**
  * goo_canvas_polyline_model_new_line:
- * @parent: the parent model, or %NULL.
+ * @parent: (skip): the parent model, or %NULL.
  * @x1: the x coordinate of the start of the line.
  * @y1: the y coordinate of the start of the line.
  * @x2: the x coordinate of the end of the line.
@@ -1246,7 +1281,7 @@ goo_canvas_polyline_model_new (GooCanvasItemModel *parent,
  *                                                                     NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline model.
+ * Returns: (transfer full): a new polyline model.
  **/
 GooCanvasItemModel*
 goo_canvas_polyline_model_new_line (GooCanvasItemModel *parent,

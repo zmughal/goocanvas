@@ -43,6 +43,7 @@ Makefile.in
 /ltmain.sh
 /missing
 /mkinstalldirs
+/py-compile
 /po/POTFILES
 /po/Makefile.in.in
 /po/goocanvas2.pot
@@ -52,6 +53,8 @@ Makefile.in
 /src/goocanvasmarshal.h
 /src/stamp-goocanvasenumtypes.h
 /src/stamp-goocanvasmarshal.h
+/src/GooCanvas-2.0.gir
+/src/GooCanvas-2.0.typelib
 /stamp-h1
 /docs/goocanvas-decl-list.txt
 /docs/goocanvas-decl.txt

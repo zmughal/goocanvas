@@ -186,7 +186,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
       /**
        * GooCanvasItemModel::child-notify
        * @item: the item model that received the signal.
-       * @pspec: the #GParamSpec of the changed child property.
+       * @pspec: (type GLib.ParamSpec): the #GParamSpec of the changed child property.
        *
        * Emitted for each child property that has changed.
        * The signal's detail holds the property name. 
@@ -425,8 +425,8 @@ goo_canvas_item_model_get_n_children (GooCanvasItemModel       *model)
  * 
  * Gets the child at the given stack position.
  * 
- * Returns: the child at the given stack position, or %NULL if @child_num
- * is out of range.
+ * Returns: (transfer none): the child at the given stack position, or %NULL
+ *  if @child_num is out of range.
  **/
 GooCanvasItemModel*
 goo_canvas_item_model_get_child (GooCanvasItemModel  *model,
@@ -444,7 +444,7 @@ goo_canvas_item_model_get_child (GooCanvasItemModel  *model,
  * 
  * Gets the parent of the given model.
  * 
- * Returns: the parent model, or %NULL if the model has no parent.
+ * Returns: (transfer none): the parent model, or %NULL if the model has no parent.
  **/
 GooCanvasItemModel*
 goo_canvas_item_model_get_parent  (GooCanvasItemModel *model)
@@ -843,7 +843,7 @@ goo_canvas_item_model_skew_y         (GooCanvasItemModel *model,
  * Gets the model's style. If the model doesn't have its own style it will
  * return its parent's style.
  * 
- * Returns: the model's style.
+ * Returns: (transfer none): the model's style.
  **/
 GooCanvasStyle*
 goo_canvas_item_model_get_style      (GooCanvasItemModel   *model)
@@ -1119,14 +1119,15 @@ goo_canvas_item_model_class_install_child_property (GObjectClass *mclass,
  * goo_canvas_item_model_class_find_child_property:
  * @mclass: a #GObjectClass
  * @property_name: the name of the child property to find
- * @returns: the #GParamSpec of the child property or %NULL if @class has no
- *   child property with that name.
  *
  * This function is only intended to be used when implementing new canvas
  * item models, specifically layout container item models such as
  * #GooCanvasTableModel.
  *
  * It finds a child property of a canvas item class by name.
+ *
+ * Returns: (type GLib.ParamSpec) (transfer none): The #GParamSpec of the child
+ *  property or %NULL if @class has no child property with that name.
  */
 GParamSpec*
 goo_canvas_item_model_class_find_child_property (GObjectClass *mclass,
@@ -1144,14 +1145,15 @@ goo_canvas_item_model_class_find_child_property (GObjectClass *mclass,
  * goo_canvas_item_model_class_list_child_properties:
  * @mclass: a #GObjectClass
  * @n_properties: location to return the number of child properties found
- * @returns: a newly allocated array of #GParamSpec*. The array must be 
- *           freed with g_free().
  *
  * This function is only intended to be used when implementing new canvas
  * item models, specifically layout container item models such as
  * #GooCanvasTableModel.
  *
  * It returns all child properties of a canvas item class.
+ *
+ * Returns: (array length=n_properties) (element-type GLib.ParamSpec) (transfer container):
+ *  a newly allocated array of #GParamSpec*. The array must be freed with g_free(). 
  */
 GParamSpec**
 goo_canvas_item_model_class_list_child_properties (GObjectClass *mclass,
