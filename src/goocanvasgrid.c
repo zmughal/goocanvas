@@ -246,6 +246,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  /**
+   * GooCanvasGrid:horz-grid-line-color-gdk-rgba
+   *
+   * The color to use for the horizontal grid lines, specified as a GdkRGBA.
+   *
+   * Since: 2.0.1
+   */
   g_object_class_install_property (gobject_class, PROP_HORZ_GRID_LINE_COLOR_GDK_RGBA,
                                    g_param_spec_boxed ("horz-grid-line-color-gdk-rgba",
                                                        _("Horizontal Grid Line Color GdkRGBA"),
@@ -274,6 +281,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  /**
+   * GooCanvasGrid:vert-grid-line-color-gdk-rgba
+   *
+   * The color to use for the vertical grid lines, specified as a GdkRGBA.
+   *
+   * Since: 2.0.1
+   */
   g_object_class_install_property (gobject_class, PROP_VERT_GRID_LINE_COLOR_GDK_RGBA,
                                    g_param_spec_boxed ("vert-grid-line-color-gdk-rgba",
                                                        _("Vertical Grid Line Color GdkRGBA"),
@@ -302,6 +316,13 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  /**
+   * GooCanvasGrid:border-color-gdk-rgba
+   *
+   * The color to use for the border, specified as a GdkRGBA.
+   *
+   * Since: 2.0.1
+   */
   g_object_class_install_property (gobject_class, PROP_BORDER_COLOR_GDK_RGBA,
                                    g_param_spec_boxed ("border-color-gdk-rgba",
                                                        _("Border Color GdkRGBA"),

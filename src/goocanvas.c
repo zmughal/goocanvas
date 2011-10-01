@@ -419,6 +419,13 @@ goo_canvas_class_init (GooCanvasClass *klass)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_WRITABLE));
 
+  /**
+   * GooCanvas:background-color-gdk-rgba
+   *
+   * The color to use for the canvas background, specified as a GdkRGBA.
+   *
+   * Since: 2.0.1
+   */
   g_object_class_install_property (gobject_class, PROP_BACKGROUND_COLOR_GDK_RGBA,
                                    g_param_spec_boxed ("background-color-gdk-rgba",
                                                        _("Background Color GdkRGBA"),
@@ -3677,13 +3684,14 @@ goo_canvas_convert_from_pixels (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_units_to_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from the canvas's units to pixels,
  * ignoring scaling and ignoring the coordinate space specified
  * in the call to goo_canvas_set_bounds().
  *
+ * Since: 2.0.1
  **/
 void
 goo_canvas_convert_units_to_pixels (GooCanvas     *canvas,
@@ -3702,13 +3710,14 @@ goo_canvas_convert_units_to_pixels (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_units_from_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  *
  * Converts a coordinate from pixels to the canvas's units,
  * ignoring scaling and ignoring the coordinate space specified
  * in the call to goo_canvas_set_bounds().
  *
+ * Since: 2.0.1
  **/
 void
 goo_canvas_convert_units_from_pixels (GooCanvas     *canvas,

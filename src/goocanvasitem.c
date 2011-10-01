@@ -1769,6 +1769,8 @@ goo_canvas_item_get_requested_area (GooCanvasItem    *item,
  * 
  * Returns: %TRUE if the item's requested area changes due to the new allocated
  * width.
+ *
+ * Since: 2.0.1
  **/
 gboolean
 goo_canvas_item_get_requested_area_for_width (GooCanvasItem	*item,
