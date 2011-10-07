@@ -60,7 +60,7 @@ struct _GooCanvas
 
   /* Where the canvas is anchored (where it is displayed when it is smaller
      than the entire window). */
-  GtkAnchorType anchor;
+  GooCanvasAnchorType anchor;
 
   /* Idle handler ID, for processing updates. */
   guint idle_id;
@@ -88,8 +88,12 @@ struct _GooCanvas
      useful when there are sticky items to reduce flicker, but is slower. */
   guint redraw_when_scrolled : 1;
 
-  /* If the canvas hasn't received the initial expose event yet. */
-  guint before_initial_expose : 1;
+  /* If the canvas hasn't received the initial draw signal yet. */
+  guint before_initial_draw : 1;
+
+  /* GtkScrollablePolicy for each adjustment. */
+  guint hscroll_policy : 1;
+  guint vscroll_policy : 1;
 
   /* This is the padding around the automatic bounds. */
   gdouble bounds_padding;
@@ -155,6 +159,7 @@ struct _GooCanvas
 
   /* The last window position, used for static items. */
   gint window_x, window_y;
+  gint static_window_x, static_window_y;
 
   /* The default style for all canvas items. */
   GooCanvasStyle *style;
@@ -169,10 +174,6 @@ struct _GooCanvasClass
 {
   /*< private >*/
   GtkContainerClass parent_class;
-
-  void		 (* set_scroll_adjustments) (GooCanvas          *canvas,
-					     GtkAdjustment      *hadjustment,
-					     GtkAdjustment      *vadjustment);
 
   /*< private >*/
   /* Padding for future expansion */

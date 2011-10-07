@@ -140,7 +140,7 @@ setup_canvas (GtkWidget *canvas)
   g_object_unref (pixbuf);
   setup_dnd_handlers (GOO_CANVAS (canvas), item);
 
-  item = goo_canvas_text_new (root, "Hello, World!", 250, 450, -1, GTK_ANCHOR_NW, "fill-color", "magenta", "wrap", PANGO_WRAP_WORD_CHAR, NULL);
+  item = goo_canvas_text_new (root, "Hello, World!", 250, 450, -1, GOO_CANVAS_ANCHOR_NW, "fill-color", "magenta", "wrap", PANGO_WRAP_WORD_CHAR, NULL);
   setup_dnd_handlers (GOO_CANVAS (canvas), item);
 
   button = gtk_label_new ("GtkLabel");
@@ -176,7 +176,6 @@ main (int argc, char *argv[])
   GtkWidget *window, *vbox, *label, *scrolled_win, *canvas;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /* Create the window and widgets. */

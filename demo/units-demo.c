@@ -65,7 +65,7 @@ setup_canvas (GtkWidget *canvas,
   sprintf (buffer, "This box is %gx%g %s", d[2], d[3], units_name);
   sprintf (font_desc, "Sans %gpx", d[4]);
   item = goo_canvas_text_new (root, buffer, d[0] + d[2] / 2, d[1] + d[3] / 2,
-			      -1, GTK_ANCHOR_CENTER,
+			      -1, GOO_CANVAS_ANCHOR_CENTER,
 			      "font", font_desc,
 			      NULL);
 
@@ -73,13 +73,13 @@ setup_canvas (GtkWidget *canvas,
   sprintf (buffer, "This font is %g %s high", d[7], units_name);
   sprintf (font_desc, "Sans %gpx", d[7]);
   item = goo_canvas_text_new (root, buffer, d[5], d[6], -1,
-			      GTK_ANCHOR_CENTER,
+			      GOO_CANVAS_ANCHOR_CENTER,
 			      "font", font_desc,
 			      NULL);
 
   sprintf (buffer, "This font is 12 points high");
   item = goo_canvas_text_new (root, buffer, d[5], d[6] * 1.5, -1,
-			      GTK_ANCHOR_CENTER,
+			      GOO_CANVAS_ANCHOR_CENTER,
 			      "font", "Sans 12",
 			      NULL);
 
@@ -95,7 +95,7 @@ setup_canvas (GtkWidget *canvas,
 static void
 zoom_changed (GtkAdjustment *adj, GooCanvas *canvas)
 {
-  goo_canvas_set_scale (canvas, adj->value);
+  goo_canvas_set_scale (canvas, gtk_adjustment_get_value (adj));
 }
 
 
@@ -140,7 +140,7 @@ create_canvas (GtkUnit         units,
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 1000, 1000);
   g_object_set (canvas,
 		"units", units,
-		"anchor", GTK_ANCHOR_CENTER,
+		"anchor", GOO_CANVAS_ANCHOR_CENTER,
 		NULL);
 
   gtk_widget_show (canvas);
@@ -166,7 +166,6 @@ main (int argc, char *argv[])
   GtkWidget *window, *notebook;
   cairo_surface_t *surface;
 
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

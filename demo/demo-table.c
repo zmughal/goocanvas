@@ -46,7 +46,7 @@ create_demo_item (GooCanvasItem *table,
 				  NULL);
       break;
     case DEMO_TEXT_ITEM:
-      item = goo_canvas_text_new (table, text, 0, 0, -1, GTK_ANCHOR_NW, NULL);
+      item = goo_canvas_text_new (table, text, 0, 0, -1, GOO_CANVAS_ANCHOR_NW, NULL);
       break;
     case DEMO_WIDGET_ITEM:
       widget = gtk_button_new_with_label (text);
@@ -241,7 +241,7 @@ create_width_for_height_table (GooCanvasItem *root,
 					NULL);
 
 #if 1
-  item = goo_canvas_text_new (table, text, 0, 0, -1, GTK_ANCHOR_NW, NULL);
+  item = goo_canvas_text_new (table, text, 0, 0, -1, GOO_CANVAS_ANCHOR_NW, NULL);
   goo_canvas_item_set_child_properties (table, item,
 					"row", 1,
 					"column", 0,

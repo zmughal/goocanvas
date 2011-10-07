@@ -38,7 +38,7 @@ struct _GooCanvasText
   gdouble layout_width;
 
   guint use_markup		: 1;
-  guint anchor			: 5;	/* GtkAnchorType */
+  guint anchor			: 5;	/* GooCanvasAnchorType */
   guint alignment		: 3;	/* PangoAlignment */
   guint ellipsize		: 3;	/* PangoEllipsizeMode */
   guint wrap			: 3;	/* PangoWrapMode */
@@ -65,7 +65,7 @@ GooCanvasItem*      goo_canvas_text_new       (GooCanvasItem      *parent,
 					       gdouble             x,
 					       gdouble             y,
 					       gdouble             width,
-					       GtkAnchorType       anchor,
+					       GooCanvasAnchorType anchor,
 					       ...);
 
 void	goo_canvas_text_get_natural_extents   (GooCanvasText  *text,

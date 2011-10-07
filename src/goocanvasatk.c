@@ -59,10 +59,10 @@ goo_canvas_item_accessible_get_item_extents (GooCanvasItem *item,
       goo_canvas_convert_to_pixels (canvas, &bounds.x2, &bounds.y2);
 
       /* Convert to pixels within the visible window. */
-      bounds.x1 -= canvas->hadjustment->value;
-      bounds.y1 -= canvas->vadjustment->value;
-      bounds.x2 -= canvas->hadjustment->value;
-      bounds.y2 -= canvas->vadjustment->value;
+      bounds.x1 -= gtk_adjustment_get_value (canvas->hadjustment);
+      bounds.y1 -= gtk_adjustment_get_value (canvas->vadjustment);
+      bounds.x2 -= gtk_adjustment_get_value (canvas->hadjustment);
+      bounds.y2 -= gtk_adjustment_get_value (canvas->vadjustment);
     }
 
   /* Round up or down to integers. */
@@ -80,13 +80,16 @@ goo_canvas_item_accessible_is_item_in_window (GooCanvasItem *item,
 					      GdkRectangle  *rect)
 {
   GtkWidget *widget;
+  GtkAllocation allocation;
 
   widget = (GtkWidget*) goo_canvas_item_get_canvas (item);
   if (!widget)
     return FALSE;
 
-  if (rect->x + rect->width < 0 || rect->x > widget->allocation.width
-      || rect->y + rect->height < 0 || rect->y > widget->allocation.height)
+  gtk_widget_get_allocation (widget, &allocation);
+
+  if (rect->x + rect->width < 0 || rect->x > allocation.width
+      || rect->y + rect->height < 0 || rect->y > allocation.height)
     return FALSE;
 
   return TRUE;
@@ -118,7 +121,7 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
   gint window_x, window_y;
   gint toplevel_x, toplevel_y;
   GdkRectangle rect;
-  GdkWindow *window;
+  GdkWindow *canvas_window, *window;
 
   g_return_if_fail (GOO_IS_CANVAS_ITEM_ACCESSIBLE (component));
 
@@ -131,7 +134,11 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
   item = GOO_CANVAS_ITEM (object);
 
   canvas = goo_canvas_item_get_canvas (item);
-  if (!canvas || !GTK_WIDGET (canvas)->window)
+  if (!canvas)
+    return;
+
+  canvas_window = gtk_widget_get_window (GTK_WIDGET (canvas));
+  if (!canvas_window)
     return;
 
   goo_canvas_item_accessible_get_item_extents (item, &rect);
@@ -141,14 +148,13 @@ goo_canvas_item_accessible_get_extents (AtkComponent *component,
   if (!goo_canvas_item_accessible_is_item_in_window (item, &rect))
     return;
 
-  gdk_window_get_origin (GTK_WIDGET (canvas)->window,
-			 &window_x, &window_y);
+  gdk_window_get_origin (canvas_window, &window_x, &window_y);
   *x = rect.x + window_x;
   *y = rect.y + window_y;
 
   if (coord_type == ATK_XY_WINDOW)
     {
-      window = gdk_window_get_toplevel (GTK_WIDGET (canvas)->window);
+      window = gdk_window_get_toplevel (canvas_window);
       gdk_window_get_origin (window, &toplevel_x, &toplevel_y);
       *x -= toplevel_x;
       *y -= toplevel_y;
@@ -639,7 +645,7 @@ goo_canvas_accessible_get_n_children (AtkObject *object)
   GtkWidget *widget;
 
   accessible = GTK_ACCESSIBLE (object);
-  widget = accessible->widget;
+  widget = gtk_accessible_get_widget (accessible);
 
   /* Check if widget still exists. */
   if (widget == NULL)
@@ -667,7 +673,7 @@ goo_canvas_accessible_ref_child (AtkObject *object,
     return NULL;
 
   accessible = GTK_ACCESSIBLE (object);
-  widget = accessible->widget;
+  widget = gtk_accessible_get_widget (accessible);
 
   /* Check if widget still exists. */
   if (widget == NULL)

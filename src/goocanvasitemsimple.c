@@ -858,6 +858,11 @@ goo_canvas_item_simple_update_internal  (GooCanvasItemSimple *simple,
     }
 
   cairo_set_matrix (cr, &transform);
+
+#if 0
+  g_print ("Item bounds: %g,%g -%g,%g\n", simple->bounds.x1, simple->bounds.y1,
+	   simple->bounds.x2, simple->bounds.y2);
+#endif
 }
 
 

@@ -42,6 +42,7 @@ enum {
   PROP_WIDTH,
   PROP_HEIGHT,
   PROP_SCALE_TO_FIT,
+  PROP_ALPHA,
 
   /* Convenience properties. */
   PROP_PIXBUF
@@ -54,7 +55,7 @@ G_DEFINE_TYPE (GooCanvasImage, goo_canvas_image, GOO_TYPE_CANVAS_ITEM_SIMPLE)
 static void
 goo_canvas_image_init (GooCanvasImage *image)
 {
-
+  image->alpha = 1.0;
 }
 
 
@@ -163,6 +164,9 @@ goo_canvas_image_get_property (GObject              *object,
     case PROP_SCALE_TO_FIT:
       g_value_set_boolean (value, image->scale_to_fit);
       break;
+    case PROP_ALPHA:
+      g_value_set_double (value, image->alpha);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -179,6 +183,7 @@ goo_canvas_image_set_property (GObject              *object,
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) object;
   GooCanvasImage *image = (GooCanvasImage*) object;
   GdkPixbuf *pixbuf;
+  gboolean recompute_bounds = TRUE;
 
   switch (prop_id)
     {
@@ -209,12 +214,16 @@ goo_canvas_image_set_property (GObject              *object,
       image->width = pixbuf ? gdk_pixbuf_get_width (pixbuf) : 0;
       image->height = pixbuf ? gdk_pixbuf_get_height (pixbuf) : 0;
       break;
+    case PROP_ALPHA:
+      image->alpha = g_value_get_double (value);
+      recompute_bounds = FALSE;
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
   }
 
-  goo_canvas_item_simple_changed (simple, TRUE);
+  goo_canvas_item_simple_changed (simple, recompute_bounds);
 }
 
 
@@ -284,7 +293,12 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
   cairo_set_source (cr, image->pattern);
   cairo_rectangle (cr, image->x, image->y,
 		   image->width, image->height);
-  cairo_fill (cr);
+  /* To have better performance, we don't use cairo_paint_with_alpha if
+   * the image is not transparent at all. */
+  if (image->alpha != 1.0)
+    cairo_paint_with_alpha (cr, image->alpha);
+  else
+    cairo_fill (cr);
 #else
   /* Using cairo_paint() used to be much slower than cairo_fill(), though
      they seem similar now. I'm not sure if it matters which we use. */
@@ -355,6 +369,13 @@ goo_canvas_image_class_init (GooCanvasImageClass *klass)
 							 _("If the image is scaled to fit the width and height settings"),
 							 FALSE,
 							 G_PARAM_READWRITE));
+
+  g_object_class_install_property (gobject_class, PROP_ALPHA,
+				   g_param_spec_double ("alpha",
+							_("Alpha"),
+							_("The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."),
+							0.0, 1.0, 1.0,
+							G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_PIXBUF,
 				   g_param_spec_object ("pixbuf",

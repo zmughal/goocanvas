@@ -5,15 +5,17 @@
 
 
 static gboolean
-on_widget_expose (GtkWidget *widget,
-		  GdkEventExpose *event,
+on_widget_draw (GtkWidget *widget,
+		  cairo_t *cr,
 		  char *item_id)
 {
-  g_print ("%s received 'expose' signal\n", item_id);
+  GtkAllocation allocation;
+  g_print ("%s received 'draw' signal\n", item_id);
 
-  gtk_paint_box (widget->style, widget->window, GTK_STATE_NORMAL,
-		 GTK_SHADOW_IN, &event->area, widget, NULL, 0, 0,
-		 widget->allocation.width, widget->allocation.height);
+  gtk_widget_get_allocation (widget, &allocation);
+  gtk_paint_box (gtk_widget_get_style (widget), cr, GTK_STATE_NORMAL,
+		 GTK_SHADOW_IN, widget, NULL, 0, 0,
+		 allocation.width, allocation.height);
 
   return FALSE;
 }
@@ -71,7 +73,7 @@ on_widget_button_press (GtkWidget *widget,
 	| GDK_ENTER_NOTIFY_MASK
 	| GDK_LEAVE_NOTIFY_MASK;
 
-      status = gdk_pointer_grab (widget->window, FALSE, mask, FALSE, NULL,
+      status = gdk_pointer_grab (gtk_widget_get_window (widget), FALSE, mask, FALSE, NULL,
 				 event->time);
       if (status == GDK_GRAB_SUCCESS)
 	g_print ("grabbed pointer\n");
@@ -230,8 +232,8 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
   gtk_widget_show (fixed);
 
   view_id = g_strdup_printf ("%s-background", id);
-  g_signal_connect (fixed, "expose_event",
-		    G_CALLBACK (on_widget_expose), view_id);
+  g_signal_connect (fixed, "draw",
+		    G_CALLBACK (on_widget_draw), view_id);
 
   g_signal_connect (fixed, "enter_notify_event",
 		    G_CALLBACK (on_widget_enter_notify), view_id);
@@ -263,8 +265,8 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
   gtk_widget_show (drawing_area);
 
   view_id = g_strdup_printf ("%s-left", id);
-  g_signal_connect (drawing_area, "expose_event",
-		    G_CALLBACK (on_widget_expose), view_id);
+  g_signal_connect (drawing_area, "draw",
+		    G_CALLBACK (on_widget_draw), view_id);
 
   g_signal_connect (drawing_area, "enter_notify_event",
 		    G_CALLBACK (on_widget_enter_notify), view_id);
@@ -296,8 +298,8 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
   gtk_widget_show (drawing_area);
 
   view_id = g_strdup_printf ("%s-right", id);
-  g_signal_connect (drawing_area, "expose_event",
-		    G_CALLBACK (on_widget_expose), view_id);
+  g_signal_connect (drawing_area, "draw",
+		    G_CALLBACK (on_widget_draw), view_id);
 
   g_signal_connect (drawing_area, "enter_notify_event",
 		    G_CALLBACK (on_widget_enter_notify), view_id);

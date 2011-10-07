@@ -12,7 +12,7 @@
 
 
 static void
-free_stuff (GtkObject *obj, gpointer data)
+free_stuff (GObject *obj, gpointer data)
 {
 	g_free (data);
 }
@@ -179,7 +179,7 @@ setup_item_signals (GooCanvasItem     *item)
 #define SCRAMBLE_MOVES 256
 
 static void
-scramble (GtkObject *object, gpointer data)
+scramble (GObject *object, gpointer data)
 {
 	GooCanvas *canvas;
 	GooCanvasItem **board;
@@ -300,7 +300,7 @@ create_canvas_fifteen (void)
 
 		text = goo_canvas_text_new (board[i], buf,
 					    PIECE_SIZE / 2.0, PIECE_SIZE / 2.0,
-					    -1, GTK_ANCHOR_CENTER,
+					    -1, GOO_CANVAS_ANCHOR_CENTER,
 					    "font", "Sans bold 24",
 					    "fill_color", "black",
 					    NULL);

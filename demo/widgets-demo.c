@@ -72,15 +72,15 @@ move_widget_clicked (GtkWidget *button, gpointer data)
 static void
 change_anchor_clicked (GtkWidget *button, gpointer data)
 {
-  static GtkAnchorType anchor = GTK_ANCHOR_CENTER;
+  static GooCanvasAnchorType anchor = GOO_CANVAS_ANCHOR_CENTER;
 
   g_print ("Setting anchor to: %i\n", anchor);
   g_object_set (move_item,
 		"anchor", anchor,
 		NULL);
   anchor++;
-  if (anchor > GTK_ANCHOR_EAST)
-    anchor = GTK_ANCHOR_CENTER;
+  if (anchor > GOO_CANVAS_ANCHOR_EAST)
+    anchor = GOO_CANVAS_ANCHOR_CENTER;
 }
 
 
@@ -272,7 +272,6 @@ main (int argc, char *argv[])
   GooCanvasItem *root, *witem;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /* Create the window and widgets. */
@@ -352,7 +351,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
   canvas = goo_canvas_new ();
-  GTK_WIDGET_SET_FLAGS (canvas, GTK_CAN_FOCUS);
+  gtk_widget_set_can_focus (canvas, TRUE);
   gtk_widget_set_size_request (canvas, 600, 450);
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 1000, 1000);
   gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);

@@ -36,6 +36,7 @@ struct _GooCanvasImage
   cairo_pattern_t *pattern;
 
   gdouble x, y, width, height;
+  gdouble alpha;
   gboolean scale_to_fit;
 };
 

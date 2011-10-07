@@ -186,6 +186,50 @@ typedef enum
 } GooCanvasPathCommandType;
 
 
+/**
+ * GooCanvasAnchorType
+ * @GOO_CANVAS_ANCHOR_CENTER: the anchor is in the center of the object.
+ * @GOO_CANVAS_ANCHOR_NORTH: the anchor is at the top of the object, centered horizontally.
+ * @GOO_CANVAS_ANCHOR_NORTH_WEST: the anchor is at the top-left of the object.
+ * @GOO_CANVAS_ANCHOR_NORTH_EAST: the anchor is at the top-right of the object.
+ * @GOO_CANVAS_ANCHOR_SOUTH: the anchor is at the bottom of the object, centered horizontally.
+ * @GOO_CANVAS_ANCHOR_SOUTH_WEST: the anchor is at the bottom-left of the object.
+ * @GOO_CANVAS_ANCHOR_SOUTH_EAST: the anchor is at the bottom-right of the object.
+ * @GOO_CANVAS_ANCHOR_WEST: the anchor is on the left of the object, centered vertically.
+ * @GOO_CANVAS_ANCHOR_EAST: the anchor is on the right of the object, centered vertically.
+ * @GOO_CANVAS_ANCHOR_N: see GOO_CANVAS_ANCHOR_NORTH.
+ * @GOO_CANVAS_ANCHOR_NW: see GOO_CANVAS_ANCHOR_NORTH_WEST.
+ * @GOO_CANVAS_ANCHOR_NE: see GOO_CANVAS_ANCHOR_NORTH_EAST.
+ * @GOO_CANVAS_ANCHOR_S: see GOO_CANVAS_ANCHOR_SOUTH.
+ * @GOO_CANVAS_ANCHOR_SW: see GOO_CANVAS_ANCHOR_SOUTH_WEST.
+ * @GOO_CANVAS_ANCHOR_SE: see GOO_CANVAS_ANCHOR_SOUTH_EAST.
+ * @GOO_CANVAS_ANCHOR_W: see GOO_CANVAS_ANCHOR_WEST.
+ * @GOO_CANVAS_ANCHOR_E: see GOO_CANVAS_ANCHOR_EAST.
+ *
+ * GooCanvasAnchorType is used to specify the positions of objects relative to
+ * a particular anchor point.
+ */
+typedef enum
+{
+  GOO_CANVAS_ANCHOR_CENTER,
+  GOO_CANVAS_ANCHOR_NORTH,
+  GOO_CANVAS_ANCHOR_NORTH_WEST,
+  GOO_CANVAS_ANCHOR_NORTH_EAST,
+  GOO_CANVAS_ANCHOR_SOUTH,
+  GOO_CANVAS_ANCHOR_SOUTH_WEST,
+  GOO_CANVAS_ANCHOR_SOUTH_EAST,
+  GOO_CANVAS_ANCHOR_WEST,
+  GOO_CANVAS_ANCHOR_EAST,
+  GOO_CANVAS_ANCHOR_N		= GOO_CANVAS_ANCHOR_NORTH,
+  GOO_CANVAS_ANCHOR_NW		= GOO_CANVAS_ANCHOR_NORTH_WEST,
+  GOO_CANVAS_ANCHOR_NE		= GOO_CANVAS_ANCHOR_NORTH_EAST,
+  GOO_CANVAS_ANCHOR_S		= GOO_CANVAS_ANCHOR_SOUTH,
+  GOO_CANVAS_ANCHOR_SW		= GOO_CANVAS_ANCHOR_SOUTH_WEST,
+  GOO_CANVAS_ANCHOR_SE		= GOO_CANVAS_ANCHOR_SOUTH_EAST,
+  GOO_CANVAS_ANCHOR_W		= GOO_CANVAS_ANCHOR_WEST,
+  GOO_CANVAS_ANCHOR_E		= GOO_CANVAS_ANCHOR_EAST
+} GooCanvasAnchorType;
+
 typedef union _GooCanvasPathCommand  GooCanvasPathCommand;
 
 /* Note that the command type is always the first element in each struct, so
@@ -248,6 +292,7 @@ typedef struct _GooCanvasLineDash GooCanvasLineDash;
  */
 struct _GooCanvasLineDash
 {
+  /*< public >*/
   int ref_count;
   int num_dashes;
   double *dashes;

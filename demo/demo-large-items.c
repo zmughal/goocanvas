@@ -54,7 +54,7 @@ on_motion_notify (GooCanvasItem *item,
 static void
 zoom_changed (GtkAdjustment *adj, GooCanvas *canvas)
 {
-  goo_canvas_set_scale (canvas, adj->value);
+  goo_canvas_set_scale (canvas, gtk_adjustment_get_value (adj));
 }
 
 

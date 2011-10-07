@@ -19,7 +19,6 @@ main (int argc, char *argv[])
   GooCanvasItem *root, *rect_item, *text_item;
 
   /* Initialize GTK+. */
-  gtk_set_locale ();
   gtk_init (&argc, &argv);
 
   /* Create the window and widgets. */
@@ -53,7 +52,7 @@ main (int argc, char *argv[])
 				   NULL);
 
   text_item = goo_canvas_text_new (root, "Hello World", 300, 300, -1,
-				   GTK_ANCHOR_CENTER,
+				   GOO_CANVAS_ANCHOR_CENTER,
 				   "font", "Sans 24",
 				   NULL);
   goo_canvas_item_rotate (text_item, 45, 300, 300);
