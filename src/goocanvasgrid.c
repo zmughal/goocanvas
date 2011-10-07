@@ -1090,7 +1090,7 @@ goo_canvas_grid_model_init (GooCanvasGridModel *gmodel)
  * @y_step: the distance between the horizontal grid lines.
  * @x_offset: the distance before the first vertical grid line.
  * @y_offset: the distance before the first horizontal grid line.
- * @...: (skip): optional pairs of property names and values, and a terminating %NULL.
+ * @...: optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new grid model.
  *

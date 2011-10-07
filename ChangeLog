@@ -1,3 +1,14 @@
+2011-10-07  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitem.c (goo_canvas_item_get_transform)
+	(goo_canvas_item_get_transform_for_child): use (out) annotation for the
+	transformation matrix. Though it won't work at the moment as there is
+	currently no introspection support for cairo_matrix_t. (See #651043)
+	Also don't (skip) the return value.
+
+	* src/goocanvasgrid.c (goo_canvas_grid_model_new): removed the (skip)
+	annotation on the varargs - none of the other new() functions have it.
+
 2011-09-26  Murray Cumming  <murrayc@murrayc.com>
 
   GooCanvasImage: Correct the image appearance when using non-pixel units.

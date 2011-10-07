@@ -932,11 +932,11 @@ goo_canvas_item_lower          (GooCanvasItem *item,
 /**
  * goo_canvas_item_get_transform:
  * @item: an item.
- * @transform: (out callee-allocates) (transfer none): the place to store the transform.
+ * @transform: (out): the place to store the transform.
  * 
  * Gets the transformation matrix of an item.
  * 
- * Returns: (skip): %TRUE if a transform is set.
+ * Returns: %TRUE if a transform is set.
  **/
 gboolean
 goo_canvas_item_get_transform  (GooCanvasItem   *item,
@@ -952,7 +952,7 @@ goo_canvas_item_get_transform  (GooCanvasItem   *item,
  * goo_canvas_item_get_transform_for_child:
  * @item: an item.
  * @child: a child of @item.
- * @transform: the place to store the transform.
+ * @transform: (out): the place to store the transform.
  * 
  * Gets the transformation matrix of an item combined with any special
  * transform needed for the given child. These special transforms are used
