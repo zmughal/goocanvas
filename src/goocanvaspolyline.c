@@ -95,11 +95,13 @@ goo_canvas_points_unref (GooCanvasPoints *points)
 /**
  * goo_canvas_points_set_point:
  * @points: a #GooCanvasPoints struct.
- * @idx: index of point to set
- * @x: x value to set point coordinate to
- * @y: y value to set point coordinate to
+ * @idx: index of point to set.
+ * @x: x value to set point coordinate to.
+ * @y: y value to set point coordinate to.
  * 
- * Sets the coordinates of idx in the #GooCanvasPoints struct. For bindings
+ * Sets the coordinates of a point in the #GooCanvasPoints struct.
+ *
+ * Since: 2.0.1
  **/
 void
 goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y)
@@ -112,11 +114,13 @@ goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y
 /**
  * goo_canvas_points_get_point:
  * @points: a #GooCanvasPoints struct.
- * @idx: index of point to get
- * @x: (out): location to store x coordinate
- * @y: (out): location to store y coordinate
+ * @idx: index of point to get.
+ * @x: (out): location to store x coordinate.
+ * @y: (out): location to store y coordinate.
  * 
- * Gets the coordinates of idx in the #GooCanvasPoints struct. For bindings
+ * Gets the coordinates of a point in the #GooCanvasPoints struct.
+ *
+ * Since: 2.0.1
  **/
 void
 goo_canvas_points_get_point(GooCanvasPoints *points, int idx, double *x, double *y)
@@ -877,7 +881,7 @@ goo_canvas_polyline_create_start_arrow_path (GooCanvasPolyline *polyline,
 
   cairo_move_to (cr, arrow->start_arrow_coords[0],
 		 arrow->start_arrow_coords[1]);
-  for (i = 1; i < NUM_ARROW_POINTS; i++)
+  for (i = 1; i < GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS; i++)
     {
       cairo_line_to (cr, arrow->start_arrow_coords[i * 2],
 		     arrow->start_arrow_coords[i * 2 + 1]);
@@ -901,7 +905,7 @@ goo_canvas_polyline_create_end_arrow_path (GooCanvasPolyline *polyline,
 
   cairo_move_to (cr, arrow->end_arrow_coords[0],
 		 arrow->end_arrow_coords[1]);
-  for (i = 1; i < NUM_ARROW_POINTS; i++)
+  for (i = 1; i < GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS; i++)
     {
       cairo_line_to (cr, arrow->end_arrow_coords[i * 2],
 		     arrow->end_arrow_coords[i * 2 + 1]);

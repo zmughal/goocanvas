@@ -38,7 +38,7 @@ void             goo_canvas_points_unref    (GooCanvasPoints *points);
 void             goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y);
 void             goo_canvas_points_get_point(GooCanvasPoints *points, int idx, double *x, double *y);
 
-#define NUM_ARROW_POINTS     5		/* number of points in an arrowhead */
+#define GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS     5		/* number of points in an arrowhead */
 
 typedef struct _GooCanvasPolylineArrowData GooCanvasPolylineArrowData;
 struct _GooCanvasPolylineArrowData
@@ -48,8 +48,8 @@ struct _GooCanvasPolylineArrowData
   gdouble arrow_width, arrow_length, arrow_tip_length;
 
   gdouble line_start[2], line_end[2];
-  gdouble start_arrow_coords[NUM_ARROW_POINTS * 2];
-  gdouble end_arrow_coords[NUM_ARROW_POINTS * 2];
+  gdouble start_arrow_coords[GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS * 2];
+  gdouble end_arrow_coords[GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS * 2];
 };
 
 
