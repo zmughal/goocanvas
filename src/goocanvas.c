@@ -2850,6 +2850,24 @@ goo_canvas_draw (GtkWidget      *widget,
  * have their visibility set to %GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD.
  *
  * Renders all or part of a canvas to the given cairo context.
+ *
+ * This example code could be used in a #GtkPrintOperation
+ * #GtkPrintOperation::draw-page callback to print each page in a multi-page
+ * document (assuming the pages appear one after the other vertically in the
+ * canvas). Note the call to cairo_translate() to translate the output to
+ * the correct position on the printed page.
+ *
+ * <informalexample><programlisting>
+ *    GooCanvasBounds bounds;
+ *    bounds.x1 = 0;
+ *    bounds.x2 = A4_PAGE_WIDTH;
+ *    bounds.y1 = A4_PAGE_HEIGHT * page_num;
+ *    bounds.y2 = A4_PAGE_HEIGHT * (page_num + 1);
+ *
+ *    cr = gtk_print_context_get_cairo_context (print_context);
+ *    cairo_translate (cr, 0, -A4_PAGE_HEIGHT * page_num);
+ *    goo_canvas_render (GOO_CANVAS (canvas), cr, &bounds, 0.0);
+ * </programlisting></informalexample>
  **/
 void
 goo_canvas_render (GooCanvas             *canvas,

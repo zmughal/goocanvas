@@ -483,7 +483,7 @@ GOO_CANVAS_POLYLINE_GET_CLASS
 
 <SUBSECTION Private>
 GooCanvasPolylineData
-NUM_ARROW_POINTS
+GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS
 GooCanvasPolylineArrowData
 GooCanvasPolylineClass
 </SECTION>
@@ -722,6 +722,8 @@ GooCanvasAnchorType
 <SUBSECTION>
 GooCanvasPoints
 goo_canvas_points_new
+goo_canvas_points_get_point
+goo_canvas_points_set_point
 goo_canvas_points_ref
 goo_canvas_points_unref
 
