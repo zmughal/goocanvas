@@ -1557,14 +1557,16 @@ goo_canvas_item_get_bounds  (GooCanvasItem   *item,
  *  be used to determine which parts of the item are tested.
  * @parent_is_visible: %TRUE if the parent item is visible (which
  *  implies that all ancestors are also visible).
- * @found_items: the list of items found so far.
+ * @found_items: (element-type GooCanvas.CanvasItem): the list of items found
+ *  so far.
  * 
  * This function is only intended to be used when implementing new canvas
  * items, specifically container items such as #GooCanvasGroup.
  *
  * It gets the items at the given point.
  * 
- * Returns: (transfer none): the @found_items list, with any more found items 
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer none): the
+ *  @found_items list, with any more found items 
  *  added onto the start of the list, leaving the top item first.
  **/
 GList*
