@@ -73,7 +73,7 @@ goo_canvas_image_convert_pixbuf_sizes (GooCanvasImage *image)
 {
   const double original_width = image->width;
   
-  GooCanvas *canvas = goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (item));
+  GooCanvas *canvas = goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (image));
   if (canvas)
     {
       goo_canvas_convert_units_from_pixels (canvas, 
@@ -333,16 +333,16 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
 	  cairo_matrix_scale (&matrix, width / image->width,
 			      height / image->height);
 	}
-    } else if (priv->scale_to_units && (priv->scale_to_units != 1.0f))
+    } else if (image->scale_to_units && (image->scale_to_units != 1.0f))
    {
       /* Scale the image to fit the size in units.
          We have already scaled the width and height numbers. */
-      if (cairo_pattern_get_surface (image_data->pattern, &surface)
+      if (cairo_pattern_get_surface (image->pattern, &surface)
 	  == CAIRO_STATUS_SUCCESS
 	  && cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE)
 	{
-	  cairo_matrix_scale (&matrix, priv->scale_to_units,
-			      priv->scale_to_units);
+	  cairo_matrix_scale (&matrix, image->scale_to_units,
+			      image->scale_to_units);
 	}
     }
 

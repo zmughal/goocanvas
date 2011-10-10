@@ -618,23 +618,21 @@ goo_canvas_text_get_requested_area_for_width (GooCanvasItem	*item,
 					      GooCanvasBounds	*requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
-  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasText *text = (GooCanvasText*) item;
-  GooCanvasTextPrivate *priv = goo_canvas_text_get_private (text);
   PangoLayout *layout;
   cairo_matrix_t matrix;
   double x_offset, y_offset;
 
   /* If we have a transformation besides a simple scale & translation, just
      return -1 as we can't adjust the height in that case. */
-  if (simple_data->clip_path_commands
-      || (simple_data->transform && (simple_data->transform->xy != 0.0
-				     || simple_data->transform->yx != 0.0)))
+  if (simple->clip_path_commands
+      || (simple->transform && (simple->transform->xy != 0.0
+				|| simple->transform->yx != 0.0)))
     return FALSE;
 
   cairo_save (cr);
-  if (simple_data->transform)
-    cairo_transform (cr, simple_data->transform);
+  if (simple->transform)
+    cairo_transform (cr, simple->transform);
 
   /* Remove any current translation, to avoid the 16-bit cairo limit. */
   cairo_get_matrix (cr, &matrix);
@@ -646,18 +644,17 @@ goo_canvas_text_get_requested_area_for_width (GooCanvasItem	*item,
   /* Convert the width from the parent's coordinate space. Note that we only
      need to support a simple scale operation here. */
   text->layout_width = width;
-  if (simple_data->transform)
-    text->layout_width /= simple_data->transform->xx;
+  if (simple->transform)
+    text->layout_width /= simple->transform->xx;
 
   /* Create layout with given width. */
-  layout = goo_canvas_text_create_layout (simple_data, text->text_data,
-					  text->layout_width, cr,
+  layout = goo_canvas_text_create_layout (text, text->layout_width, cr,
 					  &simple->bounds, NULL, NULL);
   g_object_unref (layout);
 
   /* If the height is set, use that. */
-  if (priv->height > 0.0)
-    simple->bounds.y2 = simple->bounds.y1 + priv->height;
+  if (text->height > 0.0)
+    simple->bounds.y2 = simple->bounds.y1 + text->height;
 
 
   /* Convert to device space. */
