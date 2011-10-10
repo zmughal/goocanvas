@@ -12,6 +12,11 @@
  *
  * GooCanvasImage represents an image item.
  *
+ * <note><para>
+ * It is usually necessary to set the "scale-to-fit" property to %TRUE to
+ * scale the image to fit the given rectangle.
+ * </para></note>
+ *
  * It is a subclass of #GooCanvasItemSimple and so inherits all of the style
  * properties such as "operator" and "pointer-events".
  *
@@ -59,12 +64,36 @@ goo_canvas_image_init (GooCanvasImage *image)
 }
 
 
+/*
+ * Convert the width and height to the canvas's units, from the pixbuf's size 
+ * in pixels.
+ */
+static void
+goo_canvas_image_convert_pixbuf_sizes (GooCanvasImage *image)
+{
+  const double original_width = image->width;
+  
+  GooCanvas *canvas = goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (item));
+  if (canvas)
+    {
+      goo_canvas_convert_units_from_pixels (canvas, 
+					    &(image->width),
+					    &(image->height));
+    }
+    
+  if (image->width) /* Avoid division by zero. */
+    image->scale_to_units = original_width / image->width;
+  else
+    image->scale_to_units = 1.0f;
+}
+
+
 /**
  * goo_canvas_image_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
- * @pixbuf: the #GdkPixbuf containing the image data, or %NULL.
+ * @pixbuf: (allow-none): the #GdkPixbuf containing the image data, or %NULL.
  * @x: the x coordinate of the image.
  * @y: the y coordinate of the image.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -81,7 +110,17 @@ goo_canvas_image_init (GooCanvasImage *image)
  *                                               NULL);
  * </programlisting></informalexample>
  *
- * Returns: a new image item.
+ * This example creates an image scaled to a size of 200x200:
+ *
+ * <informalexample><programlisting>
+ *  GooCanvasItem *image = goo_canvas_image_new (mygroup, pixbuf, 100.0, 100.0,
+ *                                               "width", 200.0,
+ *                                               "height", 200.0,
+ *                                               "scale-to-fit", TRUE,
+ *                                               NULL);
+ * </programlisting></informalexample>
+ *
+ * Returns: (transfer full): a new image item.
  **/
 GooCanvasItem*
 goo_canvas_image_new (GooCanvasItem *parent,
@@ -96,6 +135,16 @@ goo_canvas_image_new (GooCanvasItem *parent,
   va_list var_args;
 
   item = g_object_new (GOO_TYPE_CANVAS_IMAGE, NULL);
+
+  /* Put it in the parent first because other property setters might need
+   * access to the parent.
+   */  
+  if (parent)
+    {
+      goo_canvas_item_add_child (parent, item, -1);
+      g_object_unref (item);
+    }
+
   image = (GooCanvasImage*) item;
 
   image->x = x;
@@ -106,6 +155,8 @@ goo_canvas_image_new (GooCanvasItem *parent,
       image->pattern = goo_canvas_cairo_pattern_from_pixbuf (pixbuf);
       image->width = gdk_pixbuf_get_width (pixbuf);
       image->height = gdk_pixbuf_get_height (pixbuf);
+
+      goo_canvas_image_convert_pixbuf_sizes (image);
     }
 
   va_start (var_args, y);
@@ -113,12 +164,6 @@ goo_canvas_image_new (GooCanvasItem *parent,
   if (first_property)
     g_object_set_valist ((GObject*) item, first_property, var_args);
   va_end (var_args);
-
-  if (parent)
-    {
-      goo_canvas_item_add_child (parent, item, -1);
-      g_object_unref (item);
-    }
 
   return item;
 }
@@ -213,6 +258,7 @@ goo_canvas_image_set_property (GObject              *object,
       image->pattern = pixbuf ? goo_canvas_cairo_pattern_from_pixbuf (pixbuf) : NULL;
       image->width = pixbuf ? gdk_pixbuf_get_width (pixbuf) : 0;
       image->height = pixbuf ? gdk_pixbuf_get_height (pixbuf) : 0;
+      goo_canvas_image_convert_pixbuf_sizes (image);
       break;
     case PROP_ALPHA:
       image->alpha = g_value_get_double (value);
@@ -273,6 +319,9 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
     return;
 
 #if 1
+
+  /* scale-to-fit means a simple scale, not keeping the aspect ratio.
+     This does not need to consider the units used. */ 
   if (image->scale_to_fit)
     {
       if (cairo_pattern_get_surface (image->pattern, &surface)
@@ -284,7 +333,19 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
 	  cairo_matrix_scale (&matrix, width / image->width,
 			      height / image->height);
 	}
+    } else if (priv->scale_to_units && (priv->scale_to_units != 1.0f))
+   {
+      /* Scale the image to fit the size in units.
+         We have already scaled the width and height numbers. */
+      if (cairo_pattern_get_surface (image_data->pattern, &surface)
+	  == CAIRO_STATUS_SUCCESS
+	  && cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE)
+	{
+	  cairo_matrix_scale (&matrix, priv->scale_to_units,
+			      priv->scale_to_units);
+	}
     }
+
 
   cairo_matrix_translate (&matrix, -image->x, -image->y);
 

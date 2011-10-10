@@ -37,6 +37,7 @@ struct _GooCanvasImage
 
   gdouble x, y, width, height;
   gdouble alpha;
+  gdouble scale_to_units; /* How much to scale the image when the units are not pixels. */
   gboolean scale_to_fit;
 };
 

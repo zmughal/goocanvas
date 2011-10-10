@@ -60,7 +60,7 @@ goo_canvas_path_init (GooCanvasPath *path)
 
 /**
  * goo_canvas_path_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @path_data: the sequence of path commands, specified as a string using the
@@ -103,7 +103,7 @@ goo_canvas_path_init (GooCanvasPath *path)
  *                                             NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new path item.
+ * Returns: (transfer full): a new path item.
  **/
 GooCanvasItem*
 goo_canvas_path_new               (GooCanvasItem *parent,

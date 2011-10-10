@@ -56,7 +56,7 @@ goo_canvas_rect_init (GooCanvasRect *rect)
 
 /**
  * goo_canvas_rect_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @x: the x coordinate of the left of the rectangle.
@@ -80,7 +80,7 @@ goo_canvas_rect_init (GooCanvasRect *rect)
  *                                             NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new rectangle item.
+ * Returns: (transfer full): a new rectangle item.
  **/
 GooCanvasItem*
 goo_canvas_rect_new (GooCanvasItem *parent,

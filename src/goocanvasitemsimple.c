@@ -65,9 +65,11 @@ enum {
   /* Convenience properties. */
   PROP_STROKE_COLOR,
   PROP_STROKE_COLOR_RGBA,
+  PROP_STROKE_COLOR_GDK_RGBA,
   PROP_STROKE_PIXBUF,
   PROP_FILL_COLOR,
   PROP_FILL_COLOR_RGBA,
+  PROP_FILL_COLOR_GDK_RGBA,
   PROP_FILL_PIXBUF,
 
   /* Other properties. Note that the order here is important PROP_TRANSFORM
@@ -248,8 +250,14 @@ goo_canvas_item_simple_get_property (GObject              *object,
     case PROP_STROKE_COLOR_RGBA:
       goo_canvas_get_rgba_value_from_pattern (style ? style->stroke_pattern : NULL, value);
       break;
+    case PROP_STROKE_COLOR_GDK_RGBA:
+      goo_canvas_get_gdk_rgba_value_from_pattern (style ? style->stroke_pattern : NULL, value);
+      break;
     case PROP_FILL_COLOR_RGBA:
       goo_canvas_get_rgba_value_from_pattern (style ? style->fill_pattern : NULL, value);
+      break;
+    case PROP_FILL_COLOR_GDK_RGBA:
+      goo_canvas_get_gdk_rgba_value_from_pattern (style ? style->fill_pattern : NULL, value);
       break;
 
       /* Other properties. */
@@ -431,6 +439,11 @@ goo_canvas_item_simple_set_property (GObject              *object,
       goo_canvas_style_set_stroke_pattern (style, pattern);
       cairo_pattern_destroy (pattern);
       break;
+    case PROP_STROKE_COLOR_GDK_RGBA:
+      pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
+      goo_canvas_style_set_stroke_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
+      break;
     case PROP_STROKE_PIXBUF:
       pattern = goo_canvas_create_pattern_from_pixbuf_value (value);
       goo_canvas_style_set_stroke_pattern (style, pattern);
@@ -444,6 +457,11 @@ goo_canvas_item_simple_set_property (GObject              *object,
       break;
     case PROP_FILL_COLOR_RGBA:
       pattern = goo_canvas_create_pattern_from_rgba_value (value);
+      goo_canvas_style_set_fill_pattern (style, pattern);
+      cairo_pattern_destroy (pattern);
+      break;
+    case PROP_FILL_COLOR_GDK_RGBA:
+      pattern = goo_canvas_create_pattern_from_gdk_rgba_value (value);
       goo_canvas_style_set_fill_pattern (style, pattern);
       cairo_pattern_destroy (pattern);
       break;
@@ -1140,6 +1158,12 @@ goo_canvas_item_simple_allocate_area      (GooCanvasItem         *item,
   simple->bounds.y1 += y_offset;
   simple->bounds.x2 += x_offset;
   simple->bounds.y2 += y_offset;
+
+#if 0
+  g_print ("Offsets: %g, %g Allocated bounds: %g,%g - %g,%g\n",
+	   x_offset, y_offset, simple->bounds.x1,
+	   simple->bounds.y1, simple->bounds.x2, simple->bounds.y2);
+#endif
 
   /* Request a redraw of the new bounds. */
   goo_canvas_request_item_redraw (simple->canvas, &simple->bounds, simple->is_static);
@@ -2049,6 +2073,20 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
 
+  /**
+   * GooCanvasItemSimple:stroke-color-gdk-rgba
+   *
+   * The color to use for the item's perimeter, specified as a GdkRGBA. To disable painting set the 'stroke-pattern' property to NULL.
+   *
+   * Since: 2.0.1
+   */
+  g_object_class_install_property (gobject_class, PROP_STROKE_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("stroke-color-gdk-rgba",
+                                                       _("Stroke Color GdkRGBA"),
+                                                       _("The color to use for the item's perimeter, specified as a GdkRGBA. To disable painting set the 'stroke-pattern' property to NULL"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
+
   g_object_class_install_property (gobject_class, PROP_STROKE_PIXBUF,
                                    g_param_spec_object ("stroke-pixbuf",
 							_("Stroke Pixbuf"),
@@ -2069,6 +2107,20 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 						      _("The color to use to paint the interior of the item, specified as a 32-bit integer value. To disable painting set the 'fill-pattern' property to NULL"),
 						      0, G_MAXUINT, 0,
 						      G_PARAM_READWRITE));
+
+  /**
+   * GooCanvasItemSimple:fill-color-gdk-rgba
+   *
+   * The color to use to paint the interior of the item, specified as a GdkRGBA. To disable painting set the 'fill-pattern' property to NULL.
+   *
+   * Since: 2.0.1
+   */
+  g_object_class_install_property (gobject_class, PROP_FILL_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("fill-color-gdk-rgba",
+                                                       _("Fill Color GdkRGBA"),
+                                                       _("The color to use to paint the interior of the item, specified as a GdkRGBA. To disable painting set the 'fill-pattern' property to NULL"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_READWRITE));
 
   g_object_class_install_property (gobject_class, PROP_FILL_PIXBUF,
                                    g_param_spec_object ("fill-pixbuf",
@@ -2146,6 +2198,15 @@ goo_canvas_item_simple_class_init (GooCanvasItemSimpleClass *klass)
 							 FALSE,
 							 G_PARAM_READWRITE));
 
+  /**
+   * GooCanvasItemSimple:tooltip:
+   *
+   * The tooltip to display for the item, or %NULL to display no tooltip.
+   *
+   * Note that this property has no effect unless the
+   * #GtkWidget:has-tooltip property is set to %TRUE on the #GooCanvas
+   * containing this item.
+   */
   g_object_class_install_property (gobject_class,
 				   PROP_TOOLTIP,
 				   g_param_spec_string ("tooltip",

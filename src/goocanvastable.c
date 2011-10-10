@@ -414,7 +414,7 @@ goo_canvas_table_init (GooCanvasTable *table)
 
 /**
  * goo_canvas_table_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @...: optional pairs of property names and values, and a terminating %NULL.
@@ -461,7 +461,7 @@ goo_canvas_table_init (GooCanvasTable *table)
  *                                        NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new table item.
+ * Returns: (transfer full): a new table item.
  **/
 GooCanvasItem*
 goo_canvas_table_new (GooCanvasItem  *parent,
@@ -1011,6 +1011,7 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
   GooCanvasTable *table = (GooCanvasTable*) item;
   GooCanvasTableChild *table_child;
   gint child_num;
+  gboolean found = FALSE;
 
   for (child_num = 0; child_num < simple->children->len; child_num++)
     {
@@ -1023,11 +1024,16 @@ goo_canvas_table_set_child_property (GooCanvasItem     *item,
 						      table_child,
 						      property_id, value,
 						      pspec);
+          found = TRUE;
 	  break;
 	}
     }
 
-  goo_canvas_item_simple_changed (simple, TRUE);
+  if (!found) {
+    g_warning ("%s: child not found.", G_STRFUNC);
+  }
+  else
+    goo_canvas_item_simple_changed (simple, TRUE);
 }
 
 
@@ -1757,6 +1763,8 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
   GooCanvasTableChildLayoutData *child_data;
   gint start_column, end_column, i, row, end;
   gdouble x, max_width, width, requested_width, requested_height, height = 0.0;
+  GooCanvasItemClass *item_class;
+  GooCanvasBounds bounds;
 
   /* Just return if we've already calculated requested heights for this exact
      width. */
@@ -1792,10 +1800,42 @@ goo_canvas_table_update_requested_heights (GooCanvasItem       *item,
       if (!(child->flags[HORZ] & GOO_CANVAS_TABLE_CHILD_FILL))
 	width = MIN (max_width, requested_width);
 
-      requested_height = goo_canvas_item_get_requested_height (child_item, cr,
+      item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
+
+      /* See if the child supports the new get_requested_area_for_width()
+	 method, which can handles the bounds being changed by the change
+	 in width & height. */
+      if (item_class->get_requested_area_for_width)
+	{
+	  if (item_class->get_requested_area_for_width (child_item, cr, width,
+							&bounds))
+	    {
+	      /* Remember the requested position and size of the child. */
+	      child_data->requested_position[HORZ] = bounds.x1;
+	      child_data->requested_position[VERT] = bounds.y1;
+
+	      child_data->requested_size[HORZ] = bounds.x2 - bounds.x1;
+
+	      if (layout_data->integer_layout)
+		child_data->requested_size[VERT] = ceil (bounds.y2 - bounds.y1);
+	      else
+		child_data->requested_size[VERT] = bounds.y2 - bounds.y1;
+	    }
+	}
+      else if (item_class->get_requested_height)
+	{
+	  requested_height = item_class->get_requested_height (child_item, cr,
 							       width);
-      if (requested_height >= 0.0)
-	child_data->requested_size[VERT] = requested_height;
+	  if (requested_height >= 0.0)
+	    {
+	      child_data->requested_size[HORZ] = width;
+
+	      if (layout_data->integer_layout)
+		child_data->requested_size[VERT] = ceil (requested_height);
+	      else
+		child_data->requested_size[VERT] = requested_height;
+	    }
+	}
     }
 
   /* Now recalculate the requested heights of each row. */

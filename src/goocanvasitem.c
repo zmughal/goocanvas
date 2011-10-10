@@ -369,7 +369,7 @@ goo_canvas_item_class_init (GooCanvasItemClass *klass)
   /**
    * GooCanvasItem::child-notify
    * @item: the item that received the signal.
-   * @pspec: the #GParamSpec of the changed child property.
+   * @pspec: (type GLib.ParamSpec): the #GParamSpec of the changed child property.
    *
    * Emitted for each child property that has changed.
    * The signal's detail holds the property name. 
@@ -443,7 +443,7 @@ goo_canvas_item_init (GooCanvasItem *canvas_item)
  * 
  * Returns the #GooCanvas containing the given #GooCanvasItem.
  * 
- * Returns: the #GooCanvas.
+ * Returns: (transfer none): the #GooCanvas.
  **/
 GooCanvas*
 goo_canvas_item_get_canvas (GooCanvasItem *item)
@@ -618,8 +618,8 @@ goo_canvas_item_get_n_children (GooCanvasItem       *item)
  * 
  * Gets the child item at the given stack position.
  * 
- * Returns: the child item at the given stack position, or %NULL if @child_num
- * is out of range.
+ * Returns: (transfer none): the child item at the given stack position, or
+ *  %NULL if @child_num is out of range.
  **/
 GooCanvasItem*
 goo_canvas_item_get_child (GooCanvasItem       *item,
@@ -637,7 +637,7 @@ goo_canvas_item_get_child (GooCanvasItem       *item,
  * 
  * Gets the parent of the given item.
  * 
- * Returns: the parent item, or %NULL if the item has no parent.
+ * Returns: (transfer none): the parent item, or %NULL if the item has no parent.
  **/
 GooCanvasItem*
 goo_canvas_item_get_parent  (GooCanvasItem *item)
@@ -830,7 +830,7 @@ goo_canvas_item_lower          (GooCanvasItem *item,
 /**
  * goo_canvas_item_get_transform:
  * @item: an item.
- * @transform: the place to store the transform.
+ * @transform: (out): the place to store the transform.
  * 
  * Gets the transformation matrix of an item.
  * 
@@ -850,7 +850,7 @@ goo_canvas_item_get_transform  (GooCanvasItem   *item,
  * goo_canvas_item_get_transform_for_child:
  * @item: an item.
  * @child: a child of @item.
- * @transform: the place to store the transform.
+ * @transform: (out): the place to store the transform.
  * 
  * Gets the transformation matrix of an item combined with any special
  * transform needed for the given child. These special transforms are used
@@ -879,7 +879,7 @@ goo_canvas_item_get_transform_for_child  (GooCanvasItem  *item,
 /**
  * goo_canvas_item_set_transform:
  * @item: an item.
- * @transform: the new transformation matrix, or %NULL to reset the
+ * @transform: (allow-none): the new transformation matrix, or %NULL to reset the
  *  transformation to the identity matrix.
  * 
  * Sets the transformation matrix of an item.
@@ -895,10 +895,10 @@ goo_canvas_item_set_transform  (GooCanvasItem        *item,
 /**
  * goo_canvas_item_get_simple_transform:
  * @item: an item.
- * @x: returns the x coordinate of the origin of the item's coordinate space.
- * @y: returns the y coordinate of the origin of the item's coordinate space.
- * @scale: returns the scale of the item.
- * @rotation: returns the clockwise rotation of the item, in degrees (0-360).
+ * @x: (out): returns the x coordinate of the origin of the item's coordinate space.
+ * @y: (out): returns the y coordinate of the origin of the item's coordinate space.
+ * @scale: (out): returns the scale of the item.
+ * @rotation: (out): returns the clockwise rotation of the item, in degrees (0-360).
  * 
  * This function can be used to get the position, scale and rotation of an
  * item, providing that the item has a simple transformation matrix
@@ -1361,7 +1361,7 @@ goo_canvas_item_request_update  (GooCanvasItem *item)
 /**
  * goo_canvas_item_get_bounds:
  * @item: a #GooCanvasItem.
- * @bounds: a #GooCanvasBounds to return the bounds in.
+ * @bounds: (out): a #GooCanvasBounds to return the bounds in.
  * 
  * Gets the bounds of the item.
  *
@@ -1388,14 +1388,15 @@ goo_canvas_item_get_bounds  (GooCanvasItem   *item,
  *  be used to determine which parts of the item are tested.
  * @parent_is_visible: %TRUE if the parent item is visible (which
  *  implies that all ancestors are also visible).
- * @found_items: the list of items found so far.
+ * @found_items: (element-type GooCanvas.CanvasItem): the list of items found so far.
  * 
  * This function is only intended to be used when implementing new canvas
  * items, specifically container items such as #GooCanvasGroup.
  *
  * It gets the items at the given point.
  * 
- * Returns: the @found_items list, with any more found items added onto
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer none): the
+ *  @found_items list, with any more found items added onto
  *  the start of the list, leaving the top item first.
  **/
 GList*
@@ -1545,6 +1546,41 @@ goo_canvas_item_get_requested_area (GooCanvasItem    *item,
   GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
 
   return item_class->get_requested_area (item, cr, requested_area);
+}
+
+
+/**
+ * goo_canvas_item_get_requested_area_for_width:
+ * @item: a #GooCanvasItem.
+ * @cr: a cairo context.
+ * @width: the allocated width.
+ * @requested_area: a #GooCanvasBounds to return the requested area in, in the
+ *  parent's coordinate space. If %FALSE is returned, this is undefined.
+ * 
+ * This function is only intended to be used when implementing new canvas
+ * items, specifically layout items such as #GooCanvasTable.
+ *
+ * It gets the requested area of a child item, assuming it is allocated the
+ * given width. This is useful for text items whose requested height may change
+ * depending on the allocated width.
+ * 
+ * Returns: %TRUE if the item's requested area changes due to the new allocated
+ * width.
+ *
+ * Since: 2.0.1
+ **/
+gboolean
+goo_canvas_item_get_requested_area_for_width (GooCanvasItem	*item,
+					      cairo_t          *cr,
+					      gdouble           width,
+					      GooCanvasBounds  *requested_area)
+{
+  GooCanvasItemClass *item_class = GOO_CANVAS_ITEM_GET_CLASS (item);
+
+  if (item_class->get_requested_area_for_width)
+    return item_class->get_requested_area_for_width (item, cr, width, requested_area);
+  else
+    return FALSE;
 }
 
 
@@ -2059,13 +2095,14 @@ goo_canvas_item_class_install_child_property (GObjectClass *iclass,
  * goo_canvas_item_class_find_child_property:
  * @iclass: a #GObjectClass
  * @property_name: the name of the child property to find
- * @returns: the #GParamSpec of the child property or %NULL if @class has no
- *   child property with that name.
  *
  * This function is only intended to be used when implementing new canvas
  * items, specifically layout container items such as #GooCanvasTable.
  *
  * It finds a child property of a canvas item class by name.
+ *
+ * Returns: (type GObject.ParamSpec) (transfer none): the #GParamSpec of the
+ *  child property or %NULL if @class has no child property with that name.
  */
 GParamSpec*
 goo_canvas_item_class_find_child_property (GObjectClass *iclass,
@@ -2082,14 +2119,15 @@ goo_canvas_item_class_find_child_property (GObjectClass *iclass,
 /**
  * goo_canvas_item_class_list_child_properties:
  * @iclass: a #GObjectClass
- * @n_properties: location to return the number of child properties found
- * @returns: a newly allocated array of #GParamSpec*. The array must be 
- *           freed with g_free().
+ * @n_properties: (out): location to return the number of child properties found
  *
  * This function is only intended to be used when implementing new canvas
  * items, specifically layout container items such as #GooCanvasTable.
  *
  * It returns all child properties of a canvas item class.
+ *
+ * Returns: (array length=n_properties) (transfer full): a newly allocated
+ *  array of #GParamSpec*. The array must be freed with g_free().
  */
 GParamSpec**
 goo_canvas_item_class_list_child_properties (GObjectClass *iclass,

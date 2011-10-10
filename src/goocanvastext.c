@@ -77,7 +77,7 @@ goo_canvas_text_init (GooCanvasText *text)
 
 /**
  * goo_canvas_text_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @string: the text to display.
@@ -104,7 +104,7 @@ goo_canvas_text_init (GooCanvasText *text)
  *                                             NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new text item.
+ * Returns: (transfer full): a new text item.
  **/
 GooCanvasItem*
 goo_canvas_text_new (GooCanvasItem *parent,
@@ -317,8 +317,8 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
 
       /* If the text width has been set, that width is used to do the alignment
 	 positioning. Otherwise the actual width is used. */
-      if (text->width > 0)
-	align_width = text->width;
+      if (layout_width > 0)
+	align_width = layout_width;
       else
 	align_width = logical_width;
 
@@ -369,7 +369,7 @@ goo_canvas_text_create_layout (GooCanvasText           *text,
       bounds->x1 = origin_x;
       bounds->y1 = origin_y;
 
-      if (text->width > 0)
+      if (layout_width > 0)
 	{
 	  /* If the text width has been set, and the alignment isn't
 	     PANGO_ALIGN_LEFT, we need to adjust for the difference between
@@ -611,59 +611,93 @@ goo_canvas_text_paint (GooCanvasItemSimple   *simple,
 }
 
 
-static gdouble
-goo_canvas_text_get_requested_height (GooCanvasItem	*item,
-				      cairo_t		*cr,
-				      gdouble            width)
+static gboolean
+goo_canvas_text_get_requested_area_for_width (GooCanvasItem	*item,
+					      cairo_t		*cr,
+					      gdouble            width,
+					      GooCanvasBounds	*requested_area)
 {
   GooCanvasItemSimple *simple = (GooCanvasItemSimple*) item;
+  GooCanvasItemSimpleData *simple_data = simple->simple_data;
   GooCanvasText *text = (GooCanvasText*) item;
+  GooCanvasTextPrivate *priv = goo_canvas_text_get_private (text);
   PangoLayout *layout;
-  gdouble height;
+  cairo_matrix_t matrix;
+  double x_offset, y_offset;
 
   /* If we have a transformation besides a simple scale & translation, just
      return -1 as we can't adjust the height in that case. */
-  if (simple->clip_path_commands
-      || (simple->transform && (simple->transform->xy != 0.0
-				     || simple->transform->yx != 0.0)))
-    return -1;
+  if (simple_data->clip_path_commands
+      || (simple_data->transform && (simple_data->transform->xy != 0.0
+				     || simple_data->transform->yx != 0.0)))
+    return FALSE;
 
   cairo_save (cr);
-  if (simple->transform)
-    cairo_transform (cr, simple->transform);
+  if (simple_data->transform)
+    cairo_transform (cr, simple_data->transform);
+
+  /* Remove any current translation, to avoid the 16-bit cairo limit. */
+  cairo_get_matrix (cr, &matrix);
+  x_offset = matrix.x0;
+  y_offset = matrix.y0;
+  matrix.x0 = matrix.y0 = 0.0;
+  cairo_set_matrix (cr, &matrix);
 
   /* Convert the width from the parent's coordinate space. Note that we only
      need to support a simple scale operation here. */
   text->layout_width = width;
-  if (simple->transform)
-    text->layout_width /= simple->transform->xx;
+  if (simple_data->transform)
+    text->layout_width /= simple_data->transform->xx;
 
-  if (text->height < 0.0)
-    {
-     /* Create layout with given width. */
-      layout = goo_canvas_text_create_layout (text, text->layout_width, cr,
-					      &simple->bounds, NULL, NULL);
-      g_object_unref (layout);
+  /* Create layout with given width. */
+  layout = goo_canvas_text_create_layout (simple_data, text->text_data,
+					  text->layout_width, cr,
+					  &simple->bounds, NULL, NULL);
+  g_object_unref (layout);
 
-      height = simple->bounds.y2 - simple->bounds.y1;
-    }
-  else
-    {
-      height = text->height;
-    }
+  /* If the height is set, use that. */
+  if (priv->height > 0.0)
+    simple->bounds.y2 = simple->bounds.y1 + priv->height;
 
-  /* Convert to the parent's coordinate space. As above, we only need to
-     support a simple scale operation here. */
-  if (simple->transform)
-    height *= simple->transform->yy;
+
+  /* Convert to device space. */
+  cairo_user_to_device (cr, &simple->bounds.x1, &simple->bounds.y1);
+  cairo_user_to_device (cr, &simple->bounds.x2, &simple->bounds.y2);
+
+  /* Add the translation back to the bounds. */
+  simple->bounds.x1 += x_offset;
+  simple->bounds.y1 += y_offset;
+  simple->bounds.x2 += x_offset;
+  simple->bounds.y2 += y_offset;
+
+  /* Restore the item's proper transformation matrix. */
+  matrix.x0 = x_offset;
+  matrix.y0 = y_offset;
+  cairo_set_matrix (cr, &matrix);
+
+  /* Convert back to user space. */
+  cairo_device_to_user (cr, &simple->bounds.x1, &simple->bounds.y1);
+  cairo_device_to_user (cr, &simple->bounds.x2, &simple->bounds.y2);
+
+
+  /* Copy the user bounds to the requested area. */
+  *requested_area = simple->bounds;
+
+  /* Convert to the parent's coordinate space. */
+  goo_canvas_item_simple_user_bounds_to_parent (simple, cr, requested_area);
 
   /* Convert the item's bounds to device space. */
   goo_canvas_item_simple_user_bounds_to_device (simple, cr, &simple->bounds);
 
+#if 0
+  g_print ("Width: %g Requested bounds: %g,%g - %g,%g\n",
+	   width, simple->bounds.x1, simple->bounds.y1,
+	   simple->bounds.x2, simple->bounds.y2);
+#endif
+
   cairo_restore (cr);
 
-  /* Return the new requested height of the text. */
-  return height;
+  return TRUE;
 }
 
 
@@ -712,7 +746,7 @@ goo_canvas_text_class_init (GooCanvasTextClass *klass)
   gobject_class->get_property = goo_canvas_text_get_property;
   gobject_class->set_property = goo_canvas_text_set_property;
 
-  item_class->get_requested_height = goo_canvas_text_get_requested_height;
+  item_class->get_requested_area_for_width = goo_canvas_text_get_requested_area_for_width;
 
   simple_class->simple_update        = goo_canvas_text_update;
   simple_class->simple_paint         = goo_canvas_text_paint;

@@ -122,6 +122,7 @@ enum {
   PROP_RESOLUTION_Y,
   PROP_BACKGROUND_COLOR,
   PROP_BACKGROUND_COLOR_RGB,
+  PROP_BACKGROUND_COLOR_GDK_RGBA,
   PROP_INTEGER_LAYOUT, 
   PROP_CLEAR_BACKGROUND,
   PROP_REDRAW_WHEN_SCROLLED,
@@ -131,6 +132,8 @@ enum {
   PROP_VSCROLL_POLICY
 };
 
+static const double GOO_CANVAS_MM_PER_INCH =  25.4;
+static const double GOO_CANVAS_POINTS_PER_INCH = 72.0;
 
 static void     goo_canvas_dispose	   (GObject          *object);
 static void     goo_canvas_finalize	   (GObject          *object);
@@ -392,6 +395,20 @@ goo_canvas_class_init (GooCanvasClass *klass)
 						      0, G_MAXUINT, 0,
 						      G_PARAM_WRITABLE));
 
+  /**
+   * GooCanvas:background-color-gdk-rgba
+   *
+   * The color to use for the canvas background, specified as a GdkRGBA.
+   *
+   * Since: 2.0.1
+   */
+  g_object_class_install_property (gobject_class, PROP_BACKGROUND_COLOR_GDK_RGBA,
+                                   g_param_spec_boxed ("background-color-gdk-rgba",
+                                                       _("Background Color GdkRGBA"),
+                                                       _("The color to use for the canvas background, specified as a GdkRGBA"),
+                                                       GDK_TYPE_RGBA,
+                                                       G_PARAM_WRITABLE));
+
   g_object_class_install_property (gobject_class, PROP_INTEGER_LAYOUT,
                                    g_param_spec_boolean ("integer-layout",
 							 _("Integer Layout"),
@@ -583,7 +600,7 @@ goo_canvas_get_default_line_width (GooCanvas *canvas)
       line_width = 2.0;
       break;
     case GTK_UNIT_INCH:
-      line_width = 2.0 / 72.0;
+      line_width = 2.0 / GOO_CANVAS_POINTS_PER_INCH;
       break;
     case GTK_UNIT_MM:
       line_width = 0.7;
@@ -767,6 +784,8 @@ goo_canvas_set_property    (GObject            *object,
   gboolean need_reconfigure = FALSE;
   gboolean need_update_automatic_bounds = FALSE;
   guint rgb;
+  GdkRGBA rgba = { 0, 0, 0, 0 };
+  const char *color_string;
 
   switch (prop_id)
     {
@@ -829,12 +848,13 @@ goo_canvas_set_property    (GObject            *object,
       need_reconfigure = TRUE;
       break;
     case PROP_BACKGROUND_COLOR:
-      if (!g_value_get_string (value))
-	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, NULL);
-      else if (gdk_color_parse (g_value_get_string (value), &color))
-	gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      color_string = g_value_get_string (value);
+      if (!color_string)
+	gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, NULL);
+      else if (gdk_rgba_parse (&rgba, color_string))
+        gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, &rgba);
       else
-	g_warning ("Unknown color: %s", g_value_get_string (value));
+	g_warning ("Unknown color: %s", color_string);
       break;
     case PROP_BACKGROUND_COLOR_RGB:
       rgb = g_value_get_uint (value);
@@ -842,6 +862,9 @@ goo_canvas_set_property    (GObject            *object,
       color.green = ((rgb >> 8)  & 0xFF) * 257;
       color.blue  = ((rgb)       & 0xFF) * 257;
       gtk_widget_modify_bg ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      break;
+    case PROP_BACKGROUND_COLOR_GDK_RGBA:
+      gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, g_value_get_boxed (value));
       break;
     case PROP_INTEGER_LAYOUT:
       canvas->integer_layout = g_value_get_boolean (value);
@@ -893,7 +916,7 @@ goo_canvas_set_property    (GObject            *object,
  * 
  * Gets the root item of the canvas, usually a #GooCanvasGroup.
  * 
- * Returns: the root item, or %NULL if there is no root item.
+ * Returns: (transfer none): the root item, or %NULL if there is no root item.
  **/
 GooCanvasItem*
 goo_canvas_get_root_item (GooCanvas     *canvas)
@@ -949,7 +972,7 @@ goo_canvas_set_root_item    (GooCanvas		*canvas,
  * Static items are added to the static root item in exactly the same way that
  * ordinary items are added to the root item.
  *
- * Returns: the static root item, or %NULL.
+ * Returns: (transfer none): the static root item, or %NULL.
  **/
 GooCanvasItem*
 goo_canvas_get_static_root_item    (GooCanvas		*canvas)
@@ -1010,7 +1033,8 @@ goo_canvas_set_static_root_item    (GooCanvas		*canvas,
  * 
  * Gets the item at the given point.
  * 
- * Returns: the item found at the given point, or %NULL if no item was found.
+ * Returns: (transfer none): the item found at the given point, or %NULL if no
+ *  item was found.
  **/
 GooCanvasItem*
 goo_canvas_get_item_at (GooCanvas     *canvas,
@@ -1062,9 +1086,9 @@ goo_canvas_get_item_at (GooCanvas     *canvas,
  * 
  * Gets all items at the given point.
  * 
- * Returns: a list of items found at the given point, with the top item at
- *  the start of the list, or %NULL if no items were found. The list must be
- *  freed with g_list_free().
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer container): a list of
+ *  items found at the given point, with the top item at the start of the list, 
+ *  or %NULL if no items were found. The list must be freed with g_list_free().
  **/
 GList*
 goo_canvas_get_items_at (GooCanvas     *canvas,
@@ -1176,7 +1200,8 @@ goo_canvas_get_items_in_area_recurse (GooCanvas		    *canvas,
  * 
  * Gets a list of items inside or outside a given area.
  * 
- * Returns: a list of items in the given area, or %NULL if no items are found.
+ * Returns: (element-type GooCanvas.CanvasItem) (transfer container): a list of
+ *  items in the given area, or %NULL if no items are found.
  *  The list should be freed with g_list_free().
  **/
 GList*
@@ -1467,28 +1492,41 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
 
 
 static void
-recalculate_scales (GooCanvas *canvas)
+units_to_pixels_ratios (GooCanvas *canvas,
+			gdouble   *x_ratio,
+			gdouble   *y_ratio)
 {
   switch (canvas->units)
     {
     case GTK_UNIT_PIXEL:
-      canvas->device_to_pixels_x = canvas->scale_x;
-      canvas->device_to_pixels_y = canvas->scale_y;
+      *x_ratio = 1.0;
+      *y_ratio = *x_ratio;
       break;
     case GTK_UNIT_POINTS:
-      canvas->device_to_pixels_x = canvas->scale_x * (canvas->resolution_x / 72.0);
-      canvas->device_to_pixels_y = canvas->scale_y * (canvas->resolution_y / 72.0);
+      *x_ratio = canvas->resolution_x / GOO_CANVAS_POINTS_PER_INCH;
+      *y_ratio = canvas->resolution_y / GOO_CANVAS_POINTS_PER_INCH;
       break;
     case GTK_UNIT_INCH:
-      canvas->device_to_pixels_x = canvas->scale_x * canvas->resolution_x;
-      canvas->device_to_pixels_y = canvas->scale_y * canvas->resolution_y;
+      *x_ratio = canvas->resolution_x;
+      *y_ratio = canvas->resolution_y;
       break;
     case GTK_UNIT_MM:
-      /* There are 25.4 mm to an inch. */
-      canvas->device_to_pixels_x = canvas->scale_x * (canvas->resolution_x / 25.4);
-      canvas->device_to_pixels_y = canvas->scale_y * (canvas->resolution_y / 25.4);
+      *x_ratio = canvas->resolution_x / GOO_CANVAS_MM_PER_INCH;
+      *y_ratio = canvas->resolution_y / GOO_CANVAS_MM_PER_INCH;
       break;
     }
+}
+
+
+static void
+recalculate_scales (GooCanvas *canvas)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  canvas->device_to_pixels_x = canvas->scale_x * x_ratio;
+  canvas->device_to_pixels_y = canvas->scale_y * y_ratio;
 }
 
 
@@ -2485,6 +2523,24 @@ goo_canvas_draw (GtkWidget      *widget,
  * have their visibility set to %GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD.
  * 
  * Renders all or part of a canvas to the given cairo context.
+ *
+ * This example code could be used in a #GtkPrintOperation
+ * #GtkPrintOperation::draw-page callback to print each page in a multi-page
+ * document (assuming the pages appear one after the other vertically in the
+ * canvas). Note the call to cairo_translate() to translate the output to
+ * the correct position on the printed page.
+ *
+ * <informalexample><programlisting>
+ *    GooCanvasBounds bounds;
+ *    bounds.x1 = 0;
+ *    bounds.x2 = A4_PAGE_WIDTH;
+ *    bounds.y1 = A4_PAGE_HEIGHT * page_num;
+ *    bounds.y2 = A4_PAGE_HEIGHT * (page_num + 1);
+ *
+ *    cr = gtk_print_context_get_cairo_context (print_context);
+ *    cairo_translate (cr, 0, -A4_PAGE_HEIGHT * page_num);
+ *    goo_canvas_render (GOO_CANVAS (canvas), cr, &bounds, 0.0);
+ * </programlisting></informalexample>
  **/
 void
 goo_canvas_render (GooCanvas             *canvas,
@@ -3268,8 +3324,8 @@ goo_canvas_keyboard_ungrab (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_to_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  * 
  * Converts a coordinate from the canvas coordinate space to pixels.
  *
@@ -3293,8 +3349,8 @@ goo_canvas_convert_to_pixels (GooCanvas     *canvas,
 /**
  * goo_canvas_convert_from_pixels:
  * @canvas: a #GooCanvas.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  * 
  * Converts a coordinate from pixels to the canvas coordinate space.
  *
@@ -3315,6 +3371,56 @@ goo_canvas_convert_from_pixels (GooCanvas     *canvas,
   *y = ((*y - canvas->canvas_y_offset) / canvas->device_to_pixels_y) + canvas->bounds.y1;
 }
 
+/**
+ * goo_canvas_convert_units_to_pixels:
+ * @canvas: a #GooCanvas.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
+ *
+ * Converts a coordinate from the canvas's units to pixels,
+ * ignoring scaling and ignoring the coordinate space specified
+ * in the call to goo_canvas_set_bounds().
+ *
+ * Since: 2.0.1
+ **/
+void
+goo_canvas_convert_units_to_pixels (GooCanvas     *canvas,
+			      gdouble       *x,
+			      gdouble       *y)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  *x = *x * x_ratio;
+  *y = *y * y_ratio;
+}
+
+
+/**
+ * goo_canvas_convert_units_from_pixels:
+ * @canvas: a #GooCanvas.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
+ *
+ * Converts a coordinate from pixels to the canvas's units,
+ * ignoring scaling and ignoring the coordinate space specified
+ * in the call to goo_canvas_set_bounds().
+ *
+ * Since: 2.0.1
+ **/
+void
+goo_canvas_convert_units_from_pixels (GooCanvas     *canvas,
+				gdouble       *x,
+				gdouble       *y)
+{
+  gdouble x_ratio = 0;
+  gdouble y_ratio = 0;
+  units_to_pixels_ratios (canvas, &x_ratio, &y_ratio);
+ 
+  *x = *x / x_ratio;
+  *y = *y / y_ratio;
+}
 
 static void
 goo_canvas_convert_from_window_pixels (GooCanvas     *canvas,
@@ -3380,8 +3486,8 @@ get_transform_to_item_space (GooCanvasItem  *item,
  * goo_canvas_convert_to_item_space:
  * @canvas: a #GooCanvas.
  * @item: a #GooCanvasItem.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  * 
  * Converts a coordinate from the canvas coordinate space to the given
  * item's coordinate space, applying all transformation matrices including the
@@ -3404,8 +3510,8 @@ goo_canvas_convert_to_item_space (GooCanvas     *canvas,
  * goo_canvas_convert_from_item_space:
  * @canvas: a #GooCanvas.
  * @item: a #GooCanvasItem.
- * @x: a pointer to the x coordinate to convert.
- * @y: a pointer to the y coordinate to convert.
+ * @x: (inout): a pointer to the x coordinate to convert.
+ * @y: (inout): a pointer to the y coordinate to convert.
  * 
  * Converts a coordinate from the given item's coordinate space to the canvas
  * coordinate space, applying all transformation matrices including the

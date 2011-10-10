@@ -68,14 +68,14 @@ goo_canvas_group_init (GooCanvasGroup *group)
 
 /**
  * goo_canvas_group_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @...: optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new group item.
  * 
- * Return value: a new group item.
+ * Return value: (transfer full): a new group item.
  **/
 GooCanvasItem*
 goo_canvas_group_new (GooCanvasItem *parent,

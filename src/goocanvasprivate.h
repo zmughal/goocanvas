@@ -39,13 +39,17 @@ guint goo_canvas_convert_colors_to_rgba (double red,
 void goo_canvas_get_rgba_value_from_pattern (cairo_pattern_t *pattern,
 					     GValue          *value);
 
+void goo_canvas_get_gdk_rgba_value_from_pattern (cairo_pattern_t *pattern,
+                                                 GValue          *value);
+
 void goo_canvas_set_style_property_from_pattern (GooCanvasStyle  *style,
 						 GQuark           property_id,
 						 cairo_pattern_t *pattern);
 
-cairo_pattern_t* goo_canvas_create_pattern_from_color_value  (const GValue *value);
-cairo_pattern_t* goo_canvas_create_pattern_from_rgba_value   (const GValue *value);
-cairo_pattern_t* goo_canvas_create_pattern_from_pixbuf_value (const GValue *value);
+cairo_pattern_t* goo_canvas_create_pattern_from_color_value    (const GValue *value);
+cairo_pattern_t* goo_canvas_create_pattern_from_rgba_value     (const GValue *value);
+cairo_pattern_t* goo_canvas_create_pattern_from_gdk_rgba_value (const GValue *value);
+cairo_pattern_t* goo_canvas_create_pattern_from_pixbuf_value   (const GValue *value);
 
 
 gboolean goo_canvas_boolean_handled_accumulator (GSignalInvocationHint *ihint,

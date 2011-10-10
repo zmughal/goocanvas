@@ -43,7 +43,7 @@
  * Creates a new #GooCanvasPoints struct with space for the given number of
  * points. It should be freed with goo_canvas_points_unref().
  * 
- * Returns: a new #GooCanvasPoints struct.
+ * Returns: (transfer full): a new #GooCanvasPoints struct.
  **/
 GooCanvasPoints*
 goo_canvas_points_new   (int    num_points)
@@ -90,6 +90,46 @@ goo_canvas_points_unref (GooCanvasPoints *points)
       g_slice_free1 (points->num_points * 2 * sizeof (double), points->coords);
       g_slice_free (GooCanvasPoints, points);
     }
+}
+
+
+/**
+ * goo_canvas_points_set_point:
+ * @points: a #GooCanvasPoints struct.
+ * @idx: index of point to set.
+ * @x: x value to set point coordinate to.
+ * @y: y value to set point coordinate to.
+ * 
+ * Sets the coordinates of a point in the #GooCanvasPoints struct.
+ *
+ * Since: 2.0.1
+ **/
+void
+goo_canvas_points_set_point(GooCanvasPoints *points, int idx, double x, double y)
+{
+    g_return_if_fail(idx < points->num_points);
+    points->coords[2*idx] = x;
+    points->coords[2*idx + 1] = y;
+}
+
+/**
+ * goo_canvas_points_get_point:
+ * @points: a #GooCanvasPoints struct.
+ * @idx: index of point to get.
+ * @x: (out): location to store x coordinate.
+ * @y: (out): location to store y coordinate.
+ * 
+ * Gets the coordinates of a point in the #GooCanvasPoints struct.
+ *
+ * Since: 2.0.1
+ **/
+void
+goo_canvas_points_get_point(GooCanvasPoints *points, int idx, double *x, double *y)
+{
+    *x = 0; *y = 0;
+    g_return_if_fail(idx < points->num_points);
+    *x = points->coords[2*idx];
+    *y = points->coords[2*idx + 1];
 }
 
 
@@ -527,7 +567,7 @@ goo_canvas_polyline_set_property (GObject              *object,
 
 /**
  * goo_canvas_polyline_new:
- * @parent: the parent item, or %NULL. If a parent is specified, it will assume
+ * @parent: (skip): the parent item, or %NULL. If a parent is specified, it will assume
  *  ownership of the item, and the item will automatically be freed when it is
  *  removed from the parent. Otherwise call g_object_unref() to free it.
  * @close_path: if the last point should be connected to the first.
@@ -553,7 +593,7 @@ goo_canvas_polyline_set_property (GObject              *object,
  *                                                     NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline item.
+ * Returns: (transfer full): a new polyline item.
  **/
 GooCanvasItem*
 goo_canvas_polyline_new               (GooCanvasItem *parent,
@@ -596,7 +636,7 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
 
 /**
  * goo_canvas_polyline_new_line:
- * @parent: the parent item, or %NULL.
+ * @parent: (skip): the parent item, or %NULL.
  * @x1: the x coordinate of the start of the line.
  * @y1: the y coordinate of the start of the line.
  * @x2: the x coordinate of the end of the line.
@@ -618,7 +658,7 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
  *                                                          NULL);
  * </programlisting></informalexample>
  * 
- * Returns: a new polyline item.
+ * Returns: (transfer full): a new polyline item.
  **/
 GooCanvasItem*
 goo_canvas_polyline_new_line          (GooCanvasItem *parent,
@@ -718,7 +758,7 @@ goo_canvas_polyline_create_start_arrow_path (GooCanvasPolyline *polyline,
 
   cairo_move_to (cr, arrow->start_arrow_coords[0],
 		 arrow->start_arrow_coords[1]);
-  for (i = 1; i < NUM_ARROW_POINTS; i++)
+  for (i = 1; i < GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS; i++)
     {
       cairo_line_to (cr, arrow->start_arrow_coords[i * 2],
 		     arrow->start_arrow_coords[i * 2 + 1]);
@@ -741,7 +781,7 @@ goo_canvas_polyline_create_end_arrow_path (GooCanvasPolyline *polyline,
 
   cairo_move_to (cr, arrow->end_arrow_coords[0],
 		 arrow->end_arrow_coords[1]);
-  for (i = 1; i < NUM_ARROW_POINTS; i++)
+  for (i = 1; i < GOO_CANVAS_POLYLINE_NUM_ARROW_POINTS; i++)
     {
       cairo_line_to (cr, arrow->end_arrow_coords[i * 2],
 		     arrow->end_arrow_coords[i * 2 + 1]);

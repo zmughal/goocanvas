@@ -1,4 +1,15 @@
 
+GooCanvas 2.0.1	(Oct 9 2011)
+===============
+
+ o Added GObject introspection support, though a few issues remain.
+   (e.g. cairo_transform_t hasn't been wrapped yet, so can't be used.)
+ o Fixed bounds calculation of text items in tables, when "height" is set.
+ o Fixed layout of center/right-aligned text in tables.
+ o Improved handling of image pixbuf sizes when using units other than pixels.
+ o Added GdkRGBA variants of all color properties, e.g. "stroke-color-gdk-rgba".
+
+
 GooCanvas 2.0.0	(Feb 27 2011)
 ===============
 
