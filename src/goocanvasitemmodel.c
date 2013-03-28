@@ -115,7 +115,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
       _goo_canvas_item_model_child_property_notify_context = &cpn_context;
 
       /**
-       * GooCanvasItemModel::child-added
+       * GooCanvasItemModel::child-added:
        * @model: the item model that received the signal.
        * @child_num: the index of the new child.
        *
@@ -132,7 +132,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      G_TYPE_INT);
 
       /**
-       * GooCanvasItemModel::child-moved
+       * GooCanvasItemModel::child-moved:
        * @model: the item model that received the signal.
        * @old_child_num: the old index of the child.
        * @new_child_num: the new index of the child.
@@ -150,7 +150,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      G_TYPE_INT, G_TYPE_INT);
 
       /**
-       * GooCanvasItemModel::child-removed
+       * GooCanvasItemModel::child-removed:
        * @model: the item model that received the signal.
        * @child_num: the index of the child that was removed.
        *
@@ -167,7 +167,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      G_TYPE_INT);
 
       /**
-       * GooCanvasItemModel::changed
+       * GooCanvasItemModel::changed:
        * @model: the item model that received the signal.
        * @recompute_bounds: if the bounds of the item need to be recomputed.
        *
@@ -184,7 +184,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      G_TYPE_BOOLEAN);
 
       /**
-       * GooCanvasItemModel::child-notify
+       * GooCanvasItemModel::child-notify:
        * @item: the item model that received the signal.
        * @pspec: (type GObject.ParamSpec): the #GParamSpec of the changed child property.
        *
@@ -202,7 +202,7 @@ goo_canvas_item_model_base_init (gpointer g_iface)
 		      G_TYPE_PARAM);
 
       /**
-       * GooCanvasItemModel::animation-finished
+       * GooCanvasItemModel::animation-finished:
        * @item: the item model that received the signal.
        * @stopped: if the animation was explicitly stopped.
        *

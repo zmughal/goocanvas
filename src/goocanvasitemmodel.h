@@ -20,7 +20,7 @@ G_BEGIN_DECLS
 
 
 /**
- * GooCanvasItemModel
+ * GooCanvasItemModel:
  *
  * #GooCanvasItemModel is a typedef used for objects that implement the
  * #GooCanvasItemModel interface.
@@ -33,7 +33,8 @@ G_BEGIN_DECLS
 
 
 /**
- * GooCanvasItemModelIface
+ * GooCanvasItemModelIface:
+ *
  * @get_n_children: returns the number of children of the model.
  * @get_child: returns the child at the given index.
  * @add_child: adds a child.

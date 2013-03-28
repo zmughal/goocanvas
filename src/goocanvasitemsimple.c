@@ -273,7 +273,7 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 						      G_PARAM_READWRITE));
 
   /**
-   * GooCanvasItemSimple:fill-color-gdk-rgba
+   * GooCanvasItemSimple:fill-color-gdk-rgba:
    *
    * The color to use to paint the interior of the item, specified as a GdkRGBA. To disable painting set the 'fill-pattern' property to NULL.
    *
@@ -322,7 +322,7 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 				    "tooltip");
 
   /**
-   * GooCanvasItemSimple:clip-path
+   * GooCanvasItemSimple:clip-path:
    *
    * The sequence of commands describing the clip path of the item, specified
    * as a string using the same syntax
@@ -330,7 +330,7 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
    * Graphics (SVG)</ulink> path element.
    */
   /**
-   * GooCanvasItemModelSimple:clip-path
+   * GooCanvasItemModelSimple:clip-path:
    *
    * The sequence of commands describing the clip path of the item, specified
    * as a string using the same syntax

@@ -247,7 +247,7 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      G_PARAM_READWRITE));
 
   /**
-   * GooCanvasGrid:horz-grid-line-color-gdk-rgba
+   * GooCanvasGrid:horz-grid-line-color-gdk-rgba:
    *
    * The color to use for the horizontal grid lines, specified as a GdkRGBA.
    *
@@ -282,7 +282,7 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      G_PARAM_READWRITE));
 
   /**
-   * GooCanvasGrid:vert-grid-line-color-gdk-rgba
+   * GooCanvasGrid:vert-grid-line-color-gdk-rgba:
    *
    * The color to use for the vertical grid lines, specified as a GdkRGBA.
    *
@@ -317,7 +317,7 @@ goo_canvas_grid_install_common_properties (GObjectClass *gobject_class)
 						      G_PARAM_READWRITE));
 
   /**
-   * GooCanvasGrid:border-color-gdk-rgba
+   * GooCanvasGrid:border-color-gdk-rgba:
    *
    * The color to use for the border, specified as a GdkRGBA.
    *

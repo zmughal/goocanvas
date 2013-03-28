@@ -34,7 +34,7 @@ typedef struct _GooCanvasPath       GooCanvasPath;
 typedef struct _GooCanvasPathClass  GooCanvasPathClass;
 
 /**
- * GooCanvasPath
+ * GooCanvasPath:
  *
  * The #GooCanvasPath-struct struct contains private data only.
  */
@@ -79,7 +79,7 @@ typedef struct _GooCanvasPathModel       GooCanvasPathModel;
 typedef struct _GooCanvasPathModelClass  GooCanvasPathModelClass;
 
 /**
- * GooCanvasPathModel
+ * GooCanvasPathModel:
  *
  * The #GooCanvasPathModel-struct struct contains private data only.
  */

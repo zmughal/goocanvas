@@ -420,7 +420,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
 						      G_PARAM_WRITABLE));
 
   /**
-   * GooCanvas:background-color-gdk-rgba
+   * GooCanvas:background-color-gdk-rgba:
    *
    * The color to use for the canvas background, specified as a GdkRGBA.
    *
@@ -463,7 +463,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
   /* Signals. */
 
   /**
-   * GooCanvas::item-created
+   * GooCanvas::item-created:
    * @canvas: the canvas.
    * @item: the new item.
    * @model: the item's model.

@@ -59,7 +59,7 @@ typedef struct _GooCanvasGrid       GooCanvasGrid;
 typedef struct _GooCanvasGridClass  GooCanvasGridClass;
 
 /**
- * GooCanvasGrid
+ * GooCanvasGrid:
  *
  * The #GooCanvasGrid-struct struct contains private data only.
  */
@@ -110,7 +110,7 @@ typedef struct _GooCanvasGridModel       GooCanvasGridModel;
 typedef struct _GooCanvasGridModelClass  GooCanvasGridModelClass;
 
 /**
- * GooCanvasGridModel
+ * GooCanvasGridModel:
  *
  * The #GooCanvasGridModel-struct struct contains private data only.
  */

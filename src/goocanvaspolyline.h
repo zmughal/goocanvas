@@ -14,7 +14,8 @@ G_BEGIN_DECLS
 
 
 /**
- * GooCanvasPoints
+ * GooCanvasPoints:
+ *
  * @coords: the coordinates of the points, in pairs.
  * @num_points: the number of points.
  * @ref_count: the reference count of the struct.
@@ -81,7 +82,7 @@ typedef struct _GooCanvasPolyline       GooCanvasPolyline;
 typedef struct _GooCanvasPolylineClass  GooCanvasPolylineClass;
 
 /**
- * GooCanvasPolyline
+ * GooCanvasPolyline:
  *
  * The #GooCanvasPolyline-struct struct contains private data only.
  */
@@ -134,7 +135,7 @@ typedef struct _GooCanvasPolylineModel       GooCanvasPolylineModel;
 typedef struct _GooCanvasPolylineModelClass  GooCanvasPolylineModelClass;
 
 /**
- * GooCanvasPolylineModel
+ * GooCanvasPolylineModel:
  *
  * The #GooCanvasPolylineModel-struct struct contains private data only.
  */

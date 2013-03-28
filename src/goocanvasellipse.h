@@ -33,7 +33,7 @@ typedef struct _GooCanvasEllipse       GooCanvasEllipse;
 typedef struct _GooCanvasEllipseClass  GooCanvasEllipseClass;
 
 /**
- * GooCanvasEllipse
+ * GooCanvasEllipse:
  *
  * The #GooCanvasEllipse-struct struct contains private data only.
  */
@@ -81,7 +81,7 @@ typedef struct _GooCanvasEllipseModel       GooCanvasEllipseModel;
 typedef struct _GooCanvasEllipseModelClass  GooCanvasEllipseModelClass;
 
 /**
- * GooCanvasEllipseModel
+ * GooCanvasEllipseModel:
  *
  * The #GooCanvasEllipseModel-struct struct contains private data only.
  */

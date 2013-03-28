@@ -65,7 +65,7 @@ typedef struct _GooCanvasItemModel  GooCanvasItemModel;
 
 
 /**
- * GooCanvasItem
+ * GooCanvasItem:
  *
  * #GooCanvasItem is a typedef used for objects that implement the
  * #GooCanvasItem interface.
@@ -77,7 +77,8 @@ typedef struct _GooCanvasItem       GooCanvasItem;
 
 
 /**
- * GooCanvasItemIface
+ * GooCanvasItemIface:
+ *
  * @get_canvas: returns the canvas the item is in.
  * @set_canvas: sets the canvas the item is in.
  * @get_n_children: returns the number of children of the item.

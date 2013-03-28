@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 typedef struct _GooCanvasClass  GooCanvasClass;
 
 /**
- * GooCanvas
+ * GooCanvas:
  *
  * The #GooCanvas-struct struct contains private data only.
  */
@@ -162,7 +162,8 @@ struct _GooCanvas
 };
 
 /**
- * GooCanvasClass
+ * GooCanvasClass:
+ *
  * @create_item: a virtual method that subclasses may override to create custom
  *  canvas items for item models.
  * @item_created: signal emitted when a new canvas item has been created.

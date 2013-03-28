@@ -25,7 +25,7 @@ typedef struct _GooCanvasWidget       GooCanvasWidget;
 typedef struct _GooCanvasWidgetClass  GooCanvasWidgetClass;
 
 /**
- * GooCanvasWidget
+ * GooCanvasWidget:
  *
  * The #GooCanvasWidget-struct struct contains private data only.
  */

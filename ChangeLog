@@ -1,3 +1,11 @@
+2013-03-28  Murray Cumming  <murrayc@murrayc.com>
+
+	Fix some introspection generation warnings.
+
+	Avoid gobject-introspection warnings about missing : in 
+	documentation comments.
+	Part of bug #696736
+
 2011-10-19  Jasper Lievisse Adriaanse <jasperla@gnome.org>
 
 	* configure.in: Bump pygobject dependency to 2.90.4. Bug #661487.

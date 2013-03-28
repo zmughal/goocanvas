@@ -28,7 +28,7 @@ extern GQuark goo_canvas_style_hint_metrics_id;
 
 
 /**
- * GooCanvasStyleProperty
+ * GooCanvasStyleProperty:
  * @id: the unique property identifier.
  * @value: the value of the property.
  *
@@ -54,7 +54,7 @@ typedef struct _GooCanvasStyle       GooCanvasStyle;
 typedef struct _GooCanvasStyleClass  GooCanvasStyleClass;
 
 /**
- * GooCanvasStyle
+ * GooCanvasStyle:
  * @parent: the parent style.
  * @properties: an array of #GooCanvasStyleProperty property settings.
  *

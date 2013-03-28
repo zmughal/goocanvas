@@ -29,7 +29,7 @@ typedef struct _GooCanvasGroupModel       GooCanvasGroupModel;
 typedef struct _GooCanvasGroupModelClass  GooCanvasGroupModelClass;
 
 /**
- * GooCanvasGroup
+ * GooCanvasGroup:
  *
  * The #GooCanvasGroup-struct struct contains private data only.
  */
@@ -72,7 +72,7 @@ GooCanvasItem* goo_canvas_group_new         (GooCanvasItem  *parent,
 
 
 /**
- * GooCanvasGroupModel
+ * GooCanvasGroupModel:
  *
  * The #GooCanvasGroupModel-struct struct contains private data only.
  */

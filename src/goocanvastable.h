@@ -60,7 +60,7 @@ typedef struct _GooCanvasTable       GooCanvasTable;
 typedef struct _GooCanvasTableClass  GooCanvasTableClass;
 
 /**
- * GooCanvasTable
+ * GooCanvasTable:
  *
  * The #GooCanvasTable-struct struct contains private data only.
  */
@@ -104,7 +104,7 @@ typedef struct _GooCanvasTableModel       GooCanvasTableModel;
 typedef struct _GooCanvasTableModelClass  GooCanvasTableModelClass;
 
 /**
- * GooCanvasTableModel
+ * GooCanvasTableModel:
  *
  * The #GooCanvasTableModel-struct struct contains private data only.
  */

@@ -35,7 +35,7 @@ typedef struct _GooCanvasImage       GooCanvasImage;
 typedef struct _GooCanvasImageClass  GooCanvasImageClass;
 
 /**
- * GooCanvasImage
+ * GooCanvasImage:
  *
  * The #GooCanvasImage-struct struct contains private data only.
  */
@@ -82,7 +82,7 @@ typedef struct _GooCanvasImageModel       GooCanvasImageModel;
 typedef struct _GooCanvasImageModelClass  GooCanvasImageModelClass;
 
 /**
- * GooCanvasImageModel
+ * GooCanvasImageModel:
  *
  * The #GooCanvasImageModel-struct struct contains private data only.
  */

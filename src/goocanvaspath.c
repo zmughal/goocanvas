@@ -59,7 +59,7 @@ static void
 goo_canvas_path_install_common_properties (GObjectClass *gobject_class)
 {
   /**
-   * GooCanvasPath:data
+   * GooCanvasPath:data:
    *
    * The sequence of path commands, specified as a string using the same syntax
    * as in the <ulink url="http://www.w3.org/Graphics/SVG/">Scalable Vector
