@@ -397,7 +397,7 @@ goo_canvas_item_base_init (gpointer g_iface)
       /**
        * GooCanvasItem::child-notify
        * @item: the item that received the signal.
-       * @pspec: (type GLib.ParamSpec): the #GParamSpec of the changed child property.
+       * @pspec: (type GObject.ParamSpec): the #GParamSpec of the changed child property.
        *
        * Emitted for each child property that has changed.
        * The signal's detail holds the property name. 
