@@ -1,3 +1,9 @@
+2013-07-18  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (paint_static_items, goo_canvas_draw): tried to
+	fix drawing code to work with new GTK+ 3.9 drawing code. I'm not sure
+	it is 100% there yet, but the demo seems OK.
+
 2013-03-28  Murray Cumming  <murrayc@murrayc.com>
 
 	Fix some introspection generation warnings.
