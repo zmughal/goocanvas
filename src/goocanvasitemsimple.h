@@ -18,7 +18,6 @@ G_BEGIN_DECLS
 
 /**
  * GooCanvasItemSimpleData:
- *
  * @style: the style to draw with.
  * @transform: the transformation matrix of the item, or %NULL.
  * @clip_path_commands: an array of #GooCanvasPathCommand specifying the clip
@@ -78,7 +77,6 @@ typedef struct _GooCanvasItemModelSimple       GooCanvasItemModelSimple;
 
 /**
  * GooCanvasItemSimple:
- *
  * @canvas: the canvas.
  * @parent: the parent item.
  * @model: the item's model, if it has one.
@@ -114,7 +112,6 @@ struct _GooCanvasItemSimple
 
 /**
  * GooCanvasItemSimpleClass:
- *
  * @simple_create_path: simple subclasses that draw basic shapes and paths only
  *  need to override this one method. It creates the path for the item.
  *  All updating, painting and hit-testing is provided automatically by the
@@ -206,7 +203,6 @@ typedef struct _GooCanvasItemModelSimpleClass  GooCanvasItemModelSimpleClass;
 
 /**
  * GooCanvasItemModelSimple:
- *
  * @parent: the parent model.
  * @simple_data: data used by the canvas item for viewing the model.
  *

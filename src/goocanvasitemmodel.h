@@ -34,7 +34,6 @@ G_BEGIN_DECLS
 
 /**
  * GooCanvasItemModelIface:
- *
  * @get_n_children: returns the number of children of the model.
  * @get_child: returns the child at the given index.
  * @add_child: adds a child.

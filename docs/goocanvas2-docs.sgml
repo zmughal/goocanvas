@@ -57,5 +57,6 @@
   <chapter>
     <title>Miscellaneous</title>
     <xi:include href="xml/goocanvasutils.xml"/>
+    <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
   </chapter>
 </book>

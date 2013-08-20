@@ -163,7 +163,6 @@ struct _GooCanvas
 
 /**
  * GooCanvasClass:
- *
  * @create_item: a virtual method that subclasses may override to create custom
  *  canvas items for item models.
  * @item_created: signal emitted when a new canvas item has been created.

@@ -15,7 +15,6 @@ G_BEGIN_DECLS
 
 /**
  * GooCanvasPoints:
- *
  * @coords: the coordinates of the points, in pairs.
  * @num_points: the number of points.
  * @ref_count: the reference count of the struct.

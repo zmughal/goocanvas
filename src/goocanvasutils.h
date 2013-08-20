@@ -18,7 +18,6 @@ G_BEGIN_DECLS
 
 /**
  * GooCanvasPointerEvents:
- *
  * @GOO_CANVAS_EVENTS_VISIBLE_MASK: a mask indicating that the item only
  *  receives events when it is visible.
  * @GOO_CANVAS_EVENTS_PAINTED_MASK: a mask indicating that the item only
@@ -68,7 +67,6 @@ typedef enum
 
 /**
  * GooCanvasItemVisibility:
- *
  * @GOO_CANVAS_ITEM_HIDDEN: the item is invisible, and is not allocated any
  *  space in layout container items such as #GooCanvasTable.
  * @GOO_CANVAS_ITEM_INVISIBLE: the item is invisible, but it is still allocated
@@ -94,7 +92,6 @@ typedef enum
 
 /**
  * GooCanvasPathCommandType:
- *
  * @GOO_CANVAS_PATH_MOVE_TO: move to the given point.
  * @GOO_CANVAS_PATH_CLOSE_PATH: close the current path, drawing a line from the
  *  current position to the start of the path.
@@ -144,7 +141,6 @@ typedef enum
 
 /**
  * GooCanvasAnchorType:
- *
  * @GOO_CANVAS_ANCHOR_CENTER: the anchor is in the center of the object.
  * @GOO_CANVAS_ANCHOR_NORTH: the anchor is at the top of the object, centered horizontally.
  * @GOO_CANVAS_ANCHOR_NORTH_WEST: the anchor is at the top-left of the object.
@@ -240,7 +236,6 @@ typedef struct _GooCanvasLineDash GooCanvasLineDash;
 
 /**
  * GooCanvasLineDash:
- *
  * @ref_count: the reference count of the struct.
  * @num_dashes: the number of dashes and gaps between them.
  * @dashes: the sizes of each dash and gap.
