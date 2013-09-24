@@ -12,7 +12,7 @@ INCLUDES = \
 
 lib_LTLIBRARIES = libgoocanvas-2.0.la
 
-libgoocanvas_2_0_la_LIBADD = @PACKAGE_LIBS@ $(INTLLIBS)
+libgoocanvas_2_0_la_LIBADD = @PACKAGE_LIBS@ $(INTLLIBS) -lm
 
 if PLATFORM_WIN32
 no_undefined = -no-undefined
