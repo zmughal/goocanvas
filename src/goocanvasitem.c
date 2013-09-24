@@ -846,7 +846,7 @@ goo_canvas_item_remove (GooCanvasItem *item)
 /**
  * goo_canvas_item_raise:
  * @item: an item.
- * @above: the item to raise @item above, or %NULL to raise @item to the top
+ * @above: (allow-none): the item to raise @item above, or %NULL to raise @item to the top
  *  of the stack.
  * 
  * Raises an item in the stacking order.
@@ -889,7 +889,7 @@ goo_canvas_item_raise          (GooCanvasItem *item,
 /**
  * goo_canvas_item_lower:
  * @item: an item.
- * @below: the item to lower @item below, or %NULL to lower @item to the
+ * @below: (allow-none): the item to lower @item below, or %NULL to lower @item to the
  *  bottom of the stack.
  * 
  * Lowers an item in the stacking order.

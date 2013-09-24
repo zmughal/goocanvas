@@ -1,5 +1,10 @@
 2013-09-24  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasitem.c: 
+	* src/goocanvasitemmodel.c: added a few (allow-none) flags. #677013.
+
+2013-09-24  Damon Chaplin  <damon@gnome.org>
+
 	* src/Makefile.am: added -lm to LIBADD. Bug #671766.
 
 2013-08-20  Damon Chaplin  <damon@gnome.org>

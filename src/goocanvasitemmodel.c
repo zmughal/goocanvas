@@ -506,7 +506,7 @@ goo_canvas_item_model_remove         (GooCanvasItemModel *model)
 /**
  * goo_canvas_item_model_raise:
  * @model: an item model.
- * @above: the item model to raise @model above, or %NULL to raise @model to the top
+ * @above: (allow-none): the item model to raise @model above, or %NULL to raise @model to the top
  *  of the stack.
  * 
  * Raises a model in the stacking order.
@@ -549,7 +549,7 @@ goo_canvas_item_model_raise          (GooCanvasItemModel *model,
 /**
  * goo_canvas_item_model_lower:
  * @model: an item model.
- * @below: the item model to lower @model below, or %NULL to lower @model to the
+ * @below: (allow-none): the item model to lower @model below, or %NULL to lower @model to the
  *  bottom of the stack.
  * 
  * Lowers a model in the stacking order.
@@ -611,7 +611,7 @@ goo_canvas_item_model_get_transform  (GooCanvasItemModel *model,
 /**
  * goo_canvas_item_model_set_transform:
  * @model: an item model.
- * @transform: the new transformation matrix, or %NULL to reset the
+ * @transform: (allow-none): the new transformation matrix, or %NULL to reset the
  *  transformation to the identity matrix.
  * 
  * Sets the transformation matrix of an item model.
