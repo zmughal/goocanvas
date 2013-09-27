@@ -13,9 +13,16 @@ on_widget_draw (GtkWidget *widget,
   g_print ("%s received 'draw' signal\n", item_id);
 
   gtk_widget_get_allocation (widget, &allocation);
+
+  cairo_rectangle (cr, 0, 0,
+		   allocation.width, allocation.height);
+  cairo_stroke (cr);
+
+#if 0
   gtk_paint_box (gtk_widget_get_style (widget), cr, GTK_STATE_NORMAL,
 		 GTK_SHADOW_IN, widget, NULL, 0, 0,
 		 allocation.width, allocation.height);
+#endif
 
   return FALSE;
 }

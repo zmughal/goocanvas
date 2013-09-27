@@ -1,3 +1,17 @@
+2013-09-27  Damon Chaplin  <damon@gnome.org>
+
+	* demo/demo-grabs.c (on_widget_draw): draw simple rects for the widgets
+	as the old code using gtk_paint_box() doesn't seem to work any more.
+
+2013-09-27  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasutils.c: added introspection flags, so it now seems to
+	work OK with python at least.
+
+	* bindings/python/demo.py (setup_canvas): added line dash to a path.
+
+	* demo/demo.c (setup_rectangles): added line dash to one rect.
+
 2013-09-24  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasitem.c: 
