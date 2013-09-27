@@ -238,7 +238,7 @@ goo_canvas_item_simple_install_common_properties (GObjectClass *gobject_class)
 						      G_PARAM_READWRITE));
 
   /**
-   * GooCanvasItemSimple:stroke-color-gdk-rgba
+   * GooCanvasItemSimple:stroke-color-gdk-rgba:
    *
    * The color to use for the item's perimeter, specified as a GdkRGBA. To disable painting set the 'stroke-pattern' property to NULL.
    *

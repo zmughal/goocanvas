@@ -14,7 +14,7 @@ G_BEGIN_DECLS
 
 
 /**
- * GooCanvasAnimateType
+ * GooCanvasAnimateType:
  * @GOO_CANVAS_ANIMATE_FREEZE: the item remains in the final position.
  * @GOO_CANVAS_ANIMATE_RESET: the item is moved back to the initial position.
  * @GOO_CANVAS_ANIMATE_RESTART: the animation is restarted from the initial
@@ -35,7 +35,7 @@ typedef enum
 
 
 /**
- * GooCanvasBounds
+ * GooCanvasBounds:
  * @x1: the left edge.
  * @y1: the top edge.
  * @x2: the right edge.
