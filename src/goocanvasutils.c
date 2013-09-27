@@ -413,8 +413,8 @@ goo_canvas_line_dash_new (gint num_dashes,
 /**
  * goo_canvas_line_dash_newv:
  * @num_dashes: the number of dashes and gaps in the pattern.
- * @dashes: a g_new-allocated vector of doubles, the length of each
- * dash and gap.
+ * @dashes: (array length=num_dashes) (transfer full): a g_new-allocated vector
+ * of doubles, the length of each dash and gap.
  * 
  * Creates a new dash pattern.  Takes ownership of the @dashes vector.
  * 

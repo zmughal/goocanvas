@@ -78,6 +78,7 @@ def setup_canvas(c):
     #Test the bezier curve commands: CcSsQqTt. */
     GooCanvas.CanvasPath (parent=root,
                   data="M20,100 C20,50 100,50 100,100 S180,150 180,100",
+                  line_dash=GooCanvas.CanvasLineDash.newv((10.0, 10.0)),
                   )
 
     GooCanvas.CanvasPath (parent=root,
