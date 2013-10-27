@@ -2718,23 +2718,8 @@ paint_static_items (GooCanvas       *canvas,
 		    GooCanvasBounds *clip_bounds)
 {
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
-  guint major_gtk_version, minor_gtk_version;
-  gboolean gtk_3_9 = FALSE;
-
-  major_gtk_version = gtk_get_major_version ();
-  minor_gtk_version = gtk_get_minor_version ();
-  if (major_gtk_version > 3
-      || (major_gtk_version == 3 && minor_gtk_version >= 9))
-    gtk_3_9 = TRUE;
 
   cairo_save (cr);
-  if (!gtk_3_9)
-    cairo_identity_matrix (cr);
-  /* FIXME: I'm not sure what we should be doing with 3.9. It doesn't seem
-     to flicker anyway. Maybe we aren't using X for scrolling windows any more
-     so we don't need to worry about redrawing before scrolling etc. */
-  if (!gtk_3_9)
-    cairo_translate (cr, -priv->static_window_x, -priv->static_window_y);
   /* FIXME: Uses pixels at present - use canvas units instead? */
   goo_canvas_item_paint (priv->static_root_item, cr, clip_bounds, 1.0);
   cairo_restore (cr);
@@ -2749,14 +2734,6 @@ goo_canvas_draw (GtkWidget      *widget,
   GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GooCanvasBounds clip_bounds, bounds, root_item_bounds;
   double x1, y1, x2, y2;
-  guint major_gtk_version, minor_gtk_version;
-  gboolean gtk_3_9 = FALSE;
-
-  major_gtk_version = gtk_get_major_version ();
-  minor_gtk_version = gtk_get_minor_version ();
-  if (major_gtk_version > 3
-      || (major_gtk_version == 3 && minor_gtk_version >= 9))
-    gtk_3_9 = TRUE;
 
   if (!gtk_cairo_should_draw_window (cr, canvas->canvas_window))
     return FALSE;
@@ -2775,11 +2752,12 @@ goo_canvas_draw (GtkWidget      *widget,
   cairo_clip_extents (cr, &clip_bounds.x1, &clip_bounds.y1,
 		      &clip_bounds.x2, &clip_bounds.y2);
 
-  cairo_save (cr);
+#if 0
+  g_print ("In goo_canvas_draw extents: %g,%g - %g,%g\n",
+	   clip_bounds.x1, clip_bounds.y1, clip_bounds.x2, clip_bounds.y2);
+#endif
 
-  /* Get rid of the translation passed in by GTK+. We use our own. */
-  if (!gtk_3_9)
-    cairo_identity_matrix (cr);
+  cairo_save (cr);
 
   /* Set our default drawing settins - antialias, line width. */
   goo_canvas_setup_cairo_context (canvas, cr);
@@ -2801,13 +2779,7 @@ goo_canvas_draw (GtkWidget      *widget,
   goo_canvas_convert_from_window_pixels (canvas, &bounds.x1, &bounds.y1);
   goo_canvas_convert_from_window_pixels (canvas, &bounds.x2, &bounds.y2);
 
-  if (gtk_3_9)
-    cairo_translate (cr, priv->window_x, priv->window_y);
-
-  /* Get rid of the current clip, as it uses the wrong coordinate space.
-     FIXME: Maybe we should always set a clip with the new GTK+ drawing code. */
-  if (!gtk_3_9)
-    cairo_reset_clip (cr);
+  cairo_translate (cr, priv->window_x, priv->window_y);
 
   /* Translate it to use the canvas pixel offsets (used when the canvas is
      smaller than the window and the anchor isn't set to NORTH_WEST). */
