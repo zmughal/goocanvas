@@ -1,5 +1,9 @@
 2013-11-01  Damon Chaplin  <damon@gnome.org>
 
+	* .gitignore: added gtk-doc.m4
+
+2013-11-01  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c: added doc about disabling mouse-wheel scrolling.
 	#617900.
 

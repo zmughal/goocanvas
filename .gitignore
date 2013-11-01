@@ -38,6 +38,7 @@ Makefile.in
 /goocanvas.pc
 /goocanvas-2.0.pc
 /gtk-doc.make
+/gtk-doc.m4
 /install-sh
 /libtool
 /ltmain.sh
