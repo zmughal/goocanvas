@@ -2071,6 +2071,10 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
       new_window_x = -gtk_adjustment_get_value (canvas->hadjustment);
       new_window_y = -gtk_adjustment_get_value (canvas->vadjustment);
 
+      /* NOTE: GTK+ 3.0 always redraws the entire window when scrolling, so
+	 we don't need to do this. We could possibly use something like
+	 GtkPixelCache in future to speed up scrolling, if it is made public. */
+#if 0
       if (canvas->redraw_when_scrolled)
 	{
 	  /* Map the temporary window to stop the canvas window being scrolled.
@@ -2085,6 +2089,7 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 	     from being "dragged" when the window is scrolled. */
 	  redraw_static_items_at_position (canvas, new_window_x, new_window_y);
 	}
+#endif
 
       /* Move the window to the new position. */
       priv->window_x = priv->static_window_x = new_window_x;
@@ -2092,6 +2097,8 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
 
       gdk_window_move (canvas->canvas_window, new_window_x, new_window_y);
 
+      /* NOTE: As above, this isn't useful with GTK+ 3.0. */
+#if 0
       if (canvas->redraw_when_scrolled)
 	{
 	  /* Unmap the temporary window, causing the entire canvas to be
@@ -2102,13 +2109,14 @@ goo_canvas_adjustment_value_changed (GtkAdjustment *adjustment,
       else
 	{
 	  /* Process updates here for smoother scrolling. */
-	  /* FIXME: This causes flicker. Do we need it? */
+	  /* NOTE: This was used here for GTK+ 2.x. */
 	  /*gdk_window_process_updates (canvas->canvas_window, TRUE);*/
 
 	  /* Now ensure the static items are redrawn in their new position. */
 	  redraw_static_items_at_position (canvas, priv->window_x,
 					   priv->window_y);
 	}
+#endif
 
       /* Notify any accessibility modules that the view has changed. */
       accessible = gtk_widget_get_accessible (GTK_WIDGET (canvas));
@@ -2376,6 +2384,7 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
      scrolling is unnecessary and really ugly.
      FIXME: There is a possible issue with keyboard focus/input methods here,
      since hidden windows can't have the keyboard focus. */
+  /* NOTE: We don't seem to need this with GTK+ 3.0. */
 #if 0
   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
     gdk_window_show (canvas->tmp_window);
@@ -2400,6 +2409,7 @@ goo_canvas_set_scale_internal	(GooCanvas *canvas,
 
   /* Now hide the temporary window, so the canvas window will get a draw
      signal. */
+  /* NOTE: We don't seem to need this with GTK+ 3.0. */
 #if 0
   if (gtk_widget_get_mapped (GTK_WIDGET (canvas)))
     gdk_window_hide (canvas->tmp_window);
@@ -2743,8 +2753,6 @@ goo_canvas_draw (GtkWidget      *widget,
       canvas->before_initial_draw = FALSE;
       return FALSE;
     }
-
-  /* TODO: Need to worry about child widgets? */
 
   /* The clip extents tell us which parts of the window need to be drawn,
      in pixels, where (0,0) is the top-left of the widget window (not the

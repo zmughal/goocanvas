@@ -1,15 +1,19 @@
+2013-11-01  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_adjustment_value_changed): disabled
+	the code that handled "redraw-when-scrolled" and tried to optimise
+	the drawing of static items. GTK+ 3.0 always redraws everything when
+	a window is scrolled, so these aren't needed.
+
+	We could possibly use GtkPixelCache or similar in future, to try to
+	optimise scrolling.
+
 2013-10-25  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (paint_static_items, goo_canvas_draw): another
 	attempt at fixing the drawing code. Now it uses the transform & clip
 	from the given cairo_t and the code seems to work OK for both the old
 	GTK+ and GTK+ 3.10. Bug #700674.
-
-	The only problem now is the "Large Items" page in the demo, which
-	only works up to ~23 bit int window size rather than 31 bit.
-
-	Note also that X isn't used for scrolling in GTK+ any more, and if
-	we want fast scrolling there is a new method used in GTK+.
 
 2013-09-27  Damon Chaplin  <damon@gnome.org>
 
