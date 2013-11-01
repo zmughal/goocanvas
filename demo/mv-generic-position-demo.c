@@ -186,7 +186,7 @@ create_window (GooCanvasItemModel *model)
   gtk_widget_show (window);
   g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
-  vbox = gtk_vbox_new (FALSE, 4);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);

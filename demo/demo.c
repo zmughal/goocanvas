@@ -41,7 +41,7 @@ static void
 write_pdf_clicked (GtkWidget *button, GooCanvas *canvas)
 {
   cairo_surface_t *surface;
-  GooCanvasBounds bounds;
+  GooCanvasBounds bounds G_GNUC_UNUSED;
   cairo_t *cr;
 
   g_print ("In write_pdf_clicked\n");
@@ -364,7 +364,7 @@ on_button_press (GooCanvasItem *item,
 				   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 				   fleur,
 				   event->time);
-	  gdk_cursor_unref (fleur);
+	  g_object_unref (fleur);
 	  dragging = TRUE;
 	}
       break;
@@ -471,7 +471,7 @@ create_canvas_primitives ()
 	GtkAdjustment *adj;
 	GSList *group = NULL;
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
 
@@ -479,7 +479,7 @@ create_canvas_primitives ()
 	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
@@ -542,7 +542,7 @@ create_canvas_primitives ()
 	gtk_widget_show (w);
 
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
@@ -601,7 +601,7 @@ create_canvas_primitives ()
 			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
@@ -780,7 +780,7 @@ setup_heading (GooCanvasItem *root, char *text, int pos)
 static void
 setup_divisions (GooCanvasItem *root)
 {
-  GooCanvasItem *group, *item;
+  GooCanvasItem *group, *item G_GNUC_UNUSED;
 
   group = goo_canvas_group_new (root, NULL);
   goo_canvas_item_translate (group, 2, 2);
@@ -951,7 +951,7 @@ setup_ellipses (GooCanvasItem *root)
 static void
 polish_diamond (GooCanvasItem *root)
 {
-  GooCanvasItem *group, *item;
+  GooCanvasItem *group, *item G_GNUC_UNUSED;
   int i, j;
   double a, x1, y1, x2, y2;
 
@@ -1484,7 +1484,7 @@ test_simple_transforms (GooCanvasItem *root)
 static void
 setup_grids (GooCanvasItem *root)
 {
-  GooCanvasItem *item;
+  GooCanvasItem *item G_GNUC_UNUSED;
 
   item = goo_canvas_grid_new (root, 80, 310, 90, 90, 10, 10, 5, 5,
 			      "stroke-color", "yellow",
@@ -1625,7 +1625,7 @@ create_window ()
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window;
+  GtkWidget *window G_GNUC_UNUSED;
 
   gtk_init (&argc, &argv);
 

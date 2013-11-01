@@ -288,7 +288,7 @@ on_button_press (GooCanvasItem *item,
 			   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 			   fleur,
 			   event->time);
-  gdk_cursor_unref (fleur);
+  g_object_unref (fleur);
 
   return TRUE;
 }
@@ -411,7 +411,7 @@ create_canvas_arrowhead (void)
 	GtkWidget *canvas;
 	GooCanvasItem *root, *item;
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
 

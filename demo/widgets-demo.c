@@ -281,12 +281,12 @@ main (int argc, char *argv[])
   g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
 		    NULL);
 
-  vbox = gtk_vbox_new (FALSE, 4);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
-  hbox = gtk_hbox_new (FALSE, 4);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
@@ -315,7 +315,7 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (change_widget_clicked), NULL);
 
-  hbox = gtk_hbox_new (FALSE, 4);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
@@ -394,7 +394,7 @@ main (int argc, char *argv[])
 
   /* Create a vbox item with several child entry widgets to check focus
      traversal.*/
-  vbox = gtk_vbox_new (FALSE, 4);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 
   entry = gtk_entry_new ();
   gtk_widget_show (entry);

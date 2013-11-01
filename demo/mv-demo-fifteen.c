@@ -109,8 +109,8 @@ piece_button_press (GooCanvasItem *item,
 {
         GooCanvas *canvas;
 	GooCanvasItemModel **board;
-	GooCanvasItemModel *model, *text;
-	int num, pos, newpos;
+	GooCanvasItemModel *model, *text G_GNUC_UNUSED;
+	int num G_GNUC_UNUSED, pos, newpos;
 	int x, y;
 	double dx = 0.0, dy = 0.0;
 	int move;
@@ -250,11 +250,11 @@ create_canvas_fifteen (void)
 	GtkWidget *canvas;
 	GtkWidget *button;
 	GooCanvasItemModel **board;
-	GooCanvasItemModel *root, *rect, *text;
+	GooCanvasItemModel *root, *rect G_GNUC_UNUSED, *text;
 	int i, x, y;
 	char buf[20];
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
 

@@ -1,5 +1,9 @@
 2013-11-01  Damon Chaplin  <damon@gnome.org>
 
+	* demo/*.c: fixed a lot of warnings.
+
+2013-11-01  Damon Chaplin  <damon@gnome.org>
+
 	* .gitignore: added gtk-doc.m4
 
 2013-11-01  Damon Chaplin  <damon@gnome.org>

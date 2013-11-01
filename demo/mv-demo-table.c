@@ -383,7 +383,7 @@ create_table_page (void)
   GtkWidget *vbox, *scrolled_win;
   GooCanvasItemModel *root, *table;
 
-  vbox = gtk_vbox_new (FALSE, 4);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_widget_show (vbox);
 

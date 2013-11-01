@@ -306,7 +306,7 @@ on_button_press (GooCanvasItem *item,
 				   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 				   fleur,
 				   event->time);
-	  gdk_cursor_unref (fleur);
+	  g_object_unref (fleur);
 	  dragging = TRUE;
 	}
       break;
@@ -395,7 +395,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 	GtkAdjustment *adj;
 	GSList *group = NULL;
 
-	vbox = gtk_vbox_new (FALSE, 4);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
 
@@ -403,7 +403,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
@@ -495,7 +495,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
-	hbox = gtk_hbox_new (FALSE, 4);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 	gtk_widget_show (hbox);
 
@@ -738,7 +738,7 @@ create_stipple (const char *color_name, guchar stipple_data[16])
 static void
 setup_rectangles (GooCanvasItemModel *root)
 {
-  GooCanvasItemModel *item;
+  GooCanvasItemModel *item G_GNUC_UNUSED;
   cairo_pattern_t *pattern;
   static guchar stipple_data[16] = {
     0, 0, 0, 255,   0, 0, 0, 0,   0, 0, 0, 0,     0, 0, 0, 255
@@ -785,7 +785,7 @@ setup_rectangles (GooCanvasItemModel *root)
 static void
 setup_ellipses (GooCanvasItemModel *root)
 {
-  GooCanvasItemModel *ellipse1, *ellipse3;
+  GooCanvasItemModel *ellipse1 G_GNUC_UNUSED, *ellipse3 G_GNUC_UNUSED;
   cairo_pattern_t *pattern;
   static guchar stipple_data[16] = {
     0, 0, 0, 255,   0, 0, 0, 0,
@@ -866,7 +866,7 @@ make_hilbert (GooCanvasItemModel *root)
   char hilbert[] = "urdrrulurulldluuruluurdrurddldrrruluurdrurddldrddlulldrdldrrurd";
   char *c;
   double *pp, *p;
-  GooCanvasItemModel *item;
+  GooCanvasItemModel *item G_GNUC_UNUSED;
   GooCanvasPoints *points;
   cairo_pattern_t *pattern;
   static guchar stipple_data[16] = {
@@ -917,7 +917,7 @@ make_hilbert (GooCanvasItemModel *root)
 static void
 setup_lines (GooCanvasItemModel *root)
 {
-  GooCanvasItemModel *polyline1, *polyline2, *polyline3, *polyline4, *polyline5;
+  GooCanvasItemModel *polyline1 G_GNUC_UNUSED, *polyline2 G_GNUC_UNUSED, *polyline3 G_GNUC_UNUSED, *polyline4 G_GNUC_UNUSED, *polyline5 G_GNUC_UNUSED;
 
   polish_diamond (root);
   make_hilbert (root);
@@ -978,7 +978,7 @@ setup_lines (GooCanvasItemModel *root)
 static void
 setup_polygons (GooCanvasItemModel *root)
 {
-  GooCanvasItemModel *polyline1, *polyline2;
+  GooCanvasItemModel *polyline1 G_GNUC_UNUSED, *polyline2 G_GNUC_UNUSED;
   GooCanvasPoints *points;
   cairo_pattern_t *pattern;
   static guchar stipple_data[16] = {
@@ -1044,7 +1044,7 @@ setup_polygons (GooCanvasItemModel *root)
 static GooCanvasItemModel *
 make_anchor (GooCanvasItemModel *root, double x, double y)
 {
-  GooCanvasItemModel *group, *item;
+  GooCanvasItemModel *group, *item G_GNUC_UNUSED;
   cairo_matrix_t transform = { 0.8, 0.2, -0.3, 0.5, x, y };
 
   group = goo_canvas_group_model_new (root, NULL);
@@ -1178,7 +1178,7 @@ plant_flower (GooCanvasItemModel *root,
 {
   cairo_pattern_t *pattern;
   cairo_surface_t *surface;
-  GooCanvasItemModel *image;
+  GooCanvasItemModel *image G_GNUC_UNUSED;
   double w, h;
 
   surface = cairo_image_surface_create_from_png ("flower.png");
@@ -1202,7 +1202,7 @@ static void
 setup_images (GooCanvasItemModel *root)
 {
   GdkPixbuf *im;
-  GooCanvasItemModel *image;
+  GooCanvasItemModel *image G_GNUC_UNUSED;
 
   im = gdk_pixbuf_new_from_file ("toroid.png", NULL);
 
@@ -1230,7 +1230,7 @@ setup_images (GooCanvasItemModel *root)
 static GooCanvasItemModel*
 create_static_model ()
 {
-  GooCanvasItemModel *static_root, *group, *item;
+  GooCanvasItemModel *static_root, *group, *item G_GNUC_UNUSED;
 
   static_root = goo_canvas_group_model_new (NULL, NULL);
 
@@ -1310,7 +1310,7 @@ test_simple_transforms (GooCanvasItemModel *root)
 static void
 setup_grids (GooCanvasItemModel *root)
 {
-  GooCanvasItemModel *item;
+  GooCanvasItemModel *item G_GNUC_UNUSED;
 
   item = goo_canvas_grid_model_new (root, 80, 310, 90, 90, 10, 10, 5, 5,
 				    "stroke-color", "yellow",
@@ -1447,7 +1447,7 @@ int
 main (int argc, char *argv[])
 {
   GooCanvasItemModel *model, *static_model;
-  GtkWidget *window;
+  GtkWidget *window G_GNUC_UNUSED;
 
   gtk_init (&argc, &argv);
 

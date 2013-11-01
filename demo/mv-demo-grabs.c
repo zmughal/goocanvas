@@ -14,9 +14,10 @@ on_widget_draw (GtkWidget *widget,
   g_print ("%s received 'draw' signal\n", item_id);
 
   gtk_widget_get_allocation (widget, &allocation);
-  gtk_paint_box (gtk_widget_get_style (widget), cr, GTK_STATE_NORMAL,
-		 GTK_SHADOW_IN, widget, NULL, 0, 0,
-		 allocation.width, allocation.height);
+
+  cairo_rectangle (cr, 0, 0,
+		   allocation.width, allocation.height);
+  cairo_stroke (cr);
 
   return FALSE;
 }
@@ -47,11 +48,13 @@ on_widget_motion_notify (GtkWidget *widget,
 			 GdkEventMotion *event,
 			 char *item_id)
 {
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
+
   g_print ("%s received 'motion-notify' signal (window: %p)\n", item_id,
 	   event->window);
 
-  if (event->is_hint)
-    gdk_window_get_pointer (event->window, NULL, NULL, NULL);
+  if (event->is_hint && device)
+    gdk_window_get_device_position (event->window, device, NULL, NULL, NULL);
 
   return TRUE;
 }
@@ -62,9 +65,11 @@ on_widget_button_press (GtkWidget *widget,
 			GdkEventButton *event,
 			char *item_id)
 {
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
+
   g_print ("%s received 'button-press' signal\n", item_id);
 
-  if (strstr (item_id, "explicit"))
+  if (device && strstr (item_id, "explicit"))
     {
       GdkGrabStatus status;
       GdkEventMask mask = GDK_BUTTON_PRESS_MASK
@@ -74,8 +79,9 @@ on_widget_button_press (GtkWidget *widget,
 	| GDK_ENTER_NOTIFY_MASK
 	| GDK_LEAVE_NOTIFY_MASK;
 
-      status = gdk_pointer_grab (gtk_widget_get_window (widget), FALSE, mask, FALSE, NULL,
-				 event->time);
+      status = gdk_device_grab (device, gtk_widget_get_window (widget),
+				GDK_OWNERSHIP_NONE, FALSE, mask,
+				NULL, event->time);
       if (status == GDK_GRAB_SUCCESS)
 	g_print ("grabbed pointer\n");
       else
@@ -91,14 +97,13 @@ on_widget_button_release (GtkWidget *widget,
 			  GdkEventButton *event,
 			  char *item_id)
 {
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
+
   g_print ("%s received 'button-release' signal\n", item_id);
 
-  if (strstr (item_id, "explicit"))
+  if (device && strstr (item_id, "explicit"))
     {
-      GdkDisplay *display;
-
-      display = gtk_widget_get_display (widget);
-      gdk_display_pointer_ungrab (display, event->time);
+      gdk_device_ungrab (device, event->time);
       g_print ("released pointer grab\n");
     }
 

@@ -9,7 +9,7 @@ static GooCanvasItemModel *path1;
 static GooCanvasItemModel*
 create_canvas_model (void)
 {
-  GooCanvasItemModel *root, *path;
+  GooCanvasItemModel *root, *path G_GNUC_UNUSED;
 
   root = goo_canvas_group_model_new (NULL, NULL);
 
@@ -128,11 +128,11 @@ create_paths_page (void)
   GtkWidget *vbox, *hbox, *w, *scrolled_win, *canvas;
   GooCanvasItemModel *root;
 
-  vbox = gtk_vbox_new (FALSE, 4);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_widget_show (vbox);
 
-  hbox = gtk_hbox_new (FALSE, 4);
+  hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
