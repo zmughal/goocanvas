@@ -1,5 +1,10 @@
 2013-11-01  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvas.c: added doc about disabling mouse-wheel scrolling.
+	#617900.
+
+2013-11-01  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (goo_canvas_adjustment_value_changed): disabled
 	the code that handled "redraw-when-scrolled" and tried to optimise
 	the drawing of static items. GTK+ 3.0 always redraws everything when

@@ -91,6 +91,13 @@
  *  }
  *
  * </programlisting></informalexample>
+ *
+ * A #GooCanvas widget is usually placed inside a #GtkScrolledWindow widget
+ * and can be scrolled with the scrollbar or with the scroll wheel on a mouse.
+ * To disable mouse wheel scrolling, do this:
+ * <informalexample><programlisting>
+ *  g_signal_connect (canvas, "scroll-event", G_CALLBACK (gtk_true), NULL);
+ * </programlisting></informalexample>
  */
 #include <config.h>
 #include <math.h>
