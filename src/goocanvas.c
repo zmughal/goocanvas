@@ -1828,6 +1828,9 @@ request_static_redraw (GooCanvas             *canvas,
    position, but redraws them at their given new position.
    We redraw one item at a time to avoid GTK+ merging the rectangles into
    one big one. */
+/* NOTE: GTK+ 3.0 always redraws the entire window when scrolling, so
+   we don't need to do this. */
+#if 0
 static void
 redraw_static_items_at_position (GooCanvas *canvas,
 				 gint       x,
@@ -1867,6 +1870,7 @@ redraw_static_items_at_position (GooCanvas *canvas,
       priv->static_window_y = window_y_copy;
     }
 }
+#endif
 
 
 /* This makes sure the canvas is all set up correctly, i.e. the scrollbar
@@ -3205,14 +3209,15 @@ goo_canvas_motion          (GtkWidget      *widget,
 			    GdkEventMotion *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
 
   if (event->window != canvas->canvas_window)
     return FALSE;
 
-  /* For motion notify hint events we need to call gdk_window_get_pointer()
-     to let X know we're ready for another pointer event. */
-  if (event->is_hint)
-    gdk_window_get_pointer (event->window, NULL, NULL, NULL);
+  /* For motion notify hint events we need to request the position to let X
+     know we're ready for another event. */
+  if (event->is_hint && device)
+    gdk_window_get_device_position (event->window, device, NULL, NULL, NULL);
 
   update_pointer_item (canvas, (GdkEvent*) event);
 

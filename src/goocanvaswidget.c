@@ -214,7 +214,7 @@ goo_canvas_widget_get_widget_size (GooCanvasWidget *witem,
     {
       /* Get the widget's requested size, if we need it. */
       if (witem->width < 0 || witem->height < 0)
-	gtk_widget_size_request (witem->widget, &requisition);
+	gtk_widget_get_preferred_size (witem->widget, NULL, &requisition);
 
       *width = witem->width < 0 ? requisition.width : witem->width;
       *height = witem->height < 0 ? requisition.height : witem->height;
