@@ -435,6 +435,24 @@ goo_canvas_line_dash_newv (gint    num_dashes,
   return dash;
 }
 
+
+/**
+ * goo_canvas_line_dash_set_offset:
+ * @dash: a #GooCanvasLinedash.
+ * @dash_offset: the start offset into the dash pattern.
+ * 
+ * Sets the start offset into the dash pattern.
+ * 
+ * Since: 2.0.2
+ **/
+void
+goo_canvas_line_dash_set_offset (GooCanvasLineDash *dash,
+				 double             dash_offset)
+{
+  dash->dash_offset = dash_offset;
+}
+
+
 cairo_matrix_t*
 goo_cairo_matrix_copy   (const cairo_matrix_t *matrix)
 {

@@ -876,6 +876,7 @@ setup_rectangles (GooCanvasItem *root)
   setup_item_signals (item);
 
   dash = goo_canvas_line_dash_new (2, 5.0, 2.0);
+  goo_canvas_line_dash_set_offset (dash, 2.0);
   item = goo_canvas_rect_new (root, 20, 90, 70, 60,
 			      "fill-color-rgba", 0x3cb37180,
 			      "line-dash", dash,

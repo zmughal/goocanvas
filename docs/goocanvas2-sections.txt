@@ -733,6 +733,7 @@ goo_canvas_line_dash_new
 goo_canvas_line_dash_newv
 goo_canvas_line_dash_ref
 goo_canvas_line_dash_unref
+goo_canvas_line_dash_set_offset
 
 <SUBSECTION>
 GooCanvasPathCommandType

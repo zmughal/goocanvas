@@ -1,5 +1,10 @@
 2013-11-02  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvasutils.c (goo_canvas_line_dash_set_offset): new function
+	to set the offset.
+
+2013-11-02  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (emit_pointer_event): use gdk_event_copy() rather
 	than a struct copy, to copy the private stuff like device etc. #665637
 

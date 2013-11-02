@@ -346,6 +346,8 @@ GooCanvasLineDash* goo_canvas_line_dash_newv  (gint               num_dashes,
                                                double            *dashes);
 GooCanvasLineDash* goo_canvas_line_dash_ref   (GooCanvasLineDash *dash);
 void               goo_canvas_line_dash_unref (GooCanvasLineDash *dash);
+void		   goo_canvas_line_dash_set_offset (GooCanvasLineDash *dash,
+						    double             dash_offset);
 
 #define GOO_TYPE_CAIRO_MATRIX	   (goo_cairo_matrix_get_type())
 GType              goo_cairo_matrix_get_type  (void) G_GNUC_CONST;
