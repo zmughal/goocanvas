@@ -1,6 +1,12 @@
+2013-11-02  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (emit_pointer_event): use gdk_event_copy() rather
+	than a struct copy, to copy the private stuff like device etc. #665637
+
 2013-11-01  Damon Chaplin  <damon@gnome.org>
 
-	* demo/*.c: fixed a lot of warnings.
+	* src/*.c:
+	* demo/*.c: fixed a lot of warnings, mainly about deprecated stuff.
 
 2013-11-01  Damon Chaplin  <damon@gnome.org>
 

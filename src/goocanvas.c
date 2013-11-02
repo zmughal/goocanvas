@@ -3059,9 +3059,10 @@ emit_pointer_event (GooCanvas *canvas,
 		    gchar     *signal_name,
 		    GdkEvent  *original_event)
 {
-  GdkEvent event = *original_event;
+  GdkEvent *event;
   GooCanvasItem *target_item = canvas->pointer_item;
   double *x, *y, *x_root, *y_root;
+  gboolean retval;
 
   /* Check if an item has grabbed the pointer. */
   if (canvas->pointer_grab_item)
@@ -3069,7 +3070,8 @@ emit_pointer_event (GooCanvas *canvas,
       /* When the pointer is grabbed, it receives all the pointer motion,
 	 button press/release events and its own enter/leave notify events.
 	 Enter/leave notify events for other items are discarded. */
-      if ((event.type == GDK_ENTER_NOTIFY || event.type == GDK_LEAVE_NOTIFY)
+      if ((original_event->type == GDK_ENTER_NOTIFY
+	   || original_event->type == GDK_LEAVE_NOTIFY)
 	  && canvas->pointer_item != canvas->pointer_grab_item)
 	return FALSE;
 
@@ -3080,34 +3082,36 @@ emit_pointer_event (GooCanvas *canvas,
   if (target_item && !ITEM_IS_VALID (target_item))
     return FALSE;
 
+  event = gdk_event_copy (original_event);
+
   /* Translate the x & y coordinates to the item's space. */
-  switch (event.type)
+  switch (event->type)
     {
     case GDK_MOTION_NOTIFY:
-      x = &event.motion.x;
-      y = &event.motion.y;
-      x_root = &event.motion.x_root;
-      y_root = &event.motion.y_root;
+      x = &event->motion.x;
+      y = &event->motion.y;
+      x_root = &event->motion.x_root;
+      y_root = &event->motion.y_root;
       break;
     case GDK_ENTER_NOTIFY:
     case GDK_LEAVE_NOTIFY:
-      x = &event.crossing.x;
-      y = &event.crossing.y;
-      x_root = &event.crossing.x_root;
-      y_root = &event.crossing.y_root;
+      x = &event->crossing.x;
+      y = &event->crossing.y;
+      x_root = &event->crossing.x_root;
+      y_root = &event->crossing.y_root;
       break;
     case GDK_SCROLL:
-      x = &event.scroll.x;
-      y = &event.scroll.y;
-      x_root = &event.scroll.x_root;
-      y_root = &event.scroll.y_root;
+      x = &event->scroll.x;
+      y = &event->scroll.y;
+      x_root = &event->scroll.x_root;
+      y_root = &event->scroll.y_root;
       break;
     default:
       /* It must be a button press/release event. */
-      x = &event.button.x;
-      y = &event.button.y;
-      x_root = &event.button.x_root;
-      y_root = &event.button.y_root;
+      x = &event->button.x;
+      y = &event->button.y;
+      x_root = &event->button.x_root;
+      y_root = &event->button.y_root;
       break;
     }
 
@@ -3129,7 +3133,11 @@ emit_pointer_event (GooCanvas *canvas,
   /* Convert to the item's coordinate space. */
   goo_canvas_convert_to_item_space (canvas, target_item, x, y);
 
-  return propagate_event (canvas, target_item, signal_name, &event);
+  retval = propagate_event (canvas, target_item, signal_name, event);
+
+  gdk_event_free (event);
+
+  return retval;
 }
 
 
