@@ -150,7 +150,7 @@ create_focus_page (void)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_container_add (GTK_CONTAINER (vbox), scrolled_win);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
   canvas = goo_canvas_new ();
   gtk_widget_set_can_focus (canvas, TRUE);

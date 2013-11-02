@@ -1,5 +1,10 @@
 2013-11-02  Damon Chaplin  <damon@gnome.org>
 
+	* demo/*.c: use gtk_box_pack_start() rather than gtk_container_add(),
+	for boxes, as the demos didn't appear correctly.
+
+2013-11-02  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasutils.c (goo_canvas_line_dash_set_offset): new function
 	to set the offset.
 
