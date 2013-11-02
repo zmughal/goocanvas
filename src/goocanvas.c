@@ -457,7 +457,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
   g_object_class_install_property (gobject_class, PROP_REDRAW_WHEN_SCROLLED,
                                    g_param_spec_boolean ("redraw-when-scrolled",
 							 _("Redraw When Scrolled"),
-							 _("If the canvas is completely redrawn when scrolled, to reduce the flicker of static items"),
+							 _("If the canvas is completely redrawn when scrolled, to reduce the flicker of static items. Note that since GTK+ 3.0 the canvas is always redrawn when scrolled, so this option has no effect."),
 							 FALSE,
 							 G_PARAM_READWRITE));
 
@@ -1561,12 +1561,15 @@ goo_canvas_realize (GtkWidget *widget)
 				       &attributes, attributes_mask);
   gdk_window_set_user_data (canvas->tmp_window, widget);
 
-  gtk_widget_set_style(widget, gtk_style_attach (gtk_widget_get_style (widget), window));
+  /* NOTE: Not needed with GTK+ 3.0. */
+#if 0
+  gtk_widget_set_style (widget, gtk_style_attach (gtk_widget_get_style (widget), window));
+#endif
 
   /* Make sure the window backgrounds aren't set, to avoid flicker when
      scrolling (due to the delay between X clearing the background and
      GooCanvas painting it). */
-  /* TODO: Do this with GTK+ 3 too? */
+  /* NOTE: Not needed with GTK+ 3.0. */
 #if 0
   gdk_window_set_background_pattern (window, NULL);
   gdk_window_set_background_pattern (canvas->canvas_window, NULL);
@@ -2784,10 +2787,18 @@ goo_canvas_draw (GtkWidget      *widget,
   /* Clear the background. */
   if (canvas->clear_background)
     {
+      GtkAllocation allocation;
+      GtkStyleContext *context = gtk_widget_get_style_context (widget);
+      gtk_widget_get_allocation (widget, &allocation);
+      gtk_render_background (context, cr,
+			     0, 0, allocation.width, allocation.height);
+
+#if 0
       const GtkStyle* style = gtk_widget_get_style (widget);
       const GtkStateType state = gtk_widget_get_state (widget);
       gdk_cairo_set_source_color (cr, &(style->base[state]));
       cairo_paint (cr);
+#endif
       cairo_set_source_rgb (cr, 0, 0, 0);
    }
 
