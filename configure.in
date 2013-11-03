@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(goocanvas, 2.0.1)
+AC_INIT(goocanvas, 2.0.2)
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(src/goocanvas.c)
 AC_CONFIG_HEADERS(config.h)
@@ -12,8 +12,8 @@ AM_INIT_AUTOMAKE
 # If interfaces changed but it is backwards compatible: AGE++, else AGE=0.
 #  i.e. the library supports interfaces CURRENT - AGE up to CURRENT.
 #  if two libraries have identical CURRENT and AGE, then newest REVISION used.
-CURRENT=11
-AGE=2
+CURRENT=12
+AGE=3
 REVISION=0
 
 LT_VERSION_INFO="$CURRENT:$REVISION:$AGE"

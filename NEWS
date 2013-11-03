@@ -1,4 +1,12 @@
 
+GooCanvas 2.0.2	(Nov 3 2013)
+===============
+
+ o Fixed the drawing code to work with GTK+ 3.10.
+ o Added/fixed a few introspection flags. GooCanvasLineDash should now be
+   usable via introspection.
+
+
 GooCanvas 2.0.1	(Oct 9 2011)
 ===============
 

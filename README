@@ -55,5 +55,5 @@ Features that may be removed in future to simplify the code:
 
 Damon Chaplin (damon@gnome.org)
 
-(FooCanvas can be found in GNOME svn in the 'foocanvas' module.
+(FooCanvas can be found in GNOME git repository in the 'foocanvas' module.
 FooCanvas was based on GnomeCanvas, which is in the 'libgnomecanvas' module.)
