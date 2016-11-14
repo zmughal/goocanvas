@@ -171,8 +171,6 @@ static void     goo_canvas_finalize	   (GObject          *object);
 static void     goo_canvas_realize         (GtkWidget        *widget);
 static void     goo_canvas_unrealize	   (GtkWidget	     *widget);
 static void     goo_canvas_map		   (GtkWidget	     *widget);
-static void     goo_canvas_style_set	   (GtkWidget	     *widget,
-					    GtkStyle	     *old_style);
 static void     goo_canvas_get_preferred_width (GtkWidget     *widget,
 						gint          *minimum,
 						gint          *natural);
@@ -277,7 +275,6 @@ goo_canvas_class_init (GooCanvasClass *klass)
   widget_class->get_preferred_width  = goo_canvas_get_preferred_width;
   widget_class->get_preferred_height = goo_canvas_get_preferred_height;
   widget_class->size_allocate        = goo_canvas_size_allocate;
-  widget_class->style_set            = goo_canvas_style_set;
   widget_class->draw                 = goo_canvas_draw;
   widget_class->button_press_event   = goo_canvas_button_press;
   widget_class->button_release_event = goo_canvas_button_release;
@@ -1643,27 +1640,6 @@ goo_canvas_map (GtkWidget *widget)
 
   gdk_window_show (canvas->canvas_window);
   gdk_window_show (gtk_widget_get_window (widget));
-}
-
-
-static void
-goo_canvas_style_set (GtkWidget *widget,
-		      GtkStyle  *old_style)
-{
-  if (GTK_WIDGET_CLASS (goo_canvas_parent_class)->style_set)
-    GTK_WIDGET_CLASS (goo_canvas_parent_class)->style_set (widget, old_style);
-
-  if (gtk_widget_get_realized (widget))
-    {
-      /* Make sure the window backgrounds aren't set, to avoid flicker when
-	 scrolling (due to the delay between X clearing the background and
-	 GooCanvas painting it). */
-      /* TODO: Do this with GTK+ 3 too? */
-#if 0
-      gdk_window_set_background_pattern (gtk_widget_get_window (widget), NULL);
-      gdk_window_set_background_pattern (GOO_CANVAS (widget)->canvas_window, NULL);
-#endif
-    }
 }
 
 
