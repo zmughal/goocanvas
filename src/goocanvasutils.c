@@ -1058,7 +1058,8 @@ do_elliptical_arc (GooCanvasPathCommand    *cmd,
 
 /**
  * goo_canvas_create_path:
- * @commands: an array of #GooCanvasPathCommand.
+ * @commands: (element-type GooCanvasPathCommand): an array of
+ *  #GooCanvasPathCommand.
  * @cr: a cairo context.
  * 
  * Creates the path specified by the given #GooCanvasPathCommand array.

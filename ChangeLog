@@ -1,5 +1,13 @@
 2016-12-13  Damon Chaplin  <damon@localhost.lan>
 
+	* src/goocanvasutils.c (goo_canvas_create_path): added (element-type)
+	annotation.
+
+	* src/Makefile.am: moved goocanvasprivate.h to _extra_sources so
+	it doesn't get scanned for introspection.
+
+2016-12-13  Damon Chaplin  <damon@localhost.lan>
+
 	* demo/*.c: remove deprecated GTK+ calls.
 
 2013-11-02  Damon Chaplin  <damon@gnome.org>

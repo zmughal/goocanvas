@@ -59,7 +59,6 @@ libgoocanvas_2_0_la_SOURCES =		\
 	goocanvasmarshal.c		\
 	goocanvaspolyline.c		\
 	goocanvaspath.c			\
-	goocanvasprivate.h		\
 	goocanvasrect.c			\
 	goocanvasstyle.c		\
 	goocanvastable.c		\
@@ -69,6 +68,7 @@ libgoocanvas_2_0_la_SOURCES =		\
 	goocanvas.c 
 
 libgoocanvas_extra_sources =		\
+	goocanvasprivate.h		\
 	goocanvasmarshal.list
 
 libgoocanvas_built_headers =		\
