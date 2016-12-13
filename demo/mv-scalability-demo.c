@@ -121,7 +121,7 @@ setup_canvas (GtkWidget *canvas)
   GooCanvasItem *item;
   int group_i, group_j, i, j;
   int total_items = 0, id_item_num = 0;;
-  GdkColor color = { 0, 0, 0, 0, };
+  GdkRGBA color = { 0, 0, 0, 0 };
   GooCanvasStyle *style, *style2;
   GValue tmpval = { 0 };
   cairo_matrix_t item_matrix;
@@ -138,20 +138,16 @@ setup_canvas (GtkWidget *canvas)
 		    G_CALLBACK (on_motion_notify), NULL);
 
   style = goo_canvas_style_new ();
-  gdk_color_parse ("mediumseagreen", &color);
-  pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-				      color.green / 65535.0,
-				      color.blue / 65535.0);
+  gdk_rgba_parse (&color, "mediumseagreen");
+  pattern = cairo_pattern_create_rgb (color.red, color.green, color.blue);
   g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
   g_value_take_boxed (&tmpval, pattern);
   goo_canvas_style_set_property (style, goo_canvas_style_fill_pattern_id, &tmpval);
   g_value_unset (&tmpval);
 
   style2 = goo_canvas_style_new ();
-  gdk_color_parse ("steelblue", &color);
-  pattern = cairo_pattern_create_rgb (color.red / 65535.0,
-				      color.green / 65535.0,
-				      color.blue / 65535.0);
+  gdk_rgba_parse (&color, "steelblue");
+  pattern = cairo_pattern_create_rgb (color.red, color.green, color.blue);
   g_value_init (&tmpval, GOO_TYPE_CAIRO_PATTERN);
   g_value_take_boxed (&tmpval, pattern);
   goo_canvas_style_set_property (style2, goo_canvas_style_fill_pattern_id, &tmpval);

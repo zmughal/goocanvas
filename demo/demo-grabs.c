@@ -72,6 +72,13 @@ on_widget_button_press (GtkWidget *widget,
   if (device && strstr (item_id, "explicit"))
     {
       GdkGrabStatus status;
+
+#if GTK_CHECK_VERSION(3,20,0)
+      status = gdk_seat_grab (gdk_device_get_seat (device),
+			      gtk_widget_get_window (widget),
+			      GDK_SEAT_CAPABILITY_ALL_POINTING,
+			      FALSE, NULL, (GdkEvent*) event, NULL, NULL);
+#else
       GdkEventMask mask = GDK_BUTTON_PRESS_MASK
 	| GDK_BUTTON_RELEASE_MASK
 	| GDK_POINTER_MOTION_MASK
@@ -82,6 +89,8 @@ on_widget_button_press (GtkWidget *widget,
       status = gdk_device_grab (device, gtk_widget_get_window (widget),
 				GDK_OWNERSHIP_NONE, FALSE, mask,
 				NULL, event->time);
+#endif
+
       if (status == GDK_GRAB_SUCCESS)
 	g_print ("grabbed pointer\n");
       else
@@ -103,7 +112,11 @@ on_widget_button_release (GtkWidget *widget,
 
   if (device && strstr (item_id, "explicit"))
     {
+#if GTK_CHECK_VERSION(3,20,0)
+      gdk_seat_ungrab (gdk_device_get_seat (device));
+#else
       gdk_device_ungrab (device, event->time);
+#endif
       g_print ("released pointer grab\n");
     }
 
@@ -209,14 +222,13 @@ on_button_release (GooCanvasItem *item,
 
 
 static void
-create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
+create_fixed (GtkGrid *grid, gint row, gchar *text, gchar *id)
 {
   GtkWidget *label, *fixed, *drawing_area;
   char *view_id;
 
   label = gtk_label_new (text);
-  gtk_table_attach (table, label, 0, 1, row, row + 1,
-		    0, 0, 0, 0);
+  gtk_grid_attach (grid, label, 0, row, 1, 1);
   gtk_widget_show (label);
 
   fixed = gtk_fixed_new ();
@@ -233,8 +245,8 @@ create_fixed (GtkTable *table, gint row, gchar *text, gchar *id)
 			 | GDK_LEAVE_NOTIFY_MASK
 			 | GDK_FOCUS_CHANGE_MASK);
   gtk_widget_set_size_request (fixed, 200, 100);
-  gtk_table_attach (GTK_TABLE (table), fixed, 1, 2, row, row + 1,
-		    0, 0, 0, 0);
+  gtk_grid_attach (GTK_GRID (grid), fixed, 1, row, 1, 1);
+  g_object_set (fixed, "expand", FALSE, NULL);
   gtk_widget_show (fixed);
 
   view_id = g_strdup_printf ("%s-background", id);
@@ -337,21 +349,21 @@ setup_item_signals (GooCanvasItem *item)
 
 
 static void
-create_canvas (GtkTable *table, gint row, gchar *text, gchar *id)
+create_canvas (GtkGrid *grid, gint row, gchar *text, gchar *id)
 {
   GtkWidget *label, *canvas;
   GooCanvasItem *root, *rect;
   char *view_id;
 
   label = gtk_label_new (text);
-  gtk_table_attach (table, label, 0, 1, row, row + 1, 0, 0, 0, 0);
+  gtk_grid_attach (grid, label, 0, row, 1, 1);
   gtk_widget_show (label);
 
   canvas = goo_canvas_new ();
 
   gtk_widget_set_size_request (canvas, 200, 100);
   goo_canvas_set_bounds (GOO_CANVAS (canvas), 0, 0, 200, 100);
-  gtk_table_attach (table, canvas, 1, 2, row, row + 1, 0, 0, 0, 0);
+  gtk_grid_attach (grid, canvas, 1, row, 1, 1);
   gtk_widget_show (canvas);
 
   root = goo_canvas_get_root_item (GOO_CANVAS (canvas));
@@ -385,37 +397,43 @@ create_canvas (GtkTable *table, gint row, gchar *text, gchar *id)
 GtkWidget *
 create_grabs_page (void)
 {
-  GtkWidget *table, *label;
+  GtkWidget *vbox, *grid, *label;
 
-  table = gtk_table_new (5, 2, FALSE);
-  gtk_container_set_border_width (GTK_CONTAINER (table), 12);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 12);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 12);
-  gtk_widget_show (table);
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  gtk_widget_show (vbox);
 
   label = gtk_label_new ("Move the mouse over the widgets and canvas items on the right to see what events they receive.\nClick buttons to start explicit or implicit pointer grabs and see what events they receive now.\n(They should all receive the same events.)");
-  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1, 0, 0, 0, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
+  grid = gtk_grid_new ();
+  gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
+  gtk_grid_set_row_spacing (GTK_GRID (grid), 12);
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+  gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
+  g_object_set (grid, "halign", GTK_ALIGN_CENTER, NULL);
+  gtk_widget_show (grid);
+
   /* Drawing area with explicit grabs. */
-  create_fixed (GTK_TABLE (table), 1,
+  create_fixed (GTK_GRID (grid), 1,
 		"Widget with Explicit Grabs:",
 		"widget-explicit");
 
   /* Drawing area with implicit grabs. */
-  create_fixed (GTK_TABLE (table), 2,
+  create_fixed (GTK_GRID (grid), 2,
 		"Widget with Implicit Grabs:",
 		"widget-implicit");
 
   /* Canvas with explicit grabs. */
-  create_canvas (GTK_TABLE (table), 3,
+  create_canvas (GTK_GRID (grid), 3,
 		 "Canvas with Explicit Grabs:",
 		 "canvas-explicit");
 
   /* Canvas with implicit grabs. */
-  create_canvas (GTK_TABLE (table), 4,
+  create_canvas (GTK_GRID (grid), 4,
 		 "Canvas with Implicit Grabs:",
 		 "canvas-implicit");
 
-  return table;
+  return vbox;
 }

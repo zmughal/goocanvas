@@ -332,6 +332,7 @@ on_button_press (GooCanvasItem *item,
 		 gpointer data)
 {
   GooCanvas *canvas;
+  GdkDisplay *display;
   GdkCursor *fleur;
   GList *items, *elem;
 
@@ -359,7 +360,8 @@ on_button_press (GooCanvasItem *item,
 	  drag_x = event->x;
 	  drag_y = event->y;
 
-	  fleur = gdk_cursor_new (GDK_FLEUR);
+	  display = gtk_widget_get_display (GTK_WIDGET (canvas));
+	  fleur = gdk_cursor_new_for_display (display, GDK_FLEUR);
 	  goo_canvas_pointer_grab (canvas, item,
 				   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 				   fleur,
@@ -825,12 +827,12 @@ create_stipple (const char *color_name, guchar stipple_data[16])
 {
   cairo_surface_t *surface;
   cairo_pattern_t *pattern;
-  GdkColor color;
+  GdkRGBA color;
 
-  gdk_color_parse (color_name, &color);
-  stipple_data[2] = stipple_data[14] = color.red >> 8;
-  stipple_data[1] = stipple_data[13] = color.green >> 8;
-  stipple_data[0] = stipple_data[12] = color.blue >> 8;
+  gdk_rgba_parse (&color, color_name);
+  stipple_data[2] = stipple_data[14] = color.red * 255;
+  stipple_data[1] = stipple_data[13] = color.green * 255;
+  stipple_data[0] = stipple_data[12] = color.blue * 255;
   surface = cairo_image_surface_create_for_data (stipple_data,
 						 CAIRO_FORMAT_ARGB32,
 						 2, 2, 8);

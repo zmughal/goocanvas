@@ -135,7 +135,8 @@ setup_canvas (GtkWidget *canvas)
   item = goo_canvas_path_new (root, "M20,500 C20,450 100,450 100,500", "stroke-color", "green", "line-width", 5.0, NULL);
   setup_dnd_handlers (GOO_CANVAS (canvas), item);
 
-  pixbuf = gtk_widget_render_icon (GTK_WIDGET (canvas), GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG, NULL);
+  pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+				     "dialog-warning", 48, 0, NULL);
   item = goo_canvas_image_new (root, pixbuf, 150, 450, /*"fill-color", "yellow", */NULL);
   g_object_unref (pixbuf);
   setup_dnd_handlers (GOO_CANVAS (canvas), item);
@@ -190,7 +191,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
   label = gtk_label_new ("Use Ctrl+Left Click to move items or Ctrl+Right Click to resize items");
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
+  g_object_set (label, "halign", GTK_ALIGN_START, NULL);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 

@@ -299,10 +299,12 @@ on_button_press (GooCanvasItem *item,
 		 gpointer data)
 {
   GooCanvas *canvas;
+  GdkDisplay *display;
   GdkCursor *fleur;
 
-  fleur = gdk_cursor_new (GDK_FLEUR);
   canvas = goo_canvas_item_get_canvas (item);
+  display = gtk_widget_get_display (GTK_WIDGET (canvas));
+  fleur = gdk_cursor_new_for_display (display, GDK_FLEUR);
   goo_canvas_pointer_grab (canvas, item,
 			   GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_RELEASE_MASK,
 			   fleur,
@@ -436,14 +438,15 @@ create_canvas_arrowhead (void)
 	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
 	gtk_widget_show (w);
 
-	w = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
-	gtk_widget_show (w);
-
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_container_add (GTK_CONTAINER (w), frame);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 	gtk_widget_show (frame);
+
+	g_object_set (frame,
+		      "halign", GTK_ALIGN_CENTER,
+		      "valign", GTK_ALIGN_CENTER,
+		      NULL);
 
 	canvas = goo_canvas_new ();
 

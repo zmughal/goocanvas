@@ -192,7 +192,7 @@ create_window (GooCanvasItemModel *model)
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
   label = gtk_label_new ("Use Ctrl+Left Click to move items or Ctrl+Right Click to resize items");
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
+  g_object_set (label, "halign", GTK_ALIGN_START, NULL);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   gtk_widget_show (label);
 
@@ -222,23 +222,21 @@ create_window (GooCanvasItemModel *model)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window;
   GooCanvasItemModel *model;
   GdkPixbuf *pixbuf;
 
   /* Initialize GTK+. */
   gtk_init (&argc, &argv);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  pixbuf = gtk_widget_render_icon (window, GTK_STOCK_DIALOG_WARNING,
-				   GTK_ICON_SIZE_DIALOG, NULL);
+  pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+				     "dialog-warning", 48, 0, NULL);
 
   model = create_model (pixbuf);
 
   /* Create 2 windows to show off multiple views. */
-  window = create_window (model);
+  create_window (model);
 #if 1
-  window = create_window (model);
+  create_window (model);
 #endif
 
   g_object_unref (model);

@@ -16,9 +16,7 @@ GtkWidget *
 create_canvas_scalability (void)
 {
 	GtkWidget *vbox;
-	GtkWidget *frame;
 	GtkWidget *scrolled_win, *canvas;
-	GtkWidget *table;
 	GdkPixbuf *pixbuf;
 	GooCanvasItemModel *root, *item G_GNUC_UNUSED;
 	int i, j, width, height;
@@ -26,21 +24,6 @@ create_canvas_scalability (void)
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
-
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-	gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
-	gtk_widget_show (table);
-	
-	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_table_attach (GTK_TABLE (table), frame,
-			  0, 1, 0, 1,
-			  GTK_EXPAND | GTK_FILL | GTK_SHRINK,
-			  GTK_EXPAND | GTK_FILL | GTK_SHRINK,
-			  0, 0);
-	gtk_widget_show (frame);
 
 	/* Create the canvas and board */
 
@@ -66,8 +49,10 @@ create_canvas_scalability (void)
 
 
 	scrolled_win = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
+					     GTK_SHADOW_IN);
 	gtk_widget_show (scrolled_win);
-	gtk_container_add (GTK_CONTAINER (frame), scrolled_win);
+	gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
 
 	gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);
 

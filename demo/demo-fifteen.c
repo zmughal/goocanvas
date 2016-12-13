@@ -234,7 +234,6 @@ GtkWidget *
 create_canvas_fifteen (void)
 {
 	GtkWidget *vbox;
-	GtkWidget *alignment;
 	GtkWidget *frame;
 	GtkWidget *canvas;
 	GtkWidget *button;
@@ -247,14 +246,15 @@ create_canvas_fifteen (void)
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
 	gtk_widget_show (vbox);
 
-	alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_box_pack_start (GTK_BOX (vbox), alignment, TRUE, TRUE, 0);
-	gtk_widget_show (alignment);
-
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_container_add (GTK_CONTAINER (alignment), frame);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
 	gtk_widget_show (frame);
+
+	g_object_set (frame,
+		      "halign", GTK_ALIGN_CENTER,
+		      "valign", GTK_ALIGN_CENTER,
+		      NULL);
 
 	/* Create the canvas and board */
 
