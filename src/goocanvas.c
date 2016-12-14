@@ -120,6 +120,8 @@ struct _GooCanvasPrivate {
   GooCanvasItemModel *static_root_item_model;
   gint window_x, window_y;
   gint static_window_x, static_window_y;
+  GdkRGBA background_color;
+  guint background_color_set : 1;
 };
 
 
@@ -549,6 +551,7 @@ goo_canvas_init (GooCanvas *canvas)
 
   priv->window_x = priv->static_window_x = 0;
   priv->window_y = priv->static_window_y = 0;
+  priv->background_color_set = FALSE;
 }
 
 
@@ -809,11 +812,11 @@ goo_canvas_set_property    (GObject            *object,
 			    GParamSpec         *pspec)
 {
   GooCanvas *canvas = (GooCanvas*) object;
-  GdkColor color = { 0, 0, 0, 0, };
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   gboolean need_reconfigure = FALSE;
   gboolean need_update_automatic_bounds = FALSE;
   guint rgb;
-  GdkRGBA rgba = { 0, 0, 0, 0 };
+  GdkRGBA rgba = { 0, 0, 0, 0 }, *new_color;
   const char *color_string;
 
   switch (prop_id)
@@ -879,21 +882,29 @@ goo_canvas_set_property    (GObject            *object,
     case PROP_BACKGROUND_COLOR:
       color_string = g_value_get_string (value);
       if (!color_string)
-	gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, NULL);
+	{
+	  priv->background_color_set = FALSE;
+	}
       else if (gdk_rgba_parse (&rgba, color_string))
-        gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, &rgba);
+	{
+	  priv->background_color = rgba;
+	  priv->background_color_set = TRUE;
+	}
       else
 	g_warning ("Unknown color: %s", color_string);
       break;
     case PROP_BACKGROUND_COLOR_RGB:
       rgb = g_value_get_uint (value);
-      color.red   = ((rgb >> 16) & 0xFF) * 257;
-      color.green = ((rgb >> 8)  & 0xFF) * 257;
-      color.blue  = ((rgb)       & 0xFF) * 257;
-      gtk_widget_modify_bg  ((GtkWidget*) canvas, GTK_STATE_NORMAL, &color);
+      priv->background_color.red   = ((rgb >> 16) & 0xFF) / 255.0;
+      priv->background_color.green = ((rgb >> 8)  & 0xFF) / 255.0;
+      priv->background_color.blue  = ((rgb)       & 0xFF) / 255.0;
+      priv->background_color.alpha = 1.0;
+      priv->background_color_set = TRUE;
       break;
     case PROP_BACKGROUND_COLOR_GDK_RGBA:
-      gtk_widget_override_background_color ((GtkWidget*) canvas, GTK_STATE_FLAG_NORMAL, g_value_get_boxed (value));
+      new_color = g_value_get_boxed (value);
+      priv->background_color = *new_color;
+      priv->background_color_set = TRUE;
       break;
     case PROP_INTEGER_LAYOUT:
       canvas->integer_layout = g_value_get_boolean (value);
@@ -2769,18 +2780,19 @@ goo_canvas_draw (GtkWidget      *widget,
   /* Clear the background. */
   if (canvas->clear_background)
     {
-      GtkAllocation allocation;
-      GtkStyleContext *context = gtk_widget_get_style_context (widget);
-      gtk_widget_get_allocation (widget, &allocation);
-      gtk_render_background (context, cr,
-			     0, 0, allocation.width, allocation.height);
-
-#if 0
-      const GtkStyle* style = gtk_widget_get_style (widget);
-      const GtkStateType state = gtk_widget_get_state (widget);
-      gdk_cairo_set_source_color (cr, &(style->base[state]));
-      cairo_paint (cr);
-#endif
+      if (priv->background_color_set)
+	{
+	  gdk_cairo_set_source_rgba (cr, &priv->background_color);
+	  cairo_paint (cr);
+	}
+      else
+	{
+	  GtkAllocation allocation;
+	  GtkStyleContext *context = gtk_widget_get_style_context (widget);
+	  gtk_widget_get_allocation (widget, &allocation);
+	  gtk_render_background (context, cr,
+				 0, 0, allocation.width, allocation.height);
+	}
       cairo_set_source_rgb (cr, 0, 0, 0);
    }
 

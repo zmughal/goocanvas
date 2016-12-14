@@ -1,10 +1,20 @@
-2016-12-14  Damon Chaplin  <damon@localhost.lan>
+2016-12-14  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c: added background_color and background_color_set
+	to GooCanvasPrivate struct.
+	(goo_canvas_init, goo_canvas_get_property)
+	(goo_canvas_set_property): add code to init/get/set background color
+	property, as gtk_widget_override_background_color() and
+	gtk_widget_modify_bg() are now deprecated.
+	(goo_canvas_draw): use the background color property if it is set.
+
+2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_configure_hadjustment)
 	(goo_canvas_configure_vadjustment): rewrote these to get rid of
 	deprecated calls to gtk_adjustment_changed/value_changed().
 
-2016-12-14  Damon Chaplin  <damon@localhost.lan>
+2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_button_press):
 	(goo_canvas_button_release): use gdk_display_device_is_grabbed()
@@ -16,17 +26,17 @@
 	(goo_canvas_keyboard_grab, goo_canvas_keyboard_ungrab): use
 	gdk_seat_grab()/ungrab() instead of gdk_keyboard_grab/ungrab().
 
-2016-12-14  Damon Chaplin  <damon@localhost.lan>
+2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_create_cairo_context): removed use of
 	gdk_cairo_create(). We always just use cairo_create() now.
 
-2016-12-14  Damon Chaplin  <damon@localhost.lan>
+2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_focus_check_is_best): change comment
 	that confused gtk-doc.
 
-2016-12-14  Damon Chaplin  <damon@localhost.lan>
+2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_request_update): use
 	gdk_threads_add_idle_full() instead of g_idle_add_full().
@@ -37,7 +47,7 @@
 	gdk_threads_add_timeout() instead of g_timeout_add().
 	(goo_canvas_item_animate_cb): remove GDK_THREADS_ENTER/LEAVE().
 
-2016-12-13  Damon Chaplin  <damon@localhost.lan>
+2016-12-13  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvasutils.c (goo_canvas_create_path): added (element-type)
 	annotation.
@@ -45,7 +55,7 @@
 	* src/Makefile.am: moved goocanvasprivate.h to _extra_sources so
 	it doesn't get scanned for introspection.
 
-2016-12-13  Damon Chaplin  <damon@localhost.lan>
+2016-12-13  Damon Chaplin  <damon@gnome.org>
 
 	* demo/*.c: remove deprecated GTK+ calls.
 
