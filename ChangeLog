@@ -1,5 +1,10 @@
 2016-12-14  Damon Chaplin  <damon@localhost.lan>
 
+	* src/goocanvas.c (goo_canvas_focus_check_is_best): change comment
+	that confused gtk-doc.
+
+2016-12-14  Damon Chaplin  <damon@localhost.lan>
+
 	* src/goocanvas.c (goo_canvas_request_update): use
 	gdk_threads_add_idle_full() instead of g_idle_add_full().
 	(goo_canvas_idle_handler): remove GDK_THREADS_ENTER/LEAVE().

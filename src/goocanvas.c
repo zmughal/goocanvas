@@ -4150,7 +4150,7 @@ goo_canvas_focus_check_is_best (GooCanvas          *canvas,
 	return FALSE;
 
       /* Compute a score (lower is best) and check if it is the best. */
-      data->current_score = abs_x_offset /** 2*/ + abs_y_offset;
+      data->current_score = abs_x_offset /* * 2*/ + abs_y_offset;
       if (!data->best_item || data->current_score < data->best_score)
 	return TRUE;
       break;
