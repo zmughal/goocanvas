@@ -3237,6 +3237,7 @@ goo_canvas_button_press (GtkWidget      *widget,
 			 GdkEventButton *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
   GdkDisplay *display;
 
   if (event->window != canvas->canvas_window)
@@ -3247,8 +3248,8 @@ goo_canvas_button_press (GtkWidget      *widget,
   /* Check if this is the start of an implicit pointer grab, i.e. if we
      don't already have a grab and the app has no active grab. */
   display = gtk_widget_get_display (widget);
-  if (!canvas->pointer_grab_item
-      && !gdk_display_pointer_is_grabbed (display))
+  if (!canvas->pointer_grab_item && device
+      && !gdk_display_device_is_grabbed (display, device))
     {
       set_item_pointer (&canvas->pointer_grab_initial_item,
 			canvas->pointer_item);
@@ -3266,6 +3267,7 @@ goo_canvas_button_release (GtkWidget      *widget,
 			   GdkEventButton *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
   GdkDisplay *display;
   gboolean retval;
 
@@ -3279,9 +3281,9 @@ goo_canvas_button_release (GtkWidget      *widget,
 
   /* Check if an implicit (passive) grab has ended. */
   display = gtk_widget_get_display (widget);
-  if (canvas->pointer_grab_item
+  if (canvas->pointer_grab_item && device
       && event->button == canvas->pointer_grab_button
-      && !gdk_display_pointer_is_grabbed (display))
+      && !gdk_display_device_is_grabbed (display, device))
     {
       /* We set the pointer item back to the item it was in before the
 	 grab, so we'll synthesize enter/leave notify events as appropriate. */
@@ -3519,6 +3521,7 @@ goo_canvas_pointer_grab (GooCanvas     *canvas,
 			 guint32        time)
 {
   GdkGrabStatus status = GDK_GRAB_SUCCESS;
+  GdkDisplay *display;
 
   g_return_val_if_fail (GOO_IS_CANVAS (canvas), GDK_GRAB_NOT_VIEWABLE);
   g_return_val_if_fail (GOO_IS_CANVAS_ITEM (item), GDK_GRAB_NOT_VIEWABLE);
@@ -3534,8 +3537,18 @@ goo_canvas_pointer_grab (GooCanvas     *canvas,
     }
 
   /* This overrides any existing grab. */
+#if GTK_CHECK_VERSION(3,20,0)
+  /* FIXME: Maybe handle multiple seats in future, if requested!
+     Should really pass event in as well. */
+  display = gtk_widget_get_display (GTK_WIDGET (canvas));
+  status = gdk_seat_grab (gdk_display_get_default_seat (display),
+			  canvas->canvas_window,
+			  GDK_SEAT_CAPABILITY_ALL_POINTING,
+			  FALSE, cursor, NULL, NULL, NULL);
+#else
   status = gdk_pointer_grab (canvas->canvas_window, FALSE,
 			     event_mask, NULL, cursor, time);
+#endif
 
   if (status == GDK_GRAB_SUCCESS)
     {
@@ -3574,8 +3587,14 @@ goo_canvas_pointer_ungrab (GooCanvas     *canvas,
 
   /* If it is an active pointer grab, ungrab it explicitly. */
   display = gtk_widget_get_display (GTK_WIDGET (canvas));
+
+#if GTK_CHECK_VERSION(3,20,0)
+  /* FIXME: Maybe handle multiple seats in future, if requested! */
+  gdk_seat_ungrab (gdk_display_get_default_seat (display));
+#else
   if (gdk_display_pointer_is_grabbed (display))
     gdk_display_pointer_ungrab (display, time);
+#endif
 
   /* We set the pointer item back to the item it was in before the
      grab, so we'll synthesize enter/leave notify events as appropriate. */
@@ -3614,6 +3633,7 @@ goo_canvas_keyboard_grab (GooCanvas     *canvas,
 			  guint32        time)
 {
   GdkGrabStatus status = GDK_GRAB_SUCCESS;
+  GdkDisplay *display;
 
   g_return_val_if_fail (GOO_IS_CANVAS (canvas), GDK_GRAB_NOT_VIEWABLE);
   g_return_val_if_fail (GOO_IS_CANVAS_ITEM (item), GDK_GRAB_NOT_VIEWABLE);
@@ -3631,8 +3651,18 @@ goo_canvas_keyboard_grab (GooCanvas     *canvas,
     }
 
   /* This overrides any existing grab. */
+#if GTK_CHECK_VERSION(3,20,0)
+  /* FIXME: Maybe handle multiple seats in future, if requested!
+     Should really pass event in as well. */
+  display = gtk_widget_get_display (GTK_WIDGET (canvas));
+  status = gdk_seat_grab (gdk_display_get_default_seat (display),
+			  canvas->canvas_window,
+			  GDK_SEAT_CAPABILITY_KEYBOARD,
+			  owner_events, NULL, NULL, NULL, NULL);
+#else
   status = gdk_keyboard_grab (canvas->canvas_window,
 			      owner_events, time);
+#endif
 
   if (status == GDK_GRAB_SUCCESS)
     set_item_pointer (&canvas->keyboard_grab_item, item);
@@ -3667,7 +3697,13 @@ goo_canvas_keyboard_ungrab (GooCanvas     *canvas,
   set_item_pointer (&canvas->keyboard_grab_item, NULL);
 
   display = gtk_widget_get_display (GTK_WIDGET (canvas));
+
+#if GTK_CHECK_VERSION(3,20,0)
+  /* FIXME: Maybe handle multiple seats in future, if requested! */
+  gdk_seat_ungrab (gdk_display_get_default_seat (display));
+#else
   gdk_display_keyboard_ungrab (display, time);
+#endif
 }
 
 

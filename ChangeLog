@@ -1,5 +1,17 @@
 2016-12-14  Damon Chaplin  <damon@localhost.lan>
 
+	* src/goocanvas.c (goo_canvas_button_press):
+	(goo_canvas_button_release): use gdk_display_device_is_grabbed()
+	instead of gdk_display_pointer_is_grabbed().
+	(goo_canvas_pointer_grab):
+	(goo_canvas_pointer_ungrab): use gdk_seat_grab/ungrab() instead of
+	gdk_pointer_grab/ungrab(), but only with GTK+ >= 3.20.0 so we don't
+	break compilation with older GTK+.
+	(goo_canvas_keyboard_grab, goo_canvas_keyboard_ungrab): use
+	gdk_seat_grab()/ungrab() instead of gdk_keyboard_grab/ungrab().
+
+2016-12-14  Damon Chaplin  <damon@localhost.lan>
+
 	* src/goocanvas.c (goo_canvas_create_cairo_context): removed use of
 	gdk_cairo_create(). We always just use cairo_create() now.
 
