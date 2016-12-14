@@ -1,5 +1,10 @@
 2016-12-14  Damon Chaplin  <damon@localhost.lan>
 
+	* src/goocanvas.c (goo_canvas_create_cairo_context): removed use of
+	gdk_cairo_create(). We always just use cairo_create() now.
+
+2016-12-14  Damon Chaplin  <damon@localhost.lan>
+
 	* src/goocanvas.c (goo_canvas_focus_check_is_best): change comment
 	that confused gtk-doc.
 

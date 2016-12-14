@@ -698,6 +698,8 @@ goo_canvas_setup_cairo_context (GooCanvas *canvas,
  * @canvas: a #GooCanvas.
  *
  * Creates a cairo context, initialized with the default canvas settings.
+ * Note that this context should not be used for drawing. It should only be
+ * used for calculating bounds of items.
  *
  * Returns: a new cairo context. It should be freed with cairo_destroy().
  **/
@@ -707,21 +709,11 @@ goo_canvas_create_cairo_context (GooCanvas *canvas)
   cairo_t *cr;
   cairo_surface_t *surface;
 
-  /* If the canvas is realized we can use the GDK function to create a cairo
-     context for the canvas window. Otherwise we create a small temporary
-     image surface. */
-  if (canvas && canvas->canvas_window)
-    {
-      cr = gdk_cairo_create (canvas->canvas_window);
-    }
-  else
-    {
-      surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 1, 1);
-      cr = cairo_create (surface);
-      /* The cairo context will keep a reference to the surface so we can
-	 drop our reference. */
-      cairo_surface_destroy (surface);
-    }
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 1, 1);
+  cr = cairo_create (surface);
+  /* The cairo context will keep a reference to the surface so we can
+     drop our reference. */
+  cairo_surface_destroy (surface);
 
   goo_canvas_setup_cairo_context (canvas, cr);
 
