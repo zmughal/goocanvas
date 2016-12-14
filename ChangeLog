@@ -1,5 +1,11 @@
 2016-12-14  Damon Chaplin  <damon@localhost.lan>
 
+	* src/goocanvas.c (goo_canvas_configure_hadjustment)
+	(goo_canvas_configure_vadjustment): rewrote these to get rid of
+	deprecated calls to gtk_adjustment_changed/value_changed().
+
+2016-12-14  Damon Chaplin  <damon@localhost.lan>
+
 	* src/goocanvas.c (goo_canvas_button_press):
 	(goo_canvas_button_release): use gdk_display_device_is_grabbed()
 	instead of gdk_display_pointer_is_grabbed().

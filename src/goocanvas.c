@@ -1662,45 +1662,42 @@ goo_canvas_configure_hadjustment (GooCanvas *canvas,
 {
   GtkWidget *widget = GTK_WIDGET (canvas);
   GtkAdjustment *adj = canvas->hadjustment;
-  gboolean changed = FALSE;
-  gboolean value_changed = FALSE;
-  gdouble max_value;
-  gdouble page_size;
+  gboolean configure = FALSE;
+  gdouble value, max_value, lower, upper, step_inc, page_inc, page_size;
   GtkAllocation allocation;
 
-  canvas->freeze_count++;
+  value = gtk_adjustment_get_value (adj);
+  lower = gtk_adjustment_get_lower (adj);
+  upper = gtk_adjustment_get_upper (adj);
+  step_inc = gtk_adjustment_get_step_increment (adj);
+  page_inc = gtk_adjustment_get_page_increment (adj);
+  page_size = gtk_adjustment_get_page_size (adj);
 
-  if (gtk_adjustment_get_upper (adj) != window_width)
+  if (upper != window_width)
     {
-      gtk_adjustment_set_upper (adj, window_width);
-      changed = TRUE;
+      upper = window_width;
+      configure = TRUE;
     }
 
   gtk_widget_get_allocation (widget, &allocation);
-  page_size = gtk_adjustment_get_page_size (adj);
   if (page_size != allocation.width)
     {
       page_size = allocation.width;
-      gtk_adjustment_set_page_size (adj, page_size);
-      gtk_adjustment_set_page_increment (adj, page_size * 0.9);
-      gtk_adjustment_set_step_increment (adj, page_size * 0.1);
-      changed = TRUE;
+      page_inc = page_size * 0.9;
+      step_inc = page_size * 0.1;
+      configure = TRUE;
     }
 
-  max_value = MAX (0.0, gtk_adjustment_get_upper (adj) - page_size);
-  if (gtk_adjustment_get_value (adj) > max_value)
+  max_value = MAX (0.0, upper - page_size);
+  if (value > max_value)
     {
-      gtk_adjustment_set_value (adj, max_value);
-      value_changed = TRUE;
+      value = max_value;
+      configure = TRUE;
     }
 
-  canvas->freeze_count--;
-
-  if (changed)
-    gtk_adjustment_changed (adj);
-
-  if (value_changed)
-    gtk_adjustment_value_changed (adj);
+  if (configure)
+    gtk_adjustment_configure (adj, value, lower, upper, step_inc, page_inc,
+			      page_size);
 }
 
 
@@ -1710,45 +1707,42 @@ goo_canvas_configure_vadjustment (GooCanvas *canvas,
 {
   GtkWidget *widget = GTK_WIDGET (canvas);
   GtkAdjustment *adj = canvas->vadjustment;
-  gboolean changed = FALSE;
-  gboolean value_changed = FALSE;
-  gdouble max_value;
+  gboolean configure = FALSE;
+  gdouble value, max_value, lower, upper, step_inc, page_inc, page_size;
   GtkAllocation allocation;
-  gdouble page_size;
 
-  canvas->freeze_count++;
+  value = gtk_adjustment_get_value (adj);
+  lower = gtk_adjustment_get_lower (adj);
+  upper = gtk_adjustment_get_upper (adj);
+  step_inc = gtk_adjustment_get_step_increment (adj);
+  page_inc = gtk_adjustment_get_page_increment (adj);
+  page_size = gtk_adjustment_get_page_size (adj);
 
-  if (gtk_adjustment_get_upper (adj) != window_height)
+  if (upper != window_height)
     {
-      gtk_adjustment_set_upper (adj, window_height);
-      changed = TRUE;
+      upper = window_height;
+      configure = TRUE;
     }
 
   gtk_widget_get_allocation (widget, &allocation);
-  page_size = gtk_adjustment_get_page_size (adj);
   if (page_size != allocation.height)
     {
       page_size = allocation.height;
-      gtk_adjustment_set_page_size (adj, page_size);
-      gtk_adjustment_set_page_increment (adj, page_size * 0.9);
-      gtk_adjustment_set_step_increment (adj, page_size * 0.1);
-      changed = TRUE;
+      page_inc = page_size * 0.9;
+      step_inc = page_size * 0.1;
+      configure = TRUE;
     }
 
-  max_value = MAX (0.0, gtk_adjustment_get_upper (adj) - page_size);
-  if (gtk_adjustment_get_value (adj) > max_value)
+  max_value = MAX (0.0, upper - page_size);
+  if (value > max_value)
     {
-      gtk_adjustment_set_value (adj, max_value);
-      value_changed = TRUE;
+      value = max_value;
+      configure = TRUE;
     }
 
-  canvas->freeze_count--;
-
-  if (changed)
-    gtk_adjustment_changed (adj);
-
-  if (value_changed)
-    gtk_adjustment_value_changed (adj);
+  if (configure)
+    gtk_adjustment_configure (adj, value, lower, upper, step_inc, page_inc,
+			      page_size);
 }
 
 
