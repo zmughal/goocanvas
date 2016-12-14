@@ -1,3 +1,14 @@
+2016-12-14  Damon Chaplin  <damon@localhost.lan>
+
+	* src/goocanvas.c (goo_canvas_request_update): use
+	gdk_threads_add_idle_full() instead of g_idle_add_full().
+	(goo_canvas_idle_handler): remove GDK_THREADS_ENTER/LEAVE().
+	I think this is what we are supposed to do now, but I'm not sure!
+
+	* src/goocanvasitem.c (_goo_canvas_item_animate_internal): use
+	gdk_threads_add_timeout() instead of g_timeout_add().
+	(goo_canvas_item_animate_cb): remove GDK_THREADS_ENTER/LEAVE().
+
 2016-12-13  Damon Chaplin  <damon@localhost.lan>
 
 	* src/goocanvasutils.c (goo_canvas_create_path): added (element-type)

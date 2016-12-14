@@ -2621,15 +2621,11 @@ goo_canvas_update (GooCanvas *canvas)
 static gint
 goo_canvas_idle_handler (GooCanvas *canvas)
 {
-  GDK_THREADS_ENTER ();
-
   goo_canvas_update (canvas);
 
   /* Reset idle id. Note that we do this after goo_canvas_update(), to
      make sure we don't schedule another idle handler while that is running. */
   canvas->idle_id = 0;
-
-  GDK_THREADS_LEAVE ();
 
   /* Return FALSE to remove the idle handler. */
   return FALSE;
@@ -2660,7 +2656,7 @@ goo_canvas_request_update (GooCanvas   *canvas)
    * so the canvas state will be updated before allocating sizes & redrawing.
    */
   if (!canvas->idle_id)
-    canvas->idle_id = g_idle_add_full (GTK_PRIORITY_RESIZE - 5, (GSourceFunc) goo_canvas_idle_handler, canvas, NULL);
+    canvas->idle_id = gdk_threads_add_idle_full (GTK_PRIORITY_RESIZE - 5, (GSourceFunc) goo_canvas_idle_handler, canvas, NULL);
 }
 
 

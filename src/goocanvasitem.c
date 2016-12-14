@@ -1284,8 +1284,6 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
   gdouble scale;
   gint step;
 
-  GDK_THREADS_ENTER ();
-
   if (model)
     model_iface = GOO_CANVAS_ITEM_MODEL_GET_IFACE (model);
   else
@@ -1361,8 +1359,6 @@ goo_canvas_item_animate_cb (GooCanvasItemAnimation *anim)
       else
 	iface->set_transform (item, &new_matrix);
     }
-
-  GDK_THREADS_LEAVE ();
 
   /* Return FALSE to remove the timeout handler when we are finished. */
   return keep_source;
@@ -1444,9 +1440,9 @@ _goo_canvas_item_animate_internal (GooCanvasItem       *item,
   g_object_set_data_full (object, animation_key, anim,
 			  (GDestroyNotify) goo_canvas_item_free_animation);
 
-  anim->timeout_id = g_timeout_add (step_time,
-				    (GSourceFunc) goo_canvas_item_animate_cb,
-				    anim);
+  anim->timeout_id = gdk_threads_add_timeout (step_time,
+					      (GSourceFunc) goo_canvas_item_animate_cb,
+					      anim);
 }
 
 
