@@ -2871,7 +2871,7 @@ goo_canvas_draw (GtkWidget      *widget,
  * goo_canvas_render:
  * @canvas: a #GooCanvas.
  * @cr: a cairo context.
- * @bounds (allow-none): the area to render, or %NULL to render the entire canvas.
+ * @bounds: (allow-none): the area to render, or %NULL to render the entire canvas.
  * @scale: the scale to compare with each item's visibility
  * threshold to see if they should be rendered. This only affects items that
  * have their visibility set to %GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD.
