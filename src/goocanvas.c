@@ -2711,9 +2711,6 @@ goo_canvas_draw (GtkWidget      *widget,
   GooCanvasBounds clip_bounds, bounds, root_item_bounds;
   double x1, y1, x2, y2;
 
-  if (!gtk_cairo_should_draw_window (cr, canvas->canvas_window))
-    return FALSE;
-
   if (!canvas->root_item)
     {
       canvas->before_initial_draw = FALSE;
