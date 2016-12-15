@@ -1,5 +1,10 @@
 2016-12-15  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvastext.c (goo_canvas_text_get_natural_extents): patch from
+	Cédric Krier to add "(out)" annotations for introspection. #771317
+
+2016-12-15  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasitem.c (goo_canvas_item_base_init): patch from
 	Cédric Krier to specify the correct event types for the signals,
 	in the introspection annotations. #771316
