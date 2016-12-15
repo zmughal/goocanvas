@@ -1494,8 +1494,7 @@ goo_canvas_realize (GtkWidget *widget)
 {
   GooCanvas *canvas;
   GooCanvasPrivate *priv;
-  GdkWindowAttr attributes;
-  gint attributes_mask;
+  gint event_mask;
   gint width_pixels, height_pixels;
   GList *tmp_list;
   GtkAllocation allocation;
@@ -1508,19 +1507,9 @@ goo_canvas_realize (GtkWidget *widget)
   gtk_widget_set_realized (GTK_WIDGET (canvas), TRUE);
 
   gtk_widget_get_allocation (widget, &allocation);
-  attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.x = allocation.x;
-  attributes.y = allocation.y;
-  attributes.width = allocation.width;
-  attributes.height = allocation.height;
-  attributes.wclass = GDK_INPUT_OUTPUT;
-  attributes.visual = gtk_widget_get_visual (widget);
-  attributes.event_mask = GDK_VISIBILITY_NOTIFY_MASK;
-
-  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
-
-  window = gdk_window_new (gtk_widget_get_parent_window (widget),
-				   &attributes, attributes_mask);
+  event_mask = GDK_VISIBILITY_NOTIFY_MASK;
+  window = gdk_window_new_child (gtk_widget_get_parent_window (widget),
+				   event_mask, &allocation);
   gtk_widget_set_window (widget, window);
   gdk_window_set_user_data (window, widget);
 
@@ -1528,11 +1517,11 @@ goo_canvas_realize (GtkWidget *widget)
   width_pixels = ((canvas->bounds.x2 - canvas->bounds.x1) * canvas->device_to_pixels_x) + 1;
   height_pixels = ((canvas->bounds.y2 - canvas->bounds.y1) * canvas->device_to_pixels_y) + 1;
 
-  attributes.x = canvas->hadjustment ? - gtk_adjustment_get_value (canvas->hadjustment) : 0,
-  attributes.y = canvas->vadjustment ? - gtk_adjustment_get_value (canvas->vadjustment) : 0;
-  attributes.width = MAX (width_pixels, allocation.width);
-  attributes.height = MAX (height_pixels, allocation.height);
-  attributes.event_mask = GDK_EXPOSURE_MASK
+  allocation.x = canvas->hadjustment ? - gtk_adjustment_get_value (canvas->hadjustment) : 0,
+  allocation.y = canvas->vadjustment ? - gtk_adjustment_get_value (canvas->vadjustment) : 0;
+  allocation.width = MAX (width_pixels, allocation.width);
+  allocation.height = MAX (height_pixels, allocation.height);
+  event_mask = GDK_EXPOSURE_MASK
 			 | GDK_SCROLL_MASK
 			 | GDK_BUTTON_PRESS_MASK
 			 | GDK_BUTTON_RELEASE_MASK
@@ -1545,21 +1534,16 @@ goo_canvas_realize (GtkWidget *widget)
 			 | GDK_FOCUS_CHANGE_MASK
                          | gtk_widget_get_events (widget);
 
-  priv->window_x = priv->static_window_x = attributes.x;
-  priv->window_y = priv->static_window_y = attributes.y;
+  priv->window_x = priv->static_window_x = allocation.x;
+  priv->window_y = priv->static_window_y = allocation.y;
 
-  canvas->canvas_window = gdk_window_new (window,
-					  &attributes, attributes_mask);
+  canvas->canvas_window = gdk_window_new_child (window,
+					  event_mask, &allocation);
   gdk_window_set_user_data (canvas->canvas_window, widget);
 
-  attributes.x = allocation.x;
-  attributes.y = allocation.y;
-  attributes.width = allocation.width;
-  attributes.height = allocation.height;
-  attributes.event_mask = 0;
-
-  canvas->tmp_window = gdk_window_new (gtk_widget_get_parent_window (widget),
-				       &attributes, attributes_mask);
+  event_mask = 0;
+  canvas->tmp_window = gdk_window_new_child (gtk_widget_get_parent_window (widget),
+				       event_mask, &allocation);
   gdk_window_set_user_data (canvas->tmp_window, widget);
 
   /* NOTE: Not needed with GTK+ 3.0. */
