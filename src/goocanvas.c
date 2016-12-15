@@ -1608,7 +1608,7 @@ goo_canvas_map (GtkWidget *widget)
 
   canvas = GOO_CANVAS (widget);
 
-  gtk_widget_set_mapped (widget, TRUE);
+  GTK_WIDGET_CLASS (goo_canvas_parent_class)->map (widget);
 
   tmp_list = canvas->widget_items;
   while (tmp_list)
