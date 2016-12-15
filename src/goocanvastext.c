@@ -835,8 +835,8 @@ goo_canvas_text_get_requested_area_for_width (GooCanvasItem	*item,
 /**
  * goo_canvas_text_get_natural_extents:
  * @text: a #GooCanvasText.
- * @ink_rect: (out): the location to return the ink rect, or %NULL.
- * @logical_rect: (out): the location to return the logical rect, or %NULL.
+ * @ink_rect: (out) (allow-none): the location to return the ink rect, or %NULL.
+ * @logical_rect: (out) (allow-none): the location to return the logical rect, or %NULL.
  * 
  * Gets the natural extents of the text, in the text item's coordinate space.
  *

@@ -2221,10 +2221,10 @@ set_item_pointer (GooCanvasItem **item,
 /**
  * goo_canvas_get_bounds:
  * @canvas: a #GooCanvas.
- * @left: (out): a pointer to a #gdouble to return the left edge, or %NULL.
- * @top: (out): a pointer to a #gdouble to return the top edge, or %NULL.
- * @right: (out): a pointer to a #gdouble to return the right edge, or %NULL.
- * @bottom: (out): a pointer to a #gdouble to return the bottom edge, or %NULL.
+ * @left: (out) (allow-none): a pointer to a #gdouble to return the left edge, or %NULL.
+ * @top: (out) (allow-none): a pointer to a #gdouble to return the top edge, or %NULL.
+ * @right: (out) (allow-none): a pointer to a #gdouble to return the right edge, or %NULL.
+ * @bottom: (out) (allow-none): a pointer to a #gdouble to return the bottom edge, or %NULL.
  *
  * Gets the bounds of the canvas, in canvas units.
  *
@@ -2871,7 +2871,7 @@ goo_canvas_draw (GtkWidget      *widget,
  * goo_canvas_render:
  * @canvas: a #GooCanvas.
  * @cr: a cairo context.
- * @bounds: the area to render, or %NULL to render the entire canvas.
+ * @bounds (allow-none): the area to render, or %NULL to render the entire canvas.
  * @scale: the scale to compare with each item's visibility
  * threshold to see if they should be rendered. This only affects items that
  * have their visibility set to %GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD.

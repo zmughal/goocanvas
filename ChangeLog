@@ -1,5 +1,12 @@
 2016-12-15  Damon Chaplin  <damon@gnome.org>
 
+	* src/goocanvastext.c (goo_canvas_text_get_natural_extents):
+	* src/goocanvas.c (goo_canvas_render):
+	* src/goocanvas.c (goo_canvas_get_bounds): added (allow-none)
+	annotations for introspection.
+
+2016-12-15  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c (goo_canvas_get_bounds): patch from Simon Feltman
 	to add (out) annotations for introspection. #732197
 
