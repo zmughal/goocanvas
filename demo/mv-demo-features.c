@@ -65,14 +65,14 @@ create_canvas_features (void)
 	/* Instructions */
 
 	w = gtk_label_new ("Reparent test:  click on the items to switch them between parents");
-	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	/* Frame and canvas */
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE);
 	gtk_widget_show (frame);
 
 	g_object_set (frame,

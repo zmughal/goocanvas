@@ -478,11 +478,11 @@ create_canvas_primitives ()
 	gtk_widget_show (vbox);
 
 	w = gtk_label_new ("Drag an item with button 1.  Click button 2 on an item to lower it, or button 3 to raise it.");
-	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
 	gtk_widget_show (hbox);
 
 	/* Create the canvas */
@@ -503,7 +503,7 @@ create_canvas_primitives ()
 	/* Scale */
 
 	w = gtk_label_new ("Scale:");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.50));
@@ -512,12 +512,12 @@ create_canvas_primitives ()
 			  G_CALLBACK (zoom_changed),
 			  canvas);
 	gtk_widget_set_size_request (w, 50, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 
 	w = gtk_label_new ("Scale X:");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.50));
@@ -526,12 +526,12 @@ create_canvas_primitives ()
 			  G_CALLBACK (zoom_x_changed),
 			  canvas);
 	gtk_widget_set_size_request (w, 50, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 
 	w = gtk_label_new ("Scale Y:");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 50.00, 0.05, 0.50, 0.50));
@@ -540,18 +540,18 @@ create_canvas_primitives ()
 			  G_CALLBACK (zoom_y_changed),
 			  canvas);
 	gtk_widget_set_size_request (w, 50, -1);
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
 	gtk_widget_show (hbox);
 
 	/* Center: */
 	
 	w = gtk_check_button_new_with_label("Center scroll region");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	/*gtk_widget_show (w);*/
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (center_toggled),
@@ -560,7 +560,7 @@ create_canvas_primitives ()
 	/* Move Ellipse */
 
 	w = gtk_button_new_with_label("Move Ellipse");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (move_ellipse_clicked),
@@ -569,7 +569,7 @@ create_canvas_primitives ()
 	/* Animate Ellipse */
 
 	w = gtk_button_new_with_label("Animate Ellipse");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (animate_ellipse_clicked),
@@ -578,7 +578,7 @@ create_canvas_primitives ()
 	/* Stop Animation */
 
 	w = gtk_button_new_with_label("Stop Animation");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (stop_animation_clicked),
@@ -589,7 +589,7 @@ create_canvas_primitives ()
 	/* Create PDF */
 
 	w = gtk_button_new_with_label("Write PDF");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (write_pdf_clicked),
@@ -597,38 +597,38 @@ create_canvas_primitives ()
 #endif
 
 	w = gtk_button_new_with_label("Change Bounds");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (change_bounds_clicked),
 			  canvas);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
 	gtk_widget_show (hbox);
 
 	/* Scroll to */
 
 	w = gtk_label_new ("Scroll To:");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	w = gtk_button_new_with_label("50,50");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (scroll_to_50_50_clicked),
 			  canvas);
 
 	w = gtk_button_new_with_label("250,250");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (scroll_to_250_250_clicked),
 			  canvas);
 
 	w = gtk_button_new_with_label("500,500");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "clicked",
 			  G_CALLBACK (scroll_to_500_500_clicked),
@@ -637,12 +637,12 @@ create_canvas_primitives ()
 	/* Scroll anchor */
 
 	w = gtk_label_new ("Anchor:");
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 
 	w = gtk_radio_button_new_with_label (group, "NW");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -652,7 +652,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "N");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -662,7 +662,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "NE");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -672,7 +672,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "W");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -682,7 +682,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "C");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -692,7 +692,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "E");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -702,7 +702,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "SW");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -712,7 +712,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "S");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -722,7 +722,7 @@ create_canvas_primitives ()
 
 	w = gtk_radio_button_new_with_label (group, "SE");
 	group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (w));
-	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
 	gtk_widget_show (w);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (anchor_toggled),
@@ -735,7 +735,7 @@ create_canvas_primitives ()
 
 	scrolled_win = gtk_scrolled_window_new (NULL, NULL);
 	gtk_widget_show (scrolled_win);
-	gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
 
 	gtk_widget_show (canvas);
 	gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);

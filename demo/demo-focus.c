@@ -143,14 +143,14 @@ create_focus_page (void)
   gtk_widget_show (vbox);
 
   label = gtk_label_new ("Use Tab, Shift+Tab or the arrow keys to move the keyboard focus between the canvas items.");
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE);
   gtk_widget_show (label);
 
   scrolled_win = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
 
   canvas = goo_canvas_new ();
   gtk_widget_set_can_focus (canvas, TRUE);
