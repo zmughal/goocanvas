@@ -2011,12 +2011,16 @@ goo_canvas_allocate_child_widget (GooCanvas       *canvas,
 				  GooCanvasWidget *witem)
 {
   GooCanvasBounds bounds;
+  GtkRequisition minimum_size;
   GtkAllocation allocation;
 
   goo_canvas_item_get_bounds ((GooCanvasItem*) witem, &bounds);
 
   goo_canvas_convert_to_pixels (canvas, &bounds.x1, &bounds.y1);
   goo_canvas_convert_to_pixels (canvas, &bounds.x2, &bounds.y2);
+
+  /* Call this to stop GTK+ spewing warnings. */
+  gtk_widget_get_preferred_size (witem->widget, &minimum_size, NULL);
 
   /* Note that we only really support integers for the bounds, and we don't
      support scaling of a canvas with widget items in it. */

@@ -1,3 +1,8 @@
+2016-12-15  Damon Chaplin  <damon@localhost.lan>
+
+	* src/goocanvas.c (goo_canvas_allocate_child_widget): call
+	gtk_widget_get_preferred_size() to stop GTK+ spewing warnings.
+
 2016-12-14  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c: added background_color and background_color_set
