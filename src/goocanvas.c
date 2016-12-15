@@ -171,12 +171,14 @@ static void     goo_canvas_finalize	   (GObject          *object);
 static void     goo_canvas_realize         (GtkWidget        *widget);
 static void     goo_canvas_unrealize	   (GtkWidget	     *widget);
 static void     goo_canvas_map		   (GtkWidget	     *widget);
-static void     goo_canvas_get_preferred_width (GtkWidget     *widget,
-						gint          *minimum,
-						gint          *natural);
-static void     goo_canvas_get_preferred_height (GtkWidget     *widget,
-						 gint          *minimum,
-						 gint          *natural);
+
+static void     goo_canvas_measure         (GtkWidget        *widget,
+                                            GtkOrientation    orientation,
+                                            gint              for_size,
+                                            gint              *minimum,
+                                            gint              *natural,
+                                            gint              *minimum_baseline,
+                                            gint              *natural_baseline);
 static void     goo_canvas_size_allocate   (GtkWidget        *widget,
 					    GtkAllocation    *allocation);
 static void     goo_canvas_set_hadjustment (GooCanvas        *canvas,
@@ -272,8 +274,7 @@ goo_canvas_class_init (GooCanvasClass *klass)
   widget_class->realize              = goo_canvas_realize;
   widget_class->unrealize            = goo_canvas_unrealize;
   widget_class->map                  = goo_canvas_map;
-  widget_class->get_preferred_width  = goo_canvas_get_preferred_width;
-  widget_class->get_preferred_height = goo_canvas_get_preferred_height;
+  widget_class->measure              = goo_canvas_measure;
   widget_class->size_allocate        = goo_canvas_size_allocate;
   widget_class->draw                 = goo_canvas_draw;
   widget_class->button_press_event   = goo_canvas_button_press;
@@ -1965,22 +1966,16 @@ reconfigure_canvas (GooCanvas *canvas,
 
 
 static void
-goo_canvas_get_preferred_width (GtkWidget *widget,
-				gint      *minimal_width,
-				gint      *natural_width)
+goo_canvas_measure (GtkWidget      *widget,
+                    GtkOrientation orientation,
+                    gint           for_size,
+                    gint          *minimum,
+                    gint          *natural,
+                    gint          *minimum_baseline,
+                    gint          *natural_baseline)
 {
-  *minimal_width = *natural_width = 0;
+  *minimum = *natural = 0;
 }
-
-
-static void
-goo_canvas_get_preferred_height (GtkWidget *widget,
-				 gint      *minimal_height,
-				 gint      *natural_height)
-{
-  *minimal_height = *natural_height = 0;
-}
-
 
 static void
 goo_canvas_allocate_child_widget (GooCanvas       *canvas,
