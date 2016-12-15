@@ -1,3 +1,9 @@
+2016-12-15  Damon Chaplin  <damon@localhost.lan>
+
+	* configure.in:
+	* src/Makefile.am : patch from Alberto Garcia to install introspection
+	data to the correct place. #731839
+
 2016-12-15  Damon Chaplin  <damon@gnome.org>
 
 	* src/*.c: removed use of <!--PARAMETERS--> gtk-doc flag which isn't
