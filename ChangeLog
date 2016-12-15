@@ -1,4 +1,10 @@
-2016-12-15  Damon Chaplin  <damon@localhost.lan>
+2016-12-15  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvasitem.c (goo_canvas_item_base_init): patch from
+	Cédric Krier to specify the correct event types for the signals,
+	in the introspection annotations. #771316
+
+2016-12-15  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_allocate_child_widget): call
 	gtk_widget_get_preferred_size() to stop GTK+ spewing warnings.

@@ -120,9 +120,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::enter-notify-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventCrossing): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when the mouse enters an item.
        *
@@ -145,9 +146,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::leave-notify-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventCrossing): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when the mouse leaves an item.
        *
@@ -170,9 +172,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::motion-notify-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventMotion): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when the mouse moves within an item.
        *
@@ -195,9 +198,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::button-press-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventButton): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when a mouse button is pressed in an item.
        *
@@ -220,9 +224,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::button-release-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventButton): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when a mouse button is released in an item.
        *
@@ -248,7 +253,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::focus-in-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data.
+       * @event: (type Gdk.EventFocus): the event data.
        *
        * Emitted when the item receives the keyboard focus.
        *
@@ -271,7 +276,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::focus-out-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data.
+       * @event: (type Gdk.EventFocus): the event data.
        *
        * Emitted when the item loses the keyboard focus.
        *
@@ -294,7 +299,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::key-press-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data.
+       * @event: (type Gdk.EventKey): the event data.
        *
        * Emitted when a key is pressed and the item has the keyboard
        * focus.
@@ -318,7 +323,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::key-release-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data.
+       * @event: (type Gdk.EventKey): the event data.
        *
        * Emitted when a key is released and the item has the keyboard
        * focus.
@@ -374,7 +379,7 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::grab-broken-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data.
+       * @event: (type Gdk.EventGrabBroken): the event data.
        *
        * Emitted when the item's keyboard or pointer grab was lost
        * unexpectedly.
@@ -433,9 +438,10 @@ goo_canvas_item_base_init (gpointer g_iface)
        * GooCanvasItem::scroll-event:
        * @item: the item that received the signal.
        * @target_item: the target of the event.
-       * @event: the event data. The x & y fields contain the mouse position
-       *  in the item's coordinate space. The x_root & y_root fields contain
-       *  the same coordinates converted to the canvas coordinate space.
+       * @event: (type Gdk.EventScroll): the event data. The x & y fields
+       * contain the mouse position in the item's coordinate space. The x_root
+       * & y_root fields contain the same coordinates converted to the canvas
+       * coordinate space.
        *
        * Emitted when a button in the 4 to 7 range is pressed. Wheel mice are
        * usually configured to generate button press events for buttons 4 and 5
