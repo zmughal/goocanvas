@@ -1,4 +1,9 @@
-2016-12-15  Damon Chaplin  <damon@localhost.lan>
+2016-12-15  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c (goo_canvas_get_bounds): patch from Simon Feltman
+	to add (out) annotations for introspection. #732197
+
+2016-12-15  Damon Chaplin  <damon@gnome.org>
 
 	* configure.in:
 	* src/Makefile.am : patch from Alberto Garcia to install introspection

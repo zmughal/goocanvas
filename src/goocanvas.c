@@ -2221,10 +2221,10 @@ set_item_pointer (GooCanvasItem **item,
 /**
  * goo_canvas_get_bounds:
  * @canvas: a #GooCanvas.
- * @left: a pointer to a #gdouble to return the left edge, or %NULL.
- * @top: a pointer to a #gdouble to return the top edge, or %NULL.
- * @right: a pointer to a #gdouble to return the right edge, or %NULL.
- * @bottom: a pointer to a #gdouble to return the bottom edge, or %NULL.
+ * @left: (out): a pointer to a #gdouble to return the left edge, or %NULL.
+ * @top: (out): a pointer to a #gdouble to return the top edge, or %NULL.
+ * @right: (out): a pointer to a #gdouble to return the right edge, or %NULL.
+ * @bottom: (out): a pointer to a #gdouble to return the bottom edge, or %NULL.
  *
  * Gets the bounds of the canvas, in canvas units.
  *
