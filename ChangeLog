@@ -1,5 +1,10 @@
 2016-12-15  Damon Chaplin  <damon@gnome.org>
 
+	* src/*.c: removed use of <!--PARAMETERS--> gtk-doc flag which isn't
+	supported any more. #729984
+
+2016-12-15  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvastext.c (goo_canvas_text_get_natural_extents): patch from
 	Cédric Krier to add "(out)" annotations for introspection. #771317
 

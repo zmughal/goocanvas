@@ -97,8 +97,6 @@ goo_canvas_widget_init (GooCanvasWidget *witem)
  *
  * Creates a new widget item.
  *
- * <!--PARAMETERS-->
- * 
  * Here's an example showing how to create an entry widget centered at (100.0,
  * 100.0):
  *

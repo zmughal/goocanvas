@@ -694,8 +694,6 @@ goo_canvas_polyline_set_property (GObject              *object,
  * 
  * Creates a new polyline item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a filled triangle with vertices
  * at (100,100), (300,100), and (200,300).
  *
@@ -764,8 +762,6 @@ goo_canvas_polyline_new               (GooCanvasItem *parent,
  * 
  * Creates a new polyline item with a single line.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a line from (100,100) to (300,300).
  *
  * <informalexample><programlisting>
@@ -1202,8 +1198,6 @@ goo_canvas_polyline_model_init (GooCanvasPolylineModel *pmodel)
  * 
  * Creates a new polyline model.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a filled triangle with vertices
  * at (100,100), (300,100), and (200,300).
  *
@@ -1272,8 +1266,6 @@ goo_canvas_polyline_model_new (GooCanvasItemModel *parent,
  * 
  * Creates a new polyline model with a single line.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a line from (100,100) to (300,300).
  *
  * <informalexample><programlisting>

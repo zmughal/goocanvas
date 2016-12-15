@@ -123,8 +123,6 @@ goo_canvas_path_init (GooCanvasPath *path)
  * 
  * Creates a new path item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a red line from (20,20) to (40,40):
  *
  * <informalexample><programlisting>
@@ -681,8 +679,6 @@ goo_canvas_path_model_init (GooCanvasPathModel *pmodel)
  * 
  * Creates a new path model.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a red line from (20,20) to (40,40):
  *
  * <informalexample><programlisting>

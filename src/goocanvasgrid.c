@@ -396,8 +396,6 @@ goo_canvas_grid_init (GooCanvasGrid *grid)
  * 
  * Creates a new grid item.
  *
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a grid:
  *
  * <informalexample><programlisting>
@@ -1093,8 +1091,6 @@ goo_canvas_grid_model_init (GooCanvasGridModel *gmodel)
  * @...: optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new grid model.
- *
- * <!--PARAMETERS-->
  *
  * Here's an example showing how to create a grid:
  *

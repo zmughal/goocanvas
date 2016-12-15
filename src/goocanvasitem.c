@@ -764,7 +764,7 @@ goo_canvas_item_get_parent  (GooCanvasItem *item)
  * This function is only intended to be used when implementing new canvas
  * items (specifically container items such as #GooCanvasGroup).
  * It sets the parent of the child item.
- * <!--PARAMETERS-->
+ * 
  * <note><para>
  * This function cannot be used to add an item to a group
  * or to change the parent of an item.

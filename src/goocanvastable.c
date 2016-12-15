@@ -476,8 +476,6 @@ goo_canvas_table_init (GooCanvasTable *table)
  * 
  * Creates a new table item.
  *
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a table with a square, a circle and
  * a triangle in it:
  *
@@ -2822,8 +2820,6 @@ goo_canvas_table_model_init (GooCanvasTableModel *tmodel)
  * @...: optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new table model.
- *
- * <!--PARAMETERS-->
  *
  * Here's an example showing how to create a table with a square, a circle and
  * a triangle in it:

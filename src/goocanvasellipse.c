@@ -171,8 +171,6 @@ goo_canvas_ellipse_init (GooCanvasEllipse *ellipse)
  * 
  * Creates a new ellipse item.
  *
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create an ellipse centered at (100.0,
  * 100.0), with a horizontal radius of 50.0 and a vertical radius of 30.0.
  * It is drawn with a red outline with a width of 5.0 and filled with blue:
@@ -502,8 +500,6 @@ goo_canvas_ellipse_model_init (GooCanvasEllipseModel *emodel)
  * @...: optional pairs of property names and values, and a terminating %NULL.
  * 
  * Creates a new ellipse model.
- *
- * <!--PARAMETERS-->
  *
  * Here's an example showing how to create an ellipse centered at (100.0,
  * 100.0), with a horizontal radius of 50.0 and a vertical radius of 30.0.

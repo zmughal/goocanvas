@@ -461,7 +461,7 @@ goo_canvas_item_model_get_parent  (GooCanvasItemModel *model)
  * This function is only intended to be used when implementing new canvas
  * item models (specifically container models such as #GooCanvasGroupModel).
  * It sets the parent of the child model.
- * <!--PARAMETERS-->
+ * 
  * <note><para>
  * This function cannot be used to add a model to a group
  * or to change the parent of a model.

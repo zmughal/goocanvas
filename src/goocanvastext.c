@@ -206,8 +206,6 @@ goo_canvas_text_init (GooCanvasText *text)
  * 
  * Creates a new text item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a text item with the bottom right
  * of the text box placed at (500,500):
  *
@@ -1007,8 +1005,6 @@ goo_canvas_text_model_init (GooCanvasTextModel *tmodel)
  * 
  * Creates a new text model.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a text item with the bottom right
  * of the text box placed at (500,500):
  *

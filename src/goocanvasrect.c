@@ -121,8 +121,6 @@ goo_canvas_rect_init (GooCanvasRect *rect)
  * 
  * Creates a new rectangle item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a rectangle at (100,100) with a
  * width of 200 and a height of 100.
  *
@@ -500,8 +498,6 @@ goo_canvas_rect_model_init (GooCanvasRectModel *rmodel)
  * 
  * Creates a new rectangle item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create a rectangle at (100,100) with a
  * width of 200 and a height of 100.
  *

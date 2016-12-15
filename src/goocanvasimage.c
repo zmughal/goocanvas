@@ -218,8 +218,6 @@ goo_canvas_image_convert_pixbuf_sizes (GooCanvasItem *item,
  * 
  * Creates a new image item.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create an image at (100.0, 100.0), using
  * the given pixbuf at its natural width and height:
  *
@@ -696,8 +694,6 @@ goo_canvas_image_model_init (GooCanvasImageModel *emodel)
  * 
  * Creates a new image model.
  * 
- * <!--PARAMETERS-->
- *
  * Here's an example showing how to create an image at (100.0, 100.0), using
  * the given pixbuf at its natural width and height:
  *
