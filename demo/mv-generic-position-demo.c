@@ -193,7 +193,7 @@ create_window (GooCanvasItemModel *model)
 
   label = gtk_label_new ("Use Ctrl+Left Click to move items or Ctrl+Right Click to resize items");
   g_object_set (label, "halign", GTK_ALIGN_START, NULL);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE);
   gtk_widget_show (label);
 
   /* Create top canvas. */
@@ -201,7 +201,7 @@ create_window (GooCanvasItemModel *model)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
                                        GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
 
   canvas = goo_canvas_new ();
   g_object_set (G_OBJECT (canvas), "integer-layout", TRUE, NULL);

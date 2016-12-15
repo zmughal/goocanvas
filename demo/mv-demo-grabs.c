@@ -416,14 +416,14 @@ create_grabs_page (void)
   gtk_widget_show (vbox);
 
   label = gtk_label_new ("Move the mouse over the widgets and canvas items on the right to see what events they receive.\nClick buttons to start explicit or implicit pointer grabs and see what events they receive now.\n(They should all receive the same events.)");
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE);
   gtk_widget_show (label);
 
   grid = gtk_grid_new ();
   gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
   gtk_grid_set_row_spacing (GTK_GRID (grid), 12);
   gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-  gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE);
   g_object_set (grid, "halign", GTK_ALIGN_CENTER, NULL);
   gtk_widget_show (grid);
 
