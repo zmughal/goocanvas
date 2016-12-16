@@ -1,5 +1,12 @@
 2016-12-16  Damon Chaplin  <damon@gnome.org>
 
+	* autogen.sh: pinched from gdk-pixbuf.
+
+	* src/Makefile.am (GooCanvas_2_0_gir_CFLAGS): added -I$(top_srcdir)/src
+	so hopefully it builds OK outside srcdir. #735420
+
+2016-12-16  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvasimage.c (goo_canvas_image_paint): use cairo_clip() when
 	calling cairo_paint_with_alpha() otherwise it gets messed up.
 	(the flowers in the demo were sometimes painted incorrectly.)

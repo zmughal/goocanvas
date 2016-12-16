@@ -157,7 +157,7 @@ introspection_sources = $(libgoocanvas_3_0_la_SOURCES) $(libgoocanvasinclude_HEA
 GooCanvas-3.0.gir: libgoocanvas-3.0.la
 GooCanvas_3_0_gir_SCANNERFLAGS = --identifier-prefix=Goo --symbol-prefix=goo --warn-all
 GooCanvas_3_0_gir_INCLUDES = Gtk-3.0
-GooCanvas_3_0_gir_CFLAGS = $(INCLUDES)
+GooCanvas_3_0_gir_CFLAGS = $(INCLUDES) -I$(top_srcdir)/src
 GooCanvas_3_0_gir_LIBS = goocanvas-3.0
 GooCanvas_3_0_gir_FILES = $(introspection_sources)
 INTROSPECTION_GIRS += GooCanvas-3.0.gir
