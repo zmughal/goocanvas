@@ -429,7 +429,7 @@ create_canvas_arrowhead (void)
 	GooCanvasItemModel *root, *item;
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+	g_object_set (vbox, "margin", 4, NULL);
 	gtk_widget_show (vbox);
 
 	w = gtk_label_new ("This demo allows you to edit arrowhead shapes.  Drag the little boxes\n"

@@ -22,7 +22,7 @@ create_canvas_scalability (void)
 	int i, j, width, height;
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+	g_object_set (vbox, "margin", 4, NULL);
 	gtk_widget_show (vbox);
 
 	/* Create the canvas and board */

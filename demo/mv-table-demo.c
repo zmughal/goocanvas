@@ -230,7 +230,7 @@ main (int argc, char *argv[])
 		    NULL);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  g_object_set (vbox, "margin", 4, NULL);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
 

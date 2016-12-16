@@ -412,7 +412,7 @@ create_grabs_page (void)
   GtkWidget *vbox, *grid, *label;
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  g_object_set (vbox, "margin", 4, NULL);
   gtk_widget_show (vbox);
 
   label = gtk_label_new ("Move the mouse over the widgets and canvas items on the right to see what events they receive.\nClick buttons to start explicit or implicit pointer grabs and see what events they receive now.\n(They should all receive the same events.)");
@@ -420,7 +420,7 @@ create_grabs_page (void)
   gtk_widget_show (label);
 
   grid = gtk_grid_new ();
-  gtk_container_set_border_width (GTK_CONTAINER (grid), 12);
+  g_object_set (grid, "margin", 12, NULL);
   gtk_grid_set_row_spacing (GTK_GRID (grid), 12);
   gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
   gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE);
