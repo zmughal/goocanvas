@@ -5,7 +5,7 @@ INCLUDES = \
 	-I$(top_builddir)/src \
 	@PACKAGE_CFLAGS@
 
-DEMO_LIBS = $(top_builddir)/src/libgoocanvas-2.0.la @PACKAGE_LIBS@ $(INTLLIBS) -lm
+DEMO_LIBS = $(top_builddir)/src/libgoocanvas-3.0.la @PACKAGE_LIBS@ $(INTLLIBS) -lm
 
 #	-DG_DISABLE_DEPRECATED -DPANGO_DISABLE_DEPRECATED \
 #	-DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED \
