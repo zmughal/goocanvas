@@ -67,7 +67,7 @@ create_large_items_page (void)
   gchar *text;
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  g_object_set (vbox, "margin", 4, NULL);
   gtk_widget_show (vbox);
 
   text = g_strdup_printf ("This is a very large canvas, from (%i, %i) to (%i, %i).\nThe maximum zoom is %i. At this scale the canvas comes very close to the GDK window size limit (32-bit gint).\nThe items have been specially written to work around cairo's limits (transformed coords must be < +/- 32768).",

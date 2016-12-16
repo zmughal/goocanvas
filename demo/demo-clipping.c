@@ -138,7 +138,7 @@ create_clipping_page (void)
   GtkWidget *vbox, *scrolled_win, *canvas;
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  g_object_set (vbox, "margin", 4, NULL);
   gtk_widget_show (vbox);
 
   scrolled_win = gtk_scrolled_window_new (NULL, NULL);

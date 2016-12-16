@@ -398,7 +398,7 @@ create_canvas_primitives (GooCanvasItemModel *model,
 	GSList *group = NULL;
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+	g_object_set (vbox, "margin", 4, NULL);
 	gtk_widget_show (vbox);
 
 	w = gtk_label_new ("Drag an item with button 1.  Click button 2 on an item to lower it, or button 3 to raise it.");
