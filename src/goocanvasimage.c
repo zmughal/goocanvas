@@ -502,8 +502,6 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
   if (!image_data->pattern)
     return;
 
-#if 1
-
   /* scale-to-fit means a simple scale, not keeping the aspect ratio.
      This does not need to consider the units used. */ 
   if (priv->scale_to_fit)
@@ -541,18 +539,14 @@ goo_canvas_image_paint (GooCanvasItemSimple   *simple,
   /* To have better performance, we don't use cairo_paint_with_alpha if
    * the image is not transparent at all. */
   if (priv->alpha != 1.0)
-    cairo_paint_with_alpha (cr, priv->alpha);
+    {
+      cairo_clip (cr);
+      cairo_paint_with_alpha (cr, priv->alpha);
+    }
   else
-    cairo_fill (cr);
-#else
-  /* Using cairo_paint() used to be much slower than cairo_fill(), though
-     they seem similar now. I'm not sure if it matters which we use. */
-  cairo_matrix_init_translate (&matrix, -image_data->x, -image_data->y);
-  cairo_pattern_set_matrix (image_data->pattern, &matrix);
-  goo_canvas_style_set_fill_options (simple->simple_data->style, cr);
-  cairo_set_source (cr, image_data->pattern);
-  cairo_paint (cr);
-#endif
+    {
+      cairo_fill (cr);
+    }
 }
 
 
