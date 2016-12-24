@@ -1,0 +1,1275 @@
+# Czech translation for goocanvas.
+# Copyright (C) 2016 goocanvas's COPYRIGHT HOLDER
+# This file is distributed under the same license as the goocanvas package.
+# Marek Černocký <marek@manet.cz>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: goocanvas goocanvas-2.0\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=goocanvas&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-12-20 11:55+0000\n"
+"PO-Revision-Date: 2016-12-24 12:30+0100\n"
+"Last-Translator: Marek Černocký <marek@manet.cz>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: ../src/goocanvas.c:309
+msgid "Scale"
+msgstr "Měřítko"
+
+#: ../src/goocanvas.c:310
+msgid "The magnification factor of the canvas"
+msgstr "Faktor škálování plátna"
+
+#: ../src/goocanvas.c:316
+msgid "Scale X"
+msgstr "Měřítko ve směru X"
+
+#: ../src/goocanvas.c:317
+msgid "The horizontal magnification factor of the canvas"
+msgstr "Vodorovný faktor škálování plátna"
+
+#: ../src/goocanvas.c:323
+msgid "Scale Y"
+msgstr "Měřítko ve směru Y"
+
+#: ../src/goocanvas.c:324
+msgid "The vertical magnification factor of the canvas"
+msgstr "Svislý faktor škálování plátna"
+
+#: ../src/goocanvas.c:330 ../src/goocanvastext.c:158
+#: ../src/goocanvaswidget.c:587
+msgid "Anchor"
+msgstr "Kotva"
+
+#: ../src/goocanvas.c:331
+msgid ""
+"Where to place the canvas when it is smaller than the widget's allocated area"
+msgstr "Kam umístit plátno, když je menší, než oblast přidělená widgetu"
+
+#: ../src/goocanvas.c:338
+msgid "X1"
+msgstr "X1"
+
+#: ../src/goocanvas.c:339
+msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
+msgstr "X-ová souřadnice levého okraje hranic plátna, v jednotkách plátna"
+
+#: ../src/goocanvas.c:346
+msgid "Y1"
+msgstr "Y1"
+
+#: ../src/goocanvas.c:347
+msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
+msgstr "Y-ová souřadnice horního okraje hranic plátna, v jednotkách plátna"
+
+#: ../src/goocanvas.c:354
+msgid "X2"
+msgstr "X2"
+
+#: ../src/goocanvas.c:355
+msgid ""
+"The x coordinate of the right edge of the canvas bounds, in canvas units"
+msgstr "X-ová souřadnice pravého okraje hranic plátna, v jednotkách plátna"
+
+#: ../src/goocanvas.c:363
+msgid "Y2"
+msgstr "Y2"
+
+#: ../src/goocanvas.c:364
+msgid ""
+"The y coordinate of the bottom edge of the canvas bounds, in canvas units"
+msgstr "Y-ová souřadnice dolního okraje hranic plátna, v jednotkách plátna"
+
+#: ../src/goocanvas.c:373
+msgid "Automatic Bounds"
+msgstr "Automatické hranice"
+
+#: ../src/goocanvas.c:374
+msgid ""
+"If the bounds are automatically calculated based on the bounds of all the "
+"items in the canvas"
+msgstr ""
+"Zda se mají hranice automaticky vypočítat podle hranic všech položek na "
+"plátně"
+
+#: ../src/goocanvas.c:380
+msgid "Bounds From Origin"
+msgstr "Hranice od počátku"
+
+#: ../src/goocanvas.c:381
+msgid "If the automatic bounds are calculated from the origin"
+msgstr "Zda se mají automatické hranice počítat od počátku"
+
+#: ../src/goocanvas.c:387
+msgid "Bounds Padding"
+msgstr "Odsazení hranic"
+
+#: ../src/goocanvas.c:388
+msgid "The padding added to the automatic bounds"
+msgstr "Odsazení přidané k automatickým hranicím"
+
+#: ../src/goocanvas.c:394
+msgid "Units"
+msgstr "Jednotky"
+
+#: ../src/goocanvas.c:395
+msgid "The units to use for the canvas"
+msgstr "Jednotky, které se mají používat pro plátno"
+
+#: ../src/goocanvas.c:402
+msgid "Resolution X"
+msgstr "Rozlišení X"
+
+#: ../src/goocanvas.c:403
+msgid "The horizontal resolution of the display, in dots per inch"
+msgstr "Vodorovné rozlišení zobrazení, v bodech na palec"
+
+#: ../src/goocanvas.c:410
+msgid "Resolution Y"
+msgstr "Rozlišení Y"
+
+#: ../src/goocanvas.c:411
+msgid "The vertical resolution of the display, in dots per inch"
+msgstr "Svislé rozlišení zobrazení, v bodech na palec"
+
+#: ../src/goocanvas.c:419
+msgid "Background Color"
+msgstr "Barva pozadí"
+
+#: ../src/goocanvas.c:420
+msgid "The color to use for the canvas background"
+msgstr "Barva, která se má použít jako pozadí plátna"
+
+#: ../src/goocanvas.c:426
+msgid "Background Color RGB"
+msgstr "Barva pozadí jako RGB"
+
+#: ../src/goocanvas.c:427
+msgid ""
+"The color to use for the canvas background, specified as a 24-bit integer "
+"value, 0xRRGGBB"
+msgstr ""
+"Barva, která se má použít jako pozadí plátna, zadaná jako 24bitové celé "
+"číslo, 0xRRGGBB"
+
+#: ../src/goocanvas.c:440
+msgid "Background Color GdkRGBA"
+msgstr "Barva pozadí jako GdkRGBA"
+
+#: ../src/goocanvas.c:441
+msgid "The color to use for the canvas background, specified as a GdkRGBA"
+msgstr "Barva, která se má použít jako pozadí plátna, zadaná jako GdkRGBA"
+
+#: ../src/goocanvas.c:447
+msgid "Integer Layout"
+msgstr "Celočíselné rozvržení"
+
+#: ../src/goocanvas.c:448
+msgid "If all item layout is done to the nearest integer"
+msgstr ""
+"Zda se všechny položky v rozvržení mají upravit na nejbližší celočíselnou "
+"hodnotu"
+
+#: ../src/goocanvas.c:454
+msgid "Clear Background"
+msgstr "Vymazat pozadí"
+
+#: ../src/goocanvas.c:455
+msgid "If the background is cleared before the canvas is painted"
+msgstr "Zda se vymaže pozadí, než se začne na plátno malovat"
+
+#: ../src/goocanvas.c:461
+msgid "Redraw When Scrolled"
+msgstr "Překreslit při posunu"
+
+#: ../src/goocanvas.c:462
+msgid ""
+"If the canvas is completely redrawn when scrolled, to reduce the flicker of "
+"static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
+"scrolled, so this option has no effect."
+msgstr ""
+"Zda se má plátno celé překreslit, když dojde k posunu, aby se omezilo "
+"roztřepení položek. Od verze GTK+ 3.0 je plátno při posunu překreslováno "
+"vždy, takže tato volba nemá žádný vliv."
+
+#: ../src/goocanvasellipse.c:77
+msgid "Center X"
+msgstr "Střed X"
+
+#: ../src/goocanvasellipse.c:78
+msgid "The x coordinate of the center of the ellipse"
+msgstr "X-ová souřadnice středu elipsy"
+
+#: ../src/goocanvasellipse.c:85
+msgid "Center Y"
+msgstr "Střed Y"
+
+#: ../src/goocanvasellipse.c:86
+msgid "The y coordinate of the center of the ellipse"
+msgstr "Y-ová souřadnice středu elipsy"
+
+#: ../src/goocanvasellipse.c:93 ../src/goocanvasrect.c:90
+msgid "Radius X"
+msgstr "Poloměr X"
+
+#: ../src/goocanvasellipse.c:94
+msgid "The horizontal radius of the ellipse"
+msgstr "Vodorovný poloměr elipsy"
+
+#: ../src/goocanvasellipse.c:100 ../src/goocanvasrect.c:97
+msgid "Radius Y"
+msgstr "Poloměr Y"
+
+#: ../src/goocanvasellipse.c:101
+msgid "The vertical radius of the ellipse"
+msgstr "Svislý poloměr elipsy"
+
+#: ../src/goocanvasellipse.c:108
+msgid "The x coordinate of the left side of the ellipse"
+msgstr "X-ová souřadnice levé strany elipsy"
+
+#: ../src/goocanvasellipse.c:116
+msgid "The y coordinate of the top of the ellipse"
+msgstr "Y-ová souřadnice horní strany elipsy"
+
+#: ../src/goocanvasellipse.c:123 ../src/goocanvasgrid.c:127
+#: ../src/goocanvasgroup.c:106 ../src/goocanvasimage.c:115
+#: ../src/goocanvaspath.c:93 ../src/goocanvaspolyline.c:246
+#: ../src/goocanvasrect.c:76 ../src/goocanvastext.c:141
+#: ../src/goocanvaswidget.c:570
+msgid "Width"
+msgstr "Šířka"
+
+#: ../src/goocanvasellipse.c:124
+msgid "The width of the ellipse"
+msgstr "Šířka elipsy"
+
+#: ../src/goocanvasellipse.c:130 ../src/goocanvasgrid.c:134
+#: ../src/goocanvasgroup.c:114 ../src/goocanvasimage.c:122
+#: ../src/goocanvaspath.c:100 ../src/goocanvaspolyline.c:253
+#: ../src/goocanvasrect.c:83 ../src/goocanvastext.c:149
+#: ../src/goocanvaswidget.c:578
+msgid "Height"
+msgstr "Výška"
+
+#: ../src/goocanvasellipse.c:131
+msgid "The height of the ellipse"
+msgstr "Výška elipsy"
+
+#: ../src/goocanvasgrid.c:112
+msgid "The x coordinate of the grid"
+msgstr "X-ová souřadnice mřížky"
+
+#: ../src/goocanvasgrid.c:120
+msgid "The y coordinate of the grid"
+msgstr "Y-ová souřadnice mřížky"
+
+#: ../src/goocanvasgrid.c:128
+msgid "The width of the grid"
+msgstr "Šířka mřížky"
+
+#: ../src/goocanvasgrid.c:135
+msgid "The height of the grid"
+msgstr "Výška mřížky"
+
+#: ../src/goocanvasgrid.c:142
+msgid "The distance between the vertical grid lines"
+msgstr "Vzdálenost mezi svislými čárami mřížky"
+
+#: ../src/goocanvasgrid.c:149
+msgid "The distance between the horizontal grid lines"
+msgstr "Vzdálenost mezi vodorovnými čárami mřížky"
+
+#: ../src/goocanvasgrid.c:156
+msgid "The distance before the first vertical grid line"
+msgstr "Vzdálenost k první svislé čáře mřížky"
+
+#: ../src/goocanvasgrid.c:163
+msgid "The distance before the first horizontal grid line"
+msgstr "Vzdálenost k první vodorovné čáře mřížky"
+
+#: ../src/goocanvasgrid.c:169 ../src/goocanvastable.c:276
+msgid "Horizontal Grid Line Width"
+msgstr "Tloušťka vodorovných čar mřížky"
+
+#: ../src/goocanvasgrid.c:170
+msgid "The width of the horizontal grid lines"
+msgstr "Tloušťka vodorovných čar mřížky"
+
+#: ../src/goocanvasgrid.c:177 ../src/goocanvastable.c:283
+msgid "Vertical Grid Line Width"
+msgstr "Tloušťka svislých čar mřížky"
+
+#: ../src/goocanvasgrid.c:178
+msgid "The width of the vertical grid lines"
+msgstr "Tloušťka svislých čar mřížky"
+
+#: ../src/goocanvasgrid.c:185
+msgid "Horizontal Grid Line Pattern"
+msgstr "Vzorek vodorovných čar mřížky"
+
+#: ../src/goocanvasgrid.c:186
+msgid "The cairo pattern to paint the horizontal grid lines with"
+msgstr "Vzorek Cairo, pomocí kterého se mají malovat vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:192
+msgid "Vertical Grid Line Pattern"
+msgstr "Vzorek svislých čar mřížky"
+
+#: ../src/goocanvasgrid.c:193
+msgid "The cairo pattern to paint the vertical grid lines with"
+msgstr "Vzorek Cairo, pomocí kterého se mají malovat svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:199
+msgid "Border Width"
+msgstr "Tloušťka ohraničení"
+
+#: ../src/goocanvasgrid.c:200
+msgid "The width of the border around the grid"
+msgstr "Šířka okraje okolo mřížky"
+
+#: ../src/goocanvasgrid.c:207
+msgid "Border Pattern"
+msgstr "Vzorek okraje"
+
+#: ../src/goocanvasgrid.c:208
+msgid "The cairo pattern to paint the border with"
+msgstr "Vzorek Cairo, kterým se má malovat šířka okraje"
+
+#: ../src/goocanvasgrid.c:214
+msgid "Show Horizontal Grid Lines"
+msgstr "Zobrazovat vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:215
+msgid "If the horizontal grid lines are shown"
+msgstr "Zda se mají zobrazovat vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:221
+msgid "Show Vertical Grid Lines"
+msgstr "Zobrazovat svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:222
+msgid "If the vertical grid lines are shown"
+msgstr "Zda se mají zobrazovat svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:228
+msgid "Vertical Grid Lines On Top"
+msgstr "Svislé čáry mřížky nahoře"
+
+#: ../src/goocanvasgrid.c:229
+msgid "If the vertical grid lines are painted above the horizontal grid lines"
+msgstr "Zda se mají svislé čáry mřížky malovat nad vodorovnými čárami mřížky"
+
+#: ../src/goocanvasgrid.c:237
+msgid "Horizontal Grid Line Color"
+msgstr "Barva vodorovných čar mřížky"
+
+#: ../src/goocanvasgrid.c:238
+msgid "The color to use for the horizontal grid lines"
+msgstr "Barva, která se má použít pro vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:244
+msgid "Horizontal Grid Line Color RGBA"
+msgstr "Barva vodorovných čar mřížky jako RGBA"
+
+#: ../src/goocanvasgrid.c:245
+msgid ""
+"The color to use for the horizontal grid lines, specified as a 32-bit "
+"integer value"
+msgstr ""
+"Barva, která se má použít pro vodorovné čáry mřížky, zadaná jako 32bitové "
+"celé číslo"
+
+#: ../src/goocanvasgrid.c:258
+msgid "Horizontal Grid Line Color GdkRGBA"
+msgstr "Barva vodorovných čar mřížky jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:259
+msgid "The color to use for the horizontal grid lines, specified as a GdkRGBA"
+msgstr ""
+"Barva, která se má použít pro vodorovné čáry mřížky, zadaná jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:265
+msgid "Horizontal Grid Line Pixbuf"
+msgstr "GdkPixbuf vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:266
+msgid "The pixbuf to use to draw the horizontal grid lines"
+msgstr ""
+"Pixelová vyrovnávací paměť, která se má použít pro vodorovné čáry mřížky"
+
+#: ../src/goocanvasgrid.c:272
+msgid "Vertical Grid Line Color"
+msgstr "Barva svislých čar mřížky"
+
+#: ../src/goocanvasgrid.c:273
+msgid "The color to use for the vertical grid lines"
+msgstr "Barva, která se má použít pro svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:279
+msgid "Vertical Grid Line Color RGBA"
+msgstr "Barva svislých čar mřížky jako RGBA"
+
+#: ../src/goocanvasgrid.c:280
+msgid ""
+"The color to use for the vertical grid lines, specified as a 32-bit integer "
+"value"
+msgstr ""
+"Barva, která se má použít pro svislé čáry mřížky, zadaná jako 32bitové celé "
+"číslo"
+
+#: ../src/goocanvasgrid.c:293
+msgid "Vertical Grid Line Color GdkRGBA"
+msgstr "Barva svislých čar mřížky jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:294
+msgid "The color to use for the vertical grid lines, specified as a GdkRGBA"
+msgstr "Barva, která se má použít pro svislé čáry mřížky, zadaná jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:300
+msgid "Vertical Grid Line Pixbuf"
+msgstr "GdkPixbuf svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:301
+msgid "The pixbuf to use to draw the vertical grid lines"
+msgstr "Pixelová vyrovnávací paměť, která se má použít pro svislé čáry mřížky"
+
+#: ../src/goocanvasgrid.c:307
+msgid "Border Color"
+msgstr "Barva okraje"
+
+#: ../src/goocanvasgrid.c:308
+msgid "The color to use for the border"
+msgstr "Barva, která se má použít pro okraj"
+
+#: ../src/goocanvasgrid.c:314
+msgid "Border Color RGBA"
+msgstr "Barva okraje jako RGBA"
+
+#: ../src/goocanvasgrid.c:315
+msgid "The color to use for the border, specified as a 32-bit integer value"
+msgstr "Barva, která se má použít pro okraj, zadaná jako 32bitové celé číslo"
+
+#: ../src/goocanvasgrid.c:328
+msgid "Border Color GdkRGBA"
+msgstr "Barva okraje jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:329
+msgid "The color to use for the border, specified as a GdkRGBA"
+msgstr "Barva, která se má použít pro okraj, zadaná jako GdkRGBA"
+
+#: ../src/goocanvasgrid.c:335
+msgid "Border Pixbuf"
+msgstr "GdkPixbuf okraje"
+
+#: ../src/goocanvasgrid.c:336
+msgid "The pixbuf to use to draw the border"
+msgstr "Pixelová vyrovnávací paměť, která se má použít pro vykreslení okraje"
+
+#: ../src/goocanvasgroup.c:91
+msgid "The x coordinate of the group"
+msgstr "X-ová souřadnice skupiny"
+
+#: ../src/goocanvasgroup.c:99
+msgid "The y coordinate of the group"
+msgstr "Y-ová souřadnice skupiny"
+
+#: ../src/goocanvasgroup.c:107
+msgid "The width of the group, or -1 to use the default width"
+msgstr "Šířka skupiny nebo -1, když se má použít výchozí šířka"
+
+#: ../src/goocanvasgroup.c:115
+msgid "The height of the group, or -1 to use the default height"
+msgstr "Výška skupiny nebo -1, když se má použít výchozí výška"
+
+#: ../src/goocanvasimage.c:92
+msgid "Pattern"
+msgstr "Vzorek"
+
+#: ../src/goocanvasimage.c:93
+msgid "The cairo pattern to paint"
+msgstr "Vzorek Cairo, který se má namalovat"
+
+#: ../src/goocanvasimage.c:100
+msgid "The x coordinate of the image"
+msgstr "X-ová souřadnice obrázku"
+
+#: ../src/goocanvasimage.c:108
+msgid "The y coordinate of the image"
+msgstr "Y-ová souřadnice obrázku"
+
+#: ../src/goocanvasimage.c:116
+msgid "The width of the image"
+msgstr "Šířka obrázku"
+
+#: ../src/goocanvasimage.c:123
+msgid "The height of the image"
+msgstr "Výška obrázku"
+
+#: ../src/goocanvasimage.c:129
+msgid "Scale To Fit"
+msgstr "Škálovat pro přizpůsobení"
+
+#: ../src/goocanvasimage.c:130
+msgid "If the image is scaled to fit the width and height settings"
+msgstr "Zda je obrázek škálovaný, aby se přizpůsobil šířce a výšce nastavení"
+
+#: ../src/goocanvasimage.c:136
+msgid "Alpha"
+msgstr "Alfa"
+
+#: ../src/goocanvasimage.c:137
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr "Krytí obrázku; 0,0 znamená úplnou průhlednost a 1,0 úplné krytí"
+
+#: ../src/goocanvasimage.c:143
+msgid "Pixbuf"
+msgstr "Pixelová vyrovnávací paměť"
+
+#: ../src/goocanvasimage.c:144
+msgid "The GdkPixbuf to display"
+msgstr "GdkPixbuf pro zobrazení"
+
+#: ../src/goocanvasitem.c:467 ../src/goocanvasitemmodel.c:224
+msgid "Parent"
+msgstr "Rodič"
+
+#: ../src/goocanvasitem.c:468
+msgid "The parent item"
+msgstr "Rodičovská položka"
+
+#: ../src/goocanvasitem.c:474 ../src/goocanvasitemmodel.c:231
+msgid "Visibility"
+msgstr "Viditelnost"
+
+#: ../src/goocanvasitem.c:475 ../src/goocanvasitemmodel.c:232
+msgid "When the canvas item is visible"
+msgstr "Zda je položka plátna viditelná"
+
+#: ../src/goocanvasitem.c:482 ../src/goocanvasitemmodel.c:239
+msgid "Visibility Threshold"
+msgstr "Práh viditelnosti"
+
+#: ../src/goocanvasitem.c:483 ../src/goocanvasitemmodel.c:240
+msgid "The scale threshold at which the item becomes visible"
+msgstr "Prahová hodnota měřítka, při které se položka stane viditelnou"
+
+#: ../src/goocanvasitem.c:491 ../src/goocanvasitemmodel.c:248
+msgid "Transform"
+msgstr "Transformace"
+
+#: ../src/goocanvasitem.c:492 ../src/goocanvasitemmodel.c:249
+msgid "The transformation matrix of the item"
+msgstr "Transformační matice položky"
+
+#: ../src/goocanvasitem.c:498 ../src/goocanvasitemmodel.c:255
+msgid "Pointer Events"
+msgstr "Události ukazatele"
+
+#: ../src/goocanvasitem.c:499 ../src/goocanvasitemmodel.c:256
+msgid "Specifies when the item receives pointer events"
+msgstr "Určuje, jestli má položka přijímat události ukazatele"
+
+#: ../src/goocanvasitem.c:506 ../src/goocanvasitemmodel.c:263
+msgid "Title"
+msgstr "Název"
+
+#: ../src/goocanvasitem.c:507 ../src/goocanvasitemmodel.c:264
+msgid ""
+"A short context-rich description of the item for use by assistive "
+"technologies"
+msgstr "Stručný popisný název položky pro použití asistenčními technologiemi"
+
+#: ../src/goocanvasitem.c:513 ../src/goocanvasitemmodel.c:270
+msgid "Description"
+msgstr "Popis"
+
+#: ../src/goocanvasitem.c:514 ../src/goocanvasitemmodel.c:271
+msgid "A description of the item for use by assistive technologies"
+msgstr "Popis položky pro použití asistenčními technologiemi"
+
+#: ../src/goocanvasitem.c:520 ../src/goocanvasitemmodel.c:277
+msgid "Can Focus"
+msgstr "Může mít zaměření"
+
+#: ../src/goocanvasitem.c:521 ../src/goocanvasitemmodel.c:278
+msgid "If the item can take the keyboard focus"
+msgstr "Zda položka může získat zaměření pro klávesnici"
+
+#: ../src/goocanvasitem.c:536 ../src/goocanvasitemmodel.c:284
+msgid "Tooltip"
+msgstr "Vysvětlivka"
+
+#: ../src/goocanvasitem.c:537 ../src/goocanvasitemmodel.c:285
+msgid "The tooltip to display for the item"
+msgstr "Vysvětlivka, která se má pro položku zobrazovat"
+
+#: ../src/goocanvasitemmodel.c:225
+msgid "The parent item model"
+msgstr "Model rodičovské položky"
+
+#: ../src/goocanvasitemsimple.c:128
+msgid "Stroke Pattern"
+msgstr "Vzorek obrysu"
+
+#: ../src/goocanvasitemsimple.c:129
+msgid ""
+"The pattern to use to paint the perimeter of the item, or NULL disable "
+"painting"
+msgstr ""
+"Vzorek, který se má použít pro malování obrysu položky, nebo NULL pro "
+"zakázání malování"
+
+#: ../src/goocanvasitemsimple.c:135
+msgid "Fill Pattern"
+msgstr "Vzorek výplně"
+
+#: ../src/goocanvasitemsimple.c:136
+msgid ""
+"The pattern to use to paint the interior of the item, or NULL to disable "
+"painting"
+msgstr ""
+"Vzorek, který se má použít při malování vnitřní části položky, nebo NULL pro "
+"zakázání výplně"
+
+#: ../src/goocanvasitemsimple.c:142
+msgid "Fill Rule"
+msgstr "Pravidlo výplně"
+
+#: ../src/goocanvasitemsimple.c:143
+msgid "The fill rule used to determine which parts of the item are filled"
+msgstr ""
+"Pravidlo pro vyplň použité k určení, které části položky se mají vyplnit"
+
+#: ../src/goocanvasitemsimple.c:150
+msgid "Operator"
+msgstr "Operátor"
+
+#: ../src/goocanvasitemsimple.c:151
+msgid "The compositing operator to use"
+msgstr "Operátor, který se má použít pro kombinování"
+
+#: ../src/goocanvasitemsimple.c:158
+msgid "Antialias"
+msgstr "Vyhlazování"
+
+#: ../src/goocanvasitemsimple.c:159
+msgid "The antialiasing mode to use"
+msgstr "Režim vyhlazování, který se má použít"
+
+#: ../src/goocanvasitemsimple.c:167
+msgid "Line Width"
+msgstr "Tloušťka čáry"
+
+#: ../src/goocanvasitemsimple.c:168
+msgid "The line width to use for the item's perimeter"
+msgstr "Tloušťka čáry, která se má použít pro obrys položky"
+
+#: ../src/goocanvasitemsimple.c:174
+msgid "Line Cap"
+msgstr "Zakončení čáry"
+
+#: ../src/goocanvasitemsimple.c:175
+msgid "The line cap style to use"
+msgstr "Styl zakončení čáry, který se má použít"
+
+#: ../src/goocanvasitemsimple.c:182
+msgid "Line Join"
+msgstr "Napojení čáry"
+
+#: ../src/goocanvasitemsimple.c:183
+msgid "The line join style to use"
+msgstr "Styl napojení čáry, který se má použít"
+
+#: ../src/goocanvasitemsimple.c:190
+msgid "Miter Limit"
+msgstr "Limit pro ostré spoje"
+
+#: ../src/goocanvasitemsimple.c:191
+msgid ""
+"The smallest angle to use with miter joins, in degrees. Bevel joins will be "
+"used below this limit"
+msgstr ""
+"Nejmenší úhel, ve stupních, který se má použít pro ostrá spojení. Pod tímto "
+"limitem se použije zkosené spojení."
+
+#: ../src/goocanvasitemsimple.c:197
+msgid "Line Dash"
+msgstr "Přerušovaná čára"
+
+#: ../src/goocanvasitemsimple.c:198
+msgid "The dash pattern to use"
+msgstr "Vzor, který se má použít pro přerušovanou čáru"
+
+#: ../src/goocanvasitemsimple.c:205
+msgid "Font"
+msgstr "Font"
+
+#: ../src/goocanvasitemsimple.c:206
+msgid "The base font to use for the text"
+msgstr "Základní font, který se má používat pro texty"
+
+#: ../src/goocanvasitemsimple.c:212
+msgid "Font Description"
+msgstr "Popis fontu"
+
+#: ../src/goocanvasitemsimple.c:213
+msgid "The attributes specifying which font to use"
+msgstr "Atributy určující, který font se má použít"
+
+#: ../src/goocanvasitemsimple.c:219
+msgid "Hint Metrics"
+msgstr "Hinting metriky"
+
+#: ../src/goocanvasitemsimple.c:220
+msgid "The hinting to be used for font metrics"
+msgstr "Hinting, který se má použít pro metriku fontu"
+
+#: ../src/goocanvasitemsimple.c:228
+msgid "Stroke Color"
+msgstr "Barva obrysu"
+
+#: ../src/goocanvasitemsimple.c:229
+msgid ""
+"The color to use for the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít pro obrys položky. Pro zakázání malování nastavte "
+"vlastnost „stroke-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:235
+msgid "Stroke Color RGBA"
+msgstr "Barva obrysu jako RGBA"
+
+#: ../src/goocanvasitemsimple.c:236
+msgid ""
+"The color to use for the item's perimeter, specified as a 32-bit integer "
+"value. To disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít pro obrys položky, zadaná jako 32bitové celé "
+"číslo. Pro zakázání malování nastavte vlastnost „stroke-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:249
+msgid "Stroke Color GdkRGBA"
+msgstr "Barva obrysu jako GdkRGBA"
+
+#: ../src/goocanvasitemsimple.c:250
+msgid ""
+"The color to use for the item's perimeter, specified as a GdkRGBA. To "
+"disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít pro obrys položky, zadaná jako GdkRGBA. Pro "
+"zakázání malování nastavte vlastnost „stroke-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:256
+msgid "Stroke Pixbuf"
+msgstr "GdkPixbuf obrysu"
+
+#: ../src/goocanvasitemsimple.c:257
+msgid ""
+"The pixbuf to use to draw the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Pixelová vyrovnávací paměť, která se má použít pro vykreslení obrysu "
+"položky. Pro zakázání malování nastavte vlastnost „stroke-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:263
+msgid "Fill Color"
+msgstr "Barva výplně"
+
+#: ../src/goocanvasitemsimple.c:264
+msgid ""
+"The color to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít k vyplnění vnitřní oblasti položky. Když chcete "
+"vyplnění zakázat, nastavte vlastnost „fill-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:270
+msgid "Fill Color RGBA"
+msgstr "Barva výplně jako RGBA"
+
+#: ../src/goocanvasitemsimple.c:271
+msgid ""
+"The color to use to paint the interior of the item, specified as a 32-bit "
+"integer value. To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít k vyplnění vnitřní oblasti položky, zadaná jako "
+"32bitové celé číslo. Když chcete vyplnění zakázat, nastavte vlastnost „fill-"
+"pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:284
+msgid "Fill Color GdkRGBA"
+msgstr "Barva výplně jako GdkRGBA"
+
+#: ../src/goocanvasitemsimple.c:285
+msgid ""
+"The color to use to paint the interior of the item, specified as a GdkRGBA. "
+"To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Barva, která se má použít k vyplnění vnitřní oblasti položky, zadaná jako "
+"GdkRGBA. Když chcete vyplnění zakázat, nastavte vlastnost „fill-pattern“ na "
+"NULL"
+
+#: ../src/goocanvasitemsimple.c:291
+msgid "Fill Pixbuf"
+msgstr "GdkPixbuf výplně"
+
+#: ../src/goocanvasitemsimple.c:292
+msgid ""
+"The pixbuf to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Pixelová vyrovnávací paměť, která se má použít pro malování vnitřní části "
+"položky. Pro zakázání malování nastavte vlastnost „fill-pattern“ na NULL"
+
+#: ../src/goocanvasitemsimple.c:342
+msgid "Clip Path"
+msgstr "Ořezová křivka"
+
+#: ../src/goocanvasitemsimple.c:343
+msgid "The sequence of path commands specifying the clip path"
+msgstr "Posloupnost příkazů, které určují ořezovou cestu"
+
+#: ../src/goocanvasitemsimple.c:349
+msgid "Clip Fill Rule"
+msgstr "Pravidlo výplně ořezu"
+
+#: ../src/goocanvasitemsimple.c:350
+msgid "The fill rule used to determine which parts of the item are clipped"
+msgstr "Pravidlo pro výplň použité k určení, která části položky jsou ořezány"
+
+#: ../src/goocanvaspath.c:70
+msgid "Path Data"
+msgstr "Data cesty"
+
+#: ../src/goocanvaspath.c:71
+msgid "The sequence of path commands"
+msgstr "Posloupnost příkazů tvořících cestu"
+
+#: ../src/goocanvaspath.c:78
+msgid "The x coordinate of the path"
+msgstr "X-ová souřadnice cesty"
+
+#: ../src/goocanvaspath.c:86
+msgid "The y coordinate of the path"
+msgstr "Y-ová souřadnice cesty"
+
+#: ../src/goocanvaspath.c:94
+msgid "The width of the path"
+msgstr "Šířka cesty"
+
+#: ../src/goocanvaspath.c:101
+msgid "The height of the path"
+msgstr "Výška cesty"
+
+#: ../src/goocanvaspolyline.c:181
+msgid "Points"
+msgstr "Body"
+
+#: ../src/goocanvaspolyline.c:182
+msgid "The array of points"
+msgstr "Pole bodů"
+
+#: ../src/goocanvaspolyline.c:188
+msgid "Close Path"
+msgstr "Uzavřít cestu"
+
+#: ../src/goocanvaspolyline.c:189
+msgid "If the last point should be connected to the first"
+msgstr "Poslední bod by měl být spojený s prvním"
+
+#: ../src/goocanvaspolyline.c:195
+msgid "Start Arrow"
+msgstr "Počáteční šipka"
+
+#: ../src/goocanvaspolyline.c:196
+msgid "If an arrow should be displayed at the start of the polyline"
+msgstr "Zda se má na začátku lomené čáry zobrazovat šipka"
+
+#: ../src/goocanvaspolyline.c:202
+msgid "End Arrow"
+msgstr "Koncová šipka"
+
+#: ../src/goocanvaspolyline.c:203
+msgid "If an arrow should be displayed at the end of the polyline"
+msgstr "Zda se má na konci lomené čáry zobrazovat šipka"
+
+#: ../src/goocanvaspolyline.c:209
+msgid "Arrow Length"
+msgstr "Délka šipky"
+
+#: ../src/goocanvaspolyline.c:210
+msgid "The length of the arrows, as a multiple of the line width"
+msgstr "Délka šipky jako násobek tloušťky čáry"
+
+#: ../src/goocanvaspolyline.c:216
+msgid "Arrow Width"
+msgstr "Šířka šipky"
+
+#: ../src/goocanvaspolyline.c:217
+msgid "The width of the arrows, as a multiple of the line width"
+msgstr "Šířka šipky jako násobek tloušťky čáry"
+
+#: ../src/goocanvaspolyline.c:223
+msgid "Arrow Tip Length"
+msgstr "Délka hrotu šipky"
+
+#: ../src/goocanvaspolyline.c:224
+msgid "The length of the arrow tip, as a multiple of the line width"
+msgstr "Délka hrotu šipky jako násobek tloušťky čáry"
+
+#: ../src/goocanvaspolyline.c:231
+msgid "The x coordinate of the left-most point of the polyline"
+msgstr "X-ová souřadnice bodu lomené čáry nejvíce vlevo"
+
+#: ../src/goocanvaspolyline.c:239
+msgid "The y coordinate of the top-most point of the polyline"
+msgstr "Y-ová souřadnice bodu lomené čáry nejvíce nahoře"
+
+#: ../src/goocanvaspolyline.c:247
+msgid "The width of the polyline"
+msgstr "Šířka lomené čáry"
+
+#: ../src/goocanvaspolyline.c:254
+msgid "The height of the polyline"
+msgstr "Výška lomené čáry"
+
+#: ../src/goocanvasrect.c:61
+msgid "The x coordinate of the rectangle"
+msgstr "X-ová souřadnice obdélníku"
+
+#: ../src/goocanvasrect.c:69
+msgid "The y coordinate of the rectangle"
+msgstr "Y-ová souřadnice obdélníku"
+
+#: ../src/goocanvasrect.c:77
+msgid "The width of the rectangle"
+msgstr "Šířka obdélníku"
+
+#: ../src/goocanvasrect.c:84
+msgid "The height of the rectangle"
+msgstr "Výška obdélníku"
+
+#: ../src/goocanvasrect.c:91
+msgid "The horizontal radius to use for rounded corners"
+msgstr "Vodorovný poloměr, který se má použít k zaoblení rohů"
+
+#: ../src/goocanvasrect.c:98
+msgid "The vertical radius to use for rounded corners"
+msgstr "Svislý poloměr, který se má použít k zaoblení rohů"
+
+#: ../src/goocanvastable.c:237
+msgid "Row Spacing"
+msgstr "Rozestupy řádků"
+
+#: ../src/goocanvastable.c:238
+msgid "The default space between rows"
+msgstr "Výchozí rozestupy mezi řádky"
+
+#: ../src/goocanvastable.c:244
+msgid "Column Spacing"
+msgstr "Rozestupy sloupců"
+
+#: ../src/goocanvastable.c:245
+msgid "The default space between columns"
+msgstr "Výchozí rozestupy mezi sloupci"
+
+#: ../src/goocanvastable.c:251
+msgid "Homogenous Rows"
+msgstr "Homogenní řádky"
+
+#: ../src/goocanvastable.c:252
+msgid "If all rows are the same height"
+msgstr "Zda mají všechny řádky stejnou výšku"
+
+#: ../src/goocanvastable.c:258
+msgid "Homogenous Columns"
+msgstr "Homogenní sloupce"
+
+#: ../src/goocanvastable.c:259
+msgid "If all columns are the same width"
+msgstr "Zda mají všechny sloupce stejnou šířku"
+
+#: ../src/goocanvastable.c:264
+msgid "X Border Spacing"
+msgstr "Odsazení ohraničení ve směru X"
+
+#: ../src/goocanvastable.c:265
+msgid ""
+"The amount of spacing between the lefmost and rightmost cells and the border "
+"grid line"
+msgstr ""
+"Množství místa mezi buňkou nejvíce vlevo a nejvíce vpravo a čárou tvořící "
+"ohraničující mřížku"
+
+#: ../src/goocanvastable.c:270
+msgid "Y Border Spacing"
+msgstr "Odsazení ohraničení ve směru Y"
+
+#: ../src/goocanvastable.c:271
+msgid ""
+"The amount of spacing between the topmost and bottommost cells and the "
+"border grid line"
+msgstr ""
+"Množství místa mezi buňkou nejvíce nahoře a nejvíce dole a čárou tvořící "
+"ohraničující mřížku"
+
+#: ../src/goocanvastable.c:277
+msgid "The width of the grid line to draw between rows"
+msgstr "Tloušťka čáry mřížky, která se má vykreslit mezi řádky"
+
+#: ../src/goocanvastable.c:284
+msgid "The width of the grid line to draw between columns"
+msgstr "Tloušťka čáry mřížky, která se má vykreslit mezi sloupci"
+
+#: ../src/goocanvastable.c:293
+msgid "Left Padding"
+msgstr "Odsazení zleva"
+
+#: ../src/goocanvastable.c:294
+msgid "Extra space to add to the left of the item"
+msgstr "Dodatečné místo, které se má přidat nalevo od položky"
+
+#: ../src/goocanvastable.c:299
+msgid "Right Padding"
+msgstr "Odsazení zprava"
+
+#: ../src/goocanvastable.c:300
+msgid "Extra space to add to the right of the item"
+msgstr "Dodatečné místo, které se má přidat napravo od položky"
+
+#: ../src/goocanvastable.c:305
+msgid "Top Padding"
+msgstr "Odsazení zhora"
+
+#: ../src/goocanvastable.c:306
+msgid "Extra space to add above the item"
+msgstr "Dodatečné místo, které se má přidat nad položku"
+
+#: ../src/goocanvastable.c:311
+msgid "Bottom Padding"
+msgstr "Odsazení zdola"
+
+#: ../src/goocanvastable.c:312
+msgid "Extra space to add below the item"
+msgstr "Dodatečné místo, které se má přidat pod položku"
+
+#: ../src/goocanvastable.c:318
+msgid "X Align"
+msgstr "Zarovnání ve směru X"
+
+#: ../src/goocanvastable.c:319
+msgid ""
+"The horizontal position of the item within its allocated space. 0.0 is left-"
+"aligned, 1.0 is right-aligned"
+msgstr ""
+"Vodorovné umístění položky v rámci přiděleného prostoru. 0,0 znamená "
+"zarovnání doleva, 1,0 zarovnání doprava"
+
+#: ../src/goocanvastable.c:324
+msgid "Y Align"
+msgstr "Zarovnání ve směru Y"
+
+#: ../src/goocanvastable.c:325
+msgid ""
+"The vertical position of the item within its allocated space. 0.0 is top-"
+"aligned, 1.0 is bottom-aligned"
+msgstr ""
+"Svislé umístění položky v rámci přiděleného prostoru. 0,0 znamená zarovnání "
+"nahoru, 1,0 zarovnání dolů"
+
+#: ../src/goocanvastable.c:331
+msgid "Row"
+msgstr "Řádek"
+
+#: ../src/goocanvastable.c:332
+msgid "The row to place the item in"
+msgstr "Řádek, do kterého se má položka umístit"
+
+#: ../src/goocanvastable.c:337
+msgid "Column"
+msgstr "Sloupec"
+
+#: ../src/goocanvastable.c:338
+msgid "The column to place the item in"
+msgstr "Sloupec, do kterého se má položka umístit"
+
+#: ../src/goocanvastable.c:343
+msgid "Rows"
+msgstr "Řádků"
+
+#: ../src/goocanvastable.c:344
+msgid "The number of rows that the item spans"
+msgstr "Počet řádků, které položka zabere"
+
+#: ../src/goocanvastable.c:349
+msgid "Columns"
+msgstr "Sloupců"
+
+#: ../src/goocanvastable.c:350
+msgid "The number of columns that the item spans"
+msgstr "Počet sloupců, které položka zabere"
+
+#: ../src/goocanvastable.c:356
+msgid "X Expand"
+msgstr "Roztažení ve směru X"
+
+#: ../src/goocanvastable.c:357
+msgid "If the item expands horizontally as the table expands"
+msgstr ""
+"Zda se má položka vodorovně roztáhnout podle toho, jak se roztáhne tabulka"
+
+#: ../src/goocanvastable.c:362
+msgid "X Fill"
+msgstr "Vyplnění ve směru X"
+
+#: ../src/goocanvastable.c:363
+msgid "If the item fills all horizontal allocated space"
+msgstr "Zda položka vyplní všechno přidělené vodorovné místo"
+
+#: ../src/goocanvastable.c:368
+msgid "X Shrink"
+msgstr "Sražení ve směru X"
+
+#: ../src/goocanvastable.c:369
+msgid "If the item can shrink smaller than its requested size horizontally"
+msgstr ""
+"Zda se může položka srazit na menší velikost, než jakou požaduje ve "
+"vodorovném směru"
+
+#: ../src/goocanvastable.c:374
+msgid "Y Expand"
+msgstr "Roztažení ve směru Y"
+
+#: ../src/goocanvastable.c:375
+msgid "If the item expands vertically as the table expands"
+msgstr ""
+"Zda se má položka svisle roztáhnout podle toho, jak se roztáhne tabulka"
+
+#: ../src/goocanvastable.c:380
+msgid "Y Fill"
+msgstr "Vyplnění ve směru Y"
+
+#: ../src/goocanvastable.c:381
+msgid "If the item fills all vertical allocated space"
+msgstr "Zda položka vyplní všechno přidělené svislé místo"
+
+#: ../src/goocanvastable.c:386
+msgid "Y Shrink"
+msgstr "Sražení ve směru Y"
+
+#: ../src/goocanvastable.c:387
+msgid "If the item can shrink smaller than its requested size vertically"
+msgstr ""
+"Zda se může položka srazit na menší velikost, než jakou požaduje ve svislém "
+"směru"
+
+#: ../src/goocanvastext.c:94
+msgid "Text"
+msgstr "Text"
+
+#: ../src/goocanvastext.c:95
+msgid "The text to display"
+msgstr "Text, který se má zobrazit"
+
+#: ../src/goocanvastext.c:101
+msgid "Use Markup"
+msgstr "Používat značkovací jazyk"
+
+#: ../src/goocanvastext.c:102
+msgid "Whether to parse PangoMarkup in the text, to support different styles"
+msgstr "Zda v textu zpracovávat PangoMarkup pro podporu různých stylů"
+
+#: ../src/goocanvastext.c:108
+msgid "Ellipsize"
+msgstr "Výpustek"
+
+#: ../src/goocanvastext.c:109
+msgid ""
+"The preferred place to ellipsize the string, if the label does not have "
+"enough room to display the entire string"
+msgstr ""
+"Upřednostňované umístění výpustku v řetězci, když popisek nemá dostatek "
+"místa pro zobrazení celého řetězce"
+
+#: ../src/goocanvastext.c:116
+msgid "Wrap"
+msgstr "Zalamování"
+
+#: ../src/goocanvastext.c:117
+msgid "The preferred method of wrapping the string if a width has been set"
+msgstr "Upřednostňovaná metoda zalamování řetězců, když byla nastavena šířka"
+
+#: ../src/goocanvastext.c:126
+msgid "The x coordinate of the text"
+msgstr "X-ová souřadnice textu"
+
+#: ../src/goocanvastext.c:134
+msgid "The y coordinate of the text"
+msgstr "Y-ová souřadnice textu"
+
+#: ../src/goocanvastext.c:142
+msgid ""
+"The width to use to layout the text, or -1 to let the text use as much "
+"horizontal space as needed"
+msgstr ""
+"Šířka, která se má použít k rozvržení textu, nebo -1, aby se textu nechalo "
+"tolik vodorovného místa, kolik potřebuje"
+
+#: ../src/goocanvastext.c:150
+msgid ""
+"The height to use to layout the text, or -1 to let the text use as much "
+"vertical space as needed"
+msgstr ""
+"Výška, která se má použít k rozvržení textu, nebo -1, aby se textu nechalo "
+"tolik svislého místa, kolik potřebuje"
+
+#: ../src/goocanvastext.c:159
+msgid "How to position the text relative to the given x and y coordinates"
+msgstr "Jak umístit text relativně k zadaným souřadnicím X a Y"
+
+#: ../src/goocanvastext.c:166
+msgid "Alignment"
+msgstr "Zarovnání"
+
+#: ../src/goocanvastext.c:167
+msgid "How to align the text"
+msgstr "Jak zarovnávat text"
+
+#: ../src/goocanvaswidget.c:547
+msgid "Widget"
+msgstr "Widget"
+
+#: ../src/goocanvaswidget.c:548
+msgid "The widget to place in the canvas"
+msgstr "Widget, který se má umístit na plátno"
+
+#: ../src/goocanvaswidget.c:555
+msgid "The x coordinate of the widget"
+msgstr "X-ová souřadnice widgetu"
+
+#: ../src/goocanvaswidget.c:563
+msgid "The y coordinate of the widget"
+msgstr "Y-ová souřadnice widgetu"
+
+#: ../src/goocanvaswidget.c:571
+msgid "The width of the widget, or -1 to use its requested width"
+msgstr "Šířka widgetu nebo -1, když se má použít jím vyžádaná šířka"
+
+#: ../src/goocanvaswidget.c:579
+msgid "The height of the widget, or -1 to use its requested height"
+msgstr "Výška widgetu nebo -1, když se má použít jím vyžádaná výška"
+
+#: ../src/goocanvaswidget.c:588
+msgid ""
+"How to position the widget relative to the item's x and y coordinate settings"
+msgstr ""
+"Jak se má widget umístit relativně vůči nastavení souřadnic X a Y položky"
