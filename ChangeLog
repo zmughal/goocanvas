@@ -1,3 +1,8 @@
+2016-12-30  Damon Chaplin  <damon@gnome.org>
+
+	* configure.in: Use AM_GNU_GETTEXT instead of AM_GLIB_GNU_GETTEXT.
+	Also added po/Makevars, copying from GTK+/gdk-pixbuf.
+
 2016-12-16  Damon Chaplin  <damon@gnome.org>
 
 	* autogen.sh: pinched from gdk-pixbuf.
