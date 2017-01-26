@@ -1,0 +1,1265 @@
+# Serbian translation for goocanvas.
+# Copyright (C) 2017 goocanvas's COPYRIGHT HOLDER
+# This file is distributed under the same license as the goocanvas package.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: goocanvas goocanvas-2.0\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=goocanv"
+"as&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-01-11 08:32+0000\n"
+"PO-Revision-Date: 2017-01-26 14:58+0200\n"
+"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
+"Language-Team: Serbian <(nothing)>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Project-Style: gnome\n"
+
+#: src/goocanvas.c:309
+msgid "Scale"
+msgstr "Сразмера"
+
+#: src/goocanvas.c:310
+msgid "The magnification factor of the canvas"
+msgstr "Чинилац увеличања платна"
+
+#: src/goocanvas.c:316
+msgid "Scale X"
+msgstr "X размера"
+
+#: src/goocanvas.c:317
+msgid "The horizontal magnification factor of the canvas"
+msgstr "Чинилац водоравног увеличања платна"
+
+#: src/goocanvas.c:323
+msgid "Scale Y"
+msgstr "Y размера"
+
+#: src/goocanvas.c:324
+msgid "The vertical magnification factor of the canvas"
+msgstr "Чинилац усправног увеличања платна"
+
+#: src/goocanvas.c:330 src/goocanvastext.c:158 src/goocanvaswidget.c:587
+msgid "Anchor"
+msgstr "Сидро"
+
+#: src/goocanvas.c:331
+msgid ""
+"Where to place the canvas when it is smaller than the widget's allocated area"
+msgstr "Где ће се поставити платно када је мање од додељене области елемента"
+
+#: src/goocanvas.c:338
+msgid "X1"
+msgstr "X1"
+
+#: src/goocanvas.c:339
+msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
+msgstr "Водоравна координата леве ивице границе платна, у јединицама платна"
+
+#: src/goocanvas.c:346
+msgid "Y1"
+msgstr "Y1"
+
+#: src/goocanvas.c:347
+msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
+msgstr "Усправна координата горње ивице границе платна, у јединицама платна"
+
+#: src/goocanvas.c:354
+msgid "X2"
+msgstr "X2"
+
+#: src/goocanvas.c:355
+msgid ""
+"The x coordinate of the right edge of the canvas bounds, in canvas units"
+msgstr "Водоравна координата десне ивице границе платна, у јединицама платна"
+
+#: src/goocanvas.c:363
+msgid "Y2"
+msgstr "Y2"
+
+#: src/goocanvas.c:364
+msgid ""
+"The y coordinate of the bottom edge of the canvas bounds, in canvas units"
+msgstr "Усправна координата доње ивице границе платна, у јединицама платна"
+
+#: src/goocanvas.c:373
+msgid "Automatic Bounds"
+msgstr "Самосталне границе"
+
+#: src/goocanvas.c:374
+msgid ""
+"If the bounds are automatically calculated based on the bounds of all the "
+"items in the canvas"
+msgstr ""
+"Ако се границе самостално израчунавају на основу граница свих ставки на "
+"платну"
+
+#: src/goocanvas.c:380
+msgid "Bounds From Origin"
+msgstr "Границе од поћетка"
+
+#: src/goocanvas.c:381
+msgid "If the automatic bounds are calculated from the origin"
+msgstr "Да ли се самосталне границе рачунају од почетка"
+
+#: src/goocanvas.c:387
+msgid "Bounds Padding"
+msgstr "Попуна граница"
+
+#: src/goocanvas.c:388
+msgid "The padding added to the automatic bounds"
+msgstr "Попуна додата самосталним границама"
+
+#: src/goocanvas.c:394
+msgid "Units"
+msgstr "Јединице"
+
+#: src/goocanvas.c:395
+msgid "The units to use for the canvas"
+msgstr "Јединице које ће се користити за платно"
+
+#: src/goocanvas.c:402
+msgid "Resolution X"
+msgstr "X резолуција"
+
+#: src/goocanvas.c:403
+msgid "The horizontal resolution of the display, in dots per inch"
+msgstr "Водоравна резолуција екрана, у тачкама по инчу"
+
+#: src/goocanvas.c:410
+msgid "Resolution Y"
+msgstr "Y резолуција"
+
+#: src/goocanvas.c:411
+msgid "The vertical resolution of the display, in dots per inch"
+msgstr "Усправна резолуција екрана, у тачкама по инчу"
+
+#: src/goocanvas.c:419
+msgid "Background Color"
+msgstr "Боја позадине"
+
+#: src/goocanvas.c:420
+msgid "The color to use for the canvas background"
+msgstr "Боја која ће се користити за позадину платна"
+
+#: src/goocanvas.c:426
+msgid "Background Color RGB"
+msgstr "Боја позадине као РГБ"
+
+#: src/goocanvas.c:427
+msgid ""
+"The color to use for the canvas background, specified as a 24-bit integer "
+"value, 0xRRGGBB"
+msgstr ""
+"Боја која же се користити за позадину платна, наведена као 24-битна вредност "
+"целог броја, 0xRRGGBB"
+
+#: src/goocanvas.c:440
+msgid "Background Color GdkRGBA"
+msgstr "Боја позадине као ГдкРГБА"
+
+#: src/goocanvas.c:441
+msgid "The color to use for the canvas background, specified as a GdkRGBA"
+msgstr "Боја која ће се користити за позадину платна, наведена као ГдкРГБА"
+
+#: src/goocanvas.c:447
+msgid "Integer Layout"
+msgstr "Цело број распореда"
+
+#: src/goocanvas.c:448
+msgid "If all item layout is done to the nearest integer"
+msgstr "Да ли је распоред свих ставки одрађен на најближи цео број"
+
+#: src/goocanvas.c:454
+msgid "Clear Background"
+msgstr "Чиста позадина"
+
+#: src/goocanvas.c:455
+msgid "If the background is cleared before the canvas is painted"
+msgstr "Да ли је позадина очишћена пре обојавања платна"
+
+#: src/goocanvas.c:461
+msgid "Redraw When Scrolled"
+msgstr "Поновно исцртавање приликом премицања"
+
+#: src/goocanvas.c:462
+msgid ""
+"If the canvas is completely redrawn when scrolled, to reduce the flicker of "
+"static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
+"scrolled, so this option has no effect."
+msgstr ""
+"Да ли се платно поново исцртава у потпуности када се премакне, како би се "
+"смањило треперење сатичких ставки. Знајте да се од Гтк+ 3.0 платно увек "
+"поново исцрта приликом премицања, тако да ова опција нема дејства."
+
+#: src/goocanvasellipse.c:77
+msgid "Center X"
+msgstr "X средиште"
+
+#: src/goocanvasellipse.c:78
+msgid "The x coordinate of the center of the ellipse"
+msgstr "Водоравна координата средишта елипсе"
+
+#: src/goocanvasellipse.c:85
+msgid "Center Y"
+msgstr "Y средиште"
+
+#: src/goocanvasellipse.c:86
+msgid "The y coordinate of the center of the ellipse"
+msgstr "Усправна координата средишта елипсе"
+
+#: src/goocanvasellipse.c:93 src/goocanvasrect.c:90
+msgid "Radius X"
+msgstr "X полупречник"
+
+#: src/goocanvasellipse.c:94
+msgid "The horizontal radius of the ellipse"
+msgstr "Водоравни полупречник елипсе"
+
+#: src/goocanvasellipse.c:100 src/goocanvasrect.c:97
+msgid "Radius Y"
+msgstr "Y полупречник"
+
+#: src/goocanvasellipse.c:101
+msgid "The vertical radius of the ellipse"
+msgstr "Усправни полупречник елипсе"
+
+#: src/goocanvasellipse.c:108
+msgid "The x coordinate of the left side of the ellipse"
+msgstr "Водоравна координата леве стране елипсе"
+
+#: src/goocanvasellipse.c:116
+msgid "The y coordinate of the top of the ellipse"
+msgstr "Усправна координата горње стране елипсе"
+
+#: src/goocanvasellipse.c:123 src/goocanvasgrid.c:127 src/goocanvasgroup.c:106
+#: src/goocanvasimage.c:115 src/goocanvaspath.c:93 src/goocanvaspolyline.c:246
+#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:570
+msgid "Width"
+msgstr "Ширина"
+
+#: src/goocanvasellipse.c:124
+msgid "The width of the ellipse"
+msgstr "Ширина елипсе"
+
+#: src/goocanvasellipse.c:130 src/goocanvasgrid.c:134 src/goocanvasgroup.c:114
+#: src/goocanvasimage.c:122 src/goocanvaspath.c:100 src/goocanvaspolyline.c:253
+#: src/goocanvasrect.c:83 src/goocanvastext.c:149 src/goocanvaswidget.c:578
+msgid "Height"
+msgstr "Висина"
+
+#: src/goocanvasellipse.c:131
+msgid "The height of the ellipse"
+msgstr "Висина елипсе"
+
+#: src/goocanvasgrid.c:112
+msgid "The x coordinate of the grid"
+msgstr "Водоравна координата мреже"
+
+#: src/goocanvasgrid.c:120
+msgid "The y coordinate of the grid"
+msgstr "Усправна координата мреже"
+
+#: src/goocanvasgrid.c:128
+msgid "The width of the grid"
+msgstr "Ширина мреже"
+
+#: src/goocanvasgrid.c:135
+msgid "The height of the grid"
+msgstr "Висина мреже"
+
+#: src/goocanvasgrid.c:142
+msgid "The distance between the vertical grid lines"
+msgstr "Растојање између усправних линија мреже"
+
+#: src/goocanvasgrid.c:149
+msgid "The distance between the horizontal grid lines"
+msgstr "Растојање између водоравних линија мреже"
+
+#: src/goocanvasgrid.c:156
+msgid "The distance before the first vertical grid line"
+msgstr "Растојање пре прве усправне линије мреже"
+
+#: src/goocanvasgrid.c:163
+msgid "The distance before the first horizontal grid line"
+msgstr "Растојање пре прве водоравне линије мреже"
+
+#: src/goocanvasgrid.c:169 src/goocanvastable.c:276
+msgid "Horizontal Grid Line Width"
+msgstr "Ширина водоравне линије мреже"
+
+#: src/goocanvasgrid.c:170
+msgid "The width of the horizontal grid lines"
+msgstr "Ширина водоравних линија мреже"
+
+#: src/goocanvasgrid.c:177 src/goocanvastable.c:283
+msgid "Vertical Grid Line Width"
+msgstr "Ширина усправне линије мреже"
+
+#: src/goocanvasgrid.c:178
+msgid "The width of the vertical grid lines"
+msgstr "Ширина усправних линија мреже"
+
+#: src/goocanvasgrid.c:185
+msgid "Horizontal Grid Line Pattern"
+msgstr "Шаблон водоравне линије мреже"
+
+#: src/goocanvasgrid.c:186
+msgid "The cairo pattern to paint the horizontal grid lines with"
+msgstr "Каиро шаблон за цртање водоравних линија мреже"
+
+#: src/goocanvasgrid.c:192
+msgid "Vertical Grid Line Pattern"
+msgstr "Шаблон усправне линије мреже"
+
+#: src/goocanvasgrid.c:193
+msgid "The cairo pattern to paint the vertical grid lines with"
+msgstr "Каиро шаблон за цртање усправних линија мреже"
+
+#: src/goocanvasgrid.c:199
+msgid "Border Width"
+msgstr "Ширина руба"
+
+#: src/goocanvasgrid.c:200
+msgid "The width of the border around the grid"
+msgstr "Ширина руба око мреже"
+
+#: src/goocanvasgrid.c:207
+msgid "Border Pattern"
+msgstr "Шаблон руба"
+
+#: src/goocanvasgrid.c:208
+msgid "The cairo pattern to paint the border with"
+msgstr "Каиро шаблон за цртање руба"
+
+#: src/goocanvasgrid.c:214
+msgid "Show Horizontal Grid Lines"
+msgstr "Приказ водоравних линија мреже"
+
+#: src/goocanvasgrid.c:215
+msgid "If the horizontal grid lines are shown"
+msgstr "Да ли се приказују водоравне линије мреже"
+
+#: src/goocanvasgrid.c:221
+msgid "Show Vertical Grid Lines"
+msgstr "Приказ усправних линија мреже"
+
+#: src/goocanvasgrid.c:222
+msgid "If the vertical grid lines are shown"
+msgstr "Да ли се приказују усправне линије мреже"
+
+#: src/goocanvasgrid.c:228
+msgid "Vertical Grid Lines On Top"
+msgstr "Усправне линије мреже одозго"
+
+#: src/goocanvasgrid.c:229
+msgid "If the vertical grid lines are painted above the horizontal grid lines"
+msgstr "Да се усправне линије мреже обојавају изнад усправних линија мреже"
+
+#: src/goocanvasgrid.c:237
+msgid "Horizontal Grid Line Color"
+msgstr "Боја водоравне линије мреже"
+
+#: src/goocanvasgrid.c:238
+msgid "The color to use for the horizontal grid lines"
+msgstr "Боја за водоравне линије мреже"
+
+#: src/goocanvasgrid.c:244
+msgid "Horizontal Grid Line Color RGBA"
+msgstr "Боја водоравне линије мреже као РГБА"
+
+#: src/goocanvasgrid.c:245
+msgid ""
+"The color to use for the horizontal grid lines, specified as a 32-bit "
+"integer value"
+msgstr ""
+"Боја која ће се корстити за водоравне линије мреже, наведена као 32-битна "
+"вредност целог броја"
+
+#: src/goocanvasgrid.c:258
+msgid "Horizontal Grid Line Color GdkRGBA"
+msgstr "Боја водоравне линије мреже као ГдкРГБА"
+
+#: src/goocanvasgrid.c:259
+msgid "The color to use for the horizontal grid lines, specified as a GdkRGBA"
+msgstr ""
+"Боја која ће се корстити за водоравне линије мреже, наведена као ГдкРГБА"
+
+#: src/goocanvasgrid.c:265
+msgid "Horizontal Grid Line Pixbuf"
+msgstr "Сличица водоравне линије мреже"
+
+#: src/goocanvasgrid.c:266
+msgid "The pixbuf to use to draw the horizontal grid lines"
+msgstr "Сличица која ће се користити за исцртавање водоравних линија мреже"
+
+#: src/goocanvasgrid.c:272
+msgid "Vertical Grid Line Color"
+msgstr "Боја усправне линије мреже"
+
+#: src/goocanvasgrid.c:273
+msgid "The color to use for the vertical grid lines"
+msgstr "Боја која ће се користити за усправне линије мреже"
+
+#: src/goocanvasgrid.c:279
+msgid "Vertical Grid Line Color RGBA"
+msgstr "Боја усправне линије мреже као РГБА"
+
+#: src/goocanvasgrid.c:280
+msgid ""
+"The color to use for the vertical grid lines, specified as a 32-bit integer "
+"value"
+msgstr ""
+"Боја која ће се корстити за усправне линије мреже, наведена као 32-битна "
+"вредност целог броја"
+
+#: src/goocanvasgrid.c:293
+msgid "Vertical Grid Line Color GdkRGBA"
+msgstr "Боја усправне линије мреже као ГдкРГБА"
+
+#: src/goocanvasgrid.c:294
+msgid "The color to use for the vertical grid lines, specified as a GdkRGBA"
+msgstr "Боја која ће се корстити за усправне линије мреже, наведена као ГдкРГБА"
+
+#: src/goocanvasgrid.c:300
+msgid "Vertical Grid Line Pixbuf"
+msgstr "Сличица усправне линије мреже"
+
+#: src/goocanvasgrid.c:301
+msgid "The pixbuf to use to draw the vertical grid lines"
+msgstr "Сличица која ће се користити за исцртавање усправних линија мреже"
+
+#: src/goocanvasgrid.c:307
+msgid "Border Color"
+msgstr "Боја руба"
+
+#: src/goocanvasgrid.c:308
+msgid "The color to use for the border"
+msgstr "Боја која ће се користити за руб"
+
+#: src/goocanvasgrid.c:314
+msgid "Border Color RGBA"
+msgstr "Боја руба као РГБА"
+
+#: src/goocanvasgrid.c:315
+msgid "The color to use for the border, specified as a 32-bit integer value"
+msgstr ""
+"Боја која ће се корстити за руб, наведена као 32-битна вредност целог броја"
+
+#: src/goocanvasgrid.c:328
+msgid "Border Color GdkRGBA"
+msgstr "Боја руба као ГдкРГБА"
+
+#: src/goocanvasgrid.c:329
+msgid "The color to use for the border, specified as a GdkRGBA"
+msgstr "Боја која ће се користити за руб, наведена као ГдкРГБА"
+
+#: src/goocanvasgrid.c:335
+msgid "Border Pixbuf"
+msgstr "Сличица руба"
+
+#: src/goocanvasgrid.c:336
+msgid "The pixbuf to use to draw the border"
+msgstr "Сличица која ће се користити за исцртавање руба"
+
+#: src/goocanvasgroup.c:91
+msgid "The x coordinate of the group"
+msgstr "Водоравна координата групе"
+
+#: src/goocanvasgroup.c:99
+msgid "The y coordinate of the group"
+msgstr "Усправна координата групе"
+
+#: src/goocanvasgroup.c:107
+msgid "The width of the group, or -1 to use the default width"
+msgstr "Ширина групе, или -1 за основну ширину"
+
+#: src/goocanvasgroup.c:115
+msgid "The height of the group, or -1 to use the default height"
+msgstr "Висина групе, или -1 за основну висину"
+
+#: src/goocanvasimage.c:92
+msgid "Pattern"
+msgstr "Шаблон"
+
+#: src/goocanvasimage.c:93
+msgid "The cairo pattern to paint"
+msgstr "Каиро шаблон за бојење"
+
+#: src/goocanvasimage.c:100
+msgid "The x coordinate of the image"
+msgstr "Водоравна координата слике"
+
+#: src/goocanvasimage.c:108
+msgid "The y coordinate of the image"
+msgstr "Усправна координата слике"
+
+#: src/goocanvasimage.c:116
+msgid "The width of the image"
+msgstr "Ширина слике"
+
+#: src/goocanvasimage.c:123
+msgid "The height of the image"
+msgstr "Висина слике"
+
+#: src/goocanvasimage.c:129
+msgid "Scale To Fit"
+msgstr "Сразмеравање за попуну"
+
+#: src/goocanvasimage.c:130
+msgid "If the image is scaled to fit the width and height settings"
+msgstr ""
+"Да ли се слици мења сразмера како би испунила подешавања ширине и висине"
+
+#: src/goocanvasimage.c:136
+msgid "Alpha"
+msgstr "Провидност"
+
+#: src/goocanvasimage.c:137
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr "Провидност слике, 0.0 — потпуно провидно, а 1.0 — потпуно непровидно"
+
+#: src/goocanvasimage.c:143
+msgid "Pixbuf"
+msgstr "Сличица"
+
+#: src/goocanvasimage.c:144
+msgid "The GdkPixbuf to display"
+msgstr "Гдк сличица за приказ"
+
+#: src/goocanvasitem.c:467 src/goocanvasitemmodel.c:224
+msgid "Parent"
+msgstr "Родитељ"
+
+#: src/goocanvasitem.c:468
+msgid "The parent item"
+msgstr "Родитељска ставка"
+
+#: src/goocanvasitem.c:474 src/goocanvasitemmodel.c:231
+msgid "Visibility"
+msgstr "Видљивост"
+
+#: src/goocanvasitem.c:475 src/goocanvasitemmodel.c:232
+msgid "When the canvas item is visible"
+msgstr "Када је ставка платна видљива"
+
+#: src/goocanvasitem.c:482 src/goocanvasitemmodel.c:239
+msgid "Visibility Threshold"
+msgstr "Праг видљивости"
+
+#: src/goocanvasitem.c:483 src/goocanvasitemmodel.c:240
+msgid "The scale threshold at which the item becomes visible"
+msgstr "Праг размере при којој ставка постаје видљива"
+
+#: src/goocanvasitem.c:491 src/goocanvasitemmodel.c:248
+msgid "Transform"
+msgstr "Преображај"
+
+#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:249
+msgid "The transformation matrix of the item"
+msgstr "Матрица преображаја ставке"
+
+#: src/goocanvasitem.c:498 src/goocanvasitemmodel.c:255
+msgid "Pointer Events"
+msgstr "Догађај показивача"
+
+#: src/goocanvasitem.c:499 src/goocanvasitemmodel.c:256
+msgid "Specifies when the item receives pointer events"
+msgstr "Одређује када ставка прима догађаје показивача"
+
+#: src/goocanvasitem.c:506 src/goocanvasitemmodel.c:263
+msgid "Title"
+msgstr "Наслов"
+
+#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:264
+msgid ""
+"A short context-rich description of the item for use by assistive "
+"technologies"
+msgstr ""
+"Кратак опис богат садржајем ставке за коришћење технологијама за испомоћ"
+
+#: src/goocanvasitem.c:513 src/goocanvasitemmodel.c:270
+msgid "Description"
+msgstr "Опис"
+
+#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:271
+msgid "A description of the item for use by assistive technologies"
+msgstr "Опис ставке за коришћење технологијама за испомоћ"
+
+#: src/goocanvasitem.c:520 src/goocanvasitemmodel.c:277
+msgid "Can Focus"
+msgstr "Може бити у фокусу"
+
+#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:278
+msgid "If the item can take the keyboard focus"
+msgstr "Да ли ставка може бити у фокусу тастатуром"
+
+#: src/goocanvasitem.c:536 src/goocanvasitemmodel.c:284
+msgid "Tooltip"
+msgstr "Облачић"
+
+#: src/goocanvasitem.c:537 src/goocanvasitemmodel.c:285
+msgid "The tooltip to display for the item"
+msgstr "Облачић који се приказује за ставку"
+
+#: src/goocanvasitemmodel.c:225
+msgid "The parent item model"
+msgstr "Модел родитељске ставке"
+
+#: src/goocanvasitemsimple.c:128
+msgid "Stroke Pattern"
+msgstr "Шаблон потеза"
+
+#: src/goocanvasitemsimple.c:129
+msgid ""
+"The pattern to use to paint the perimeter of the item, or NULL disable "
+"painting"
+msgstr ""
+"Шаблон који се користи за сликање обима ставке, или НИШТА за искључивање"
+
+#: src/goocanvasitemsimple.c:135
+msgid "Fill Pattern"
+msgstr "Шаблон испуњавања"
+
+#: src/goocanvasitemsimple.c:136
+msgid ""
+"The pattern to use to paint the interior of the item, or NULL to disable "
+"painting"
+msgstr ""
+"Шаблон који се користи за сликање унутрашњости ставке, или НИШТА за "
+"искључивање"
+
+#: src/goocanvasitemsimple.c:142
+msgid "Fill Rule"
+msgstr "Правило испуњавања"
+
+#: src/goocanvasitemsimple.c:143
+msgid "The fill rule used to determine which parts of the item are filled"
+msgstr ""
+"Правило испуњавања које се користи за одређивање који делови ставке се "
+"испуњавају"
+
+#: src/goocanvasitemsimple.c:150
+msgid "Operator"
+msgstr "Оператор"
+
+#: src/goocanvasitemsimple.c:151
+msgid "The compositing operator to use"
+msgstr "Оператор слагања за коришћење"
+
+#: src/goocanvasitemsimple.c:158
+msgid "Antialias"
+msgstr "Умекшавање"
+
+#: src/goocanvasitemsimple.c:159
+msgid "The antialiasing mode to use"
+msgstr "Режим умекшавања за коришћење"
+
+#: src/goocanvasitemsimple.c:167
+msgid "Line Width"
+msgstr "Ширина линије"
+
+#: src/goocanvasitemsimple.c:168
+msgid "The line width to use for the item's perimeter"
+msgstr "Ширина линије за коришћење за обим ставке"
+
+#: src/goocanvasitemsimple.c:174
+msgid "Line Cap"
+msgstr "Капица линије"
+
+#: src/goocanvasitemsimple.c:175
+msgid "The line cap style to use"
+msgstr "Стил капице линије за коришћење"
+
+#: src/goocanvasitemsimple.c:182
+msgid "Line Join"
+msgstr "Спој линије"
+
+#: src/goocanvasitemsimple.c:183
+msgid "The line join style to use"
+msgstr "Стил спајања линије за коришћење"
+
+#: src/goocanvasitemsimple.c:190
+msgid "Miter Limit"
+msgstr "Ограничење шиљка"
+
+#: src/goocanvasitemsimple.c:191
+msgid ""
+"The smallest angle to use with miter joins, in degrees. Bevel joins will be "
+"used below this limit"
+msgstr ""
+"Најмањи угао који ће се користити са спојевима шиљка, у степенима. Зарубљени "
+"спојеви ће се користити испод овог ограничења"
+
+#: src/goocanvasitemsimple.c:197
+msgid "Line Dash"
+msgstr "Цртица линије"
+
+#: src/goocanvasitemsimple.c:198
+msgid "The dash pattern to use"
+msgstr "Шаблон цртице за коришћење"
+
+#: src/goocanvasitemsimple.c:205
+msgid "Font"
+msgstr "Слова"
+
+#: src/goocanvasitemsimple.c:206
+msgid "The base font to use for the text"
+msgstr "Словни лик основе који ће се користити за текст"
+
+#: src/goocanvasitemsimple.c:212
+msgid "Font Description"
+msgstr "Опис словног лика"
+
+#: src/goocanvasitemsimple.c:213
+msgid "The attributes specifying which font to use"
+msgstr "Атрибути који одређују који словни лик ће се користити"
+
+#: src/goocanvasitemsimple.c:219
+msgid "Hint Metrics"
+msgstr "Метрика наговештаја"
+
+#: src/goocanvasitemsimple.c:220
+msgid "The hinting to be used for font metrics"
+msgstr "Наговештавање које ће се користити за метрику словних ликова"
+
+#: src/goocanvasitemsimple.c:228
+msgid "Stroke Color"
+msgstr "Боја потеза"
+
+#: src/goocanvasitemsimple.c:229
+msgid ""
+"The color to use for the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обим ставке. Да искључите обојавање поставите "
+"„stroke-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:235
+msgid "Stroke Color RGBA"
+msgstr "Боја потеза као РГБА"
+
+#: src/goocanvasitemsimple.c:236
+msgid ""
+"The color to use for the item's perimeter, specified as a 32-bit integer "
+"value. To disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обим ставке, наведена као 32-битна вредност "
+"целог броја. Да искључите обојавање поставите „stroke-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:249
+msgid "Stroke Color GdkRGBA"
+msgstr "Боја потеза као ГдкРГБА"
+
+#: src/goocanvasitemsimple.c:250
+msgid ""
+"The color to use for the item's perimeter, specified as a GdkRGBA. To "
+"disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обим ставке, наведена као ГдкРГБА. Да искључите "
+"обојавање поставите „stroke-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:256
+msgid "Stroke Pixbuf"
+msgstr "Сличица потеза"
+
+#: src/goocanvasitemsimple.c:257
+msgid ""
+"The pixbuf to use to draw the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Сличица која ће се користити за исцртавање обима ставке. Да искључите "
+"обојавање поставите „stroke-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:263
+msgid "Fill Color"
+msgstr "Боја испуњавања"
+
+#: src/goocanvasitemsimple.c:264
+msgid ""
+"The color to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обојавање унутрашњости ставке. Да искључите "
+"обојавање поставите „fill-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:270
+msgid "Fill Color RGBA"
+msgstr "Боја испуњавања као РГБА"
+
+#: src/goocanvasitemsimple.c:271
+msgid ""
+"The color to use to paint the interior of the item, specified as a 32-bit "
+"integer value. To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обојавање унутрашњости ставке, наведена као 32-"
+"битна вредност целог броја. Да искључите обојавање поставите „fill-pattern“ "
+"на „NULL“"
+
+#: src/goocanvasitemsimple.c:284
+msgid "Fill Color GdkRGBA"
+msgstr "Боја испуњавања као ГдкРГБА"
+
+#: src/goocanvasitemsimple.c:285
+msgid ""
+"The color to use to paint the interior of the item, specified as a GdkRGBA. "
+"To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Боја која ће се користити за обојавање унутрашњости ставке, наведена као "
+"ГдкРГБА. Да искључите обојавање поставите „fill-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:291
+msgid "Fill Pixbuf"
+msgstr "Сличица испуњавања"
+
+#: src/goocanvasitemsimple.c:292
+msgid ""
+"The pixbuf to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Сличица која ће се користити за обојавање унутрашњости ставке. Да искључите "
+"обојавање поставите „fill-pattern“ на „NULL“"
+
+#: src/goocanvasitemsimple.c:342
+msgid "Clip Path"
+msgstr "Путања одсецања"
+
+#: src/goocanvasitemsimple.c:343
+msgid "The sequence of path commands specifying the clip path"
+msgstr "Низ наредби путање који наводи путању одсецања"
+
+#: src/goocanvasitemsimple.c:349
+msgid "Clip Fill Rule"
+msgstr "Правило испуњавања одсецања"
+
+#: src/goocanvasitemsimple.c:350
+msgid "The fill rule used to determine which parts of the item are clipped"
+msgstr ""
+"Правило испуњавања које се користи за одређивање који делови ставке се "
+"одсецају"
+
+#: src/goocanvaspath.c:70
+msgid "Path Data"
+msgstr "Подаци путање"
+
+#: src/goocanvaspath.c:71
+msgid "The sequence of path commands"
+msgstr "Низ наредби путање"
+
+#: src/goocanvaspath.c:78
+msgid "The x coordinate of the path"
+msgstr "Водоравна координата путање"
+
+#: src/goocanvaspath.c:86
+msgid "The y coordinate of the path"
+msgstr "Усправна координата путање"
+
+#: src/goocanvaspath.c:94
+msgid "The width of the path"
+msgstr "Ширина путање"
+
+#: src/goocanvaspath.c:101
+msgid "The height of the path"
+msgstr "Висина путање"
+
+#: src/goocanvaspolyline.c:181
+msgid "Points"
+msgstr "Тачке"
+
+#: src/goocanvaspolyline.c:182
+msgid "The array of points"
+msgstr "Низ тачака"
+
+#: src/goocanvaspolyline.c:188
+msgid "Close Path"
+msgstr "Путања затварања"
+
+#: src/goocanvaspolyline.c:189
+msgid "If the last point should be connected to the first"
+msgstr "Да ли последња тачка треба да се повеже са првом"
+
+#: src/goocanvaspolyline.c:195
+msgid "Start Arrow"
+msgstr "Почетна стрелица"
+
+#: src/goocanvaspolyline.c:196
+msgid "If an arrow should be displayed at the start of the polyline"
+msgstr "Да ли стрелица треба да се прикаже на почетку полилиније"
+
+#: src/goocanvaspolyline.c:202
+msgid "End Arrow"
+msgstr "Крајња стрелица"
+
+#: src/goocanvaspolyline.c:203
+msgid "If an arrow should be displayed at the end of the polyline"
+msgstr "Да ли стрелица треба да се прикаже на крају полилиније"
+
+#: src/goocanvaspolyline.c:209
+msgid "Arrow Length"
+msgstr "Дужина стрелице"
+
+#: src/goocanvaspolyline.c:210
+msgid "The length of the arrows, as a multiple of the line width"
+msgstr "Дужина стрелица, као множилац ширине линије"
+
+#: src/goocanvaspolyline.c:216
+msgid "Arrow Width"
+msgstr "Ширина стрелице"
+
+#: src/goocanvaspolyline.c:217
+msgid "The width of the arrows, as a multiple of the line width"
+msgstr "Ширина стрелица, као множилац ширине линије"
+
+#: src/goocanvaspolyline.c:223
+msgid "Arrow Tip Length"
+msgstr "Дужина врха стрелице"
+
+#: src/goocanvaspolyline.c:224
+msgid "The length of the arrow tip, as a multiple of the line width"
+msgstr "Дужина врха стрелице, као множилац ширине линије"
+
+#: src/goocanvaspolyline.c:231
+msgid "The x coordinate of the left-most point of the polyline"
+msgstr "Водоравна координата крајње леве тачке полилиније"
+
+#: src/goocanvaspolyline.c:239
+msgid "The y coordinate of the top-most point of the polyline"
+msgstr "Усправна координата највише тачке полилиније"
+
+#: src/goocanvaspolyline.c:247
+msgid "The width of the polyline"
+msgstr "Ширина полилиније"
+
+#: src/goocanvaspolyline.c:254
+msgid "The height of the polyline"
+msgstr "Висина полилиније"
+
+#: src/goocanvasrect.c:61
+msgid "The x coordinate of the rectangle"
+msgstr "Водоравна координата правоугаоника"
+
+#: src/goocanvasrect.c:69
+msgid "The y coordinate of the rectangle"
+msgstr "Усправна координата правоугаоника"
+
+#: src/goocanvasrect.c:77
+msgid "The width of the rectangle"
+msgstr "Ширина правоугаоника"
+
+#: src/goocanvasrect.c:84
+msgid "The height of the rectangle"
+msgstr "Висина правоугаоника"
+
+#: src/goocanvasrect.c:91
+msgid "The horizontal radius to use for rounded corners"
+msgstr "Водоравни полупречник који ће се користити за заобљене углове"
+
+#: src/goocanvasrect.c:98
+msgid "The vertical radius to use for rounded corners"
+msgstr "Усправни полупречник који ће се користити за заобљене углове"
+
+#: src/goocanvastable.c:237
+msgid "Row Spacing"
+msgstr "Размак редова"
+
+#: src/goocanvastable.c:238
+msgid "The default space between rows"
+msgstr "Основни размак између редова"
+
+#: src/goocanvastable.c:244
+msgid "Column Spacing"
+msgstr "Размак колона"
+
+#: src/goocanvastable.c:245
+msgid "The default space between columns"
+msgstr "Основни размак између колона"
+
+#: src/goocanvastable.c:251
+msgid "Homogenous Rows"
+msgstr "Једнообразни редови"
+
+#: src/goocanvastable.c:252
+msgid "If all rows are the same height"
+msgstr "Да ли сви редови имају у+исту висину"
+
+#: src/goocanvastable.c:258
+msgid "Homogenous Columns"
+msgstr "Једнообразне колоне"
+
+#: src/goocanvastable.c:259
+msgid "If all columns are the same width"
+msgstr "Да ли све колоне имају исту ширину"
+
+#: src/goocanvastable.c:264
+msgid "X Border Spacing"
+msgstr "Размак X руба"
+
+#: src/goocanvastable.c:265
+msgid ""
+"The amount of spacing between the lefmost and rightmost cells and the border "
+"grid line"
+msgstr ""
+"Износ размака између крајње леве и крајње десне ћелије и линије мреже руба"
+
+#: src/goocanvastable.c:270
+msgid "Y Border Spacing"
+msgstr "Размак Y руба"
+
+#: src/goocanvastable.c:271
+msgid ""
+"The amount of spacing between the topmost and bottommost cells and the "
+"border grid line"
+msgstr ""
+"Износ размака између крајње горње и крајње доње ћелије и линије мреже руба"
+
+#: src/goocanvastable.c:277
+msgid "The width of the grid line to draw between rows"
+msgstr "Ширина линије мреже за исцртавање између редова"
+
+#: src/goocanvastable.c:284
+msgid "The width of the grid line to draw between columns"
+msgstr "Ширина линије мреже за исцртавање између колона"
+
+#: src/goocanvastable.c:293
+msgid "Left Padding"
+msgstr "Лева попуна"
+
+#: src/goocanvastable.c:294
+msgid "Extra space to add to the left of the item"
+msgstr "Додатни простор који ће се додати са леве стране ставке"
+
+#: src/goocanvastable.c:299
+msgid "Right Padding"
+msgstr "Десна попуна"
+
+#: src/goocanvastable.c:300
+msgid "Extra space to add to the right of the item"
+msgstr "Додатни простор који ће се додати са десне стране ставке"
+
+#: src/goocanvastable.c:305
+msgid "Top Padding"
+msgstr "Попуна на врху"
+
+#: src/goocanvastable.c:306
+msgid "Extra space to add above the item"
+msgstr "Додатни простор који ће се додати изнад ставке"
+
+#: src/goocanvastable.c:311
+msgid "Bottom Padding"
+msgstr "Попуна на дну"
+
+#: src/goocanvastable.c:312
+msgid "Extra space to add below the item"
+msgstr "Додатни простор који ће се додати испод ставке"
+
+#: src/goocanvastable.c:318
+msgid "X Align"
+msgstr "Водоравно поравнање"
+
+#: src/goocanvastable.c:319
+msgid ""
+"The horizontal position of the item within its allocated space. 0.0 is left-"
+"aligned, 1.0 is right-aligned"
+msgstr ""
+"Водоравни положај ставке унутар њој доступног простора. 0.0 означава лево "
+"поравнање, 1.0 десно поравнање"
+
+#: src/goocanvastable.c:324
+msgid "Y Align"
+msgstr "Усправно поравнање"
+
+#: src/goocanvastable.c:325
+msgid ""
+"The vertical position of the item within its allocated space. 0.0 is top-"
+"aligned, 1.0 is bottom-aligned"
+msgstr ""
+"Усправни положај ставке унутар њој доступног простора. 0.0 означава "
+"поравнање са врхом, а 1.0 поравнање са дном."
+
+#: src/goocanvastable.c:331
+msgid "Row"
+msgstr "Ред"
+
+#: src/goocanvastable.c:332
+msgid "The row to place the item in"
+msgstr "Ред у који ће се поставити ставка"
+
+#: src/goocanvastable.c:337
+msgid "Column"
+msgstr "Колона"
+
+#: src/goocanvastable.c:338
+msgid "The column to place the item in"
+msgstr "Колона у коју ће се поставити ставка"
+
+#: src/goocanvastable.c:343
+msgid "Rows"
+msgstr "Редови"
+
+#: src/goocanvastable.c:344
+msgid "The number of rows that the item spans"
+msgstr "Број редова које ставка обухвата"
+
+#: src/goocanvastable.c:349
+msgid "Columns"
+msgstr "Колоне"
+
+#: src/goocanvastable.c:350
+msgid "The number of columns that the item spans"
+msgstr "Број колона које ставка обухвата"
+
+#: src/goocanvastable.c:356
+msgid "X Expand"
+msgstr "X ширење"
+
+#: src/goocanvastable.c:357
+msgid "If the item expands horizontally as the table expands"
+msgstr "Да ли се ставка шири водоравно као и табела"
+
+#: src/goocanvastable.c:362
+msgid "X Fill"
+msgstr "X испуна"
+
+#: src/goocanvastable.c:363
+msgid "If the item fills all horizontal allocated space"
+msgstr "Да ли ставка испуњава сав водоравни додељени простор"
+
+#: src/goocanvastable.c:368
+msgid "X Shrink"
+msgstr "X скупљање"
+
+#: src/goocanvastable.c:369
+msgid "If the item can shrink smaller than its requested size horizontally"
+msgstr "Да ли се ставка може скупити водоравно мање од своје затражене величине"
+
+#: src/goocanvastable.c:374
+msgid "Y Expand"
+msgstr "Y ширење"
+
+#: src/goocanvastable.c:375
+msgid "If the item expands vertically as the table expands"
+msgstr "Да ли се ставка шири усравно као и табела"
+
+#: src/goocanvastable.c:380
+msgid "Y Fill"
+msgstr "Y испуна"
+
+#: src/goocanvastable.c:381
+msgid "If the item fills all vertical allocated space"
+msgstr "Да ли ставка испуњава сав усправни додељени простор"
+
+#: src/goocanvastable.c:386
+msgid "Y Shrink"
+msgstr "Y скупљање"
+
+#: src/goocanvastable.c:387
+msgid "If the item can shrink smaller than its requested size vertically"
+msgstr "Да ли се ставка може скупити усправно мање од своје затражене величине"
+
+#: src/goocanvastext.c:94
+msgid "Text"
+msgstr "Текст"
+
+#: src/goocanvastext.c:95
+msgid "The text to display"
+msgstr "Текст за приказивање"
+
+#: src/goocanvastext.c:101
+msgid "Use Markup"
+msgstr "Користи ознаке"
+
+#: src/goocanvastext.c:102
+msgid "Whether to parse PangoMarkup in the text, to support different styles"
+msgstr ""
+"Да ли ће да обради Панго означавање у тексту, како би подржао различите "
+"стилове"
+
+#: src/goocanvastext.c:108
+msgid "Ellipsize"
+msgstr "Скраћивање"
+
+#: src/goocanvastext.c:109
+msgid ""
+"The preferred place to ellipsize the string, if the label does not have "
+"enough room to display the entire string"
+msgstr ""
+"Жељено место за скраћивање текста, уколико ознака не располаже довољним "
+"простором за приказ целог текста"
+
+#: src/goocanvastext.c:116
+msgid "Wrap"
+msgstr "Преламање"
+
+#: src/goocanvastext.c:117
+msgid "The preferred method of wrapping the string if a width has been set"
+msgstr "Жељени начин прелома ниске ако је постављена ширина"
+
+#: src/goocanvastext.c:126
+msgid "The x coordinate of the text"
+msgstr "Водоравна координата текста"
+
+#: src/goocanvastext.c:134
+msgid "The y coordinate of the text"
+msgstr "Усправна координата текста"
+
+#: src/goocanvastext.c:142
+msgid ""
+"The width to use to layout the text, or -1 to let the text use as much "
+"horizontal space as needed"
+msgstr ""
+"Ширина која ће се користити за распоређивање текста, или -1 да дозволите да "
+"текст користи што више водоравног простора"
+
+#: src/goocanvastext.c:150
+msgid ""
+"The height to use to layout the text, or -1 to let the text use as much "
+"vertical space as needed"
+msgstr ""
+"Висина која ће се користити за распоређивање текста, или -1 да дозволите да "
+"текст користи што више усправног простора"
+
+#: src/goocanvastext.c:159
+msgid "How to position the text relative to the given x and y coordinates"
+msgstr "Како ће се поставити текст у односу на дату x и y координату"
+
+#: src/goocanvastext.c:166
+msgid "Alignment"
+msgstr "Поравнање"
+
+#: src/goocanvastext.c:167
+msgid "How to align the text"
+msgstr "Како се поравнава текст"
+
+#: src/goocanvaswidget.c:547
+msgid "Widget"
+msgstr "Елемент"
+
+#: src/goocanvaswidget.c:548
+msgid "The widget to place in the canvas"
+msgstr "Елемент који ће се поставити на платно"
+
+#: src/goocanvaswidget.c:555
+msgid "The x coordinate of the widget"
+msgstr "Водоравна координата елемента"
+
+#: src/goocanvaswidget.c:563
+msgid "The y coordinate of the widget"
+msgstr "Усправна координата елемента"
+
+#: src/goocanvaswidget.c:571
+msgid "The width of the widget, or -1 to use its requested width"
+msgstr "Ширина елемента, или -1 за коришћење њене затражене ширине"
+
+#: src/goocanvaswidget.c:579
+msgid "The height of the widget, or -1 to use its requested height"
+msgstr "Висина елемента, или -1 за коришћење њене затражене висине"
+
+#: src/goocanvaswidget.c:588
+msgid ""
+"How to position the widget relative to the item's x and y coordinate settings"
+msgstr ""
+"Како ће се поставити елемент у односу на подешавање x и y координате ставке"
