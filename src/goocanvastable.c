@@ -262,7 +262,7 @@ goo_canvas_table_install_common_properties (GObjectClass *gobject_class,
   g_object_class_install_property (gobject_class, PROP_X_BORDER_SPACING,
                                    g_param_spec_double("x-border-spacing",
                                                        _("X Border Spacing"),
-                                                       _("The amount of spacing between the lefmost and rightmost cells and the border grid line"),
+                                                       _("The amount of spacing between the leftmost and rightmost cells and the border grid line"),
                                                        0.0, G_MAXDOUBLE, 0.0,
                                                        G_PARAM_READWRITE));
   g_object_class_install_property (gobject_class, PROP_Y_BORDER_SPACING,
