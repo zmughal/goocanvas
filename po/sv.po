@@ -1,983 +1,1101 @@
 # Swedish translation for goocanvas.
-# Copyright (C) 2010 Free Software Foundation, Inc.
+# Copyright © 2010-2017 Free Software Foundation, Inc.
 # This file is distributed under the same license as the goocanvas package.
 # Daniel Nylander <po@danielnylander.se>, 2010.
+# Josef Andersson <josef.andersson@fripost.org>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: goocanvas\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-27 14:06+0000\n"
-"PO-Revision-Date: 2010-07-27 12:08+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=goocanvas&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-03-05 12:06+0000\n"
+"PO-Revision-Date: 2017-03-07 23:41+0100\n"
+"Last-Translator: Josef Andersson <josef.andersson@fripost.org>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Project-Style: gnome\n"
 
-#: src/goocanvas.c:296
+#: src/goocanvas.c:307
 msgid "Scale"
 msgstr "Skala"
 
-#: src/goocanvas.c:297
+#: src/goocanvas.c:308
 msgid "The magnification factor of the canvas"
-msgstr ""
+msgstr "Förstoringsfaktor för arbetsytan"
 
-#: src/goocanvas.c:303
+#: src/goocanvas.c:314
 msgid "Scale X"
-msgstr ""
+msgstr "X-skala"
 
-#: src/goocanvas.c:304
+#: src/goocanvas.c:315
 msgid "The horizontal magnification factor of the canvas"
-msgstr ""
+msgstr "Den horisontella förstoringsfaktorn för arbetsytan"
 
-#: src/goocanvas.c:310
+#: src/goocanvas.c:321
 msgid "Scale Y"
-msgstr ""
+msgstr "Y-skala"
 
-#: src/goocanvas.c:311
+#: src/goocanvas.c:322
 msgid "The vertical magnification factor of the canvas"
-msgstr ""
+msgstr "Den vertikala förstoringsfaktorn för arbetsytan"
 
-#: src/goocanvas.c:317 src/goocanvastext.c:158 src/goocanvaswidget.c:589
+#: src/goocanvas.c:328 src/goocanvastext.c:158 src/goocanvaswidget.c:587
 msgid "Anchor"
 msgstr "Ankare"
 
-#: src/goocanvas.c:318
+#: src/goocanvas.c:329
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr ""
+"Var arbetsytan ska placeras när den är mindre än komponentens allokerade area"
 
-#: src/goocanvas.c:325
+#: src/goocanvas.c:336
 msgid "X1"
 msgstr "X1"
 
-#: src/goocanvas.c:326
+#: src/goocanvas.c:337
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr ""
+"X-koordinaten för den vänstra kanten av arbetsytans gränser, i ytenheter"
 
-#: src/goocanvas.c:333
+#: src/goocanvas.c:344
 msgid "Y1"
 msgstr "Y1"
 
-#: src/goocanvas.c:334
+#: src/goocanvas.c:345
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr ""
+"Y-koordinaten för den översta kanten av arbetsytans gränser, i ytenheter"
 
-#: src/goocanvas.c:341
+#: src/goocanvas.c:352
 msgid "X2"
 msgstr "X2"
 
-#: src/goocanvas.c:342
+#: src/goocanvas.c:353
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
-msgstr ""
+msgstr "X-koordinaten för den högra kanten av arbetsytans gränser, i ytenheter"
 
-#: src/goocanvas.c:350
+#: src/goocanvas.c:361
 msgid "Y2"
 msgstr "Y2"
 
-#: src/goocanvas.c:351
+#: src/goocanvas.c:362
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr ""
+"Y-koordinaten för den nedersta kanten av arbetsytans gränser, i ytenheter"
 
-#: src/goocanvas.c:360
+#: src/goocanvas.c:371
 msgid "Automatic Bounds"
-msgstr ""
+msgstr "Automatiska gränser"
 
-#: src/goocanvas.c:361
+#: src/goocanvas.c:372
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
 msgstr ""
+"Huruvida gränserna beräknas automatiskt baserat på gränserna för alla objekt "
+"i arbetsytan"
 
-#: src/goocanvas.c:367
+#: src/goocanvas.c:378
 msgid "Bounds From Origin"
-msgstr ""
+msgstr "Gränser från origo"
 
-#: src/goocanvas.c:368
+#: src/goocanvas.c:379
 msgid "If the automatic bounds are calculated from the origin"
-msgstr ""
+msgstr "Om de automatiska gränserna beräknas från origo"
 
-#: src/goocanvas.c:374
+#: src/goocanvas.c:385
 msgid "Bounds Padding"
-msgstr ""
+msgstr "Gränsernas utfyllnad"
 
-#: src/goocanvas.c:375
+#: src/goocanvas.c:386
 msgid "The padding added to the automatic bounds"
-msgstr ""
+msgstr "Den utfyllnad som läggs till de automatiska gränserna"
 
-#: src/goocanvas.c:381
+#: src/goocanvas.c:392
 msgid "Units"
-msgstr ""
+msgstr "Enheter"
 
-#: src/goocanvas.c:382
+#: src/goocanvas.c:393
 msgid "The units to use for the canvas"
-msgstr ""
+msgstr "Enheter att använda för arbetsytan"
 
-#: src/goocanvas.c:389
+#: src/goocanvas.c:400
 msgid "Resolution X"
-msgstr ""
+msgstr "X-upplösning"
 
-#: src/goocanvas.c:390
+#: src/goocanvas.c:401
 msgid "The horizontal resolution of the display, in dots per inch"
-msgstr ""
+msgstr "Den horisontella upplösningen för displayen i punkter per tum (DPI)"
 
-#: src/goocanvas.c:397
+#: src/goocanvas.c:408
 msgid "Resolution Y"
-msgstr ""
+msgstr "Y-upplösning"
 
-#: src/goocanvas.c:398
+#: src/goocanvas.c:409
 msgid "The vertical resolution of the display, in dots per inch"
-msgstr ""
+msgstr "Den vertikala upplösningen för displayen i punkter per tum (DPI)"
 
-#: src/goocanvas.c:406
+#: src/goocanvas.c:417
 msgid "Background Color"
 msgstr "Bakgrundsfärg"
 
-#: src/goocanvas.c:407
+#: src/goocanvas.c:418
 msgid "The color to use for the canvas background"
-msgstr ""
+msgstr "Färgen att använda för arbetsytans bakgrund"
 
-#: src/goocanvas.c:413
+#: src/goocanvas.c:424
 msgid "Background Color RGB"
-msgstr ""
+msgstr "RGB-bakgrundsfärg"
 
-#: src/goocanvas.c:414
+#: src/goocanvas.c:425
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
 msgstr ""
+"Färgen att använda för arbetsytans bakgrund, specificerad som ett 24-bitars "
+"heltalsvärde, 0xRRGGBB"
 
-#: src/goocanvas.c:420
+#: src/goocanvas.c:438
+msgid "Background Color GdkRGBA"
+msgstr "GdkRGBA-bakgrundsfärg"
+
+#: src/goocanvas.c:439
+msgid "The color to use for the canvas background, specified as a GdkRGBA"
+msgstr "Färgen att använda för arbetsytans bakgrund, specificerad som GdkRGBA"
+
+#: src/goocanvas.c:445
 msgid "Integer Layout"
-msgstr ""
+msgstr "Heltalslayout"
 
-#: src/goocanvas.c:421
+#: src/goocanvas.c:446
 msgid "If all item layout is done to the nearest integer"
-msgstr ""
+msgstr "Huruvida all objektlayout sker mot närmaste heltal"
 
-#: src/goocanvas.c:427
+#: src/goocanvas.c:452
 msgid "Clear Background"
-msgstr ""
+msgstr "Rensa bakgrund"
 
-#: src/goocanvas.c:428
+#: src/goocanvas.c:453
 msgid "If the background is cleared before the canvas is painted"
-msgstr ""
+msgstr "Huruvida bakgrunden rensas innan arbetsytan målas"
 
-#: src/goocanvas.c:434
+#: src/goocanvas.c:459
 msgid "Redraw When Scrolled"
-msgstr ""
+msgstr "Rita om vid rullning"
 
-#: src/goocanvas.c:435
+#: src/goocanvas.c:460
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
-"static items"
+"static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
+"scrolled, so this option has no effect."
 msgstr ""
+"Huruvida arbetsytan ritas om helt vid rullning för att minska flimmer av "
+"statiska objekt. Observera att sedan GTK+ 3.0 ritas alltid arbetsytan om vid "
+"rullning, och detta alternativ har då ingen effekt."
 
 #: src/goocanvasellipse.c:77
 msgid "Center X"
-msgstr ""
+msgstr "X-centrum"
 
 #: src/goocanvasellipse.c:78
 msgid "The x coordinate of the center of the ellipse"
-msgstr ""
+msgstr "X-koordinaten för ellipsens centrum"
 
 #: src/goocanvasellipse.c:85
 msgid "Center Y"
-msgstr ""
+msgstr "Y-centrum"
 
 #: src/goocanvasellipse.c:86
 msgid "The y coordinate of the center of the ellipse"
-msgstr ""
+msgstr "Y-koordinaten för ellipsens centrum"
 
 #: src/goocanvasellipse.c:93 src/goocanvasrect.c:90
 msgid "Radius X"
-msgstr ""
+msgstr "X-radie"
 
 #: src/goocanvasellipse.c:94
 msgid "The horizontal radius of the ellipse"
-msgstr ""
+msgstr "Den horisontella radien för ellipsen"
 
 #: src/goocanvasellipse.c:100 src/goocanvasrect.c:97
 msgid "Radius Y"
-msgstr ""
+msgstr "Y-radie"
 
 #: src/goocanvasellipse.c:101
 msgid "The vertical radius of the ellipse"
-msgstr ""
+msgstr "Den vertikala radien för ellipsen"
 
 #: src/goocanvasellipse.c:108
 msgid "The x coordinate of the left side of the ellipse"
-msgstr ""
+msgstr "X-koordinaten för den vänstra sidan av ellipsen"
 
 #: src/goocanvasellipse.c:116
 msgid "The y coordinate of the top of the ellipse"
-msgstr ""
+msgstr "Y-koordinaten för den översta delen av ellipsen"
 
-#: src/goocanvasellipse.c:123 src/goocanvasgrid.c:124 src/goocanvasgroup.c:106
-#: src/goocanvasimage.c:109 src/goocanvaspath.c:93 src/goocanvaspolyline.c:207
-#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:572
+#: src/goocanvasellipse.c:123 src/goocanvasgrid.c:127 src/goocanvasgroup.c:106
+#: src/goocanvasimage.c:115 src/goocanvaspath.c:93 src/goocanvaspolyline.c:246
+#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:570
 msgid "Width"
 msgstr "Bredd"
 
 #: src/goocanvasellipse.c:124
 msgid "The width of the ellipse"
-msgstr ""
+msgstr "Ellipsens bredd"
 
-#: src/goocanvasellipse.c:130 src/goocanvasgrid.c:131 src/goocanvasgroup.c:114
-#: src/goocanvasimage.c:116 src/goocanvaspath.c:100
-#: src/goocanvaspolyline.c:214 src/goocanvasrect.c:83 src/goocanvastext.c:149
-#: src/goocanvaswidget.c:580
+#: src/goocanvasellipse.c:130 src/goocanvasgrid.c:134 src/goocanvasgroup.c:114
+#: src/goocanvasimage.c:122 src/goocanvaspath.c:100 src/goocanvaspolyline.c:253
+#: src/goocanvasrect.c:83 src/goocanvastext.c:149 src/goocanvaswidget.c:578
 msgid "Height"
 msgstr "Höjd"
 
 #: src/goocanvasellipse.c:131
 msgid "The height of the ellipse"
-msgstr ""
+msgstr "Ellipsens höjd"
 
-#: src/goocanvasgrid.c:109
+#: src/goocanvasgrid.c:112
 msgid "The x coordinate of the grid"
-msgstr ""
+msgstr "X-koordinaten för rutnätet"
 
-#: src/goocanvasgrid.c:117
+#: src/goocanvasgrid.c:120
 msgid "The y coordinate of the grid"
-msgstr ""
+msgstr "Y-koordinaten för rutnätet"
 
-#: src/goocanvasgrid.c:125
+#: src/goocanvasgrid.c:128
 msgid "The width of the grid"
-msgstr ""
+msgstr "Rutnätets bredd"
 
-#: src/goocanvasgrid.c:132
+#: src/goocanvasgrid.c:135
 msgid "The height of the grid"
-msgstr ""
+msgstr "Rutnätets höjd"
 
-#: src/goocanvasgrid.c:139
+#: src/goocanvasgrid.c:142
 msgid "The distance between the vertical grid lines"
-msgstr ""
+msgstr "Avståndet mellan rutnätets vertikala linjer"
 
-#: src/goocanvasgrid.c:146
+#: src/goocanvasgrid.c:149
 msgid "The distance between the horizontal grid lines"
-msgstr ""
+msgstr "Avståndet mellan rutnätets horisontella linjer"
 
-#: src/goocanvasgrid.c:153
+#: src/goocanvasgrid.c:156
 msgid "The distance before the first vertical grid line"
-msgstr ""
+msgstr "Avståndet före rutnätets första vertikala linje"
 
-#: src/goocanvasgrid.c:160
+#: src/goocanvasgrid.c:163
 msgid "The distance before the first horizontal grid line"
-msgstr ""
+msgstr "Avståndet före rutnätets första horisontella linje"
 
-#: src/goocanvasgrid.c:166 src/goocanvastable.c:276
+#: src/goocanvasgrid.c:169 src/goocanvastable.c:276
 msgid "Horizontal Grid Line Width"
-msgstr ""
+msgstr "Horisontell bredd på rutnätslinje"
 
-#: src/goocanvasgrid.c:167
+#: src/goocanvasgrid.c:170
 msgid "The width of the horizontal grid lines"
-msgstr ""
+msgstr "Bredden på horisontella rutnätslinjer"
 
-#: src/goocanvasgrid.c:174 src/goocanvastable.c:283
+#: src/goocanvasgrid.c:177 src/goocanvastable.c:283
 msgid "Vertical Grid Line Width"
-msgstr ""
+msgstr "Vertikal bredd på rutnätslinje"
 
-#: src/goocanvasgrid.c:175
+#: src/goocanvasgrid.c:178
 msgid "The width of the vertical grid lines"
-msgstr ""
+msgstr "Bredden på vertikala rutnätslinjer"
 
-#: src/goocanvasgrid.c:182
+#: src/goocanvasgrid.c:185
 msgid "Horizontal Grid Line Pattern"
-msgstr ""
+msgstr "Horisontellt mönster på rutnätslinje"
 
-#: src/goocanvasgrid.c:183
+#: src/goocanvasgrid.c:186
 msgid "The cairo pattern to paint the horizontal grid lines with"
-msgstr ""
+msgstr "Cairo-mönster att måla de horisontella rutnätslinjerna med"
 
-#: src/goocanvasgrid.c:189
+#: src/goocanvasgrid.c:192
 msgid "Vertical Grid Line Pattern"
-msgstr ""
+msgstr "Vertikalt mönster på rutnätslinje"
 
-#: src/goocanvasgrid.c:190
+#: src/goocanvasgrid.c:193
 msgid "The cairo pattern to paint the vertical grid lines with"
-msgstr ""
+msgstr "Cairo-mönster att måla de vertikala rutnätslinjerna med"
 
-#: src/goocanvasgrid.c:196
+#: src/goocanvasgrid.c:199
 msgid "Border Width"
-msgstr ""
+msgstr "Kantlinjebredd"
 
-#: src/goocanvasgrid.c:197
+#: src/goocanvasgrid.c:200
 msgid "The width of the border around the grid"
-msgstr ""
+msgstr "Bredd på kantlinjen runt rutnätet"
 
-#: src/goocanvasgrid.c:204
+#: src/goocanvasgrid.c:207
 msgid "Border Pattern"
-msgstr ""
+msgstr "Kantlinjemönster"
 
-#: src/goocanvasgrid.c:205
+#: src/goocanvasgrid.c:208
 msgid "The cairo pattern to paint the border with"
-msgstr ""
+msgstr "Cairo-mönster att måla kantlinje med"
 
-#: src/goocanvasgrid.c:211
+#: src/goocanvasgrid.c:214
 msgid "Show Horizontal Grid Lines"
-msgstr ""
+msgstr "Visa horisontella rutnätslinjer"
 
-#: src/goocanvasgrid.c:212
+#: src/goocanvasgrid.c:215
 msgid "If the horizontal grid lines are shown"
-msgstr ""
+msgstr "Huruvida de horisontella rutnätslinjerna visas"
 
-#: src/goocanvasgrid.c:218
+#: src/goocanvasgrid.c:221
 msgid "Show Vertical Grid Lines"
-msgstr ""
+msgstr "Visa vertikala rutnätslinjer"
 
-#: src/goocanvasgrid.c:219
+#: src/goocanvasgrid.c:222
 msgid "If the vertical grid lines are shown"
-msgstr ""
+msgstr "Huruvida de vertikala rutnätslinjerna visas"
 
-#: src/goocanvasgrid.c:225
+#: src/goocanvasgrid.c:228
 msgid "Vertical Grid Lines On Top"
-msgstr ""
+msgstr "Vertikala rutnätslinjer överst"
 
-#: src/goocanvasgrid.c:226
+#: src/goocanvasgrid.c:229
 msgid "If the vertical grid lines are painted above the horizontal grid lines"
 msgstr ""
+"Huruvida de vertikala rutnätslinjerna ritas ut ovanpå de horisontella "
+"rutnätslinjerna"
 
-#: src/goocanvasgrid.c:234
+#: src/goocanvasgrid.c:237
 msgid "Horizontal Grid Line Color"
-msgstr ""
+msgstr "Färg på horisontell rutnätslinje"
 
-#: src/goocanvasgrid.c:235
+#: src/goocanvasgrid.c:238
 msgid "The color to use for the horizontal grid lines"
-msgstr ""
+msgstr "Färgen att använda för de horisontella rutnätslinjerna"
 
-#: src/goocanvasgrid.c:241
+#: src/goocanvasgrid.c:244
 msgid "Horizontal Grid Line Color RGBA"
-msgstr ""
+msgstr "RGBA-färg för horisontell rutnätslinje"
 
-#: src/goocanvasgrid.c:242
+#: src/goocanvasgrid.c:245
 msgid ""
 "The color to use for the horizontal grid lines, specified as a 32-bit "
 "integer value"
 msgstr ""
+"Färgen att använda för de horisontella rutnätslinjerna, specificerat som ett "
+"32-bitars heltal"
 
-#: src/goocanvasgrid.c:248
+#: src/goocanvasgrid.c:258
+msgid "Horizontal Grid Line Color GdkRGBA"
+msgstr "GdkRGBA-färg för horisontell rutnätslinje"
+
+#: src/goocanvasgrid.c:259
+msgid "The color to use for the horizontal grid lines, specified as a GdkRGBA"
+msgstr ""
+"Färgen att använda för de horisontella rutnätslinjerna, specificerad som "
+"GdkRGBA"
+
+#: src/goocanvasgrid.c:265
 msgid "Horizontal Grid Line Pixbuf"
-msgstr ""
+msgstr "Pixbuf för horisontell rutnätslinje"
 
-#: src/goocanvasgrid.c:249
+#: src/goocanvasgrid.c:266
 msgid "The pixbuf to use to draw the horizontal grid lines"
-msgstr ""
+msgstr "Pixbuf att använda för att rita de horisontella rutnätslinjerna"
 
-#: src/goocanvasgrid.c:255
+#: src/goocanvasgrid.c:272
 msgid "Vertical Grid Line Color"
-msgstr ""
+msgstr "Färg på vertikal rutnätslinje"
 
-#: src/goocanvasgrid.c:256
+#: src/goocanvasgrid.c:273
 msgid "The color to use for the vertical grid lines"
-msgstr ""
+msgstr "Färgen att använda för de vertikala rutnätslinjerna"
 
-#: src/goocanvasgrid.c:262
+#: src/goocanvasgrid.c:279
 msgid "Vertical Grid Line Color RGBA"
-msgstr ""
+msgstr "RGBA-färg för vertikal rutnätslinje"
 
-#: src/goocanvasgrid.c:263
+#: src/goocanvasgrid.c:280
 msgid ""
 "The color to use for the vertical grid lines, specified as a 32-bit integer "
 "value"
 msgstr ""
+"Färgen att använda för de vertikala rutnätslinjerna, specificerat som ett 32-"
+"bitars heltal"
 
-#: src/goocanvasgrid.c:269
+#: src/goocanvasgrid.c:293
+msgid "Vertical Grid Line Color GdkRGBA"
+msgstr "GdkRGBA-färg för vertikal rutnätslinje"
+
+#: src/goocanvasgrid.c:294
+msgid "The color to use for the vertical grid lines, specified as a GdkRGBA"
+msgstr ""
+"Färgen att använda för de vertikala rutnätslinjerna, specificerad som GdkRGBA"
+
+#: src/goocanvasgrid.c:300
 msgid "Vertical Grid Line Pixbuf"
-msgstr ""
+msgstr "Pixbuf för vertikal rutnätslinje"
 
-#: src/goocanvasgrid.c:270
+#: src/goocanvasgrid.c:301
 msgid "The pixbuf to use to draw the vertical grid lines"
-msgstr ""
+msgstr "Pixbuf att använda för att rita de vertikala rutnätslinjerna"
 
-#: src/goocanvasgrid.c:276
+#: src/goocanvasgrid.c:307
 msgid "Border Color"
-msgstr ""
+msgstr "Kantlinjefärg"
 
-#: src/goocanvasgrid.c:277
+#: src/goocanvasgrid.c:308
 msgid "The color to use for the border"
-msgstr ""
+msgstr "Färgen att använda för kantlinjen"
 
-#: src/goocanvasgrid.c:283
+#: src/goocanvasgrid.c:314
 msgid "Border Color RGBA"
-msgstr ""
+msgstr "RGBA-kantlinjefärg"
 
-#: src/goocanvasgrid.c:284
+#: src/goocanvasgrid.c:315
 msgid "The color to use for the border, specified as a 32-bit integer value"
 msgstr ""
+"Färgen att använda för kantlinjen, specificerad som ett 32-bitars "
+"heltalsvärde"
 
-#: src/goocanvasgrid.c:290
+#: src/goocanvasgrid.c:328
+msgid "Border Color GdkRGBA"
+msgstr "GdkRGBA-kantlinjefärg"
+
+#: src/goocanvasgrid.c:329
+msgid "The color to use for the border, specified as a GdkRGBA"
+msgstr "Färgen att använda för kantlinjen, specificerad som GdkRGBA"
+
+#: src/goocanvasgrid.c:335
 msgid "Border Pixbuf"
-msgstr ""
+msgstr "Kantlinje-Pixbuf"
 
-#: src/goocanvasgrid.c:291
+#: src/goocanvasgrid.c:336
 msgid "The pixbuf to use to draw the border"
-msgstr ""
+msgstr "Pixbuf att använda för att rita kantlinjen"
 
 #: src/goocanvasgroup.c:91
 msgid "The x coordinate of the group"
-msgstr ""
+msgstr "X-koordinaten för gruppen"
 
 #: src/goocanvasgroup.c:99
 msgid "The y coordinate of the group"
-msgstr ""
+msgstr "Y-koordinaten för gruppen"
 
 #: src/goocanvasgroup.c:107
 msgid "The width of the group, or -1 to use the default width"
-msgstr ""
+msgstr "Bredden på gruppen, eller -1 för använda standardbredden"
 
 #: src/goocanvasgroup.c:115
 msgid "The height of the group, or -1 to use the default height"
-msgstr ""
+msgstr "Höjden på gruppen, eller -1 för använda standardhöjden"
 
-#: src/goocanvasimage.c:86
+#: src/goocanvasimage.c:92
 msgid "Pattern"
 msgstr "Mönster"
 
-#: src/goocanvasimage.c:87
+#: src/goocanvasimage.c:93
 msgid "The cairo pattern to paint"
-msgstr ""
+msgstr "Cairo-mönster att rita"
 
-#: src/goocanvasimage.c:94
+#: src/goocanvasimage.c:100
 msgid "The x coordinate of the image"
-msgstr ""
+msgstr "X-koordinaten för bilden"
 
-#: src/goocanvasimage.c:102
+#: src/goocanvasimage.c:108
 msgid "The y coordinate of the image"
-msgstr ""
+msgstr "Y-koordinaten för bilden"
 
-#: src/goocanvasimage.c:110
+#: src/goocanvasimage.c:116
 msgid "The width of the image"
-msgstr ""
-
-#: src/goocanvasimage.c:117
-msgid "The height of the image"
-msgstr ""
+msgstr "Bredden på bilden"
 
 #: src/goocanvasimage.c:123
-msgid "Scale To Fit"
-msgstr ""
+msgid "The height of the image"
+msgstr "Höjden på bilden"
 
-#: src/goocanvasimage.c:124
-msgid "If the image is scaled to fit the width and height settings"
-msgstr ""
+#: src/goocanvasimage.c:129
+msgid "Scale To Fit"
+msgstr "Skala för att passa"
 
 #: src/goocanvasimage.c:130
-msgid "Alpha"
-msgstr ""
+msgid "If the image is scaled to fit the width and height settings"
+msgstr "Om bilden är skalad för att passa bredd- och höjdinställningar"
 
-#: src/goocanvasimage.c:131
-msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
-msgstr ""
+#: src/goocanvasimage.c:136
+msgid "Alpha"
+msgstr "Alfa"
 
 #: src/goocanvasimage.c:137
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr ""
+"Genomskinlighet för bilden, 0.0 är helt transparent och 1.0 ogenomskinligt."
+
+#: src/goocanvasimage.c:143
 msgid "Pixbuf"
-msgstr ""
+msgstr "Pixbuf"
 
-#: src/goocanvasimage.c:138
+#: src/goocanvasimage.c:144
 msgid "The GdkPixbuf to display"
-msgstr ""
+msgstr "GdkPixbuf att visa"
 
-#: src/goocanvasitem.c:461 src/goocanvasitemmodel.c:224
+#: src/goocanvasitem.c:467 src/goocanvasitemmodel.c:224
 msgid "Parent"
-msgstr ""
+msgstr "Överordnad"
 
-#: src/goocanvasitem.c:462
+#: src/goocanvasitem.c:468
 msgid "The parent item"
-msgstr ""
+msgstr "Det överordnade objektet"
 
-#: src/goocanvasitem.c:468 src/goocanvasitemmodel.c:231
+#: src/goocanvasitem.c:474 src/goocanvasitemmodel.c:231
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: src/goocanvasitem.c:469 src/goocanvasitemmodel.c:232
+#: src/goocanvasitem.c:475 src/goocanvasitemmodel.c:232
 msgid "When the canvas item is visible"
-msgstr ""
+msgstr "Huruvida arbetsytan är synlig"
 
-#: src/goocanvasitem.c:476 src/goocanvasitemmodel.c:239
+#: src/goocanvasitem.c:482 src/goocanvasitemmodel.c:239
 msgid "Visibility Threshold"
-msgstr ""
+msgstr "Tröskelvärde för synlighet"
 
-#: src/goocanvasitem.c:477 src/goocanvasitemmodel.c:240
+#: src/goocanvasitem.c:483 src/goocanvasitemmodel.c:240
 msgid "The scale threshold at which the item becomes visible"
-msgstr ""
+msgstr "Skalningströskelvärde för då objektet blir synligt"
 
-#: src/goocanvasitem.c:485 src/goocanvasitemmodel.c:248
+#: src/goocanvasitem.c:491 src/goocanvasitemmodel.c:248
 msgid "Transform"
-msgstr ""
+msgstr "Transformera"
 
-#: src/goocanvasitem.c:486 src/goocanvasitemmodel.c:249
+#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:249
 msgid "The transformation matrix of the item"
-msgstr ""
+msgstr "Transformationsmatris för objektet"
 
-#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:255
+#: src/goocanvasitem.c:498 src/goocanvasitemmodel.c:255
 msgid "Pointer Events"
-msgstr ""
+msgstr "Mushändelser"
 
-#: src/goocanvasitem.c:493 src/goocanvasitemmodel.c:256
+#: src/goocanvasitem.c:499 src/goocanvasitemmodel.c:256
 msgid "Specifies when the item receives pointer events"
-msgstr ""
+msgstr "Specificerar när objektet tar emot mushändelser"
 
-#: src/goocanvasitem.c:500 src/goocanvasitemmodel.c:263
+#: src/goocanvasitem.c:506 src/goocanvasitemmodel.c:263
 msgid "Title"
 msgstr "Titel"
 
-#: src/goocanvasitem.c:501 src/goocanvasitemmodel.c:264
+#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:264
 msgid ""
 "A short context-rich description of the item for use by assistive "
 "technologies"
 msgstr ""
+"Ett kort kontextrik beskrivning av objektet att använda för "
+"hjälpmedelstekniker"
 
-#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:270
+#: src/goocanvasitem.c:513 src/goocanvasitemmodel.c:270
 msgid "Description"
 msgstr "Beskrivning"
 
-#: src/goocanvasitem.c:508 src/goocanvasitemmodel.c:271
+#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:271
 msgid "A description of the item for use by assistive technologies"
-msgstr ""
+msgstr "En beskrivning av objektet att använda för hjälpmedelstekniker"
 
-#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:277
+#: src/goocanvasitem.c:520 src/goocanvasitemmodel.c:277
 msgid "Can Focus"
-msgstr ""
+msgstr "Kan erhålla fokus"
 
-#: src/goocanvasitem.c:515 src/goocanvasitemmodel.c:278
+#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:278
 msgid "If the item can take the keyboard focus"
-msgstr ""
+msgstr "Om objektet kan erhålla tangentbordsfokus"
 
-#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:284
+#: src/goocanvasitem.c:536 src/goocanvasitemmodel.c:284
 msgid "Tooltip"
-msgstr "Verktygstips"
+msgstr "Inforuta"
 
-#: src/goocanvasitem.c:522 src/goocanvasitemmodel.c:285
+#: src/goocanvasitem.c:537 src/goocanvasitemmodel.c:285
 msgid "The tooltip to display for the item"
-msgstr ""
+msgstr "Inforuta att visa för objektet"
 
 #: src/goocanvasitemmodel.c:225
 msgid "The parent item model"
-msgstr ""
+msgstr "Det överordnade objektets modell"
 
-#: src/goocanvasitemsimple.c:126
+#: src/goocanvasitemsimple.c:128
 msgid "Stroke Pattern"
-msgstr ""
+msgstr "Genomstrykningsmönster"
 
-#: src/goocanvasitemsimple.c:127
+#: src/goocanvasitemsimple.c:129
 msgid ""
 "The pattern to use to paint the perimeter of the item, or NULL disable "
 "painting"
 msgstr ""
+"Mönster att använda för att rita omkretsen av objektet eller NULL för att "
+"inaktivera ritandet"
 
-#: src/goocanvasitemsimple.c:133
+#: src/goocanvasitemsimple.c:135
 msgid "Fill Pattern"
-msgstr ""
+msgstr "Fyllnadsmönster"
 
-#: src/goocanvasitemsimple.c:134
+#: src/goocanvasitemsimple.c:136
 msgid ""
 "The pattern to use to paint the interior of the item, or NULL to disable "
 "painting"
 msgstr ""
+"Mönster att använda för att måla objektets insida eller NULL för att "
+"inaktivera ritning"
 
-#: src/goocanvasitemsimple.c:140
+#: src/goocanvasitemsimple.c:142
 msgid "Fill Rule"
-msgstr ""
+msgstr "Fyllnadsregel"
 
-#: src/goocanvasitemsimple.c:141
+#: src/goocanvasitemsimple.c:143
 msgid "The fill rule used to determine which parts of the item are filled"
 msgstr ""
+"Fyllnadsregeln att använda för att avgöra vilka delar av objektet som ska "
+"fyllas"
 
-#: src/goocanvasitemsimple.c:148
+#: src/goocanvasitemsimple.c:150
 msgid "Operator"
-msgstr ""
+msgstr "Operator"
 
-#: src/goocanvasitemsimple.c:149
+#: src/goocanvasitemsimple.c:151
 msgid "The compositing operator to use"
-msgstr ""
+msgstr "Grafiksammansättningsoperator att använda"
 
-#: src/goocanvasitemsimple.c:156
+#: src/goocanvasitemsimple.c:158
 msgid "Antialias"
 msgstr "Kantutjämning"
 
-#: src/goocanvasitemsimple.c:157
+#: src/goocanvasitemsimple.c:159
 msgid "The antialiasing mode to use"
-msgstr ""
+msgstr "Kantutjämningsläge att använda"
 
-#: src/goocanvasitemsimple.c:165
+#: src/goocanvasitemsimple.c:167
 msgid "Line Width"
-msgstr ""
+msgstr "Linjebredd"
 
-#: src/goocanvasitemsimple.c:166
+#: src/goocanvasitemsimple.c:168
 msgid "The line width to use for the item's perimeter"
-msgstr ""
+msgstr "Linjebredden att använda för objektets omkrets"
 
-#: src/goocanvasitemsimple.c:172
+#: src/goocanvasitemsimple.c:174
 msgid "Line Cap"
-msgstr ""
+msgstr "Linjeavrundning"
 
-#: src/goocanvasitemsimple.c:173
+#: src/goocanvasitemsimple.c:175
 msgid "The line cap style to use"
-msgstr ""
+msgstr "Stil på linjeavrundning att använda"
 
-#: src/goocanvasitemsimple.c:180
+#: src/goocanvasitemsimple.c:182
 msgid "Line Join"
-msgstr ""
+msgstr "Linjeövergång"
 
-#: src/goocanvasitemsimple.c:181
+#: src/goocanvasitemsimple.c:183
 msgid "The line join style to use"
-msgstr ""
+msgstr "Linjeövergångsstil att använda"
 
-#: src/goocanvasitemsimple.c:188
+#: src/goocanvasitemsimple.c:190
 msgid "Miter Limit"
-msgstr ""
+msgstr "Kantgräns"
 
-#: src/goocanvasitemsimple.c:189
+#: src/goocanvasitemsimple.c:191
 msgid ""
 "The smallest angle to use with miter joins, in degrees. Bevel joins will be "
 "used below this limit"
 msgstr ""
+"Den minsta vinkeln att använda med kantfogning, i grader. Avfasad fogning "
+"kommer att användas under denna gräns"
 
-#: src/goocanvasitemsimple.c:195
+#: src/goocanvasitemsimple.c:197
 msgid "Line Dash"
-msgstr ""
+msgstr "Linjestreck"
 
-#: src/goocanvasitemsimple.c:196
+#: src/goocanvasitemsimple.c:198
 msgid "The dash pattern to use"
-msgstr ""
+msgstr "Streckmönster att använda"
 
-#: src/goocanvasitemsimple.c:203
+#: src/goocanvasitemsimple.c:205
 msgid "Font"
 msgstr "Typsnitt"
 
-#: src/goocanvasitemsimple.c:204
+#: src/goocanvasitemsimple.c:206
 msgid "The base font to use for the text"
-msgstr ""
+msgstr "Grundtypsnittet att använda för texten"
 
-#: src/goocanvasitemsimple.c:210
+#: src/goocanvasitemsimple.c:212
 msgid "Font Description"
-msgstr ""
+msgstr "Typsnittsbeskrivning"
 
-#: src/goocanvasitemsimple.c:211
+#: src/goocanvasitemsimple.c:213
 msgid "The attributes specifying which font to use"
-msgstr ""
+msgstr "Attributen som specificerar vilka typsnitt att använda"
 
-#: src/goocanvasitemsimple.c:217
+#: src/goocanvasitemsimple.c:219
 msgid "Hint Metrics"
-msgstr ""
+msgstr "Mått för hintning"
 
-#: src/goocanvasitemsimple.c:218
+#: src/goocanvasitemsimple.c:220
 msgid "The hinting to be used for font metrics"
-msgstr ""
+msgstr "Hintning att använda för typsnittets mått"
 
-#: src/goocanvasitemsimple.c:226
+#: src/goocanvasitemsimple.c:228
 msgid "Stroke Color"
-msgstr ""
+msgstr "Linjefärg"
 
-#: src/goocanvasitemsimple.c:227
+#: src/goocanvasitemsimple.c:229
 msgid ""
 "The color to use for the item's perimeter. To disable painting set the "
 "'stroke-pattern' property to NULL"
 msgstr ""
+"Färg att använda för objektets omkrets. För att inaktivera utritning, sätt "
+"egenskapen ”stroke-pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:233
+#: src/goocanvasitemsimple.c:235
 msgid "Stroke Color RGBA"
-msgstr ""
+msgstr "RGBA-linjefärg"
 
-#: src/goocanvasitemsimple.c:234
+#: src/goocanvasitemsimple.c:236
 msgid ""
 "The color to use for the item's perimeter, specified as a 32-bit integer "
 "value. To disable painting set the 'stroke-pattern' property to NULL"
 msgstr ""
+"Färgen att använda för objektets omkrets, specificerad som ett 32-bitars "
+"heltalsvärde. För att inaktivera utritning, sätt egenskapen ”stroke-pattern” "
+"till NULL"
 
-#: src/goocanvasitemsimple.c:240
-msgid "Stroke Pixbuf"
+#: src/goocanvasitemsimple.c:249
+msgid "Stroke Color GdkRGBA"
+msgstr "GdkRGBA-linjefärg"
+
+#: src/goocanvasitemsimple.c:250
+msgid ""
+"The color to use for the item's perimeter, specified as a GdkRGBA. To "
+"disable painting set the 'stroke-pattern' property to NULL"
 msgstr ""
+"Färgen att använda för objektets omkrets specificerat som GdkRGBA. För att "
+"inaktivera utritning, sätt egenskapen ”stroke-pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:241
+#: src/goocanvasitemsimple.c:256
+msgid "Stroke Pixbuf"
+msgstr "Pixbuf för linje"
+
+#: src/goocanvasitemsimple.c:257
 msgid ""
 "The pixbuf to use to draw the item's perimeter. To disable painting set the "
 "'stroke-pattern' property to NULL"
 msgstr ""
+"Pixbuf att använda för att rita ut objektets omkrets. För att inaktivera "
+"utritning, sätt ”stroke-pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:247
+#: src/goocanvasitemsimple.c:263
 msgid "Fill Color"
-msgstr ""
+msgstr "Fyllnadsfärg"
 
-#: src/goocanvasitemsimple.c:248
+#: src/goocanvasitemsimple.c:264
 msgid ""
 "The color to use to paint the interior of the item. To disable painting set "
 "the 'fill-pattern' property to NULL"
 msgstr ""
+"Färgen att använda för att rita ut insidan på objektet. För att inaktivera "
+"utritning, sätt egenskapen ”fill-pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:254
+#: src/goocanvasitemsimple.c:270
 msgid "Fill Color RGBA"
-msgstr ""
+msgstr "RGBA-fyllnadsfärg"
 
-#: src/goocanvasitemsimple.c:255
+#: src/goocanvasitemsimple.c:271
 msgid ""
 "The color to use to paint the interior of the item, specified as a 32-bit "
 "integer value. To disable painting set the 'fill-pattern' property to NULL"
 msgstr ""
+"Färgen att använda för att rita ut insidan på objektet, specificerat som ett "
+"32-bitars heltalsvärde. För att inaktivera utritning, sätt egenskapen ”fill-"
+"pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:261
-msgid "Fill Pixbuf"
+#: src/goocanvasitemsimple.c:284
+msgid "Fill Color GdkRGBA"
+msgstr "GdkRGBA-fyllnadsfärg"
+
+#: src/goocanvasitemsimple.c:285
+msgid ""
+"The color to use to paint the interior of the item, specified as a GdkRGBA. "
+"To disable painting set the 'fill-pattern' property to NULL"
 msgstr ""
+"Färgen att använda för att rita ut insidan på objektet, specificerat som "
+"GdkRGBA. För att inaktivera utritning, sätt egenskapen ”fill-pattern” till "
+"NULL"
 
-#: src/goocanvasitemsimple.c:262
+#: src/goocanvasitemsimple.c:291
+msgid "Fill Pixbuf"
+msgstr "Pixbuf-fyllnad"
+
+#: src/goocanvasitemsimple.c:292
 msgid ""
 "The pixbuf to use to paint the interior of the item. To disable painting set "
 "the 'fill-pattern' property to NULL"
 msgstr ""
+"Pixbuf att använda för insidan av objektet. För att inaktivera utritning, "
+"sätt egenskapen ”fill-pattern” till NULL"
 
-#: src/goocanvasitemsimple.c:312
+#: src/goocanvasitemsimple.c:342
 msgid "Clip Path"
-msgstr ""
+msgstr "Beskärningsbana"
 
-#: src/goocanvasitemsimple.c:313
+#: src/goocanvasitemsimple.c:343
 msgid "The sequence of path commands specifying the clip path"
-msgstr ""
+msgstr "Sekvensen av bankommandon som specificerar beskärningsbana"
 
-#: src/goocanvasitemsimple.c:319
+#: src/goocanvasitemsimple.c:349
 msgid "Clip Fill Rule"
-msgstr ""
+msgstr "Beskärningsfyllnadsregel"
 
-#: src/goocanvasitemsimple.c:320
+#: src/goocanvasitemsimple.c:350
 msgid "The fill rule used to determine which parts of the item are clipped"
 msgstr ""
+"Fyllnadsregeln som används för att avgöra vilka delar av objektet som beskärs"
 
 #: src/goocanvaspath.c:70
 msgid "Path Data"
-msgstr ""
+msgstr "Bandata"
 
 #: src/goocanvaspath.c:71
 msgid "The sequence of path commands"
-msgstr ""
+msgstr "Sekvensen av bankommandon"
 
 #: src/goocanvaspath.c:78
 msgid "The x coordinate of the path"
-msgstr ""
+msgstr "X-koordinat för banan"
 
 #: src/goocanvaspath.c:86
 msgid "The y coordinate of the path"
-msgstr ""
+msgstr "Y-koordinat för banan"
 
 #: src/goocanvaspath.c:94
 msgid "The width of the path"
-msgstr ""
+msgstr "Bredden på banan"
 
 #: src/goocanvaspath.c:101
 msgid "The height of the path"
-msgstr ""
+msgstr "Höjden på banan"
 
-#: src/goocanvaspolyline.c:142
+#: src/goocanvaspolyline.c:181
 msgid "Points"
-msgstr ""
+msgstr "Punkter"
 
-#: src/goocanvaspolyline.c:143
+#: src/goocanvaspolyline.c:182
 msgid "The array of points"
-msgstr ""
+msgstr "Vektorn av punkter"
 
-#: src/goocanvaspolyline.c:149
+#: src/goocanvaspolyline.c:188
 msgid "Close Path"
-msgstr ""
+msgstr "Slut bana"
 
-#: src/goocanvaspolyline.c:150
+#: src/goocanvaspolyline.c:189
 msgid "If the last point should be connected to the first"
-msgstr ""
+msgstr "Huruvida den sista punkten ska anslutas till den första"
 
-#: src/goocanvaspolyline.c:156
+#: src/goocanvaspolyline.c:195
 msgid "Start Arrow"
-msgstr ""
+msgstr "Startpil"
 
-#: src/goocanvaspolyline.c:157
+#: src/goocanvaspolyline.c:196
 msgid "If an arrow should be displayed at the start of the polyline"
-msgstr ""
+msgstr "Om en pil ska visas i början av polylinjen"
 
-#: src/goocanvaspolyline.c:163
+#: src/goocanvaspolyline.c:202
 msgid "End Arrow"
-msgstr ""
+msgstr "Slutpil"
 
-#: src/goocanvaspolyline.c:164
+#: src/goocanvaspolyline.c:203
 msgid "If an arrow should be displayed at the end of the polyline"
-msgstr ""
+msgstr "Huruvida ska visas vid slutet av polylinjen"
 
-#: src/goocanvaspolyline.c:170
+#: src/goocanvaspolyline.c:209
 msgid "Arrow Length"
-msgstr ""
+msgstr "Pillängd"
 
-#: src/goocanvaspolyline.c:171
+#: src/goocanvaspolyline.c:210
 msgid "The length of the arrows, as a multiple of the line width"
-msgstr ""
+msgstr "Längden på pilarna, som en multipel av linjebredden"
 
-#: src/goocanvaspolyline.c:177
+#: src/goocanvaspolyline.c:216
 msgid "Arrow Width"
-msgstr ""
+msgstr "Pilbredd"
 
-#: src/goocanvaspolyline.c:178
+#: src/goocanvaspolyline.c:217
 msgid "The width of the arrows, as a multiple of the line width"
-msgstr ""
+msgstr "Bredden på pilarna som en multipel av linjebredden"
 
-#: src/goocanvaspolyline.c:184
+#: src/goocanvaspolyline.c:223
 msgid "Arrow Tip Length"
-msgstr ""
+msgstr "Längd på pilspets"
 
-#: src/goocanvaspolyline.c:185
+#: src/goocanvaspolyline.c:224
 msgid "The length of the arrow tip, as a multiple of the line width"
-msgstr ""
+msgstr "Längden på pilspetsen, som en multipel av linjebredden"
 
-#: src/goocanvaspolyline.c:192
+#: src/goocanvaspolyline.c:231
 msgid "The x coordinate of the left-most point of the polyline"
-msgstr ""
+msgstr "X-koordinaten för polylinje-punkten längst till vänster"
 
-#: src/goocanvaspolyline.c:200
+#: src/goocanvaspolyline.c:239
 msgid "The y coordinate of the top-most point of the polyline"
-msgstr ""
+msgstr "Y-koordinaten för polylinje-punkten längst upp"
 
-#: src/goocanvaspolyline.c:208
+#: src/goocanvaspolyline.c:247
 msgid "The width of the polyline"
-msgstr ""
+msgstr "Bredden på polylinjen"
 
-#: src/goocanvaspolyline.c:215
+#: src/goocanvaspolyline.c:254
 msgid "The height of the polyline"
-msgstr ""
+msgstr "Höjden på polylinjen"
 
 #: src/goocanvasrect.c:61
 msgid "The x coordinate of the rectangle"
-msgstr ""
+msgstr "X-koordinaten för rektangeln"
 
 #: src/goocanvasrect.c:69
 msgid "The y coordinate of the rectangle"
-msgstr ""
+msgstr "Y-koordinaten för rektangeln"
 
 #: src/goocanvasrect.c:77
 msgid "The width of the rectangle"
-msgstr ""
+msgstr "Bredden för rektangeln"
 
 #: src/goocanvasrect.c:84
 msgid "The height of the rectangle"
-msgstr ""
+msgstr "Höjden på rektangeln"
 
 #: src/goocanvasrect.c:91
 msgid "The horizontal radius to use for rounded corners"
-msgstr ""
+msgstr "Den horisontella radien att använda för rundade hörn"
 
 #: src/goocanvasrect.c:98
 msgid "The vertical radius to use for rounded corners"
-msgstr ""
+msgstr "Den vertikala radien att använda för rundade hörn"
 
 #: src/goocanvastable.c:237
 msgid "Row Spacing"
-msgstr ""
+msgstr "Radavstånd"
 
 #: src/goocanvastable.c:238
 msgid "The default space between rows"
-msgstr ""
+msgstr "Standardavståndet mellan rader"
 
 #: src/goocanvastable.c:244
 msgid "Column Spacing"
-msgstr ""
+msgstr "Kolumnavstånd"
 
 #: src/goocanvastable.c:245
 msgid "The default space between columns"
-msgstr ""
+msgstr "Standardavståndet mellan kolumner"
 
 #: src/goocanvastable.c:251
 msgid "Homogenous Rows"
-msgstr ""
+msgstr "Homogena rader"
 
 #: src/goocanvastable.c:252
 msgid "If all rows are the same height"
-msgstr ""
+msgstr "Om alla rader har samma höjd"
 
 #: src/goocanvastable.c:258
 msgid "Homogenous Columns"
-msgstr ""
+msgstr "Homogena kolumner"
 
 #: src/goocanvastable.c:259
 msgid "If all columns are the same width"
-msgstr ""
+msgstr "Om alla kolumner har samma bredd"
 
 #: src/goocanvastable.c:264
 msgid "X Border Spacing"
-msgstr ""
+msgstr "X-kantlinjeavstånd"
 
+# TODO: lefmost -> leftmost
 #: src/goocanvastable.c:265
 msgid ""
 "The amount of spacing between the lefmost and rightmost cells and the border "
 "grid line"
 msgstr ""
+"Mängden utrymme mellan cellerna längst till vänster respektive höger samt "
+"kantlinjerutnätet"
 
 #: src/goocanvastable.c:270
 msgid "Y Border Spacing"
-msgstr ""
+msgstr "Y-kantlinjeavstånd"
 
 #: src/goocanvastable.c:271
 msgid ""
 "The amount of spacing between the topmost and bottommost cells and the "
 "border grid line"
 msgstr ""
+"Mängden utrymme mellan cellerna överst respektive nederst samt "
+"kantlinjerutnätet"
 
 #: src/goocanvastable.c:277
 msgid "The width of the grid line to draw between rows"
-msgstr ""
+msgstr "Bredden på rutnätet att rita mellan rader"
 
 #: src/goocanvastable.c:284
 msgid "The width of the grid line to draw between columns"
-msgstr ""
+msgstr "Bredden på rutnätet att rita mellan kolumner"
 
 #: src/goocanvastable.c:293
 msgid "Left Padding"
-msgstr ""
+msgstr "Vänsterutfyllnad"
 
 #: src/goocanvastable.c:294
 msgid "Extra space to add to the left of the item"
-msgstr ""
+msgstr "Extra utrymme att lägga till vänster om objektet"
 
 #: src/goocanvastable.c:299
 msgid "Right Padding"
-msgstr ""
+msgstr "Högerutfyllnad"
 
 #: src/goocanvastable.c:300
 msgid "Extra space to add to the right of the item"
-msgstr ""
+msgstr "Extra utrymme att lägga till höger om objektet"
 
 #: src/goocanvastable.c:305
 msgid "Top Padding"
-msgstr ""
+msgstr "Överkantsutfyllnad"
 
 #: src/goocanvastable.c:306
 msgid "Extra space to add above the item"
-msgstr ""
+msgstr "Extra utrymme att lägga till ovanpå objektet"
 
 #: src/goocanvastable.c:311
 msgid "Bottom Padding"
-msgstr ""
+msgstr "Nederkantsutfyllnad"
 
 #: src/goocanvastable.c:312
 msgid "Extra space to add below the item"
-msgstr ""
+msgstr "Extra utrymme att lägga till nedan objektet"
 
 #: src/goocanvastable.c:318
 msgid "X Align"
-msgstr ""
+msgstr "X-justering"
 
 #: src/goocanvastable.c:319
 msgid ""
 "The horizontal position of the item within its allocated space. 0.0 is left-"
 "aligned, 1.0 is right-aligned"
 msgstr ""
+"Den horisontella justeringen för objektet inom dess allokerade utrymme. 0.0 "
+"är vänsterjusterad, 1.0 högerjusterad"
 
 #: src/goocanvastable.c:324
 msgid "Y Align"
-msgstr ""
+msgstr "Y-justering"
 
 #: src/goocanvastable.c:325
 msgid ""
 "The vertical position of the item within its allocated space. 0.0 is top-"
 "aligned, 1.0 is bottom-aligned"
 msgstr ""
+"Den vertikala positionen för objektet inom dess allokerade utrymme. 0.0 är "
+"justerad överst, 1.0 är justerad nederst"
 
 #: src/goocanvastable.c:331
 msgid "Row"
@@ -985,7 +1103,7 @@ msgstr "Rad"
 
 #: src/goocanvastable.c:332
 msgid "The row to place the item in"
-msgstr ""
+msgstr "Raden att placera objektet i"
 
 #: src/goocanvastable.c:337
 msgid "Column"
@@ -993,7 +1111,7 @@ msgstr "Kolumn"
 
 #: src/goocanvastable.c:338
 msgid "The column to place the item in"
-msgstr ""
+msgstr "Kolumnen att placera objektet i"
 
 #: src/goocanvastable.c:343
 msgid "Rows"
@@ -1001,121 +1119,134 @@ msgstr "Rader"
 
 #: src/goocanvastable.c:344
 msgid "The number of rows that the item spans"
-msgstr ""
+msgstr "Antalet rader som objektet omfattar"
 
 #: src/goocanvastable.c:349
 msgid "Columns"
-msgstr ""
+msgstr "Kolumner"
 
 #: src/goocanvastable.c:350
 msgid "The number of columns that the item spans"
-msgstr ""
+msgstr "Antalet kolumner som objektet omfattar"
 
 #: src/goocanvastable.c:356
 msgid "X Expand"
-msgstr ""
+msgstr "X-expandering"
 
 #: src/goocanvastable.c:357
 msgid "If the item expands horizontally as the table expands"
 msgstr ""
+"Huruvida objektet expanderar horisontellt allt eftersom tabellen expanderar"
 
 #: src/goocanvastable.c:362
 msgid "X Fill"
-msgstr ""
+msgstr "X-fyllnad"
 
 #: src/goocanvastable.c:363
 msgid "If the item fills all horizontal allocated space"
-msgstr ""
+msgstr "Huruvida objektet fyller allt horisontellt allokerat utrymme"
 
 #: src/goocanvastable.c:368
 msgid "X Shrink"
-msgstr ""
+msgstr "X-förminskning"
 
 #: src/goocanvastable.c:369
 msgid "If the item can shrink smaller than its requested size horizontally"
 msgstr ""
+"Huruvida objektet kan förminskas till mindre än dess begärda storlek "
+"horisontellt"
 
 #: src/goocanvastable.c:374
 msgid "Y Expand"
-msgstr ""
+msgstr "Y-expandering"
 
 #: src/goocanvastable.c:375
 msgid "If the item expands vertically as the table expands"
 msgstr ""
+"Huruvida objektet expanderar vertikalt allt eftersom tabellen expanderar"
 
 #: src/goocanvastable.c:380
 msgid "Y Fill"
-msgstr ""
+msgstr "Y-fyllnad"
 
 #: src/goocanvastable.c:381
 msgid "If the item fills all vertical allocated space"
-msgstr ""
+msgstr "Huruvida objektet fyller allt vertikalt allokerat utrymme"
 
 #: src/goocanvastable.c:386
 msgid "Y Shrink"
-msgstr ""
+msgstr "Y-förminska"
 
 #: src/goocanvastable.c:387
 msgid "If the item can shrink smaller than its requested size vertically"
 msgstr ""
+"Huruvida objektet kan förminskas till mindre än dess begärda storlek "
+"vertikalt"
 
 #: src/goocanvastext.c:94
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: src/goocanvastext.c:95
 msgid "The text to display"
-msgstr ""
+msgstr "Text att visa"
 
 #: src/goocanvastext.c:101
 msgid "Use Markup"
-msgstr ""
+msgstr "Använd markup"
 
 #: src/goocanvastext.c:102
 msgid "Whether to parse PangoMarkup in the text, to support different styles"
-msgstr ""
+msgstr "Huruvida PangoMarkup ska tolkas i texten för att stödja olika stilar"
 
 #: src/goocanvastext.c:108
 msgid "Ellipsize"
-msgstr ""
+msgstr "Elliptisera"
 
 #: src/goocanvastext.c:109
 msgid ""
 "The preferred place to ellipsize the string, if the label does not have "
 "enough room to display the entire string"
 msgstr ""
+"Den föredragna platsen att elliptisera strängen, om etiketten inte har "
+"tillräckligt med utrymme för att visa hela strängen"
 
 #: src/goocanvastext.c:116
 msgid "Wrap"
-msgstr ""
+msgstr "Radbryt"
 
 #: src/goocanvastext.c:117
 msgid "The preferred method of wrapping the string if a width has been set"
-msgstr ""
+msgstr "Föredragen metod för att radbryta strängen om en bredd har angetts"
 
 #: src/goocanvastext.c:126
 msgid "The x coordinate of the text"
-msgstr ""
+msgstr "X-koordinaten för texten"
 
 #: src/goocanvastext.c:134
 msgid "The y coordinate of the text"
-msgstr ""
+msgstr "Y-koordinaten för texten"
 
 #: src/goocanvastext.c:142
 msgid ""
 "The width to use to layout the text, or -1 to let the text use as much "
 "horizontal space as needed"
 msgstr ""
+"Bredden att använda för att bestämma layout för texten, eller, -1 för att "
+"låta texten använda så mycket horisontellt utrymme som nödvändigt"
 
 #: src/goocanvastext.c:150
 msgid ""
 "The height to use to layout the text, or -1 to let the text use as much "
 "vertical space as needed"
 msgstr ""
+"Höjden att använda för att bestämma layout för texten, eller, -1 för att "
+"låta texten använda så mycket vertikalt utrymme som nödvändigt"
 
 #: src/goocanvastext.c:159
 msgid "How to position the text relative to the given x and y coordinates"
 msgstr ""
+"Hur texten ska positioneras relativt till de givna x- och y-koordinaterna"
 
 #: src/goocanvastext.c:166
 msgid "Alignment"
@@ -1125,31 +1256,36 @@ msgstr "Justering"
 msgid "How to align the text"
 msgstr "Hur texten ska justeras"
 
-#: src/goocanvaswidget.c:549
+#: src/goocanvaswidget.c:547
 msgid "Widget"
-msgstr "Widget"
+msgstr "Gränssnittskomponent"
 
-#: src/goocanvaswidget.c:550
+#: src/goocanvaswidget.c:548
 msgid "The widget to place in the canvas"
-msgstr ""
+msgstr "Gränssnittskomponenten att placera på arbetsytan"
 
-#: src/goocanvaswidget.c:557
+#: src/goocanvaswidget.c:555
 msgid "The x coordinate of the widget"
-msgstr ""
+msgstr "X-koordinaten för komponenten"
 
-#: src/goocanvaswidget.c:565
+#: src/goocanvaswidget.c:563
 msgid "The y coordinate of the widget"
-msgstr ""
+msgstr "Y-koordinaten för komponenten"
 
-#: src/goocanvaswidget.c:573
+#: src/goocanvaswidget.c:571
 msgid "The width of the widget, or -1 to use its requested width"
 msgstr ""
+"Bredden på gränssnittskomponenten, eller. -1 för att använda dess begärda "
+"bredd"
 
-#: src/goocanvaswidget.c:581
+#: src/goocanvaswidget.c:579
 msgid "The height of the widget, or -1 to use its requested height"
 msgstr ""
+"Höjd på gränssnittskomponenten, eller. -1 för att använda dess begärda höjd"
 
-#: src/goocanvaswidget.c:590
+#: src/goocanvaswidget.c:588
 msgid ""
 "How to position the widget relative to the item's x and y coordinate settings"
 msgstr ""
+"Hur komponenten ska positioneras relativt till objektets x- och y-"
+"koordinatinställningar"
