@@ -1,0 +1,1278 @@
+# Indonesian translation for goocanvas.
+# Copyright (C) 2017 goocanvas's COPYRIGHT HOLDER
+# This file is distributed under the same license as the goocanvas package.
+# Andika Triwidada <atriwidada@gnome.org>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: goocanvas goocanvas-2.0\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=goocanvas&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2017-03-08 14:22+0000\n"
+"PO-Revision-Date: 2017-04-02 20:57+0000\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0\n"
+
+#: src/goocanvas.c:309
+msgid "Scale"
+msgstr "Skala"
+
+#: src/goocanvas.c:310
+msgid "The magnification factor of the canvas"
+msgstr "Faktor pembesaran kanvas"
+
+#: src/goocanvas.c:316
+msgid "Scale X"
+msgstr "Skala X"
+
+#: src/goocanvas.c:317
+msgid "The horizontal magnification factor of the canvas"
+msgstr "Faktor pembesaran horisontal dari kanvas"
+
+#: src/goocanvas.c:323
+msgid "Scale Y"
+msgstr "Skala Y"
+
+#: src/goocanvas.c:324
+msgid "The vertical magnification factor of the canvas"
+msgstr "Faktor pembesaran vertikal dari kanvas"
+
+#: src/goocanvas.c:330 src/goocanvastext.c:158 src/goocanvaswidget.c:587
+msgid "Anchor"
+msgstr "Jangkar"
+
+#: src/goocanvas.c:331
+msgid ""
+"Where to place the canvas when it is smaller than the widget's allocated area"
+msgstr ""
+"Di mana menempatkan kanvas ketika itu lebih kecil daripada wilayah widget "
+"yang dialokasikan"
+
+#: src/goocanvas.c:338
+msgid "X1"
+msgstr "X1"
+
+#: src/goocanvas.c:339
+msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
+msgstr "Koordinat x tepi kiri batas kanvas, dalam unit kanvas"
+
+#: src/goocanvas.c:346
+msgid "Y1"
+msgstr "Y1"
+
+#: src/goocanvas.c:347
+msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
+msgstr "Koordinat y tepi puncak batas kanvas, dalam unit kanvas"
+
+#: src/goocanvas.c:354
+msgid "X2"
+msgstr "X2"
+
+#: src/goocanvas.c:355
+msgid ""
+"The x coordinate of the right edge of the canvas bounds, in canvas units"
+msgstr "Koordinat x tepi kanan batas kanvas, dalam unit kanvas"
+
+#: src/goocanvas.c:363
+msgid "Y2"
+msgstr "Y2"
+
+#: src/goocanvas.c:364
+msgid ""
+"The y coordinate of the bottom edge of the canvas bounds, in canvas units"
+msgstr "Koordinat y tepi bawah batas kanvas, dalam unit kanvas"
+
+#: src/goocanvas.c:373
+msgid "Automatic Bounds"
+msgstr "Batas Otomatis"
+
+#: src/goocanvas.c:374
+msgid ""
+"If the bounds are automatically calculated based on the bounds of all the "
+"items in the canvas"
+msgstr ""
+"Apakah batas secara otomatis dihitung berdasarkan pada batas dari semua "
+"butir dalam kanvas"
+
+#: src/goocanvas.c:380
+msgid "Bounds From Origin"
+msgstr "Batas Dari Asal"
+
+#: src/goocanvas.c:381
+msgid "If the automatic bounds are calculated from the origin"
+msgstr "Apakah batas otomatis dihitung dari titik asal"
+
+#: src/goocanvas.c:387
+msgid "Bounds Padding"
+msgstr "Ganjal Batas"
+
+#: src/goocanvas.c:388
+msgid "The padding added to the automatic bounds"
+msgstr "Pengganjal yang ditambahkan ke batas otomatis"
+
+#: src/goocanvas.c:394
+msgid "Units"
+msgstr "Unit"
+
+#: src/goocanvas.c:395
+msgid "The units to use for the canvas"
+msgstr "Satuan yang hendak dipakai bagi kanvas"
+
+#: src/goocanvas.c:402
+msgid "Resolution X"
+msgstr "Resolusi X"
+
+#: src/goocanvas.c:403
+msgid "The horizontal resolution of the display, in dots per inch"
+msgstr "Resolusi horisontal tampilan, dalam dot per inci"
+
+#: src/goocanvas.c:410
+msgid "Resolution Y"
+msgstr "Resolusi Y"
+
+#: src/goocanvas.c:411
+msgid "The vertical resolution of the display, in dots per inch"
+msgstr "Resolusi vertikal tampilan, dalam dot per inci"
+
+#: src/goocanvas.c:419
+msgid "Background Color"
+msgstr "Warna Latar"
+
+#: src/goocanvas.c:420
+msgid "The color to use for the canvas background"
+msgstr "Warna yang hendak dipakai bagi latar belakang kanvas"
+
+#: src/goocanvas.c:426
+msgid "Background Color RGB"
+msgstr "Warna Latar RGB"
+
+#: src/goocanvas.c:427
+msgid ""
+"The color to use for the canvas background, specified as a 24-bit integer "
+"value, 0xRRGGBB"
+msgstr ""
+"Warna yang dipakai bagi latar kanvas, dinyatakan sebagai nilai bilangan "
+"bulat 24 bit, 0xRRGGBB"
+
+#: src/goocanvas.c:440
+msgid "Background Color GdkRGBA"
+msgstr "Warna Latar GdkRGBA"
+
+#: src/goocanvas.c:441
+msgid "The color to use for the canvas background, specified as a GdkRGBA"
+msgstr ""
+"Warna yang hendak dipakai bagi latar kanvas, dinyatakan sebagai suatu GdkRGBA"
+
+#: src/goocanvas.c:447
+msgid "Integer Layout"
+msgstr "Tata Letak Bilangan Bulat"
+
+#: src/goocanvas.c:448
+msgid "If all item layout is done to the nearest integer"
+msgstr "Apakah semua tata letak objek dilakukan ke bilangan bulat terdekat"
+
+#: src/goocanvas.c:454
+msgid "Clear Background"
+msgstr "Hapus Latar"
+
+#: src/goocanvas.c:455
+msgid "If the background is cleared before the canvas is painted"
+msgstr "Apakah latar dibersihkan sebelum kanvas dicat"
+
+#: src/goocanvas.c:461
+msgid "Redraw When Scrolled"
+msgstr "Gambar Ulang Ketika Digulung"
+
+#: src/goocanvas.c:462
+msgid ""
+"If the canvas is completely redrawn when scrolled, to reduce the flicker of "
+"static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
+"scrolled, so this option has no effect."
+msgstr ""
+"Apakah kanvas digambar ulang sepenuhnya ketika digulung, untuk mengurangi "
+"kedipan butir-butir statik. Catat bahwa sejak GTK+ 3.0 kanvas selalu "
+"digambar ulang ketika digulung, sehingga opsi ini tidak berpengaruh."
+
+#: src/goocanvasellipse.c:77
+msgid "Center X"
+msgstr "Pusat X"
+
+#: src/goocanvasellipse.c:78
+msgid "The x coordinate of the center of the ellipse"
+msgstr "Koordinat x dari pusat elips"
+
+#: src/goocanvasellipse.c:85
+msgid "Center Y"
+msgstr "Pusat Y"
+
+#: src/goocanvasellipse.c:86
+msgid "The y coordinate of the center of the ellipse"
+msgstr "Koordinat y dari pusat elips"
+
+#: src/goocanvasellipse.c:93 src/goocanvasrect.c:90
+msgid "Radius X"
+msgstr "Radius X"
+
+#: src/goocanvasellipse.c:94
+msgid "The horizontal radius of the ellipse"
+msgstr "Jari-jari horisontal elips"
+
+#: src/goocanvasellipse.c:100 src/goocanvasrect.c:97
+msgid "Radius Y"
+msgstr "Radius Y"
+
+#: src/goocanvasellipse.c:101
+msgid "The vertical radius of the ellipse"
+msgstr "Jari-jari vertikal elips"
+
+#: src/goocanvasellipse.c:108
+msgid "The x coordinate of the left side of the ellipse"
+msgstr "Koordinat x dari sisi kiri elips"
+
+#: src/goocanvasellipse.c:116
+msgid "The y coordinate of the top of the ellipse"
+msgstr "Koordinat y puncak elips"
+
+#: src/goocanvasellipse.c:123 src/goocanvasgrid.c:127 src/goocanvasgroup.c:106
+#: src/goocanvasimage.c:115 src/goocanvaspath.c:93 src/goocanvaspolyline.c:246
+#: src/goocanvasrect.c:76 src/goocanvastext.c:141 src/goocanvaswidget.c:570
+msgid "Width"
+msgstr "Lebar"
+
+#: src/goocanvasellipse.c:124
+msgid "The width of the ellipse"
+msgstr "Lebar elips"
+
+#: src/goocanvasellipse.c:130 src/goocanvasgrid.c:134 src/goocanvasgroup.c:114
+#: src/goocanvasimage.c:122 src/goocanvaspath.c:100 src/goocanvaspolyline.c:253
+#: src/goocanvasrect.c:83 src/goocanvastext.c:149 src/goocanvaswidget.c:578
+msgid "Height"
+msgstr "Tinggi"
+
+#: src/goocanvasellipse.c:131
+msgid "The height of the ellipse"
+msgstr "Tinggi elips"
+
+#: src/goocanvasgrid.c:112
+msgid "The x coordinate of the grid"
+msgstr "Koordinat x kisi"
+
+#: src/goocanvasgrid.c:120
+msgid "The y coordinate of the grid"
+msgstr "Koordinat y kisi"
+
+#: src/goocanvasgrid.c:128
+msgid "The width of the grid"
+msgstr "Lebar kisi"
+
+#: src/goocanvasgrid.c:135
+msgid "The height of the grid"
+msgstr "Tinggi kisi"
+
+#: src/goocanvasgrid.c:142
+msgid "The distance between the vertical grid lines"
+msgstr "Jarak antara garis kisi vertikal"
+
+#: src/goocanvasgrid.c:149
+msgid "The distance between the horizontal grid lines"
+msgstr "Jarak antara garis kisi horisontal"
+
+#: src/goocanvasgrid.c:156
+msgid "The distance before the first vertical grid line"
+msgstr "Jarak sebelum garis kisi vertikal pertama"
+
+#: src/goocanvasgrid.c:163
+msgid "The distance before the first horizontal grid line"
+msgstr "Jarak sebelum garis kisi horisontal pertama"
+
+#: src/goocanvasgrid.c:169 src/goocanvastable.c:276
+msgid "Horizontal Grid Line Width"
+msgstr "Lebar Garis Kisi Horisontal"
+
+#: src/goocanvasgrid.c:170
+msgid "The width of the horizontal grid lines"
+msgstr "Lebar garis kisi horisontal"
+
+#: src/goocanvasgrid.c:177 src/goocanvastable.c:283
+msgid "Vertical Grid Line Width"
+msgstr "Lebar Garis Kisi Vertikal"
+
+#: src/goocanvasgrid.c:178
+msgid "The width of the vertical grid lines"
+msgstr "Lebar garis kisi vertikal"
+
+#: src/goocanvasgrid.c:185
+msgid "Horizontal Grid Line Pattern"
+msgstr "Pola Garis Kisi Horisontal"
+
+#: src/goocanvasgrid.c:186
+msgid "The cairo pattern to paint the horizontal grid lines with"
+msgstr "Pola cairo yang akan dipakai untuk mengecat garis kisi horisontal"
+
+#: src/goocanvasgrid.c:192
+msgid "Vertical Grid Line Pattern"
+msgstr "Pola Garis Kisi Vertikal"
+
+#: src/goocanvasgrid.c:193
+msgid "The cairo pattern to paint the vertical grid lines with"
+msgstr "Pola cairo yang akan dipakai untuk mengecat garis kisi vertikal"
+
+#: src/goocanvasgrid.c:199
+msgid "Border Width"
+msgstr "Lebar Tepi"
+
+#: src/goocanvasgrid.c:200
+msgid "The width of the border around the grid"
+msgstr "Lebar batas sekeliling kisi"
+
+#: src/goocanvasgrid.c:207
+msgid "Border Pattern"
+msgstr "Pola Tepi"
+
+#: src/goocanvasgrid.c:208
+msgid "The cairo pattern to paint the border with"
+msgstr "Pola cairo yang akan dipakai untuk mengecat tepian"
+
+#: src/goocanvasgrid.c:214
+msgid "Show Horizontal Grid Lines"
+msgstr "Tampilkan Garis Kisi Horisontal"
+
+#: src/goocanvasgrid.c:215
+msgid "If the horizontal grid lines are shown"
+msgstr "Apakah garis kisi horisontal ditampilkan"
+
+#: src/goocanvasgrid.c:221
+msgid "Show Vertical Grid Lines"
+msgstr "Tampilkan Garis Kisi Vertikal"
+
+#: src/goocanvasgrid.c:222
+msgid "If the vertical grid lines are shown"
+msgstr "Apakah garis kisi vertikal ditampilkan"
+
+#: src/goocanvasgrid.c:228
+msgid "Vertical Grid Lines On Top"
+msgstr "Garis Kisi Vertikal Di Puncak"
+
+#: src/goocanvasgrid.c:229
+msgid "If the vertical grid lines are painted above the horizontal grid lines"
+msgstr "Apakah garis kisi vertikal dicat di atas garis kisi horisontal"
+
+#: src/goocanvasgrid.c:237
+msgid "Horizontal Grid Line Color"
+msgstr "Warna Garis Kisi Horisontal"
+
+#: src/goocanvasgrid.c:238
+msgid "The color to use for the horizontal grid lines"
+msgstr "Warna yang dipakai untuk garis kisi horisontal"
+
+#: src/goocanvasgrid.c:244
+msgid "Horizontal Grid Line Color RGBA"
+msgstr "Warna Garis Kisi Horisontal RGBA"
+
+#: src/goocanvasgrid.c:245
+msgid ""
+"The color to use for the horizontal grid lines, specified as a 32-bit "
+"integer value"
+msgstr ""
+"Warna yang akan dipakai untuk garis kisi horisontal, dinyatakan sebagai "
+"sebuah nilai bilangan bulat 32 bit"
+
+#: src/goocanvasgrid.c:258
+msgid "Horizontal Grid Line Color GdkRGBA"
+msgstr "Warna Garis Kisi Horisontal GdkRGBA"
+
+#: src/goocanvasgrid.c:259
+msgid "The color to use for the horizontal grid lines, specified as a GdkRGBA"
+msgstr ""
+"Warna yang dipakai untuk garis kisi horisontal, dinyatakan sebagai suatu "
+"GdkRGBA"
+
+#: src/goocanvasgrid.c:265
+msgid "Horizontal Grid Line Pixbuf"
+msgstr "Pixbuf Garis Kisi Horisontal"
+
+#: src/goocanvasgrid.c:266
+msgid "The pixbuf to use to draw the horizontal grid lines"
+msgstr "Pixbuf yang dipakai untuk menggambar garis kisi horisontal"
+
+#: src/goocanvasgrid.c:272
+msgid "Vertical Grid Line Color"
+msgstr "Warna Garis Kisi Vertikal"
+
+#: src/goocanvasgrid.c:273
+msgid "The color to use for the vertical grid lines"
+msgstr "Warna yang dipakai untuk garis kisi vertikal"
+
+#: src/goocanvasgrid.c:279
+msgid "Vertical Grid Line Color RGBA"
+msgstr "Warna Garis Kisi Vertikal RGBA"
+
+#: src/goocanvasgrid.c:280
+msgid ""
+"The color to use for the vertical grid lines, specified as a 32-bit integer "
+"value"
+msgstr ""
+"Warna yang akan dipakai untuk garis kisi vertikal, dinyatakan sebagai sebuah "
+"nilai bilangan bulat 32 bit"
+
+#: src/goocanvasgrid.c:293
+msgid "Vertical Grid Line Color GdkRGBA"
+msgstr "Warna Garis Kisi Vertikal GdkRGBA"
+
+#: src/goocanvasgrid.c:294
+msgid "The color to use for the vertical grid lines, specified as a GdkRGBA"
+msgstr ""
+"Warna yang dipakai untuk garis kisi vertikal, dinyatakan sebagai suatu "
+"GdkRGBA"
+
+#: src/goocanvasgrid.c:300
+msgid "Vertical Grid Line Pixbuf"
+msgstr "Pixbuf Garis Kisi Vertikal"
+
+#: src/goocanvasgrid.c:301
+msgid "The pixbuf to use to draw the vertical grid lines"
+msgstr "Pixbuf yang dipakai untuk menggambar garis kisi vertikal"
+
+#: src/goocanvasgrid.c:307
+msgid "Border Color"
+msgstr "Warna Tepi"
+
+#: src/goocanvasgrid.c:308
+msgid "The color to use for the border"
+msgstr "Warna yang dipakai untuk tepi"
+
+#: src/goocanvasgrid.c:314
+msgid "Border Color RGBA"
+msgstr "Warna Tepi RGBA"
+
+#: src/goocanvasgrid.c:315
+msgid "The color to use for the border, specified as a 32-bit integer value"
+msgstr ""
+"Warna yang dipakai bagi tepi, dinyatakan sebagai nilai bilangan bulat 24 "
+"bit, 0xRRGGBB"
+
+#: src/goocanvasgrid.c:328
+msgid "Border Color GdkRGBA"
+msgstr "Warna Tepi GdkRGBA"
+
+#: src/goocanvasgrid.c:329
+msgid "The color to use for the border, specified as a GdkRGBA"
+msgstr "Warna yang dipakai bagi tepi, dinyatakan sebagai suatu GdkRGBA"
+
+#: src/goocanvasgrid.c:335
+msgid "Border Pixbuf"
+msgstr "Pixbuf Tepi"
+
+#: src/goocanvasgrid.c:336
+msgid "The pixbuf to use to draw the border"
+msgstr "Pixbuf yang dipakai untuk menggambar tepi"
+
+#: src/goocanvasgroup.c:91
+msgid "The x coordinate of the group"
+msgstr "Koordinat x grup"
+
+#: src/goocanvasgroup.c:99
+msgid "The y coordinate of the group"
+msgstr "Koordinat y grup"
+
+#: src/goocanvasgroup.c:107
+msgid "The width of the group, or -1 to use the default width"
+msgstr "Lebar grup, atau -1 untuk memakai lebar baku"
+
+#: src/goocanvasgroup.c:115
+msgid "The height of the group, or -1 to use the default height"
+msgstr "Tinggi grup, atau -1 untuk memakai tinggi baku"
+
+#: src/goocanvasimage.c:92
+msgid "Pattern"
+msgstr "Pola"
+
+#: src/goocanvasimage.c:93
+msgid "The cairo pattern to paint"
+msgstr "Pola cairo yang akan digambar"
+
+#: src/goocanvasimage.c:100
+msgid "The x coordinate of the image"
+msgstr "Koordinat x citra"
+
+#: src/goocanvasimage.c:108
+msgid "The y coordinate of the image"
+msgstr "Koordinat y citra"
+
+#: src/goocanvasimage.c:116
+msgid "The width of the image"
+msgstr "Lebar citra"
+
+#: src/goocanvasimage.c:123
+msgid "The height of the image"
+msgstr "Tinggi citra"
+
+#: src/goocanvasimage.c:129
+msgid "Scale To Fit"
+msgstr "Paskan Skala"
+
+#: src/goocanvasimage.c:130
+msgid "If the image is scaled to fit the width and height settings"
+msgstr ""
+"Apakah citra diatur skalanya agar pas dengan pengaturan lebar dan tinggi"
+
+#: src/goocanvasimage.c:136
+msgid "Alpha"
+msgstr "Alfa"
+
+#: src/goocanvasimage.c:137
+msgid "The opacity of the image, 0.0 is fully transparent, and 1.0 is opaque."
+msgstr "Kelegapan citra, 0,0 sepenuhnya transparan, dan 1,0 legap."
+
+#: src/goocanvasimage.c:143
+msgid "Pixbuf"
+msgstr "Pixbuf"
+
+#: src/goocanvasimage.c:144
+msgid "The GdkPixbuf to display"
+msgstr "GdkPixbuf yang hendak ditampilkan"
+
+#: src/goocanvasitem.c:467 src/goocanvasitemmodel.c:224
+msgid "Parent"
+msgstr "Induk"
+
+#: src/goocanvasitem.c:468
+msgid "The parent item"
+msgstr "Butir induk"
+
+#: src/goocanvasitem.c:474 src/goocanvasitemmodel.c:231
+msgid "Visibility"
+msgstr "Kenampakan"
+
+#: src/goocanvasitem.c:475 src/goocanvasitemmodel.c:232
+msgid "When the canvas item is visible"
+msgstr "Kapan butir kanvas tampak"
+
+#: src/goocanvasitem.c:482 src/goocanvasitemmodel.c:239
+msgid "Visibility Threshold"
+msgstr "Ambang Kenampakan"
+
+#: src/goocanvasitem.c:483 src/goocanvasitemmodel.c:240
+msgid "The scale threshold at which the item becomes visible"
+msgstr "Ambang skala dimana butir menjadi tampak"
+
+#: src/goocanvasitem.c:491 src/goocanvasitemmodel.c:248
+msgid "Transform"
+msgstr "Transformasikan"
+
+#: src/goocanvasitem.c:492 src/goocanvasitemmodel.c:249
+msgid "The transformation matrix of the item"
+msgstr "Matriks transformasi butir"
+
+#: src/goocanvasitem.c:498 src/goocanvasitemmodel.c:255
+msgid "Pointer Events"
+msgstr "Kejadian Penunjuk"
+
+#: src/goocanvasitem.c:499 src/goocanvasitemmodel.c:256
+msgid "Specifies when the item receives pointer events"
+msgstr "Menyatakan kapan butir menerima kejadian penunjuk"
+
+#: src/goocanvasitem.c:506 src/goocanvasitemmodel.c:263
+msgid "Title"
+msgstr "Judul"
+
+#: src/goocanvasitem.c:507 src/goocanvasitemmodel.c:264
+msgid ""
+"A short context-rich description of the item for use by assistive "
+"technologies"
+msgstr ""
+"Suatu deskripsi kaya konteks yang singkat dari butir untuk dipakai oleh "
+"teknologi asistif"
+
+#: src/goocanvasitem.c:513 src/goocanvasitemmodel.c:270
+msgid "Description"
+msgstr "Deskripsi"
+
+#: src/goocanvasitem.c:514 src/goocanvasitemmodel.c:271
+msgid "A description of the item for use by assistive technologies"
+msgstr "Suatu deskripsi dari butir untuk dipakai oleh teknologi asistif"
+
+#: src/goocanvasitem.c:520 src/goocanvasitemmodel.c:277
+msgid "Can Focus"
+msgstr "Bisa Fokus"
+
+#: src/goocanvasitem.c:521 src/goocanvasitemmodel.c:278
+msgid "If the item can take the keyboard focus"
+msgstr "Apakah butir bisa mendapat fokus papan ketik"
+
+#: src/goocanvasitem.c:536 src/goocanvasitemmodel.c:284
+msgid "Tooltip"
+msgstr "Tooltip"
+
+#: src/goocanvasitem.c:537 src/goocanvasitemmodel.c:285
+msgid "The tooltip to display for the item"
+msgstr "Tooltip yang ditampilkan bagi butir"
+
+#: src/goocanvasitemmodel.c:225
+msgid "The parent item model"
+msgstr "Model butir induk"
+
+#: src/goocanvasitemsimple.c:128
+msgid "Stroke Pattern"
+msgstr "Pola Sapuan"
+
+#: src/goocanvasitemsimple.c:129
+msgid ""
+"The pattern to use to paint the perimeter of the item, or NULL disable "
+"painting"
+msgstr ""
+"Pola yang dipakai untuk mengecat perimeter butir, atau NULL untuk "
+"menonaktifkan pengecatan"
+
+#: src/goocanvasitemsimple.c:135
+msgid "Fill Pattern"
+msgstr "Pola Isi"
+
+#: src/goocanvasitemsimple.c:136
+msgid ""
+"The pattern to use to paint the interior of the item, or NULL to disable "
+"painting"
+msgstr ""
+"Pola yang dipakai untuk mengecat interior butir, atau NULL untuk "
+"menonaktifkan pengecatan"
+
+#: src/goocanvasitemsimple.c:142
+msgid "Fill Rule"
+msgstr "Aturan Pengisian"
+
+#: src/goocanvasitemsimple.c:143
+msgid "The fill rule used to determine which parts of the item are filled"
+msgstr ""
+"Aturan pengisian yang dipakai untuk menentukan bagian mana butir yang diisi"
+
+#: src/goocanvasitemsimple.c:150
+msgid "Operator"
+msgstr "Operator"
+
+#: src/goocanvasitemsimple.c:151
+msgid "The compositing operator to use"
+msgstr "Operator pengkompositan yang akan dipakai"
+
+#: src/goocanvasitemsimple.c:158
+msgid "Antialias"
+msgstr "Antialias"
+
+#: src/goocanvasitemsimple.c:159
+msgid "The antialiasing mode to use"
+msgstr "Mode antialias yang akan dipakai"
+
+#: src/goocanvasitemsimple.c:167
+msgid "Line Width"
+msgstr "Lebar Garis"
+
+#: src/goocanvasitemsimple.c:168
+msgid "The line width to use for the item's perimeter"
+msgstr "Lebar garis yang akan dipakai untuk perimeter butir"
+
+#: src/goocanvasitemsimple.c:174
+msgid "Line Cap"
+msgstr ""
+
+#: src/goocanvasitemsimple.c:175
+msgid "The line cap style to use"
+msgstr ""
+
+#: src/goocanvasitemsimple.c:182
+msgid "Line Join"
+msgstr "Sambungan Garis"
+
+#: src/goocanvasitemsimple.c:183
+msgid "The line join style to use"
+msgstr "Gaya sambungan garis yang akan dipakai"
+
+#: src/goocanvasitemsimple.c:190
+msgid "Miter Limit"
+msgstr "Batas Miter"
+
+#: src/goocanvasitemsimple.c:191
+msgid ""
+"The smallest angle to use with miter joins, in degrees. Bevel joins will be "
+"used below this limit"
+msgstr ""
+"Sudut terkecil yang dipakai dengan sambungan miter, dalam derajat. Sambungan "
+"bevel akan dipakai di bawah batas ini"
+
+#: src/goocanvasitemsimple.c:197
+msgid "Line Dash"
+msgstr "Garis Putus-putus"
+
+#: src/goocanvasitemsimple.c:198
+msgid "The dash pattern to use"
+msgstr "Pola garis putus-putus yang dipakai"
+
+#: src/goocanvasitemsimple.c:205
+msgid "Font"
+msgstr "Fonta"
+
+#: src/goocanvasitemsimple.c:206
+msgid "The base font to use for the text"
+msgstr "Fonta dasar yang dipakai untuk teks"
+
+#: src/goocanvasitemsimple.c:212
+msgid "Font Description"
+msgstr "Deskripsi Fonta"
+
+#: src/goocanvasitemsimple.c:213
+msgid "The attributes specifying which font to use"
+msgstr "Atribut yang menyatakan fonta mana yang akan dipakai"
+
+#: src/goocanvasitemsimple.c:219
+msgid "Hint Metrics"
+msgstr ""
+
+# Hinting yang akan dipakai bagi metriks fonta
+#: src/goocanvasitemsimple.c:220
+msgid "The hinting to be used for font metrics"
+msgstr ""
+
+#: src/goocanvasitemsimple.c:228
+msgid "Stroke Color"
+msgstr "Warna Sapuan"
+
+#: src/goocanvasitemsimple.c:229
+msgid ""
+"The color to use for the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk perimeter butir. Untuk menonaktifkan pengecatan "
+"atur properti 'stroke-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:235
+msgid "Stroke Color RGBA"
+msgstr "Warna Sapuan RGBA"
+
+#: src/goocanvasitemsimple.c:236
+msgid ""
+"The color to use for the item's perimeter, specified as a 32-bit integer "
+"value. To disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk perimeter butir, dinyatakan sebagai sebuah nilai "
+"bilangan bulat 32 bit. Untuk menonaktifkan pengecatan atur properti 'stroke-"
+"pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:249
+msgid "Stroke Color GdkRGBA"
+msgstr "Warna Sapuan GdkRGBA"
+
+#: src/goocanvasitemsimple.c:250
+msgid ""
+"The color to use for the item's perimeter, specified as a GdkRGBA. To "
+"disable painting set the 'stroke-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk perimeter butir, dinyatakan sebagai sebuah GdkRGBA. "
+"Untuk menonaktifkan pengecatan atur properti 'stroke-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:256
+msgid "Stroke Pixbuf"
+msgstr "Pixbuf Sapuan"
+
+#: src/goocanvasitemsimple.c:257
+msgid ""
+"The pixbuf to use to draw the item's perimeter. To disable painting set the "
+"'stroke-pattern' property to NULL"
+msgstr ""
+"Pixbuf yang dipakai untuk menggambar perimeter butir. Untuk menonaktifkan "
+"pengecatan atur properti 'stroke-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:263
+msgid "Fill Color"
+msgstr "Warna Isi"
+
+#: src/goocanvasitemsimple.c:264
+msgid ""
+"The color to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk mengecat interior butir. Untuk menonaktifkan "
+"pengecatan atur properti 'fill-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:270
+msgid "Fill Color RGBA"
+msgstr "Warna Isian RGBA"
+
+#: src/goocanvasitemsimple.c:271
+msgid ""
+"The color to use to paint the interior of the item, specified as a 32-bit "
+"integer value. To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk mengecat interior butir, dinyatakan sebagai sebuah "
+"nilai bilangan bulat 32 bit. Untuk menonaktifkan pengecatan atur properti "
+"'fill-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:284
+msgid "Fill Color GdkRGBA"
+msgstr "Warna Isian GdkRGBA"
+
+#: src/goocanvasitemsimple.c:285
+msgid ""
+"The color to use to paint the interior of the item, specified as a GdkRGBA. "
+"To disable painting set the 'fill-pattern' property to NULL"
+msgstr ""
+"Warna yang dipakai untuk mengecat interior butir, dinyatakan sebagai sebuah "
+"GdkRGBA. Untuk menonaktifkan pengecatan atur properti 'fill-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:291
+msgid "Fill Pixbuf"
+msgstr "Pixbuf Isian"
+
+#: src/goocanvasitemsimple.c:292
+msgid ""
+"The pixbuf to use to paint the interior of the item. To disable painting set "
+"the 'fill-pattern' property to NULL"
+msgstr ""
+"Pixbuf yang dipakai untuk mengecat interior butir. Untuk menonaktifkan "
+"pengecatan atur properti 'fill-pattern' ke NULL"
+
+#: src/goocanvasitemsimple.c:342
+msgid "Clip Path"
+msgstr "Path Klip"
+
+#: src/goocanvasitemsimple.c:343
+msgid "The sequence of path commands specifying the clip path"
+msgstr "Urutan path perintah yang menyatakan path klip"
+
+#: src/goocanvasitemsimple.c:349
+msgid "Clip Fill Rule"
+msgstr "Aturan Pengisian Klip"
+
+#: src/goocanvasitemsimple.c:350
+msgid "The fill rule used to determine which parts of the item are clipped"
+msgstr ""
+"Aturan pengisian yang dipakai untuk menentukan bagian mana butir yang "
+"dipangkas"
+
+#: src/goocanvaspath.c:70
+msgid "Path Data"
+msgstr "Data Path"
+
+#: src/goocanvaspath.c:71
+msgid "The sequence of path commands"
+msgstr "Urutan perintah path"
+
+#: src/goocanvaspath.c:78
+msgid "The x coordinate of the path"
+msgstr "Koordinat x path"
+
+#: src/goocanvaspath.c:86
+msgid "The y coordinate of the path"
+msgstr "Koordinat y path"
+
+#: src/goocanvaspath.c:94
+msgid "The width of the path"
+msgstr "Lebar path"
+
+#: src/goocanvaspath.c:101
+msgid "The height of the path"
+msgstr "Tinggi path"
+
+#: src/goocanvaspolyline.c:181
+msgid "Points"
+msgstr "Titik"
+
+#: src/goocanvaspolyline.c:182
+msgid "The array of points"
+msgstr "Larik titik"
+
+#: src/goocanvaspolyline.c:188
+msgid "Close Path"
+msgstr "Tutup Path"
+
+#: src/goocanvaspolyline.c:189
+msgid "If the last point should be connected to the first"
+msgstr "Apakah titik terakhir mesti terhubung ke yang pertama"
+
+#: src/goocanvaspolyline.c:195
+msgid "Start Arrow"
+msgstr "Pangkal Panah"
+
+#: src/goocanvaspolyline.c:196
+msgid "If an arrow should be displayed at the start of the polyline"
+msgstr "Apakah panah mesti ditampilkan di awal poliline"
+
+#: src/goocanvaspolyline.c:202
+msgid "End Arrow"
+msgstr "Ujung Panah"
+
+#: src/goocanvaspolyline.c:203
+msgid "If an arrow should be displayed at the end of the polyline"
+msgstr "Apakah panah mesti ditampilkan di akhir poliline"
+
+#: src/goocanvaspolyline.c:209
+msgid "Arrow Length"
+msgstr "Panjang Panah"
+
+#: src/goocanvaspolyline.c:210
+msgid "The length of the arrows, as a multiple of the line width"
+msgstr "Panjang panah, sebagai kelipatan dari lebar garis"
+
+#: src/goocanvaspolyline.c:216
+msgid "Arrow Width"
+msgstr "Lebar Panah"
+
+#: src/goocanvaspolyline.c:217
+msgid "The width of the arrows, as a multiple of the line width"
+msgstr "Lebar panah, sebagai kelipatan lebar garis"
+
+#: src/goocanvaspolyline.c:223
+msgid "Arrow Tip Length"
+msgstr "Panjang Ujung Panah"
+
+#: src/goocanvaspolyline.c:224
+msgid "The length of the arrow tip, as a multiple of the line width"
+msgstr "Panjang ujung panah, sebagai kelipatan dari lebar garis"
+
+#: src/goocanvaspolyline.c:231
+msgid "The x coordinate of the left-most point of the polyline"
+msgstr "Koordinat x dari titik poliline paling kiri"
+
+#: src/goocanvaspolyline.c:239
+msgid "The y coordinate of the top-most point of the polyline"
+msgstr "Koordinat y dari titik poliline paling atas"
+
+#: src/goocanvaspolyline.c:247
+msgid "The width of the polyline"
+msgstr "Lebar poliline"
+
+#: src/goocanvaspolyline.c:254
+msgid "The height of the polyline"
+msgstr "Tinggi poliline"
+
+#: src/goocanvasrect.c:61
+msgid "The x coordinate of the rectangle"
+msgstr "Koordinat x dari persegi panjang"
+
+#: src/goocanvasrect.c:69
+msgid "The y coordinate of the rectangle"
+msgstr "Koordinat y dari persegi panjang"
+
+#: src/goocanvasrect.c:77
+msgid "The width of the rectangle"
+msgstr "Lebar persegi panjang"
+
+#: src/goocanvasrect.c:84
+msgid "The height of the rectangle"
+msgstr "Tinggi persegi panjang"
+
+#: src/goocanvasrect.c:91
+msgid "The horizontal radius to use for rounded corners"
+msgstr "Jari-jari horisontal yang akan dipakai untuk pojok yang dilengkungkan"
+
+#: src/goocanvasrect.c:98
+msgid "The vertical radius to use for rounded corners"
+msgstr "Jari-jari vertikal yang akan dipakai untuk pojok yang dilengkungkan"
+
+#: src/goocanvastable.c:237
+msgid "Row Spacing"
+msgstr "Jarak Antar Baris"
+
+#: src/goocanvastable.c:238
+msgid "The default space between rows"
+msgstr "Ruang baku antara baris"
+
+#: src/goocanvastable.c:244
+msgid "Column Spacing"
+msgstr "Jarak Antar Kolom"
+
+#: src/goocanvastable.c:245
+msgid "The default space between columns"
+msgstr "Ruang baku antara kolom"
+
+#: src/goocanvastable.c:251
+msgid "Homogenous Rows"
+msgstr "Baris Homogen"
+
+#: src/goocanvastable.c:252
+msgid "If all rows are the same height"
+msgstr "Apakah semua baris sama tinggi"
+
+#: src/goocanvastable.c:258
+msgid "Homogenous Columns"
+msgstr "Kolom Homogen"
+
+#: src/goocanvastable.c:259
+msgid "If all columns are the same width"
+msgstr "Apakah semua kolom sama lebar"
+
+#: src/goocanvastable.c:264
+msgid "X Border Spacing"
+msgstr "Sela Tepi X"
+
+#: src/goocanvastable.c:265
+msgid ""
+"The amount of spacing between the lefmost and rightmost cells and the border "
+"grid line"
+msgstr ""
+"Banyaknya sela antara sel paling kiri dan paling kanan ke garis kisi tepi"
+
+#: src/goocanvastable.c:270
+msgid "Y Border Spacing"
+msgstr "Sela Tepi Y"
+
+#: src/goocanvastable.c:271
+msgid ""
+"The amount of spacing between the topmost and bottommost cells and the "
+"border grid line"
+msgstr ""
+"Banyaknya sela antara sel paling atas dan paling bawah ke garis kisi tepi"
+
+#: src/goocanvastable.c:277
+msgid "The width of the grid line to draw between rows"
+msgstr "Lebar garis kisi yang akan digambar di antara baris"
+
+#: src/goocanvastable.c:284
+msgid "The width of the grid line to draw between columns"
+msgstr "Lebar garis kisi yang akan digambar di antara kolom"
+
+#: src/goocanvastable.c:293
+msgid "Left Padding"
+msgstr "Isian Kiri"
+
+#: src/goocanvastable.c:294
+msgid "Extra space to add to the left of the item"
+msgstr "Ruang ekstra untuk ditambahkan di sebelah kiri butir"
+
+#: src/goocanvastable.c:299
+msgid "Right Padding"
+msgstr "Isian Kanan"
+
+#: src/goocanvastable.c:300
+msgid "Extra space to add to the right of the item"
+msgstr "Ruang ekstra untuk ditambahkan di sebelah kanan butir"
+
+#: src/goocanvastable.c:305
+msgid "Top Padding"
+msgstr "Isian Atas"
+
+#: src/goocanvastable.c:306
+msgid "Extra space to add above the item"
+msgstr "Ruang ekstra untuk ditambahkan di atas butir"
+
+#: src/goocanvastable.c:311
+msgid "Bottom Padding"
+msgstr "Isian Bawah"
+
+#: src/goocanvastable.c:312
+msgid "Extra space to add below the item"
+msgstr "Ruang ekstra untuk ditambahkan di bawah butir"
+
+#: src/goocanvastable.c:318
+msgid "X Align"
+msgstr "Perataan X"
+
+#: src/goocanvastable.c:319
+msgid ""
+"The horizontal position of the item within its allocated space. 0.0 is left-"
+"aligned, 1.0 is right-aligned"
+msgstr ""
+"Posisi horisontal butir di dalam ruang yang dialokasikan untuknya. 0,0 rata "
+"kiri, 1,0 rata kanan"
+
+#: src/goocanvastable.c:324
+msgid "Y Align"
+msgstr "Perataan Y"
+
+#: src/goocanvastable.c:325
+msgid ""
+"The vertical position of the item within its allocated space. 0.0 is top-"
+"aligned, 1.0 is bottom-aligned"
+msgstr ""
+"Posisi vertikal butir di dalam ruang yang dialokasikan untuknya. 0,0 rata "
+"atas, 1,0 rata bawah"
+
+#: src/goocanvastable.c:331
+msgid "Row"
+msgstr "Baris"
+
+#: src/goocanvastable.c:332
+msgid "The row to place the item in"
+msgstr "Baris untuk menempatkan butir"
+
+#: src/goocanvastable.c:337
+msgid "Column"
+msgstr "Kolom"
+
+#: src/goocanvastable.c:338
+msgid "The column to place the item in"
+msgstr "Kolom untuk menempatkan butir"
+
+#: src/goocanvastable.c:343
+msgid "Rows"
+msgstr "Baris"
+
+#: src/goocanvastable.c:344
+msgid "The number of rows that the item spans"
+msgstr "Cacah baris yang dicakup oleh butir"
+
+#: src/goocanvastable.c:349
+msgid "Columns"
+msgstr "Kolom"
+
+#: src/goocanvastable.c:350
+msgid "The number of columns that the item spans"
+msgstr "Cacah kolom yang dicakup oleh butir"
+
+#: src/goocanvastable.c:356
+msgid "X Expand"
+msgstr "Ekspansi X"
+
+#: src/goocanvastable.c:357
+msgid "If the item expands horizontally as the table expands"
+msgstr "Apakah butir mengembang ke arah horisontal ketika tabel mengembang"
+
+#: src/goocanvastable.c:362
+msgid "X Fill"
+msgstr "Isian X"
+
+#: src/goocanvastable.c:363
+msgid "If the item fills all horizontal allocated space"
+msgstr "Apakah butir memenuhi seluruh ruang horisontal yang dialokasikan"
+
+#: src/goocanvastable.c:368
+msgid "X Shrink"
+msgstr "Kerut X"
+
+#: src/goocanvastable.c:369
+msgid "If the item can shrink smaller than its requested size horizontally"
+msgstr ""
+"Apakah butir dapat mengerut secara horisontal lebih kecil daripada ukuran "
+"yang diminta"
+
+#: src/goocanvastable.c:374
+msgid "Y Expand"
+msgstr "Ekspansi Y"
+
+#: src/goocanvastable.c:375
+msgid "If the item expands vertically as the table expands"
+msgstr "Apakah butir mengembang ke arah vertikal ketika tabel mengembang"
+
+#: src/goocanvastable.c:380
+msgid "Y Fill"
+msgstr "Isian Y"
+
+#: src/goocanvastable.c:381
+msgid "If the item fills all vertical allocated space"
+msgstr "Apakah butir memenuhi seluruh ruang vertikal yang dialokasikan"
+
+#: src/goocanvastable.c:386
+msgid "Y Shrink"
+msgstr "Kerut Y"
+
+#: src/goocanvastable.c:387
+msgid "If the item can shrink smaller than its requested size vertically"
+msgstr ""
+"Apakah butir dapat mengerut secara vertikal lebih kecil daripada ukuran yang "
+"diminta"
+
+#: src/goocanvastext.c:94
+msgid "Text"
+msgstr "Teks"
+
+#: src/goocanvastext.c:95
+msgid "The text to display"
+msgstr "Teks yang hendak ditampilkan"
+
+#: src/goocanvastext.c:101
+msgid "Use Markup"
+msgstr "Gunakan Markup"
+
+#: src/goocanvastext.c:102
+msgid "Whether to parse PangoMarkup in the text, to support different styles"
+msgstr "Apakah mengurai PangoMarkup dalam teks, untuk mendukung gaya berbeda"
+
+#: src/goocanvastext.c:108
+msgid "Ellipsize"
+msgstr "Elipsiskan"
+
+#: src/goocanvastext.c:109
+msgid ""
+"The preferred place to ellipsize the string, if the label does not have "
+"enough room to display the entire string"
+msgstr ""
+"Tempat yang disukai untuk menyingkat string, bila label tak punya cukup "
+"ruang untuk menampilkan seluruhnya"
+
+#: src/goocanvastext.c:116
+msgid "Wrap"
+msgstr "Lipat"
+
+#: src/goocanvastext.c:117
+msgid "The preferred method of wrapping the string if a width has been set"
+msgstr "Metoda pelipatan string yang disukai bila suatu lebar telah ditata"
+
+#: src/goocanvastext.c:126
+msgid "The x coordinate of the text"
+msgstr "Koordinat x dari teks"
+
+#: src/goocanvastext.c:134
+msgid "The y coordinate of the text"
+msgstr "Koordinat y dari teks"
+
+#: src/goocanvastext.c:142
+msgid ""
+"The width to use to layout the text, or -1 to let the text use as much "
+"horizontal space as needed"
+msgstr ""
+"Lebar yang dipakai untuk menata letak teks, atau -1 untuk membiarkan teks "
+"menggunakan sebanyak mungkin ruang horisontal yang diperlukan"
+
+#: src/goocanvastext.c:150
+msgid ""
+"The height to use to layout the text, or -1 to let the text use as much "
+"vertical space as needed"
+msgstr ""
+"Tinggi yang dipakai untuk menata letak teks, atau -1 untuk membiarkan teks "
+"menggunakan sebanyak mungkin ruang vertikal yang diperlukan"
+
+#: src/goocanvastext.c:159
+msgid "How to position the text relative to the given x and y coordinates"
+msgstr ""
+"Bagaimana menempatkan teks relatif terhadap koordinat x dan y yang diberikan"
+
+#: src/goocanvastext.c:166
+msgid "Alignment"
+msgstr "Perataan"
+
+#: src/goocanvastext.c:167
+msgid "How to align the text"
+msgstr "Bagaimana meratakan teks"
+
+#: src/goocanvaswidget.c:547
+msgid "Widget"
+msgstr "Widget"
+
+#: src/goocanvaswidget.c:548
+msgid "The widget to place in the canvas"
+msgstr "Widget yang akan ditempatkan di kanvas"
+
+#: src/goocanvaswidget.c:555
+msgid "The x coordinate of the widget"
+msgstr "Koordinat x widget"
+
+#: src/goocanvaswidget.c:563
+msgid "The y coordinate of the widget"
+msgstr "Koordinat y widget"
+
+#: src/goocanvaswidget.c:571
+msgid "The width of the widget, or -1 to use its requested width"
+msgstr "Lebar widget, atau -1 untuk memakai lebar yang diminta"
+
+#: src/goocanvaswidget.c:579
+msgid "The height of the widget, or -1 to use its requested height"
+msgstr "Tinggi widget, atau -1 untuk memakai tinggi yang diminta"
+
+#: src/goocanvaswidget.c:588
+msgid ""
+"How to position the widget relative to the item's x and y coordinate settings"
+msgstr ""
+"Bagaimana menempatkan widget relatif terhadap pengaturan koordinat x dan y "
+"butir"
