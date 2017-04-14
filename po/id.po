@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: goocanvas goocanvas-2.0\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=goocanvas&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-03-08 14:22+0000\n"
-"PO-Revision-Date: 2017-04-02 20:57+0000\n"
-"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"POT-Creation-Date: 2017-04-02 13:59+0000\n"
+"PO-Revision-Date: 2017-04-14 10:27+0700\n"
+"Last-Translator: Andika Triwidada <atriwidada@gnome.org>\n"
 "Language-Team: Indonesian <gnome-l10n-id@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: src/goocanvas.c:309
 msgid "Scale"
@@ -676,11 +676,11 @@ msgstr "Lebar garis yang akan dipakai untuk perimeter butir"
 
 #: src/goocanvasitemsimple.c:174
 msgid "Line Cap"
-msgstr ""
+msgstr "Tudung Garis"
 
 #: src/goocanvasitemsimple.c:175
 msgid "The line cap style to use"
-msgstr ""
+msgstr "Gaya tudung garis yang dipakai"
 
 #: src/goocanvasitemsimple.c:182
 msgid "Line Join"
@@ -728,12 +728,11 @@ msgstr "Atribut yang menyatakan fonta mana yang akan dipakai"
 
 #: src/goocanvasitemsimple.c:219
 msgid "Hint Metrics"
-msgstr ""
+msgstr "Metrik Hint"
 
-# Hinting yang akan dipakai bagi metriks fonta
 #: src/goocanvasitemsimple.c:220
 msgid "The hinting to be used for font metrics"
-msgstr ""
+msgstr "Hint yang dipakai untuk metrik fonta"
 
 #: src/goocanvasitemsimple.c:228
 msgid "Stroke Color"
