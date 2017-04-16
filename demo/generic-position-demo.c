@@ -172,12 +172,12 @@ setup_canvas (GtkWidget *canvas)
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GtkWidget *window, *vbox, *label, *scrolled_win, *canvas;
 
   /* Initialize GTK+. */
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   /* Create the window and widgets. */
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

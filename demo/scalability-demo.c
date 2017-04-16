@@ -334,11 +334,11 @@ on_delete_event (GtkWidget *window,
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GtkWidget *window, *scrolled_win, *canvas;
 
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);

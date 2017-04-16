@@ -13,13 +13,13 @@ static gboolean on_delete_event      (GtkWidget      *window,
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GtkWidget *window, *scrolled_win, *canvas;
   GooCanvasItem *root, *rect_item, *text_item;
 
   /* Initialize GTK+. */
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   /* Create the window and widgets. */
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

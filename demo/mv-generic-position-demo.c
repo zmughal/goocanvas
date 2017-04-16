@@ -220,13 +220,13 @@ create_window (GooCanvasItemModel *model)
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GooCanvasItemModel *model;
   GdkPixbuf *pixbuf;
 
   /* Initialize GTK+. */
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
 				     "dialog-warning", 48, 0, NULL);

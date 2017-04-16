@@ -1446,12 +1446,12 @@ create_window (GooCanvasItemModel *model,
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GooCanvasItemModel *model, *static_model;
   GtkWidget *window G_GNUC_UNUSED;
 
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   model = create_model ();
   static_model = create_static_model ();

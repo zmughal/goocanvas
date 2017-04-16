@@ -264,7 +264,7 @@ create_focus_box (GtkWidget     *canvas,
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GtkWidget *window, *vbox, *hbox, *w, *scrolled_win;
   GtkWidget *label, *entry, *textview;
@@ -272,7 +272,7 @@ main (int argc, char *argv[])
   GooCanvasItem *root, *witem;
 
   /* Initialize GTK+. */
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   /* Create the window and widgets. */
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);

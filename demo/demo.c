@@ -1626,11 +1626,11 @@ create_window ()
 
 
 int
-main (int argc, char *argv[])
+main ()
 {
   GtkWidget *window G_GNUC_UNUSED;
 
-  gtk_init (&argc, &argv);
+  gtk_init ();
 
   window = create_window ();
 
