@@ -4340,7 +4340,6 @@ goo_canvas_focus (GtkWidget        *widget,
 {
   GooCanvas *canvas;
   GooCanvasFocusData data;
-  GtkWidget *old_focus_child;
   gboolean found_item;
   gint try;
 
@@ -4352,20 +4351,12 @@ goo_canvas_focus (GtkWidget        *widget,
   if (!gtk_widget_get_can_focus (widget))
     return FALSE;
 
-  /* If a child widget has the focus, try moving the focus within that. */
-  old_focus_child = gtk_container_get_focus_child (GTK_CONTAINER (canvas));
-  if (old_focus_child && gtk_widget_child_focus (old_focus_child, direction))
-    return TRUE;
-
   data.direction = direction;
   data.text_direction = gtk_widget_get_direction (widget);
   data.start_item = NULL;
 
   if (gtk_widget_has_focus (GTK_WIDGET (canvas)))
     data.start_item = canvas->focused_item;
-  else if (old_focus_child && GOO_IS_CANVAS_WIDGET (old_focus_child))
-    data.start_item = g_object_get_data (G_OBJECT (old_focus_child),
-					 "goo-canvas-item");
 
   /* Keep looping until we find an item to focus or we fail. I've added a
      limit on the number of tries just in case we get into an infinite loop. */
