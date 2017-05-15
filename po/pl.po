@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: goocanvas\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=goocanvas&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-04-14 03:28+0000\n"
-"PO-Revision-Date: 2017-05-15 17:37+0200\n"
+"POT-Creation-Date: 2017-05-15 15:39+0000\n"
+"PO-Revision-Date: 2017-05-15 17:42+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -20,82 +20,82 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: src/goocanvas.c:309
+#: src/goocanvas.c:307
 msgid "Scale"
 msgstr "Skalowanie"
 
-#: src/goocanvas.c:310
+#: src/goocanvas.c:308
 msgid "The magnification factor of the canvas"
 msgstr "Współczynnik powiększenia płótna"
 
-#: src/goocanvas.c:316
+#: src/goocanvas.c:314
 msgid "Scale X"
 msgstr "Skalowanie współrzędnej X"
 
-#: src/goocanvas.c:317
+#: src/goocanvas.c:315
 msgid "The horizontal magnification factor of the canvas"
 msgstr "Poziomy współczynnik powiększenia płótna"
 
-#: src/goocanvas.c:323
+#: src/goocanvas.c:321
 msgid "Scale Y"
 msgstr "Skalowanie współrzędnej Y"
 
-#: src/goocanvas.c:324
+#: src/goocanvas.c:322
 msgid "The vertical magnification factor of the canvas"
 msgstr "Pionowy współczynnik powiększenia płótna"
 
-#: src/goocanvas.c:330 src/goocanvastext.c:158 src/goocanvaswidget.c:587
+#: src/goocanvas.c:328 src/goocanvastext.c:158 src/goocanvaswidget.c:587
 msgid "Anchor"
 msgstr "Kotwica"
 
-#: src/goocanvas.c:331
+#: src/goocanvas.c:329
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr ""
 "Gdzie umieścić płótno, kiedy jest mniejsze niż przydzielony obszar widżetu"
 
-#: src/goocanvas.c:338
+#: src/goocanvas.c:336
 msgid "X1"
 msgstr "X1"
 
-#: src/goocanvas.c:339
+#: src/goocanvas.c:337
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr "Współrzędna na osi X lewej krawędzi granic płótna w jednostkach płótna"
 
-#: src/goocanvas.c:346
+#: src/goocanvas.c:344
 msgid "Y1"
 msgstr "Y1"
 
-#: src/goocanvas.c:347
+#: src/goocanvas.c:345
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr ""
 "Współrzędna na osi Y górnej krawędzi granic płótna w jednostkach płótna"
 
-#: src/goocanvas.c:354
+#: src/goocanvas.c:352
 msgid "X2"
 msgstr "X2"
 
-#: src/goocanvas.c:355
+#: src/goocanvas.c:353
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
 msgstr ""
 "Współrzędna na osi X prawej krawędzi granic płótna w jednostkach płótna"
 
-#: src/goocanvas.c:363
+#: src/goocanvas.c:361
 msgid "Y2"
 msgstr "Y2"
 
-#: src/goocanvas.c:364
+#: src/goocanvas.c:362
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr ""
 "Współrzędna na osi Y dolnej krawędzi granic płótna w jednostkach płótna"
 
-#: src/goocanvas.c:373
+#: src/goocanvas.c:371
 msgid "Automatic Bounds"
 msgstr "Automatyczne granice"
 
-#: src/goocanvas.c:374
+#: src/goocanvas.c:372
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
@@ -103,59 +103,59 @@ msgstr ""
 "Czy granice są automatycznie obliczane na podstawie granic wszystkich "
 "elementów na płótnie"
 
-#: src/goocanvas.c:380
+#: src/goocanvas.c:378
 msgid "Bounds From Origin"
 msgstr "Granice z pochodzenia"
 
-#: src/goocanvas.c:381
+#: src/goocanvas.c:379
 msgid "If the automatic bounds are calculated from the origin"
 msgstr "Czy automatyczne granice są obliczane z pochodzenia"
 
-#: src/goocanvas.c:387
+#: src/goocanvas.c:385
 msgid "Bounds Padding"
 msgstr "Wypełnienie granic"
 
-#: src/goocanvas.c:388
+#: src/goocanvas.c:386
 msgid "The padding added to the automatic bounds"
 msgstr "Wypełnienie dodawane do automatycznych granic"
 
-#: src/goocanvas.c:394
+#: src/goocanvas.c:392
 msgid "Units"
 msgstr "Jednostki"
 
-#: src/goocanvas.c:395
+#: src/goocanvas.c:393
 msgid "The units to use for the canvas"
 msgstr "Jednostki używane dla płótna"
 
-#: src/goocanvas.c:402
+#: src/goocanvas.c:400
 msgid "Resolution X"
 msgstr "Rozdzielczość na osi X"
 
-#: src/goocanvas.c:403
+#: src/goocanvas.c:401
 msgid "The horizontal resolution of the display, in dots per inch"
 msgstr "Pozioma rozdzielczość ekranu w punktach na cal"
 
-#: src/goocanvas.c:410
+#: src/goocanvas.c:408
 msgid "Resolution Y"
 msgstr "Rozdzielczość na osi Y"
 
-#: src/goocanvas.c:411
+#: src/goocanvas.c:409
 msgid "The vertical resolution of the display, in dots per inch"
 msgstr "Pozioma rozdzielczość ekranu w punktach na cal"
 
-#: src/goocanvas.c:419
+#: src/goocanvas.c:417
 msgid "Background Color"
 msgstr "Kolor tła"
 
-#: src/goocanvas.c:420
+#: src/goocanvas.c:418
 msgid "The color to use for the canvas background"
 msgstr "Kolor używany dla tła płótna"
 
-#: src/goocanvas.c:426
+#: src/goocanvas.c:424
 msgid "Background Color RGB"
 msgstr "Wartości RGB koloru tła"
 
-#: src/goocanvas.c:427
+#: src/goocanvas.c:425
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
@@ -163,37 +163,37 @@ msgstr ""
 "Kolor używany dla tła płótna podany jako 24-bitowa wartość całkowita, "
 "0xRRGGBB"
 
-#: src/goocanvas.c:440
+#: src/goocanvas.c:438
 msgid "Background Color GdkRGBA"
 msgstr "GdkRGBA koloru tła"
 
-#: src/goocanvas.c:441
+#: src/goocanvas.c:439
 msgid "The color to use for the canvas background, specified as a GdkRGBA"
 msgstr "Kolor używany dla tła płótna podany jako GdkRGBA"
 
-#: src/goocanvas.c:447
+#: src/goocanvas.c:445
 msgid "Integer Layout"
 msgstr "Układ całkowity"
 
-#: src/goocanvas.c:448
+#: src/goocanvas.c:446
 msgid "If all item layout is done to the nearest integer"
 msgstr ""
 "Czy wszystkie elementy układu są przybliżane do najbliższej wartości "
 "całkowitej"
 
-#: src/goocanvas.c:454
+#: src/goocanvas.c:452
 msgid "Clear Background"
 msgstr "Czyszczenie tła"
 
-#: src/goocanvas.c:455
+#: src/goocanvas.c:453
 msgid "If the background is cleared before the canvas is painted"
 msgstr "Czy tło jest czyszczone przed wyświetleniem płótna"
 
-#: src/goocanvas.c:461
+#: src/goocanvas.c:459
 msgid "Redraw When Scrolled"
 msgstr "Ponowne wyświetlanie po przewinięciu"
 
-#: src/goocanvas.c:462
+#: src/goocanvas.c:460
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
 "static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
@@ -1002,8 +1002,8 @@ msgstr "Odstępy granic na osi X"
 
 #: src/goocanvastable.c:265
 msgid ""
-"The amount of spacing between the lefmost and rightmost cells and the border "
-"grid line"
+"The amount of spacing between the leftmost and rightmost cells and the "
+"border grid line"
 msgstr "Odstęp między lewymi i prawymi komórkami a linią graniczną siatki"
 
 #: src/goocanvastable.c:270
