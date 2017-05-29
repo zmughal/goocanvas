@@ -220,7 +220,6 @@ static void     goo_canvas_set_property    (GObject          *object,
 static void     goo_canvas_remove          (GtkContainer     *container,
 					    GtkWidget        *widget);
 static void     goo_canvas_forall          (GtkContainer     *container,
-					    gboolean          include_internals,
 					    GtkCallback       callback,
 					    gpointer          callback_data);
 static gboolean goo_canvas_query_tooltip   (GtkWidget	     *widget,
@@ -4462,7 +4461,6 @@ goo_canvas_unregister_widget_item (GooCanvas          *canvas,
 
 static void
 goo_canvas_forall (GtkContainer *container,
-		   gboolean      include_internals,
 		   GtkCallback   callback,
 		   gpointer      callback_data)
 {
