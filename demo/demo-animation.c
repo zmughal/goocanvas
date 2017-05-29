@@ -118,17 +118,17 @@ create_animation_page (void)
   gtk_widget_show (vbox);
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox);
   gtk_widget_show (hbox);
 
   w = gtk_button_new_with_label("Start Animation");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (start_animation_clicked),
 		    NULL);
 
   w = gtk_button_new_with_label("Stop Animation");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (stop_animation_clicked),
 		    NULL);
@@ -138,7 +138,11 @@ create_animation_page (void)
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win);
+  gtk_widget_set_halign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_valign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_hexpand (scrolled_win, TRUE);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
 
   canvas = goo_canvas_new ();
   gtk_widget_set_size_request (canvas, 600, 450);

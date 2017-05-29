@@ -105,13 +105,13 @@ create_canvas (GtkUnit         units,
   gtk_widget_show (vbox);
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox);
   gtk_widget_show (hbox);
 
   canvas = goo_canvas_new ();
 
   w = gtk_label_new ("Zoom:");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
 
   adj = GTK_ADJUSTMENT (gtk_adjustment_new (1.00, 0.05, 100.00, 0.05, 0.50, 0.50));
@@ -120,11 +120,15 @@ create_canvas (GtkUnit         units,
 		    G_CALLBACK (zoom_changed),
 		    canvas);
   gtk_widget_set_size_request (w, 50, -1);
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
 
   scrolled_win = gtk_scrolled_window_new (NULL, NULL);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win);
+  gtk_widget_set_halign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_valign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_hexpand (scrolled_win, TRUE);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
   gtk_widget_show (scrolled_win);
 
   /* Create the canvas. */

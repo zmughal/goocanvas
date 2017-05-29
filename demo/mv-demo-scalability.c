@@ -52,7 +52,11 @@ create_canvas_scalability (void)
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 					     GTK_SHADOW_IN);
 	gtk_widget_show (scrolled_win);
-	gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
+	gtk_box_pack_start (GTK_BOX (vbox), scrolled_win);
+	gtk_widget_set_halign (scrolled_win, GTK_ALIGN_FILL);
+	gtk_widget_set_valign (scrolled_win, GTK_ALIGN_FILL);
+	gtk_widget_set_hexpand (scrolled_win, TRUE);
+	gtk_widget_set_vexpand (scrolled_win, TRUE);
 
 	gtk_container_add (GTK_CONTAINER (scrolled_win), canvas);
 

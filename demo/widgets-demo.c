@@ -287,60 +287,60 @@ main ()
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox);
   gtk_widget_show (hbox);
 
   w = gtk_button_new_with_label ("Add Widget");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (add_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Remove Widget");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (remove_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Move Widget");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (move_widget_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Anchor");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (change_anchor_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Widget");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (change_widget_clicked), NULL);
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox);
   gtk_widget_show (hbox);
 
   w = gtk_button_new_with_label ("Hide Canvas");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (hide_canvas_clicked), NULL);
 
   w = gtk_button_new_with_label ("Show Canvas");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (show_canvas_clicked), NULL);
 
   w = gtk_button_new_with_label ("Hide Item");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (hide_item_clicked), NULL);
 
   w = gtk_button_new_with_label ("Show Item");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (show_item_clicked), NULL);
 
   w = gtk_button_new_with_label ("Change Transform");
-  gtk_box_pack_start (GTK_BOX (hbox), w, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (hbox), w);
   gtk_widget_show (w);
   g_signal_connect (w, "clicked", G_CALLBACK (change_transform_clicked), NULL);
 
@@ -348,7 +348,11 @@ main ()
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_win),
 				       GTK_SHADOW_IN);
   gtk_widget_show (scrolled_win);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win, TRUE, TRUE);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_win);
+  gtk_widget_set_halign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_valign (scrolled_win, GTK_ALIGN_FILL);
+  gtk_widget_set_hexpand (scrolled_win, TRUE);
+  gtk_widget_set_vexpand (scrolled_win, TRUE);
 
   canvas = goo_canvas_new ();
   gtk_widget_set_can_focus (canvas, TRUE);
@@ -398,15 +402,15 @@ main ()
 
   entry = gtk_entry_new ();
   gtk_widget_show (entry);
-  gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry);
 
   entry = gtk_entry_new ();
   gtk_widget_show (entry);
-  gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry);
 
   entry = gtk_entry_new ();
   gtk_widget_show (entry);
-  gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry);
 
   witem = goo_canvas_widget_new (root, vbox, 50, 600, -1, -1, NULL);
   g_object_set_data (G_OBJECT (witem), "id", "vbox");

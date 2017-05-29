@@ -420,17 +420,19 @@ create_canvas_arrowhead (void)
 	w = gtk_label_new ("This demo allows you to edit arrowhead shapes.  Drag the little boxes\n"
 			   "to change the shape of the line and its arrowhead.  You can see the\n"
 			   "arrows at their normal scale on the right hand side of the window.");
-	gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE);
+	gtk_box_pack_start (GTK_BOX (vbox), w);
 	gtk_widget_show (w);
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE);
+	gtk_box_pack_start (GTK_BOX (vbox), frame);
 	gtk_widget_show (frame);
 
 	g_object_set (frame,
 		      "halign", GTK_ALIGN_CENTER,
 		      "valign", GTK_ALIGN_CENTER,
+		      "hexpand", TRUE,
+		      "vexpand", TRUE,
 		      NULL);
 
 	canvas = goo_canvas_new ();

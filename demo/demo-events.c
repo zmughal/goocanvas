@@ -136,14 +136,14 @@ create_events_page (void)
   /* Instructions */
 
   label = gtk_label_new ("Move the mouse over the items to check they receive the right motion events.\nThe first 2 items in each group are 1) invisible and 2) visible but unpainted.");
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), label);
   gtk_widget_show (label);
 
   /* Frame and canvas */
 
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), frame);
   gtk_widget_show (frame);
 
   g_object_set (frame,

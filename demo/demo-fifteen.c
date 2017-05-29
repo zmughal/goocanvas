@@ -248,7 +248,11 @@ create_canvas_fifteen (void)
 
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE);
+	gtk_box_pack_start (GTK_BOX (vbox), frame);
+	gtk_widget_set_halign (frame, GTK_ALIGN_FILL);
+	gtk_widget_set_valign (frame, GTK_ALIGN_FILL);
+	gtk_widget_set_hexpand (frame, TRUE);
+	gtk_widget_set_vexpand (frame, TRUE);
 	gtk_widget_show (frame);
 
 	g_object_set (frame,
@@ -317,7 +321,7 @@ create_canvas_fifteen (void)
 	/* Scramble button */
 
 	button = gtk_button_new_with_label ("Scramble");
-	gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE);
+	gtk_box_pack_start (GTK_BOX (vbox), button);
 	g_object_set_data (G_OBJECT (button), "board", board);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (scramble),
