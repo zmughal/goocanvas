@@ -1530,8 +1530,7 @@ goo_canvas_realize (GtkWidget *widget)
 			 | GDK_KEY_RELEASE_MASK
 			 | GDK_ENTER_NOTIFY_MASK
 			 | GDK_LEAVE_NOTIFY_MASK
-			 | GDK_FOCUS_CHANGE_MASK
-                         | gtk_widget_get_events (widget);
+			 | GDK_FOCUS_CHANGE_MASK;
 
   priv->window_x = priv->static_window_x = allocation.x;
   priv->window_y = priv->static_window_y = allocation.y;

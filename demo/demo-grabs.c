@@ -233,17 +233,6 @@ create_fixed (GtkGrid *grid, gint row, gchar *text, gchar *id)
 
   fixed = gtk_fixed_new ();
   gtk_widget_set_has_window (fixed, TRUE);
-  gtk_widget_set_events (fixed,
-			 GDK_EXPOSURE_MASK
-			 | GDK_BUTTON_PRESS_MASK
-			 | GDK_BUTTON_RELEASE_MASK
-			 | GDK_POINTER_MOTION_MASK
-			 | GDK_POINTER_MOTION_HINT_MASK
-			 | GDK_KEY_PRESS_MASK
-			 | GDK_KEY_RELEASE_MASK
-			 | GDK_ENTER_NOTIFY_MASK
-			 | GDK_LEAVE_NOTIFY_MASK
-			 | GDK_FOCUS_CHANGE_MASK);
   gtk_widget_set_size_request (fixed, 200, 100);
   gtk_grid_attach (GTK_GRID (grid), fixed, 1, row, 1, 1);
   g_object_set (fixed, "expand", FALSE, NULL);
@@ -266,17 +255,6 @@ create_fixed (GtkGrid *grid, gint row, gchar *text, gchar *id)
 
 
   drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_events (drawing_area,
-			 GDK_EXPOSURE_MASK
-			 | GDK_BUTTON_PRESS_MASK
-			 | GDK_BUTTON_RELEASE_MASK
-			 | GDK_POINTER_MOTION_MASK
-			 | GDK_POINTER_MOTION_HINT_MASK
-			 | GDK_KEY_PRESS_MASK
-			 | GDK_KEY_RELEASE_MASK
-			 | GDK_ENTER_NOTIFY_MASK
-			 | GDK_LEAVE_NOTIFY_MASK
-			 | GDK_FOCUS_CHANGE_MASK);
 
   gtk_widget_set_size_request (drawing_area, 60, 60);
   gtk_fixed_put (GTK_FIXED (fixed), drawing_area, 20, 20);
@@ -299,18 +277,6 @@ create_fixed (GtkGrid *grid, gint row, gchar *text, gchar *id)
 
 
   drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_events (drawing_area,
-			 GDK_EXPOSURE_MASK
-			 | GDK_BUTTON_PRESS_MASK
-			 | GDK_BUTTON_RELEASE_MASK
-			 | GDK_POINTER_MOTION_MASK
-			 | GDK_POINTER_MOTION_HINT_MASK
-			 | GDK_KEY_PRESS_MASK
-			 | GDK_KEY_RELEASE_MASK
-			 | GDK_ENTER_NOTIFY_MASK
-			 | GDK_LEAVE_NOTIFY_MASK
-			 | GDK_FOCUS_CHANGE_MASK);
-
   gtk_widget_set_size_request (drawing_area, 60, 60);
   gtk_fixed_put (GTK_FIXED (fixed), drawing_area, 120, 20);
   gtk_widget_show (drawing_area);
