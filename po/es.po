@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GooCanvas CVS\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=goocanvas&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-12-30 17:27+0000\n"
-"PO-Revision-Date: 2017-01-11 09:27+0100\n"
+"POT-Creation-Date: 2017-03-10 20:23+0000\n"
+"PO-Revision-Date: 2017-06-20 12:43+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -18,86 +18,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: src/goocanvas.c:309
+#: src/goocanvas.c:307
 msgid "Scale"
 msgstr "Escala"
 
-#: src/goocanvas.c:310
+#: src/goocanvas.c:308
 msgid "The magnification factor of the canvas"
 msgstr "Factor de ampliación del lienzo"
 
-#: src/goocanvas.c:316
+#: src/goocanvas.c:314
 msgid "Scale X"
 msgstr "Escala X"
 
-#: src/goocanvas.c:317
+#: src/goocanvas.c:315
 msgid "The horizontal magnification factor of the canvas"
 msgstr "El factor de ampliación horizontal del lienzo"
 
-#: src/goocanvas.c:323
+#: src/goocanvas.c:321
 msgid "Scale Y"
 msgstr "Escala Y"
 
-#: src/goocanvas.c:324
+#: src/goocanvas.c:322
 msgid "The vertical magnification factor of the canvas"
 msgstr "El factor de ampliación vertical del lienzo"
 
-#: src/goocanvas.c:330 src/goocanvastext.c:158 src/goocanvaswidget.c:587
+#: src/goocanvas.c:328 src/goocanvastext.c:158 src/goocanvaswidget.c:587
 msgid "Anchor"
 msgstr "Ancla"
 
-#: src/goocanvas.c:331
+#: src/goocanvas.c:329
 msgid ""
 "Where to place the canvas when it is smaller than the widget's allocated area"
 msgstr "Dónde situar el lienzo cuando es menor que el área asignada al control"
 
-#: src/goocanvas.c:338
+#: src/goocanvas.c:336
 msgid "X1"
 msgstr "X1"
 
-#: src/goocanvas.c:339
+#: src/goocanvas.c:337
 msgid "The x coordinate of the left edge of the canvas bounds, in canvas units"
 msgstr ""
 "Coordenada x del borde izquierdo de los márgenes del lienzo, en unidades del "
 "lienzo"
 
-#: src/goocanvas.c:346
+#: src/goocanvas.c:344
 msgid "Y1"
 msgstr "Y1"
 
-#: src/goocanvas.c:347
+#: src/goocanvas.c:345
 msgid "The y coordinate of the top edge of the canvas bounds, in canvas units"
 msgstr ""
 "Coordenada y del borde superior de los márgenes del lienzo, en unidades del "
 "lienzo"
 
-#: src/goocanvas.c:354
+#: src/goocanvas.c:352
 msgid "X2"
 msgstr "X2"
 
-#: src/goocanvas.c:355
+#: src/goocanvas.c:353
 msgid ""
 "The x coordinate of the right edge of the canvas bounds, in canvas units"
 msgstr ""
 "Coordenada x del borde derecho de los márgenes del lienzo, en unidades del "
 "lienzo"
 
-#: src/goocanvas.c:363
+#: src/goocanvas.c:361
 msgid "Y2"
 msgstr "Y2"
 
-#: src/goocanvas.c:364
+#: src/goocanvas.c:362
 msgid ""
 "The y coordinate of the bottom edge of the canvas bounds, in canvas units"
 msgstr ""
 "Coordenada y del borde inferior de los márgenes del lienzo, en unidades del "
 "lienzo"
 
-#: src/goocanvas.c:373
+#: src/goocanvas.c:371
 msgid "Automatic Bounds"
 msgstr "Márgenes automáticos"
 
-#: src/goocanvas.c:374
+#: src/goocanvas.c:372
 msgid ""
 "If the bounds are automatically calculated based on the bounds of all the "
 "items in the canvas"
@@ -105,59 +105,59 @@ msgstr ""
 "Si los márgenes se calcular automáticamente basándose en los márgenes de "
 "todos los elementos del lienzo"
 
-#: src/goocanvas.c:380
+#: src/goocanvas.c:378
 msgid "Bounds From Origin"
 msgstr "Márgenes desde el origen"
 
-#: src/goocanvas.c:381
+#: src/goocanvas.c:379
 msgid "If the automatic bounds are calculated from the origin"
 msgstr "Si los márgenes automáticos se calcular desde el origen"
 
-#: src/goocanvas.c:387
+#: src/goocanvas.c:385
 msgid "Bounds Padding"
 msgstr "Relleno de los márgenes"
 
-#: src/goocanvas.c:388
+#: src/goocanvas.c:386
 msgid "The padding added to the automatic bounds"
 msgstr "El relleno añadido a los márgenes automáticos"
 
-#: src/goocanvas.c:394
+#: src/goocanvas.c:392
 msgid "Units"
 msgstr "Unidades"
 
-#: src/goocanvas.c:395
+#: src/goocanvas.c:393
 msgid "The units to use for the canvas"
 msgstr "Unidades que se han de usar para el lienzo"
 
-#: src/goocanvas.c:402
+#: src/goocanvas.c:400
 msgid "Resolution X"
 msgstr "Resolución X"
 
-#: src/goocanvas.c:403
+#: src/goocanvas.c:401
 msgid "The horizontal resolution of the display, in dots per inch"
 msgstr "Resolución horizontal de la pantalla, en puntos por pulgada"
 
-#: src/goocanvas.c:410
+#: src/goocanvas.c:408
 msgid "Resolution Y"
 msgstr "Resolución Y"
 
-#: src/goocanvas.c:411
+#: src/goocanvas.c:409
 msgid "The vertical resolution of the display, in dots per inch"
 msgstr "Resolución vertical de la pantalla, en puntos por pulgada"
 
-#: src/goocanvas.c:419
+#: src/goocanvas.c:417
 msgid "Background Color"
 msgstr "Color de fondo"
 
-#: src/goocanvas.c:420
+#: src/goocanvas.c:418
 msgid "The color to use for the canvas background"
 msgstr "El color usado para el lienzo de fondo"
 
-#: src/goocanvas.c:426
+#: src/goocanvas.c:424
 msgid "Background Color RGB"
 msgstr "Color RGB de fondo"
 
-#: src/goocanvas.c:427
+#: src/goocanvas.c:425
 msgid ""
 "The color to use for the canvas background, specified as a 24-bit integer "
 "value, 0xRRGGBB"
@@ -165,37 +165,37 @@ msgstr ""
 "El color usado para el lienzo de fondo, especificado como un valor entero de "
 "24 bits, 0xRRGGBB"
 
-#: src/goocanvas.c:440
+#: src/goocanvas.c:438
 msgid "Background Color GdkRGBA"
 msgstr "Color GdkRGBA de fondo"
 
-#: src/goocanvas.c:441
+#: src/goocanvas.c:439
 msgid "The color to use for the canvas background, specified as a GdkRGBA"
 msgstr ""
 "El color que usar para el fondo del lienzo, especificado como un GdkRGBA"
 
-#: src/goocanvas.c:447
+#: src/goocanvas.c:445
 msgid "Integer Layout"
 msgstr "Distribución por enteros"
 
-#: src/goocanvas.c:448
+#: src/goocanvas.c:446
 msgid "If all item layout is done to the nearest integer"
 msgstr ""
 "Si la distribución de todos los elementos se hace al entero más cercano"
 
-#: src/goocanvas.c:454
+#: src/goocanvas.c:452
 msgid "Clear Background"
 msgstr "Limpiar el fondo"
 
-#: src/goocanvas.c:455
+#: src/goocanvas.c:453
 msgid "If the background is cleared before the canvas is painted"
 msgstr "Si se limpia el fondo antes de dibujar el lienzo"
 
-#: src/goocanvas.c:461
+#: src/goocanvas.c:459
 msgid "Redraw When Scrolled"
 msgstr "Redibujar al desplazar"
 
-#: src/goocanvas.c:462
+#: src/goocanvas.c:460
 msgid ""
 "If the canvas is completely redrawn when scrolled, to reduce the flicker of "
 "static items. Note that since GTK+ 3.0 the canvas is always redrawn when "
@@ -1015,9 +1015,12 @@ msgid "X Border Spacing"
 msgstr "Espacio del borde X"
 
 #: src/goocanvastable.c:265
+#| msgid ""
+#| "The amount of spacing between the lefmost and rightmost cells and the "
+#| "border grid line"
 msgid ""
-"The amount of spacing between the lefmost and rightmost cells and the border "
-"grid line"
+"The amount of spacing between the leftmost and rightmost cells and the "
+"border grid line"
 msgstr ""
 "La cantidad de espacio entre la celda más a la izquierda y la que está más a "
 "la derecha y el borde de la línea de la rejilla"
