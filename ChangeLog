@@ -1,3 +1,8 @@
+2017-08-29  Damon Chaplin  <damon@localhost.lan>
+
+	* src/goocanvas.c (goo_canvas_get_bounds): Call goo_canvas_update()
+	if needed when automatic bounds is on. #785326
+
 2016-12-30  Damon Chaplin  <damon@gnome.org>
 
 	* configure.in: Use AM_GNU_GETTEXT instead of AM_GLIB_GNU_GETTEXT.
