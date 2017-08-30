@@ -72,15 +72,26 @@ main (int argc, char *argv[])
 }
 
 
-/* This handles button presses in item views. We simply output a message to
-   the console. */
+/* The signal handler for the rectangle item. We show a dialog here. */
 static gboolean
 on_rect_button_press (GooCanvasItem  *item,
 		      GooCanvasItem  *target,
 		      GdkEventButton *event,
 		      gpointer        data)
 {
-  g_print ("rect item received button press event\n");
+  GooCanvas *canvas;
+  GtkWidget *window, *dialog;
+
+  canvas = goo_canvas_item_get_canvas (item);
+  window = gtk_widget_get_toplevel (GTK_WIDGET (canvas));
+  dialog = gtk_message_dialog_new (GTK_WINDOW (window),
+				   GTK_DIALOG_DESTROY_WITH_PARENT,
+				   GTK_MESSAGE_INFO,
+				   GTK_BUTTONS_CLOSE,
+				   "rect item received button press event");
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+
   return TRUE;
 }
 

@@ -1,3 +1,13 @@
+2017-08-30  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c: If we receive a LEAVE_NOTIFY event with a mode of
+	GDK_CROSSING_GRAB or GDK_CROSSING_GTK_GRAB we finish any passive grab
+	we have underway. Hopefully fixes #711709
+
+	* demo/mv-simple-demo.c (on_rect_button_press): 
+	* demo/simple-demo.c (on_rect_button_press): show a dialog to test
+	the grab bug fix above.
+
 2017-08-29  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c:
