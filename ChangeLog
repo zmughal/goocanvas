@@ -1,5 +1,9 @@
 2017-08-30  Damon Chaplin  <damon@gnome.org>
 
+	* Released GooCanvas 2.0.3
+
+2017-08-30  Damon Chaplin  <damon@gnome.org>
+
 	* src/goocanvas.c: If we receive a LEAVE_NOTIFY event with a mode of
 	GDK_CROSSING_GRAB or GDK_CROSSING_GTK_GRAB we finish any passive grab
 	we have underway. Hopefully fixes #711709
@@ -135,6 +139,10 @@
 2016-12-13  Damon Chaplin  <damon@gnome.org>
 
 	* demo/*.c: remove deprecated GTK+ calls.
+
+2013-11-03  Damon Chaplin  <damon@gnome.org>
+
+	* Released GooCanvas 2.0.2
 
 2013-11-02  Damon Chaplin  <damon@gnome.org>
 

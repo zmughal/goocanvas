@@ -1,4 +1,12 @@
 
+GooCanvas 2.0.3	(Aug 30 2017)
+===============
+
+ o Fixed stuck pointer grab bug #711709.
+ o Fixed several introspection problems.
+ o Removed use of a lot of deprecated GTK+ API.
+
+
 GooCanvas 2.0.2	(Nov 3 2013)
 ===============
 
