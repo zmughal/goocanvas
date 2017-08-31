@@ -146,6 +146,13 @@ BUILT_SOURCES = $(libgoocanvas_built_headers) $(libgoocanvas_built_sources)
 MAINTAINERCLEANFILES = $(BUILT_SOURCES) $(stamp_files)
 EXTRA_DIST = $(BUILT_SOURCES) $(libgoocanvas_extra_sources)
 
+# if srcdir!=builddir, clean out maintainer-clean files from builddir
+# this allows dist to pass.
+distclean-local:
+	if test $(srcdir) != .; then \
+	  rm -f $(MAINTAINERCLEANFILES); \
+	fi
+
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)

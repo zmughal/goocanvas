@@ -122,6 +122,7 @@ struct _GooCanvasPrivate {
   gint static_window_x, static_window_y;
   GdkRGBA background_color;
   guint background_color_set : 1;
+  guint pointer_grab_is_implicit : 1;
 };
 
 
@@ -3159,17 +3160,51 @@ update_pointer_item (GooCanvas *canvas,
 }
 
 
+static void
+goo_canvas_finish_pointer_grab (GooCanvas *canvas,
+				GdkEvent  *event)
+{
+  /* We set the pointer item back to the item it was in before the
+     grab, so we'll synthesize enter/leave notify events as appropriate. */
+  if (canvas->pointer_grab_initial_item
+      && ITEM_IS_VALID (canvas->pointer_grab_initial_item))
+    set_item_pointer (&canvas->pointer_item,
+		      canvas->pointer_grab_initial_item);
+  else
+    set_item_pointer (&canvas->pointer_item, NULL);
+
+  set_item_pointer (&canvas->pointer_grab_item, NULL);
+  set_item_pointer (&canvas->pointer_grab_initial_item, NULL);
+
+  update_pointer_item (canvas, event);
+}
+
+
 static gboolean
 goo_canvas_crossing        (GtkWidget        *widget,
 			    GdkEventCrossing *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
 
   if (event->window != canvas->canvas_window)
     return FALSE;
 
-  /* This will result in synthesizing focus_in/out events as appropriate. */
-  update_pointer_item (canvas, (GdkEvent*) event);
+    /* If the pointer has left the canvas window due to a grab, then finish any
+       implicit pointer grab we have underway. */
+    if (event->type == GDK_LEAVE_NOTIFY
+      && (event->mode == GDK_CROSSING_GRAB
+	  || event->mode == GDK_CROSSING_GTK_GRAB)
+      && canvas->pointer_grab_item
+      && priv->pointer_grab_is_implicit)
+    {
+      goo_canvas_finish_pointer_grab (canvas, (GdkEvent*) event);
+    }
+  else
+    {
+      /* This will result in synthesizing focus_in/out events as appropriate. */
+      update_pointer_item (canvas, (GdkEvent*) event);
+    }
 
   return FALSE;
 }
@@ -3201,6 +3236,7 @@ goo_canvas_button_press (GtkWidget      *widget,
 			 GdkEventButton *event)
 {
   GooCanvas *canvas = GOO_CANVAS (widget);
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GdkDevice *device = gdk_event_get_device ((GdkEvent*) event);
   GdkDisplay *display;
 
@@ -3220,6 +3256,7 @@ goo_canvas_button_press (GtkWidget      *widget,
       set_item_pointer (&canvas->pointer_grab_item,
 			canvas->pointer_item);
       canvas->pointer_grab_button = event->button;
+      priv->pointer_grab_is_implicit = TRUE;
     }
 
   return emit_pointer_event (canvas, "button_press_event", (GdkEvent*) event);
@@ -3249,19 +3286,7 @@ goo_canvas_button_release (GtkWidget      *widget,
       && event->button == canvas->pointer_grab_button
       && !gdk_display_device_is_grabbed (display, device))
     {
-      /* We set the pointer item back to the item it was in before the
-	 grab, so we'll synthesize enter/leave notify events as appropriate. */
-      if (canvas->pointer_grab_initial_item
-	  && ITEM_IS_VALID (canvas->pointer_grab_initial_item))
-	set_item_pointer (&canvas->pointer_item,
-			  canvas->pointer_grab_initial_item);
-      else
-	set_item_pointer (&canvas->pointer_item, NULL);
-
-      set_item_pointer (&canvas->pointer_grab_item, NULL);
-      set_item_pointer (&canvas->pointer_grab_initial_item, NULL);
-
-      update_pointer_item (canvas, (GdkEvent*) event);
+      goo_canvas_finish_pointer_grab (canvas, (GdkEvent*) event);
     }
 
   return retval;
@@ -3484,6 +3509,7 @@ goo_canvas_pointer_grab (GooCanvas     *canvas,
 			 GdkCursor     *cursor,
 			 guint32        time)
 {
+  GooCanvasPrivate *priv = GOO_CANVAS_GET_PRIVATE (canvas);
   GdkGrabStatus status = GDK_GRAB_SUCCESS;
   GdkDisplay *display;
 
@@ -3520,6 +3546,7 @@ goo_canvas_pointer_grab (GooCanvas     *canvas,
 			     canvas->pointer_item);
       set_item_pointer (&canvas->pointer_grab_item,
 			     item);
+      priv->pointer_grab_is_implicit = FALSE;
     }
 
   return status;
@@ -3560,20 +3587,8 @@ goo_canvas_pointer_ungrab (GooCanvas     *canvas,
     gdk_display_pointer_ungrab (display, time);
 #endif
 
-  /* We set the pointer item back to the item it was in before the
-     grab, so we'll synthesize enter/leave notify events as appropriate. */
-  if (canvas->pointer_grab_initial_item
-      && ITEM_IS_VALID (canvas->pointer_grab_initial_item))
-    set_item_pointer (&canvas->pointer_item,
-		      canvas->pointer_grab_initial_item);
-  else
-    set_item_pointer (&canvas->pointer_item, NULL);
-
-  set_item_pointer (&canvas->pointer_grab_item, NULL);
-  set_item_pointer (&canvas->pointer_grab_initial_item, NULL);
-
-  update_pointer_item (canvas, NULL);
- }
+  goo_canvas_finish_pointer_grab (canvas, NULL);
+}
 
 
 /**

@@ -45,6 +45,7 @@ Makefile.in
 /install-sh
 /libtool
 /ltmain.sh
+/m4
 /missing
 /mkinstalldirs
 /py-compile
