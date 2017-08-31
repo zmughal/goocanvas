@@ -2193,6 +2193,10 @@ goo_canvas_get_bounds	(GooCanvas *canvas,
 {
   g_return_if_fail (GOO_IS_CANVAS (canvas));
 
+  /* If the bounds are calculated automatically make sure they're up to date.*/
+  if (canvas->automatic_bounds && canvas->need_update)
+    goo_canvas_update (canvas);
+
   if (left)
     *left = canvas->bounds.x1;
   if (top)
