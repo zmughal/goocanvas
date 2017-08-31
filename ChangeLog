@@ -1,4 +1,9 @@
-2017-08-29  Damon Chaplin  <damon@localhost.lan>
+2017-08-29  Damon Chaplin  <damon@gnome.org>
+
+	* src/goocanvas.c:
+	* docs/simple-canvas.xml: updated simple demo code.
+
+2017-08-29  Damon Chaplin  <damon@gnome.org>
 
 	* src/goocanvas.c (goo_canvas_get_bounds): Call goo_canvas_update()
 	if needed when automatic bounds is on. #785326

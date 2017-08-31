@@ -35,7 +35,7 @@
  *    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
  *    gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
  *    gtk_widget_show (window);
- *    g_signal_connect (window, "delete_event", (GtkSignalFunc) on_delete_event,
+ *    g_signal_connect (window, "delete_event", G_CALLBACK (on_delete_event),
  *                      NULL);
  *
  *    scrolled_win = gtk_scrolled_window_new (NULL, NULL);
@@ -69,7 +69,7 @@
  *
  *    /&ast; Connect a signal handler for the rectangle item. &ast;/
  *    g_signal_connect (rect_item, "button_press_event",
- *                      (GtkSignalFunc) on_rect_button_press, NULL);
+ *                      G_CALLBACK (on_rect_button_press), NULL);
  *
  *    /&ast; Pass control to the GTK+ main event loop. &ast;/
  *    gtk_main&nbsp;();
