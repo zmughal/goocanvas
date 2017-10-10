@@ -1,3 +1,10 @@
+2017-10-09  Damon Chaplin  <damon@gnome.org>
+
+	* docs/goocanvas2-docs.sgml:
+	* docs/Makefile.am:
+	* configure.in: patch from Ross Gammon to support latest gtk-doc
+	and add an index. #788436
+
 2017-08-30  Damon Chaplin  <damon@gnome.org>
 
 	* Released GooCanvas 2.0.3
