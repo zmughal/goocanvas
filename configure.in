@@ -107,7 +107,7 @@ fi
 
 AM_CONDITIONAL(ENABLE_PYTHON, test x"$enable_python" = "xyes")
 
-GTK_DOC_CHECK(1.8)
+GTK_DOC_CHECK(1.16)
 
 AC_OUTPUT([
 Makefile

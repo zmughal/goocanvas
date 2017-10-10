@@ -67,6 +67,7 @@ Makefile.in
 /src/GooCanvas-[23].0.gir
 /src/GooCanvas-[23].0.typelib
 /stamp-h1
+/test-driver
 /docs/goocanvas-decl-list.txt
 /docs/goocanvas-decl.txt
 /docs/goocanvas-undeclared.txt
