@@ -3190,13 +3190,13 @@ goo_canvas_crossing        (GtkWidget        *widget,
   if (event->window != canvas->canvas_window)
     return FALSE;
 
-    /* If the pointer has left the canvas window due to a grab, then finish any
-       implicit pointer grab we have underway. */
-    if (event->type == GDK_LEAVE_NOTIFY
-      && (event->mode == GDK_CROSSING_GRAB
-	  || event->mode == GDK_CROSSING_GTK_GRAB)
-      && canvas->pointer_grab_item
-      && priv->pointer_grab_is_implicit)
+  /* If the pointer has left the canvas window due to a grab, then finish any
+     implicit pointer grab we have underway. */
+  if (event->type == GDK_LEAVE_NOTIFY
+    && (event->mode == GDK_CROSSING_GRAB
+        || event->mode == GDK_CROSSING_GTK_GRAB)
+    && canvas->pointer_grab_item
+    && priv->pointer_grab_is_implicit)
     {
       goo_canvas_finish_pointer_grab (canvas, (GdkEvent*) event);
     }
