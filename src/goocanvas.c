@@ -2004,7 +2004,7 @@ goo_canvas_size_allocate (GtkWidget     *widget,
 
   canvas = GOO_CANVAS (widget);
 
-  gtk_widget_set_allocation (widget, allocation);
+  gtk_widget_size_allocate (widget, allocation, baseline, out_clip);
 
   if (gtk_widget_get_realized (widget))
     {
