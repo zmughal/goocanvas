@@ -180,8 +180,10 @@ static void     goo_canvas_measure         (GtkWidget        *widget,
                                             gint              *natural,
                                             gint              *minimum_baseline,
                                             gint              *natural_baseline);
-static void     goo_canvas_size_allocate   (GtkWidget        *widget,
-					    GtkAllocation    *allocation);
+static void     goo_canvas_size_allocate   (GtkWidget           *widget,
+                                            const GtkAllocation *allocation,
+                                            int                  baseline,
+                                            GtkAllocation       *out_clip);
 static void     goo_canvas_set_hadjustment (GooCanvas        *canvas,
 					    GtkAdjustment    *adjustment);
 static void     goo_canvas_set_vadjustment (GooCanvas        *canvas,
@@ -1962,7 +1964,9 @@ goo_canvas_measure (GtkWidget      *widget,
 
 static void
 goo_canvas_allocate_child_widget (GooCanvas       *canvas,
-				  GooCanvasWidget *witem)
+				  GooCanvasWidget *witem,
+                                  int              baseline,
+                                  GtkAllocation   *out_clip)
 {
   GooCanvasBounds bounds;
   GtkRequisition minimum_size;
@@ -1983,13 +1987,15 @@ goo_canvas_allocate_child_widget (GooCanvas       *canvas,
   allocation.width = bounds.x2 - allocation.x;
   allocation.height = bounds.y2 - allocation.y;
 
-  gtk_widget_size_allocate (witem->widget, &allocation);
+  gtk_widget_size_allocate (witem->widget, &allocation, baseline, out_clip);
 }
 
 
 static void
 goo_canvas_size_allocate (GtkWidget     *widget,
-			  GtkAllocation *allocation)
+			  const GtkAllocation *allocation,
+                          int                  baseline,
+                          GtkAllocation       *out_clip)
 {
   GooCanvas *canvas;
   GList *tmp_list;
@@ -2011,7 +2017,7 @@ goo_canvas_size_allocate (GtkWidget     *widget,
 	  tmp_list = tmp_list->next;
 
 	  if (witem->widget)
-	    goo_canvas_allocate_child_widget (canvas, witem);
+	    goo_canvas_allocate_child_widget (canvas, witem, baseline, out_clip);
 	}
 
       gdk_window_move_resize (gtk_widget_get_window (widget),
