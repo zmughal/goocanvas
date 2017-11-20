@@ -1152,8 +1152,8 @@ goo_canvas_item_model_class_find_child_property (GObjectClass *mclass,
  *
  * It returns all child properties of a canvas item class.
  *
- * Returns: (array length=n_properties) (element-type GObject.ParamSpec) (transfer container):
- *  a newly allocated array of #GParamSpec*. The array must be freed with g_free(). 
+ * Returns: (array length=n_properties) (transfer container):
+ *  a newly allocated array of #GParamSpec*. The array must be freed with g_free().
  */
 GParamSpec**
 goo_canvas_item_model_class_list_child_properties (GObjectClass *mclass,
