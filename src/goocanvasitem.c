@@ -2374,7 +2374,7 @@ goo_canvas_item_class_find_child_property (GObjectClass *iclass,
  *
  * It returns all child properties of a canvas item class.
  *
- * Returns: (array length=n_properties) (transfer full): a newly allocated
+ * Returns: (array length=n_properties) (transfer container): a newly allocated
  *  array of #GParamSpec*. The array must be freed with g_free().
  */
 GParamSpec**
